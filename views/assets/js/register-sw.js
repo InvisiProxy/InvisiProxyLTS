@@ -1,5 +1,6 @@
 import { values, route } from 'build:invisiproxy';
 import { selectedTransport } from '../../../src/browser/transport.ts';
+import { normalizeScramjetTarget } from '../../../src/browser/scramjet-links.ts';
 (() => {
   const swScope = route("/"),
     swAllowedHostnames = ['localhost', '127.0.0.1'],
@@ -149,6 +150,73 @@ import { selectedTransport } from '../../../src/browser/transport.ts';
                       return original.call(this, state, title, undefined);
                   };
                 }
+              const client = ctx?.client;
+              const networkPrefix = new URL(
+                route('/scram/network/'),
+                location.origin
+              ).pathname;
+              if (client && !client.__invisiNavigationGuard) {
+                client.__invisiNavigationGuard = true;
+                const originalRewriteUrl = client.rewriteUrl.bind(client);
+                client.rewriteUrl = (url, options) => {
+                  const normalized = normalizeScramjetTarget(
+                    url,
+                    location.origin,
+                    networkPrefix
+                  );
+                  if (normalized.proxyOrigin) return normalized.url;
+                  if (normalized.unwrapped)
+                    return originalRewriteUrl(normalized.url, options);
+                  return originalRewriteUrl(url, options);
+                };
+                const normalizedLinks = new WeakMap();
+                this.tap(client.hooks.rewriter.html.pre, ({ handler }) => {
+                  const visit = (node) => {
+                    if (node?.attribs && ['a', 'area'].includes(node.name)) {
+                      const value = node.attribs.href;
+                      if (value) {
+                        const normalized = normalizeScramjetTarget(
+                          value,
+                          location.origin,
+                          networkPrefix
+                        );
+                        if (normalized.proxyOrigin) {
+                          normalizedLinks.set(node, normalized.url);
+                          node.attribs.href = '#';
+                        } else if (normalized.unwrapped)
+                          node.attribs.href = normalized.url;
+                      }
+                    }
+                    for (const child of node?.children || []) visit(child);
+                  };
+                  visit(handler.root);
+                });
+                this.tap(client.hooks.rewriter.html.post, ({ handler }) => {
+                  const visit = (node) => {
+                    if (node && normalizedLinks.has(node)) {
+                      node.attribs.href = normalizedLinks.get(node);
+                      delete node.attribs['scramjet-attr-href'];
+                      normalizedLinks.delete(node);
+                    }
+                    for (const child of node?.children || []) visit(child);
+                  };
+                  visit(handler.root);
+                });
+                client.Proxy('HTMLAnchorElement.prototype.click', {
+                  apply(click) {
+                    const anchor = click.this;
+                    const normalized = normalizeScramjetTarget(
+                      anchor.href,
+                      location.origin,
+                      networkPrefix
+                    );
+                    if (normalized.proxyOrigin)
+                      anchor.href = normalized.url;
+                    else if (normalized.unwrapped)
+                      anchor.href = client.rewriteUrl(normalized.url);
+                  },
+                });
+              }
               const locationProto = win.Location?.prototype;
               if (locationProto) {
                 const descriptor = Object.getOwnPropertyDescriptor(
@@ -160,7 +228,18 @@ import { selectedTransport } from '../../../src/browser/transport.ts';
                     ...descriptor,
                     set(value) {
                       if (degenerateUrl(value)) return;
-                      descriptor.set.call(this, value);
+                      const normalized = normalizeScramjetTarget(
+                        value,
+                        location.origin,
+                        networkPrefix
+                      );
+                      const target =
+                        normalized.proxyOrigin
+                          ? normalized.url
+                          : normalized.unwrapped && client
+                            ? client.rewriteUrl(normalized.url)
+                            : value;
+                      descriptor.set.call(this, target);
                     },
                   });
                 for (const method of ['assign', 'replace']) {
@@ -168,10 +247,49 @@ import { selectedTransport } from '../../../src/browser/transport.ts';
                   if (typeof original !== 'function') continue;
                   locationProto[method] = function (url) {
                     if (degenerateUrl(url)) return;
-                    return original.call(this, url);
+                    const normalized = normalizeScramjetTarget(
+                      url,
+                      location.origin,
+                      networkPrefix
+                    );
+                    return original.call(
+                      this,
+                      normalized.proxyOrigin
+                        ? normalized.url
+                        : normalized.unwrapped && client
+                          ? client.rewriteUrl(normalized.url)
+                          : url
+                    );
                   };
                 }
               }
+            });
+            // Guard window.open separately because Scramjet rewrites its target
+            // before native window.open is called.
+            this.tap(frame.hooks.init.pre, (ctx) => {
+              const win = ctx?.window;
+              if (!win || win.__invisiOpenGuard) return;
+              win.__invisiOpenGuard = true;
+              const originalOpen = win.open;
+              if (typeof originalOpen !== 'function') return;
+              win.open = function (url, ...args) {
+                if (url === undefined || url === null || url === '')
+                  return originalOpen.call(this, url, ...args);
+                const normalized = normalizeScramjetTarget(
+                  url,
+                  location.origin,
+                  route('/scram/network/')
+                );
+                return originalOpen.call(
+                  this,
+                  normalized.proxyOrigin
+                    ? normalized.url
+                    : normalized.unwrapped && ctx?.client
+                      ? ctx.client.rewriteUrl(normalized.url)
+                      : url,
+                  ...args
+                );
+              };
             });
             // Proxied subresources inherit remote cross-origin policy
             // headers; when they reach the frame they break streaming media
