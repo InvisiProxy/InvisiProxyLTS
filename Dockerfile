@@ -10,7 +10,7 @@ RUN npm install -g corepack
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 COPY . .
-RUN pnpm run fresh-install
+RUN pnpm install --frozen-lockfile
 RUN pnpm run build
 EXPOSE 8080 9050 9051
 COPY serve.sh /serve.sh
