@@ -292,7 +292,9 @@ export function siteBuildPlugin(): Plugin[] {
 										readFileSync(file.source, 'utf8')
 									);
 					const source =
-						!config.usingSEO && file.kind === 'vendor-script'
+						!development &&
+						!config.usingSEO &&
+						file.kind === 'vendor-script'
 							? obfuscateVendorScript(
 									original.toString(),
 									file.target

@@ -292,13 +292,59 @@ const getSearchTemplate = (
     searchEngine = searchEngines[readStorage('SearchEngine')] ||
       searchEngines[defaultSearch]
   ) => `https://${searchEngine}%s`,
+  // Internal wrapper query parameters used by the page loader, proxy routing
+  // and redirect handling. These must never leak into a proxied target URL:
+  // ?cache= busts the disguised page loader and ?fromUrl= carries the real
+  // destination that should be unwrapped instead.
+  wrapperParams = Object.freeze(['cache', 'fromurl']),
+  // Remove wrapper parameters and proxy rewrite artifacts so the omnibox
+  // always routes to the destination the user actually asked for.
+  normalizeTargetUrl = (url, depth = 0) => {
+    if (depth > 4) return url;
+    for (const key of [...url.searchParams.keys()]) {
+      if (!wrapperParams.includes(key.toLowerCase())) continue;
+      const value = url.searchParams.get(key);
+      const wrapped =
+        typeof value === 'string' && /^(?:https?:)?\/\//.test(value)
+          ? value
+          : null;
+      url.searchParams.delete(key);
+      // ?fromUrl=https://... carries the real destination; open that one.
+      if (wrapped && key.toLowerCase() === 'fromurl')
+        return normalizeTargetUrl(new URL(wrapped, url), depth + 1);
+    }
+    // Repair proxy rewrite artifacts such as a trailing "/undefined" path
+    // segment so a corrupted URL still routes to its real page.
+    if (/\/(?:undefined|null|NaN)$/.test(url.pathname))
+      url.pathname = url.pathname.replace(/\/(?:undefined|null|NaN)$/, '');
+    return url;
+  },
+  // Decode fully percent-encoded URLs (eg copied out of a proxied request)
+  // before treating the input as a destination or a search query.
+  decodeProxyInput = (input) => {
+    if (!/%[0-9a-fA-F]{2}/.test(input)) return input;
+    let decoded = input;
+    for (let i = 0; i < 2; i++) {
+      try {
+        const next = decodeURIComponent(decoded);
+        if (next === decoded) break;
+        decoded = next;
+      } catch {
+        break;
+      }
+    }
+    return /^(?:https?:)?\/\/|^[\w.-]+\.[a-z]{2,}(?:\/|$)/i.test(decoded)
+      ? decoded
+      : input;
+  },
   // Like an omnibox, return the results of a search engine if search terms are
   // provided instead of a URL.
   search = (input) => {
+    input = decodeProxyInput(`${input}`.trim());
     try {
       // Return the input if it is already a valid URL.
       // eg: https://example.com, https://example.com/test?q=param
-      return new URL(input) + '';
+      return normalizeTargetUrl(new URL(input)) + '';
     } catch (e) {
       // Continue if it is invalid.
     }
@@ -306,7 +352,7 @@ const getSearchTemplate = (
     try {
       // Check if the input is valid when http:// is added to the start.
       // eg: example.com, https://example.com/test?q=param
-      const url = new URL(`http://${input}`);
+      const url = normalizeTargetUrl(new URL(`http://${input}`));
       // Return only if the hostname has a TLD or a subdomain.
       if (url.hostname.indexOf('.') != -1) return url + '';
     } catch (e) {

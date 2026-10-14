@@ -50,6 +50,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.5.15",
+		"@mercuryworkshop/wisp-js": "^0.5.0",
 		"@types/html-minifier-terser": "^7.0.2",
 		"@types/node": "^24.19.0",
 		"@types/send": "^1.2.1",

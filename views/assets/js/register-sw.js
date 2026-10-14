@@ -92,6 +92,105 @@ import { selectedTransport } from '../../../src/browser/transport.ts';
     if (typeof $scramjetUtils === 'undefined') return [];
     const plugins = [new $scramjetUtils.HttpCachePlugin()];
 
+    // Some proxied sites (eg TikTok's analytics SDK) build navigation URLs
+    // from rewritten values that stringify to "undefined", pushing a bogus
+    // /undefined route that resolves to a ?fromUrl=/undefined 404 page.
+    // Detect degenerate targets both as raw values and as scramjet-wrapped
+    // URLs whose percent-encoded target decodes to one.
+    const degenerateUrl = (value) => {
+      if (value == null) return false;
+      const raw = String(value);
+      if (/^(?:undefined|null|NaN|\[object Object\])$/.test(raw)) return true;
+      const degeneratePath = (url) =>
+        /\/(?:undefined|null|NaN)\/?$/.test(url.pathname) ||
+        /^(?:undefined|null|NaN)$/.test(url.pathname.replace(/^\//, ''));
+      try {
+        if (degeneratePath(new URL(raw, 'https://degenerate.invalid/')))
+          return true;
+      } catch {
+        return false;
+      }
+      try {
+        return degeneratePath(
+          new URL(decodeURIComponent(raw), 'https://degenerate.invalid/')
+        );
+      } catch {
+        return false;
+      }
+    };
+    if (typeof $scramjetController?.ManagedPlugin === 'function') {
+      plugins.push(
+        new (class extends $scramjetController.ManagedPlugin {
+          constructor() {
+            super('degenerate-url-guard', []);
+          }
+          install(frame) {
+            // init.pre fires before scramjet captures the native navigation
+            // methods, so these guards sit underneath its rewriters and see
+            // every proxied navigation, including already-rewritten URLs.
+            // TikTok's analytics SDK otherwise pushes history.replaceState
+            // with "undefined", leaving the frame stuck on a 404 page.
+            this.tap(frame.hooks.init.pre, (ctx) => {
+              const win = ctx?.window;
+              if (!win || win.__invisiDegenerateGuard) return;
+              win.__invisiDegenerateGuard = true;
+              const frameHistory = win.History?.prototype;
+              if (frameHistory)
+                for (const method of ['pushState', 'replaceState']) {
+                  const original = frameHistory[method];
+                  if (typeof original !== 'function') continue;
+                  frameHistory[method] = function (state, title, url) {
+                    if (!degenerateUrl(url))
+                      return original.call(this, state, title, url);
+                    // Keep the frame on its current URL instead of the
+                    // corrupted one. An undefined URL argument leaves the
+                    // URL untouched while still applying the new state.
+                    if (method === 'replaceState')
+                      return original.call(this, state, title, undefined);
+                  };
+                }
+              const locationProto = win.Location?.prototype;
+              if (locationProto) {
+                const descriptor = Object.getOwnPropertyDescriptor(
+                  locationProto,
+                  'href'
+                );
+                if (descriptor?.set && descriptor?.get)
+                  Object.defineProperty(locationProto, 'href', {
+                    ...descriptor,
+                    set(value) {
+                      if (degenerateUrl(value)) return;
+                      descriptor.set.call(this, value);
+                    },
+                  });
+                for (const method of ['assign', 'replace']) {
+                  const original = locationProto[method];
+                  if (typeof original !== 'function') continue;
+                  locationProto[method] = function (url) {
+                    if (degenerateUrl(url)) return;
+                    return original.call(this, url);
+                  };
+                }
+              }
+            });
+            // Proxied subresources inherit remote cross-origin policy
+            // headers; when they reach the frame they break streaming media
+            // chunks and WebAssembly instantiation, so strip them here.
+            this.tap(frame.hooks.fetch.response, (ctx, res) => {
+              const headers = res?.response?.headers;
+              if (headers && typeof headers.delete === 'function')
+                for (const name of [
+                  'cross-origin-opener-policy',
+                  'cross-origin-embedder-policy',
+                  'cross-origin-resource-policy',
+                ])
+                  headers.delete(name);
+            });
+          }
+        })()
+      );
+    }
+
     const omniInput = document.getElementById('search-input');
     plugins.push(
       new $scramjetUtils.UrlWatcherPlugin((url) => {
