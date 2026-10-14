@@ -1,6 +1,7 @@
 import { values, route } from 'build:invisiproxy';
 import { selectedTransport } from '../../../src/browser/transport.ts';
 import { normalizeScramjetTarget } from '../../../src/browser/scramjet-links.ts';
+import { rewriteFrameUrl } from '../../../src/browser/frame-urls.ts';
 (() => {
   const swScope = route("/"),
     swAllowedHostnames = ['localhost', '127.0.0.1'],
@@ -90,8 +91,14 @@ import { normalizeScramjetTarget } from '../../../src/browser/scramjet-links.ts'
   };
 
   const buildFramePlugins = () => {
-    if (typeof $scramjetUtils === 'undefined') return [];
-    const plugins = [new $scramjetUtils.HttpCachePlugin()];
+    // HttpCache/link watching need $scramjetUtils, but the ManagedPlugin
+    // guards (navigation, embed rewriting, response header stripping) only
+    // need the controller: never let a missing utils global skip those, or
+    // proxied game documents lose CSP/COEP stripping entirely.
+    const plugins =
+      typeof $scramjetUtils === 'undefined'
+        ? []
+        : [new $scramjetUtils.HttpCachePlugin()];
 
     // Some proxied sites (eg TikTok's analytics SDK) build navigation URLs
     // from rewritten values that stringify to "undefined", pushing a bogus
@@ -291,9 +298,66 @@ import { normalizeScramjetTarget } from '../../../src/browser/scramjet-links.ts'
                 );
               };
             });
+            // Dynamically created cross-origin embeds must stay behind the
+            // proxy: game sites (Poki, CrazyGames) inject iframes pointing at
+            // CDNs like files.crazygames.com or poki-gdn.com at runtime and
+            // spawn Workers for game binaries. Scramjet rewrites parsed
+            // markup, but values handed to setAttribute or the Worker
+            // constructors after load can still carry raw external URLs or
+            // doubly-wrapped ones. init.pre runs before Scramjet captures
+            // these natives, so these guards sit underneath its rewriters
+            // and normalize every value exactly once; blob:/data: URLs pass
+            // through untouched because their scripts were already rewritten
+            // and blob requests never leave the origin (the service worker
+            // routes prefix-wrapped blob:, .wasm and worker requests through
+            // the controller).
+            this.tap(frame.hooks.init.pre, (ctx) => {
+              const win = ctx?.window;
+              const client = ctx?.client;
+              if (!win || !client || win.__invisiEmbedGuard) return;
+              win.__invisiEmbedGuard = true;
+              const networkPrefix = new URL(
+                route('/scram/network/'),
+                location.origin
+              ).pathname;
+              const rewrite = (value) =>
+                rewriteFrameUrl(
+                  value,
+                  (url) => client.rewriteUrl(url),
+                  location.origin,
+                  networkPrefix
+                );
+              const setAttribute = win.Element?.prototype?.setAttribute;
+              if (typeof setAttribute === 'function') {
+                win.Element.prototype.setAttribute = function (name, value) {
+                  if (String(name).toLowerCase() === 'src') {
+                    const tag = String(this?.tagName || '').toLowerCase();
+                    if (tag === 'iframe' || tag === 'frame')
+                      value = rewrite(value);
+                  }
+                  return setAttribute.call(this, name, value);
+                };
+              }
+              for (const name of ['Worker', 'SharedWorker']) {
+                const Worker = win[name];
+                if (typeof Worker !== 'function') continue;
+                win[name] = new Proxy(Worker, {
+                  construct(target, args, newTarget) {
+                    if (args.length > 0) args[0] = rewrite(args[0]);
+                    return Reflect.construct(target, args, newTarget);
+                  },
+                });
+              }
+            });
             // Proxied subresources inherit remote cross-origin policy
             // headers; when they reach the frame they break streaming media
-            // chunks and WebAssembly instantiation, so strip them here.
+            // chunks, WebAssembly instantiation and game assets served from
+            // CDNs like files.crazygames.com or poki-gdn.com, so strip them
+            // here. Content-Security-Policy (and its report-only variant)
+            // leaks the remote site's img-src/frame-src/connect-src origins,
+            // which blocks proxied thumbnails and game binaries, and
+            // Cross-Origin-Embedder-Policy breaks every subresource that
+            // cannot present a CORP header back to the frame.
             this.tap(frame.hooks.fetch.response, (ctx, res) => {
               const headers = res?.response?.headers;
               if (headers && typeof headers.delete === 'function')
@@ -301,6 +365,8 @@ import { normalizeScramjetTarget } from '../../../src/browser/scramjet-links.ts'
                   'cross-origin-opener-policy',
                   'cross-origin-embedder-policy',
                   'cross-origin-resource-policy',
+                  'content-security-policy',
+                  'content-security-policy-report-only',
                 ])
                   headers.delete(name);
             });
@@ -310,21 +376,23 @@ import { normalizeScramjetTarget } from '../../../src/browser/scramjet-links.ts'
     }
 
     const omniInput = document.getElementById('search-input');
-    plugins.push(
-      new $scramjetUtils.UrlWatcherPlugin((url) => {
-        if (omniInput && document.activeElement !== omniInput)
-          omniInput.value = url;
-      })
-    );
+    if (typeof $scramjetUtils !== 'undefined') {
+      plugins.push(
+        new $scramjetUtils.UrlWatcherPlugin((url) => {
+          if (omniInput && document.activeElement !== omniInput)
+            omniInput.value = url;
+        })
+      );
 
-    plugins.push(
-      new $scramjetUtils.CatchEscapedLinksPlugin((url) => {
-        try {
-          localStorage.setItem(`${values.storageNamespace}-frame-url`, 'sj:' + url.href);
-        } catch (e) {}
-        return new URL(location.pathname + location.search, location.origin);
-      })
-    );
+      plugins.push(
+        new $scramjetUtils.CatchEscapedLinksPlugin((url) => {
+          try {
+            localStorage.setItem(`${values.storageNamespace}-frame-url`, 'sj:' + url.href);
+          } catch (e) {}
+          return new URL(location.pathname + location.search, location.origin);
+        })
+      );
+    }
 
     return plugins;
   };
@@ -410,10 +478,30 @@ import { normalizeScramjetTarget } from '../../../src/browser/scramjet-links.ts'
         hidden.style.cssText =
           'position:fixed;width:0;height:0;border:0;visibility:hidden;pointer-events:none;';
         document.body.appendChild(hidden);
-        frame = controller.createFrame(hidden);
+        // The fallback frame proxies real navigations too, so it needs the
+        // same plugins as the visible frame (embed rewriting, header strips).
+        frame = controller.createFrame(hidden, {
+          plugins: buildFramePlugins(),
+        });
       }
 
       window.$invisiScramjet = { controller, frame, ready: true };
+      // The visible #frame can appear after initialization (the disguised
+      // loader swaps the document body in late); rebind the controller to it
+      // with the same plugins so the proxied document keeps every guard.
+      const frameObserver = new MutationObserver(() => {
+        const visibleFrame = document.getElementById('frame');
+        if (!(visibleFrame instanceof HTMLIFrameElement)) return;
+        frameObserver.disconnect();
+        if (window.$invisiScramjet.frame.element !== visibleFrame)
+          window.$invisiScramjet.frame = controller.createFrame(visibleFrame, {
+            plugins: buildFramePlugins(),
+          });
+      });
+      frameObserver.observe(document.documentElement, {
+        childList: true,
+        subtree: true,
+      });
       window.dispatchEvent(new Event('s-ready'));
     } catch (err) {
       console.error(
