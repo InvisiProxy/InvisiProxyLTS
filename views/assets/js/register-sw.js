@@ -1,7 +1,11 @@
 import { values, route } from 'build:invisiproxy';
 import { selectedTransport } from '../../../src/browser/transport.ts';
 import { normalizeScramjetTarget } from '../../../src/browser/scramjet-links.ts';
-import { rewriteFrameUrl } from '../../../src/browser/frame-urls.ts';
+import {
+  rewriteFrameUrl,
+  rewriteSrcsetFrameUrls,
+  unwrapFrameUrl,
+} from '../../../src/browser/frame-urls.ts';
 (() => {
   const swScope = route("/"),
     swAllowedHostnames = ['localhost', '127.0.0.1'],
@@ -298,6 +302,10 @@ import { rewriteFrameUrl } from '../../../src/browser/frame-urls.ts';
                 );
               };
             });
+            // Shared with the init.post setter patch below: the frame
+            // realm's native src/srcset descriptors, captured before
+            // Scramjet installs its own rewriters during client init.
+            const nativeSrcDescriptors = new Map();
             // Dynamically created cross-origin embeds must stay behind the
             // proxy: game sites (Poki, CrazyGames) inject iframes pointing at
             // CDNs like files.crazygames.com or poki-gdn.com at runtime and
@@ -316,6 +324,22 @@ import { rewriteFrameUrl } from '../../../src/browser/frame-urls.ts';
               const client = ctx?.client;
               if (!win || !client || win.__invisiEmbedGuard) return;
               win.__invisiEmbedGuard = true;
+              for (const [name, props] of [
+                ['HTMLImageElement', ['src', 'srcset']],
+                ['HTMLIFrameElement', ['src']],
+                ['HTMLFrameElement', ['src']],
+              ]) {
+                const proto = win[name]?.prototype;
+                if (!proto) continue;
+                for (const prop of props) {
+                  const descriptor = Object.getOwnPropertyDescriptor(
+                    proto,
+                    prop
+                  );
+                  if (descriptor?.get && descriptor.set)
+                    nativeSrcDescriptors.set(`${name}.${prop}`, descriptor);
+                }
+              }
               const networkPrefix = new URL(
                 route('/scram/network/'),
                 location.origin
@@ -345,6 +369,60 @@ import { rewriteFrameUrl } from '../../../src/browser/frame-urls.ts';
                   construct(target, args, newTarget) {
                     if (args.length > 0) args[0] = rewrite(args[0]);
                     return Reflect.construct(target, args, newTarget);
+                  },
+                });
+              }
+            });
+            // Scramjet installs its own src rewriters during client init,
+            // which happens after init.pre, so patch the element prototypes a
+            // second time once that has landed. This covers SDK code that
+            // assigns img.src/img.srcset or iframe.src asynchronously long
+            // after load: values Scramjet still owns are unwrapped before
+            // being handed back to its rewriter (which wraps exactly once),
+            // and srcset - which Scramjet leaves native - is fully rewritten
+            // here so relative paths and CDN candidates load through the
+            // proxy prefix instead of 404ing against the static server.
+            this.tap(frame.hooks.init.post, (ctx) => {
+              const win = ctx?.window;
+              const client = ctx?.client;
+              if (!win || !client || win.__invisiEmbedSetterGuard) return;
+              win.__invisiEmbedSetterGuard = true;
+              const origin = location.origin;
+              const networkPrefix = new URL(
+                route('/scram/network/'),
+                origin
+              ).pathname;
+              for (const [key, native] of nativeSrcDescriptors) {
+                const [name, prop] = key.split('.');
+                const proto = win[name]?.prototype;
+                if (!proto) continue;
+                const current = Object.getOwnPropertyDescriptor(proto, prop);
+                if (!current?.get || !current.set) continue;
+                const scramjetOwns = current.set !== native.set;
+                const transform =
+                  prop === 'srcset'
+                    ? (value) =>
+                        rewriteSrcsetFrameUrls(
+                          value,
+                          scramjetOwns
+                            ? (url) => url
+                            : (url) => client.rewriteUrl(url),
+                          origin,
+                          networkPrefix
+                        )
+                    : scramjetOwns
+                      ? (value) => unwrapFrameUrl(value, origin, networkPrefix)
+                      : (value) =>
+                          rewriteFrameUrl(
+                            value,
+                            (url) => client.rewriteUrl(url),
+                            origin,
+                            networkPrefix
+                          );
+                Object.defineProperty(proto, prop, {
+                  ...current,
+                  set(value) {
+                    return current.set.call(this, transform(value));
                   },
                 });
               }

@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { rewriteFrameUrl } from '../../src/browser/frame-urls.ts';
+import {
+	rewriteFrameUrl,
+	rewriteSrcsetFrameUrls,
+	unwrapFrameUrl,
+} from '../../src/browser/frame-urls.ts';
 
 const proxyOrigin = 'https://proxy.example';
 const networkPrefix = '/scram/network/';
@@ -77,4 +81,74 @@ test('treats URL instances like strings and returns other values as-is', () => {
 	});
 	for (const value of [null, undefined, 42, {}, ['https://x.example']])
 		assert.deepEqual(normalize(value), { result: value, rewrites: [] });
+});
+
+test('unwraps real two-segment frame prefixes (controller and frame ids)', () => {
+	const target = 'https://files.crazygames.com/en/game.js';
+	const nested = `${proxyOrigin}${networkPrefix}ctrl1234/frame123/${encodeURIComponent(target)}`;
+	assert.equal(unwrapFrameUrl(nested, proxyOrigin, networkPrefix), target);
+	assert.equal(
+		rewriteFrameUrl(nested, rewrite, proxyOrigin, networkPrefix),
+		wrap(target)
+	);
+});
+
+test('unwrapFrameUrl only unwraps wrapped targets and leaves everything else', () => {
+	const target = 'https://files.crazygames.com/thumb.png';
+	assert.equal(
+		unwrapFrameUrl(wrap(target), proxyOrigin, networkPrefix),
+		target
+	);
+	for (const value of [
+		target,
+		'/thumbs/a.png',
+		'blob:https://proxy.example/uuid',
+		'',
+	])
+		assert.equal(
+			unwrapFrameUrl(value, proxyOrigin, networkPrefix),
+			value
+		);
+	for (const value of [null, 7, {}])
+		assert.equal(
+			unwrapFrameUrl(value, proxyOrigin, networkPrefix),
+			value
+		);
+});
+
+test('rewrites every srcset candidate once and keeps descriptors intact', () => {
+	rewrites = [];
+	const value =
+		'/thumbs/small.png 1x, https://files.crazygames.com/big.png 800w, data:image/png;base64,AAAA 2x';
+	assert.equal(
+		rewriteSrcsetFrameUrls(value, rewrite, proxyOrigin, networkPrefix),
+		[
+			`${wrap('/thumbs/small.png')} 1x`,
+			`${wrap('https://files.crazygames.com/big.png')} 800w`,
+			'data:image/png;base64,AAAA 2x',
+		].join(', ')
+	);
+	assert.deepEqual(rewrites, [
+		'/thumbs/small.png',
+		'https://files.crazygames.com/big.png',
+	]);
+});
+
+test('unwraps already-wrapped srcset candidates instead of double-wrapping', () => {
+	rewrites = [];
+	const target = 'https://games.poki-gdn.com/thumbnail.webp';
+	const value = `${wrap(target)} 2x`;
+	assert.equal(
+		rewriteSrcsetFrameUrls(value, rewrite, proxyOrigin, networkPrefix),
+		`${wrap(target)} 2x`
+	);
+	assert.deepEqual(rewrites, [target]);
+});
+
+test('passes through empty and non-string srcset values', () => {
+	for (const value of ['', null, 42])
+		assert.equal(
+			rewriteSrcsetFrameUrls(value, rewrite, proxyOrigin, networkPrefix),
+			value
+		);
 });
