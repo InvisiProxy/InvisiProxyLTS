@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+	rewriteCssTextFrameUrls,
 	rewriteFrameUrl,
 	rewriteSrcsetFrameUrls,
 	unwrapFrameUrl,
@@ -149,6 +150,103 @@ test('passes through empty and non-string srcset values', () => {
 	for (const value of ['', null, 42])
 		assert.equal(
 			rewriteSrcsetFrameUrls(value, rewrite, proxyOrigin, networkPrefix),
+			value
+		);
+});
+
+test('wraps a background-image url() declared inline, quoted or not', () => {
+	const target = 'https://games.poki-gdn.com/covers/sushi-cat.webp';
+	rewrites = [];
+	assert.equal(
+		rewriteCssTextFrameUrls(
+			`background-image: url("${target}");`,
+			rewrite,
+			proxyOrigin,
+			networkPrefix
+		),
+		`background-image: url("${wrap(target)}");`
+	);
+	rewrites = [];
+	assert.equal(
+		rewriteCssTextFrameUrls(		`background: url(${target}) no-repeat center / cover`,
+		rewrite,
+		proxyOrigin,
+		networkPrefix
+	),
+		`background: url("${wrap(target)}") no-repeat center / cover`
+	);
+	assert.deepEqual(rewrites, [target]);
+});
+
+test('wraps every url() in a cssText block exactly once and is idempotent', () => {
+	const first = 'https://cdn.example/one.png';
+	const second = 'https://games.poki-gdn.com/covers/two.png';
+	rewrites = [];
+	const once = rewriteCssTextFrameUrls(
+		`background-image: url('${first}'), url("${second}"); color: red;`,
+		rewrite,
+		proxyOrigin,
+		networkPrefix
+	);
+	assert.equal(
+		once,
+		`background-image: url('${wrap(first)}'), url("${wrap(
+			second
+		)}"); color: red;`
+	);
+	assert.deepEqual(rewrites, [first, second]);
+	rewrites = [];
+	assert.equal(
+		rewriteCssTextFrameUrls(once, rewrite, proxyOrigin, networkPrefix),
+		once
+	);
+	assert.deepEqual(rewrites, [first, second]);
+});
+
+test('leaves data, blob and fragment url() targets untouched', () => {
+	rewrites = [];
+	for (const value of [
+		'url(data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=)',
+		'url(#logo-gradient)',
+		'url("#shadow")',
+		'url(blob:https://proxy.example/8f14e45f)',
+	])
+		assert.equal(
+			rewriteCssTextFrameUrls(value, rewrite, proxyOrigin, networkPrefix),
+			value
+		);
+	assert.deepEqual(rewrites, []);
+});
+
+test('never rewrites url( inside comments, strings or custom functions', () => {
+	rewrites = [];
+	const untouched = [
+		'.card::after { content: "see url(https://example.com)"; }',
+		'/* url(https://example.com/bg.png) */ color: red',
+		'cursor: curl(https://example.com)',
+	];
+	for (const value of untouched)
+		assert.equal(
+			rewriteCssTextFrameUrls(value, rewrite, proxyOrigin, networkPrefix),
+			value
+		);
+	assert.deepEqual(rewrites, []);
+});
+
+test('handles uppercase URL() tokens and returns non-css values as-is', () => {
+	const target = 'https://files.crazygames.com/icon.png';
+	assert.equal(
+		rewriteCssTextFrameUrls(
+			`background:URL(${target})`,
+			rewrite,
+			proxyOrigin,
+			networkPrefix
+		),
+		`background:url("${wrap(target)}")`
+	);
+	for (const value of ['', null, 42, {}, 'color: red'])
+		assert.equal(
+			rewriteCssTextFrameUrls(value, rewrite, proxyOrigin, networkPrefix),
 			value
 		);
 });
