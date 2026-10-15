@@ -1,4 +1,4 @@
-import { Cooking, iconBookmarklet } from '../document-helpers.tsx';
+import { iconBookmarklet } from '../document-helpers.tsx';
 
 export default function FAQ() {
 	return (

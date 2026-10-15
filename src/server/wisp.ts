@@ -12,19 +12,71 @@ export const wispProxies = {
 } as const;
 export type WispRegion = keyof typeof wispProxies;
 
-const isRegion = (name: string): name is WispRegion =>
-	Object.hasOwn(wispProxies, name);
+const trimTrailingSlash = (path: string) =>
+	path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path;
 
-export function wispRegion(url: string | null | undefined): string | null {
-	const path = (url ?? '').split(/[?#]/, 1)[0];
-	const base = wispPath();
-	if (path === base) return '';
-	if (!path.startsWith(base)) return null;
-	const region = path.slice(base.length).replace(/\/$/, '');
-	return isRegion(region) ? region : null;
+const tryDecode = (path: string) => {
+	try {
+		return decodeURIComponent(path);
+	} catch {
+		return path;
+	}
+};
+
+/**
+ * Match a request pathname against the Wisp endpoint in every normal form a
+ * client may send it in: with or without the trailing slash, with duplicate
+ * slashes collapsed, and percent-encoded — including double-encoded slashes
+ * (`%252F`), which over-eager URL builders produce for the proxy path. The
+ * comparison stays exact against the alias after normalization, so no other
+ * route can ever be routed onto Wisp.
+ */
+export const matchesWispPath = (
+	pathname: string,
+	route = wispPath()
+): boolean => {
+	const target = trimTrailingSlash(route);
+	let candidate = pathname;
+	// Two decode rounds cover single- and double-encoded slashes; a malformed
+	// escape falls back to the raw form via tryDecode.
+	for (let depth = 0; depth < 3; depth++) {
+		if (trimTrailingSlash(candidate.replace(/\/{2,}/g, '/')) === target)
+			return true;
+		const decoded = tryDecode(candidate);
+		if (decoded === candidate) break;
+		candidate = decoded;
+	}
+	return false;
+};
+
+/**
+ * Which regional Wisp backend an incoming request targets: `''` for the
+ * default endpoint, a key of `wispProxies` for `/alias/<region>`, otherwise
+ * `null`. Matching runs through `matchesWispPath`, so query strings,
+ * duplicate slashes and percent-encoding can neither hide nor fake a region.
+ */
+export function wispRegion(
+	url: string | null | undefined,
+	route = wispPath()
+): string | null {
+	const path = typeof url === 'string' ? url.split(/[?#]/)[0] : '';
+	if (matchesWispPath(path, route)) return '';
+	const base = trimTrailingSlash(route);
+	for (const region of Object.keys(wispProxies))
+		if (matchesWispPath(path, `${base}/${region}`)) return region;
+	return null;
 }
-export const isWispRequest = (url: string | null | undefined) =>
-	wispRegion(url) !== null;
+
+/**
+ * Whether an incoming request (upgrade or probe) targets the Wisp endpoint,
+ * regional backends included. Query strings and fragments are stripped
+ * before matching so a handshake like `/alias/?v=1` still reaches the Wisp
+ * backend instead of dying at the site router before any TCP stream opens.
+ */
+export const isWispRequest = (
+	url: string | null | undefined,
+	route = wispPath()
+): boolean => wispRegion(url, route) !== null;
 
 const wispConfig = {
 	port: 4432,
@@ -79,7 +131,11 @@ const wispConfig = {
 	nonWSRedirect: '/pages/404.html',
 	logLevel: 'warn',
 	proxy: '',
-	maxMessageSize: 262144,
+	// Must fit one full inbound DATA frame: 5-byte Wisp header + tcpBufferSize
+	// (wispurr's example config uses tcpBufferSize + 5). At exactly
+	// tcpBufferSize a maximum-size frame is rejected as "message too large"
+	// and the socket dies mid-transfer under heavy concurrent asset loads.
+	maxMessageSize: 262149,
 	staticDir: '',
 	bandwidthLimitKbps: 0,
 	connectionsLimitPerIP: 200,

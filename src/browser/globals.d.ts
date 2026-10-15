@@ -10,6 +10,10 @@ declare global {
 	}
 
 	interface Window {
+		__invisiStorageDelegated?: boolean;
+	}
+
+	interface Window {
 		$invisiScramjet?: InvisiScramjet;
 		$invisiScramjetError?: unknown;
 		$invisiScramjetInitializing?: Promise<void>;

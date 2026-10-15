@@ -8,7 +8,7 @@ import { wispurrVite } from 'wispurr/vite';
 import { siteDevPlugin } from './src/build/dev.ts';
 import { siteBuildPlugin } from './src/build/plugin.ts';
 import { serverPort, serverUrl } from './src/config.ts';
-import { isWispRequest, wispOptions } from './src/server/wisp.ts';
+import { isWispRequest, wispOptions, wispPath } from './src/server/wisp.ts';
 
 // wispurr drives a Go worker binary that may be missing or built for another
 // platform/libc (e.g. the published musl build on a glibc host). Probe that it
@@ -60,7 +60,13 @@ const wispPlugin = (): Plugin => {
 				parse_real_ip_from: wispOptions.trustedProxies,
 			});
 			server.httpServer?.on('upgrade', (req, socket, head) => {
-				if (isWispRequest(req.url)) wisp.routeRequest(req, socket, head);
+				if (!isWispRequest(req.url)) return;
+				// wisp-js routes any path that does not end in "/" to its
+				// WebSocket proxy instead of the Wisp handler. Hand it the
+				// canonical path so query strings or encoded variants can
+				// never divert a Wisp handshake into the proxy protocol.
+				req.url = wispPath();
+				wisp.routeRequest(req, socket, head);
 			});
 		},
 	};

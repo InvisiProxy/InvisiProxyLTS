@@ -140,10 +140,7 @@ export default function Footer() {
 							</a>
 						</li>
 						<li>
-							<a
-								href={route('/privacy')}
-								title="Privacy Policy"
-							>
+							<a href={route('/privacy')} title="Privacy Policy">
 								Privacy Policy
 							</a>
 						</li>

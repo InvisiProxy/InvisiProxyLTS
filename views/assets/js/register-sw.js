@@ -2,6 +2,10 @@ import { values, route } from 'build:invisiproxy';
 import { selectedTransport } from '../../../src/browser/transport.ts';
 import { normalizeScramjetTarget } from '../../../src/browser/scramjet-links.ts';
 import {
+  delegateCookieAccess,
+  delegateStorageAccess,
+} from '../../../src/browser/storage-delegation.ts';
+import {
   rewriteCssTextFrameUrls,
   rewriteFrameUrl,
   rewriteSrcsetFrameUrls,
@@ -132,6 +136,47 @@ import {
       }
     };
     if (typeof $scramjetController?.ManagedPlugin === 'function') {
+      plugins.push(
+        new (class extends $scramjetController.ManagedPlugin {
+          constructor() {
+            super('storage-delegation', []);
+          }
+          install(frame) {
+            // Scramjet scopes Storage to the remote host. Keep those proxies
+            // installed even when a site deletes the globals after boot, and
+            // provide a host-isolated fallback if its DOM storage hook did not
+            // install in this frame.
+            this.tap(frame.hooks.init.post, (ctx) => {
+              const win = ctx?.window;
+              const client = ctx?.client;
+              if (!win || !client || win.__invisiStorageDelegated) return;
+              win.__invisiStorageDelegated = true;
+              const getStorage = (name) => {
+                try {
+                  return Object.getOwnPropertyDescriptor(window, name)?.get?.call(
+                    window
+                  ) ?? window[name];
+                } catch {
+                  return null;
+                }
+              };
+              const localStorage = getStorage('localStorage');
+              const sessionStorage = getStorage('sessionStorage');
+              if (!localStorage || !sessionStorage) return;
+              delegateStorageAccess(
+                win,
+                {
+                  Storage: win.Storage,
+                  localStorage,
+                  sessionStorage,
+                },
+                client.url.hostname
+              );
+              delegateCookieAccess(win, client);
+            });
+          }
+        })()
+      );
       plugins.push(
         new (class extends $scramjetController.ManagedPlugin {
           constructor() {

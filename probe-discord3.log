@@ -1,0 +1,38 @@
+[http 404] https://43703-is9po0jmy2ugc1sjco16a.e2b.app/humbler
+[http 404] https://43703-is9po0jmy2ugc1sjco16a.e2b.app/humbler
+[console.error] 
+[console.error] 
+[http 404] https://43703-is9po0jmy2ugc1sjco16a.e2b.app/rousingly
+[http 404] https://43703-is9po0jmy2ugc1sjco16a.e2b.app/rousingly
+[console.error] 
+[console.error] 
+press #1: ["https://43703-is9po0jmy2ugc1sjco16a.e2b.app/rousingly","https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hexusrqs/qzu51a9a/https%3A%2F%2Fdiscord.com%2Flogin"]
+press #1: ["https://43703-is9po0jmy2ugc1sjco16a.e2b.app/rousingly","https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hexusrqs/qzu51a9a/https%3A%2F%2Fdiscord.com%2Flogin"]
+[http 404] https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hexusrqs/qzu51a9a/https%3A%2F%2Fdiscord.com%2Fcdn-cgi%2Fchallenge-platform%2Fscripts%2Fjsd%2Fmain.js?%24io=null
+[http 404] https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hexusrqs/qzu51a9a/https%3A%2F%2Fdiscord.com%2Fcdn-cgi%2Fchallenge-platform%2Fscripts%2Fjsd%2Fmain.js?%24io=null
+[console.error] 
+[console.error] 
+[console.error] 
+[console.error] 
+form visible; frame: https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hexusrqs/qzu51a9a/https%3A%2F%2Fdiscord.com%2Flogin
+form visible; frame: https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hexusrqs/qzu51a9a/https%3A%2F%2Fdiscord.com%2Flogin
+realm probes: {"ownDesc":null,"protoDesc":null,"inWindow":false,"type":"undefined","reassign":"'localStorage' in window now: true, typeof=string","session":"undefined","eval1":2,"fn":7}
+realm probes: {"ownDesc":null,"protoDesc":null,"inWindow":false,"type":"undefined","reassign":"'localStorage' in window now: true, typeof=string","session":"undefined","eval1":2,"fn":7}
+bundles: [{"src":"533077.aaffa7a528706cc2.js","status":200,"size":12506,"localStorage":0,"gateway":false},{"src":"536004.a83dbed8d40db3b2.js","status":200,"size":8090,"localStorage":0,"gateway":false},{"src":"libdiscore-wasm-fetch.6d72434e85b0a922.js","status":200,"size":26126,"localStorage":0,"gateway":false},{"src":"935812.136ada77a97748a6.js","status":200,"size":1583,"localStorage":0,"gateway":false},{"src":"434742.5cdde648b218a4fa.js","status":200,"size":282,"localStorage":0,"gateway":false},{"src":"527542.281e49644b4d2d42.js","status":200,"size":7570,"localStorage":0,"gateway":false}]
+step: UI submit
+bundles: [{"src":"533077.aaffa7a528706cc2.js","status":200,"size":12506,"localStorage":0,"gateway":false},{"src":"536004.a83dbed8d40db3b2.js","status":200,"size":8090,"localStorage":0,"gateway":false},{"src":"libdiscore-wasm-fetch.6d72434e85b0a922.js","status":200,"size":26126,"localStorage":0,"gateway":false},{"src":"935812.136ada77a97748a6.js","status":200,"size":1583,"localStorage":0,"gateway":false},{"src":"434742.5cdde648b218a4fa.js","status":200,"size":282,"localStorage":0,"gateway":false},{"src":"527542.281e49644b4d2d42.js","status":200,"size":7570,"localStorage":0,"gateway":false}]
+step: UI submit
+[http 400] https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hexusrqs/qzu51a9a/https%3A%2F%2Fdiscord.com%2Fapi%2Fv9%2Fauth%2Flogin?%24io=https%3A%2F%2Fdiscord.com
+[console.error] 
+[http 400] https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hexusrqs/qzu51a9a/https%3A%2F%2Fdiscord.com%2Fapi%2Fv9%2Fauth%2Flogin?%24io=https%3A%2F%2Fdiscord.com
+[console.error] 
+[console.log] "recaptchacompat disabled"
+[console.log] "recaptchacompat disabled"
+[console.endGroup] {"name":""}
+[console.endGroup] {"name":""}
+after submit: {"captchaIframes":2,"challengeText":null,"bodyText":["Log In","Need an account?","Register","Log in with QR Code","Scan this with the Discord mobile app to log in instantly.","Or sign in with a passkey","Wait! Are you human?","Please confirm you’re not a robot."]}
+after submit: {"captchaIframes":2,"challengeText":null,"bodyText":["Log In","Need an account?","Register","Log in with QR Code","Scan this with the Discord mobile app to log in instantly.","Or sign in with a passkey","Wait! Are you human?","Please confirm you’re not a robot."]}
+no challenge iframe found
+done
+no challenge iframe found
+done

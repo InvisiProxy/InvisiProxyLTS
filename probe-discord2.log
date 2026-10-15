@@ -1,0 +1,25 @@
+[console.error] Failed to load resource: the server responded with a status of 404 ()
+[http 404] https://43703-is9po0jmy2ugc1sjco16a.e2b.app/rousingly
+[console.error] Failed to load resource: the server responded with a status of 404 ()
+press #1 frames: ["https://43703-is9po0jmy2ugc1sjco16a.e2b.app/rousingly","https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/klgxueee/rf36v05s/https%3A%2F%2Fdiscord.com%2Flogin"]
+[http 404] https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/klgxueee/rf36v05s/https%3A%2F%2Fdiscord.com%2Fcdn-cgi%2Fchallenge-platform%2Fscripts%2Fjsd%2Fmain.js?%24io=null
+[console.error] Failed to load resource: the server responded with a status of 404 ()
+[console.error] Refused to execute script from 'https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/klgxueee/rf36v05s/https%3A%2F%2Fdiscord.com%2Fcdn-cgi%2Fchallenge-platform%2Fscripts%2Fjsd%2Fmain.js?%24io=null' because its MIME type ('image/vnd.micros
+login form visible; frame: https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/klgxueee/rf36v05s/https%3A%2F%2Fdiscord.com%2Flogin
+storage probes: {"hasLocalStorageProp":false,"windowLocalStorage":"undefined","bareLocalStorage":"undefined","storageGlobals":["Proxy","StorageEvent","Storage","CacheStorage","StorageManager","StorageBucket","StorageBucketManager","$scramjet","$scramjetController","$scramjet$rewrite","onstorage","$scramjet$import","$scramjet$meta","$scramjet$wrappostmessage","$scramjet$pushsourcemap","$scramjet$wrap","$scramjet$prop","$scramjet$clean","$scramitize","$scramjet$tryset"],"cookieWrite":true,"cookieRead":"probe=1"}
+[http 400] https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/klgxueee/rf36v05s/https%3A%2F%2Fdiscord.com%2Fapi%2Fv9%2Fauth%2Flogin?%24mode=cors&%24cred=include&%24io=https%3A%2
+[console.error] Failed to load resource: the server responded with a status of 400 (Bad Request)
+direct login POST: {"status":400,"body":"{\"captcha_key\":[\"captcha-required\"],\"captcha_sitekey\":\"a9b5fb07-92ff-493f-86fe-352a2803b3df\",\"captcha_service\":\"hcaptcha\",\"captcha_session_id\":\"918ab848-5ddd-4081-bc7e-01de6db54acb\",\"captcha_rqdata\":\"xOBLYzaiQ6BoZnVWDebl+j7BD67Ys98r8Z1KSl8kuZBGUQRtzt54e0u/mZCtDCF7qp3TS85YI5T9lFQptk4g7RPVw65FL1vv9Iof"}
+bundle rewrite check: {"src":"https://discord.com/assets/533077.aaffa7a528706cc2.js","length":12506,"occurrences":0,"sample":null}
+step: UI submit
+[http 400] https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/klgxueee/rf36v05s/https%3A%2F%2Fdiscord.com%2Fapi%2Fv9%2Fauth%2Flogin?%24io=https%3A%2F%2Fdiscord.com
+[console.error] Failed to load resource: the server responded with a status of 400 (Bad Request)
+[console.log] recaptchacompat disabled
+[console.endGroup] EvalError
+    at https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/klgxueee/rf36v05s/https%3A%2F%2Fnewassets.hcaptcha.com%2Fc%2Fc0d1286f8bfc0fbdd6ae8f9281668c4507234091cfab63b03042ba84a805f720%2Fhsw.js?%24io=https%3A%2F%2Fnewassets.hca
+frames after submit: ["https://43703-is9po0jmy2ugc1sjco16a.e2b.app/rousingly","https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/klgxueee/rf36v05s/https%3A%2F%2Fdiscord.com%2Flogin","about:blank","https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/klgxueee/rf36v05s/https%3A%2F%2Fnewassets.hcaptcha.com%2Fcaptcha%2Fv1%2F06f8dac28bb865a058d94cb","https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/klgxueee/rf36v05s/https%3A%2F%2Fnewassets.hcaptcha.com%2Fcaptcha%2Fv1%2F06f8dac28bb865a058d94cb"]
+ui after submit: {"captchaContainers":3,"iframes":["https://newassets.hcaptcha.com/captcha/v1/06f8dac28bb865a058d94cbd615a79d63217dd86/static/hcaptcha.html#frame=checkbox&i","","https://newassets.hcaptcha.com/captcha/v1/06f8dac28bb865a058d94cbd615a79d63217dd86/static/hcaptcha.html#frame=challenge&"],"visibleText":["Welcome back!","We're so excited to see you again!","Email or Phone Number*","Password*","Forgot your password?","Log In","Need an account?","Register","Log in with QR Code","Scan this with the Discord mobile app to log in instantly.","Or sign in with a passkey","Wait! Are you human?"]}
+step: gateway ws (12s)
+ws: {"events":[],"desc":"accessor/data","url":"wss://gateway.discord.io/?v=10&encoding=json","ctorName":"WebSocket"}
+cookieJar: {"type":"string","isArray":false,"isPromise":false,"keys":null,"str":"{\".discord.com@/@_cfuvid\":{\"name\":\"_cfuvid\",\"value\":\"UBP8.xREdDGnvzYeg2.decXhqevjUR9BJSmZzxh377I-1792065082.4118228-1.0.1.1-.th9rGUbdMMu0PB0W260HMsSOHp91AhCQrEBSs2JN3Q\",\"httpOnly\":true,\"sameSite\":\"Non"}
+done

@@ -43,9 +43,9 @@ export function route(path: string, conditional?: 'inline'): string {
 			ancestor
 				? values.aliases[name] || name
 				: values.aliases[`files/${name}`] ||
-				values.cacheBust[name] ||
-				values.aliases[name] ||
-				name
+					values.cacheBust[name] ||
+					values.aliases[name] ||
+					name
 		)
 		.replace(
 			/[^/]+(?=\/)/g,
@@ -115,8 +115,16 @@ export const sites = Object.freeze([
 ]);
 
 export const partners = Object.freeze([
-	{ name: 'Titanium Network', url: 'https://titaniumnetwork.org', newtab: false },
-	{ name: 'The Freedom Project', url: 'https://nullatenus.com', newtab: true },
+	{
+		name: 'Titanium Network',
+		url: 'https://titaniumnetwork.org',
+		newtab: false,
+	},
+	{
+		name: 'The Freedom Project',
+		url: 'https://nullatenus.com',
+		newtab: true,
+	},
 	{ name: 'Truffled', url: 'https://truffled.lol', newtab: false },
 	{ name: 'Obsidian', url: 'https://playobsidian.com', newtab: false },
 ]);
@@ -157,7 +165,8 @@ export const credits = Object.freeze<CreditSection[]>([
 			},
 			{
 				name: 'Sylvia',
-				contributions: 'Co-Owner, Main Contributor, SolidJS Rewrite, English to French',
+				contributions:
+					'Co-Owner, Main Contributor, SolidJS Rewrite, English to French',
 				url: 'https://sylvieon.dev',
 				contact: '@sylvieisnton',
 			},
@@ -320,7 +329,7 @@ export const credits = Object.freeze<CreditSection[]>([
 				name: 'Synaptic',
 				contributions: 'Synaptic',
 				contact: 'Synaptic',
-			}
+			},
 		],
 	},
 ]);
