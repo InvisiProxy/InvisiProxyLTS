@@ -2,6 +2,7 @@ import { values, route } from 'build:invisiproxy';
 import { selectedTransport } from '../../../src/browser/transport.ts';
 import { normalizeScramjetTarget } from '../../../src/browser/scramjet-links.ts';
 import {
+  rewriteCssTextFrameUrls,
   rewriteFrameUrl,
   rewriteSrcsetFrameUrls,
   unwrapFrameUrl,
@@ -351,13 +352,26 @@ import {
                   location.origin,
                   networkPrefix
                 );
+              const rewriteCss = (value) =>
+                rewriteCssTextFrameUrls(
+                  value,
+                  (url) => client.rewriteUrl(url),
+                  location.origin,
+                  networkPrefix
+                );
               const setAttribute = win.Element?.prototype?.setAttribute;
               if (typeof setAttribute === 'function') {
                 win.Element.prototype.setAttribute = function (name, value) {
-                  if (String(name).toLowerCase() === 'src') {
+                  const attribute = String(name).toLowerCase();
+                  if (attribute === 'src') {
                     const tag = String(this?.tagName || '').toLowerCase();
                     if (tag === 'iframe' || tag === 'frame')
                       value = rewrite(value);
+                  } else if (attribute === 'style' && typeof value === 'string') {
+                    // Inline style attributes (Poki cover divs set them at
+                    // runtime) carry url(...) declarations that must be
+                    // prefixed like every other frame URL.
+                    value = rewriteCss(value);
                   }
                   return setAttribute.call(this, name, value);
                 };
@@ -371,6 +385,158 @@ import {
                     return Reflect.construct(target, args, newTarget);
                   },
                 });
+              }
+              // Poki renders game covers as inline CSS background images
+              // rather than <img> tags. Scramjet rewrites url(...) inside
+              // style attributes, cssText and setProperty during client
+              // init, but the individual IDL setters on CSSStyleDeclaration
+              // (el.style.backgroundImage = "url(...)" - what React-style
+              // inline styles assign) stay native, so cover images resolve
+              // against the proxy origin and never load. Intercept every
+              // url-bearing declaration setter; each layer normalizes
+              // exactly once, so values Scramjet already wrapped (or that
+              // flow through the text paths below, which Scramjet also
+              // traps) are never double-wrapped. Fragment references like
+              // url(#gradient) and blob:/data: targets pass through.
+              const cssProto = win.CSSStyleDeclaration?.prototype;
+              if (cssProto) {
+                for (const property of [
+                  'background',
+                  'backgroundImage',
+                  'borderImage',
+                  'borderImageSource',
+                  'cursor',
+                  'listStyle',
+                  'listStyleImage',
+                  'mask',
+                  'maskImage',
+                  'content',
+                ]) {
+                  const descriptor = Object.getOwnPropertyDescriptor(
+                    cssProto,
+                    property
+                  );
+                  if (!descriptor?.set) continue;
+                  Object.defineProperty(cssProto, property, {
+                    ...descriptor,
+                    set(value) {
+                      return descriptor.set.call(this, rewriteCss(value));
+                    },
+                  });
+                }
+                const cssText = Object.getOwnPropertyDescriptor(
+                  cssProto,
+                  'cssText'
+                );
+                if (cssText?.set)
+                  Object.defineProperty(cssProto, 'cssText', {
+                    ...cssText,
+                    set(value) {
+                      return cssText.set.call(this, rewriteCss(value));
+                    },
+                  });
+                const setProperty = cssProto.setProperty;
+                if (typeof setProperty === 'function')
+                  cssProto.setProperty = function (property, value, priority) {
+                    if (typeof value === 'string') value = rewriteCss(value);
+                    return setProperty.call(this, property, value, priority);
+                  };
+              }
+              // CrazyGames-style SDKs build game iframes before the src
+              // setters above exist (early inline scripts) or inject parsed
+              // markup, then attach the element later, so a plain prototype
+              // src hook can miss the value entirely. Normalize every
+              // iframe/frame subtree at the DOM mutation boundary instead:
+              // any embed appended or parsed into the document gets exactly
+              // one prefix wrap. Values whose wrapped result equals the
+              // current src (including markup Scramjet's insertAdjacentHTML
+              // rewriter already handled) are left untouched, so correctly
+              // wrapped nodes never reload.
+              const normalizeFrame = (element) => {
+                const src = element.getAttribute?.('src');
+                if (typeof src !== 'string' || !src) return;
+                if (rewrite(src) === src) return;
+                // Hand Scramjet's rewriter the raw value (it wraps once);
+                // our own setter wrapper does the same when Scramjet's
+                // rewriter is not installed yet.
+                element.setAttribute('src', src);
+              };
+              const normalizeInserted = (node) => {
+                if (!node) return;
+                if (node.nodeType === 1) {
+                  const tag = node.tagName;
+                  if (tag === 'IFRAME' || tag === 'FRAME') {
+                    normalizeFrame(node);
+                    return;
+                  }
+                  if (node.firstElementChild)
+                    for (const frame of node.querySelectorAll('iframe,frame'))
+                      normalizeFrame(frame);
+                } else if (node.nodeType === 11) {
+                  for (const child of node.childNodes) normalizeInserted(child);
+                }
+              };
+              const appendChild = win.Node?.prototype?.appendChild;
+              if (typeof appendChild === 'function') {
+                win.Node.prototype.appendChild = function (child) {
+                  // Normalize before insertion: an iframe entering the
+                  // document with a raw src would otherwise start fetching
+                  // the unproxied URL first.
+                  normalizeInserted(child);
+                  return appendChild.call(this, child);
+                };
+              }
+              const insertAdjacentHTML = win.Element?.prototype
+                ?.insertAdjacentHTML;
+              if (typeof insertAdjacentHTML === 'function') {
+                win.Element.prototype.insertAdjacentHTML = function (
+                  position,
+                  html
+                ) {
+                  const track =
+                    typeof html === 'string' && /<(?:iframe|frame)\b/i.test(html)
+                      ? String(position).toLowerCase()
+                      : '';
+                  const before =
+                    track === 'beforebegin' ? this.previousSibling : undefined;
+                  const after =
+                    track === 'afterend' ? this.nextSibling : undefined;
+                  const first =
+                    track === 'afterbegin' ? this.firstChild : undefined;
+                  const last =
+                    track === 'beforeend' ? this.lastChild : undefined;
+                  const result = insertAdjacentHTML.call(this, position, html);
+                  // Walk only the nodes this call just inserted.
+                  if (track === 'beforebegin')
+                    for (
+                      let node = this.previousSibling;
+                      node && node !== before;
+                      node = node.previousSibling
+                    )
+                      normalizeInserted(node);
+                  else if (track === 'afterend')
+                    for (
+                      let node = this.nextSibling;
+                      node && node !== after;
+                      node = node.nextSibling
+                    )
+                      normalizeInserted(node);
+                  else if (track === 'afterbegin')
+                    for (
+                      let node = this.firstChild;
+                      node && node !== first;
+                      node = node.nextSibling
+                    )
+                      normalizeInserted(node);
+                  else if (track === 'beforeend')
+                    for (
+                      let node = this.lastChild;
+                      node && node !== last;
+                      node = node.previousSibling
+                    )
+                      normalizeInserted(node);
+                  return result;
+                };
               }
             });
             // Scramjet installs its own src rewriters during client init,
