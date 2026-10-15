@@ -2,12 +2,9 @@ This will be our nonexhaustive todo list for InvisiProxy LTS v6.x.x and above. R
 
 ## Priority
 
-- [ ] Make InvisiProxy work on Firefox (requires downloading malware to test :()
 - [ ] Fix abnormal search handling
 - [ ] Class managling and DOM masquerading functionality to Scramjet (or stealth window) 
-- [ ] Font obfuscation middleware
 - [ ] Implement multi-lang support!
-- [ ] SolidJS rewrite
 - [ ] Update Scramjet to V3
 
 #### Known Regressions
@@ -15,13 +12,16 @@ This will be our nonexhaustive todo list for InvisiProxy LTS v6.x.x and above. R
 - Clean epoxy errors if unreleated to ProxyTransports
 
 ## Proxy/Site Functionality
-- [ ] Improve mobile support (epoxy should be the default; fix UI bugs)
 - [ ] Implement sandboxing techniques to prevent new tab leaks
-- [ ] Improve onboarding expierence 
 - [ ] Add bookmarks menu (source wise already present pretty much)
 - [ ] Add Chii + ensuring users can access devtools while browsing; or utilize Scramjet playground instead - partial
 - [ ] Allow for custom SOCK5 proxy layering (HTTP and SOCKS4 scheme as well)
-- [ ] Add selector for default proxy; behavior is upon clicking on logo in omnibox it will direct back to the selected proxy in Settings
+- [x] Improve InvisiProxy Firefox support - partial
+- [x] Improve onboarding 
+- [x] Improve mobile support (fix UI bugs)
+- [x] Add selector for default proxy; behavior is upon clicking on logo in omnibox it will direct back to the selected proxy in Settings
+- [x] SolidJS rewrite
+- [x] Browsing obfuscation middleware
 - [x] Swap to wispurr over mrrowisp for security and performance - done
 - [x] Update to Scramjet v2.0.67-alpha.2 fixing several regressions - done
 - [x] Omnibox should state what the current site the user is on like a proper URL bar 

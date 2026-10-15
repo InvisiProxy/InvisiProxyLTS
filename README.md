@@ -30,7 +30,9 @@ This project serves mostly as a proof of concept for the ideal clientless soluti
 
 #### Considering switching branches for self-hosting to a production branch!
 
-View the <a href="#deploy-InvisiProxy">self-deployment options</a> if you wish to self host this project. Can't deploy using any of the free options? Check out Railway or look into cheap, paid VPS hosting solutions. If you don't wish to self-host join the discord for more official instance links that are restocked frequently.
+View the <a href="#deploy-InvisiProxy">self-deployment options</a> if you wish to self host this project. Can't deploy using any of the free options? Check out Koyeb or look into cheap, paid VPS hosting solutions. If you don't wish to self-host please click on the Mirror Links Menu on InvisiProxy.
+
+<img align="left" width="20px" src="https://raw.githubusercontent.com/InvisiProxy/InvisiProxyLTS/master/views/assets/img/mirrors.png"></img>
 
 **Be sure to join TitaniumNetwork's Discord for more official site links:** <a href="https://discord.gg/unblock">https://discord.gg/unblock</a>
 
@@ -54,8 +56,8 @@ View the <a href="#deploy-InvisiProxy">self-deployment options</a> if you wish t
 | Spotify                    | Bypass regional proxy blocks by swapping regions or enabling Tor                                                                      |
 | And essentially most sites!| Built for intensive production loads and ease of setup                                                                               |
 
-<img src="https://raw.githubusercontent.com/InvisiProxy/InvisiProxyLTS/master/views/assets/img/preview/invisi-v7.0.2-preview.png"> </img>
-<img src="https://raw.githubusercontent.com/InvisiProxy/InvisiProxyLTS/master/views/assets/img/preview/invisi-v6.9.7-preview-settings.png"></img>
+<img src="https://raw.githubusercontent.com/InvisiProxy/InvisiProxyLTS/master/views/assets/img/preview/invisi-v8.1.0-preview.png"> </img>
+<img src="https://raw.githubusercontent.com/InvisiProxy/InvisiProxyLTS/master/views/assets/img/preview/invisi-v8.1.0-preview-settings.png"></img>
 
 ## Deploy InvisiProxy
 
@@ -96,9 +98,10 @@ Replit is no longer free and Heroku has a set policy against web proxies. Try Gi
 
 </details>
 
-### Mirrors
+### Partners
 - <a href="https://gitlab.com/fp-production/fp">The Freedom Project (Hard Fork)</a>
 - <a href="https://github.com/aukak/truffled">Truffled (Partner)</a>
+- <a href="https://github.com/titaniumnetwork-dev/Obsidian">Obsidian (Partner)</a>
 
 ## Table of contents:
 
@@ -139,12 +142,16 @@ Please ensure you are using `Node 20.x` as well. `git` and `curl` are required d
 ```bash
 git clone https://github.com/InvisiProxy/InvisiProxyLTS.git
 
-cd InvisiProxy
+cd InvisiProxyLTS
 
 # Edit config.js and set production to true if you want to use pm2 (Allows for easier VPS hosting)
-pnpm run fresh-install
-pnpm run fetch-adblock
+pnpm install
+pnpm fetch-adblock
+pnpm build
 pnpm start
+
+# pm2 daemon utilization
+pm2 start ecosystem.config.cjs
 
 # Or on subsequent uses...
 pnpm restart
@@ -159,7 +166,7 @@ pnpm run build
 pnpm run test
 ```
 
-This website is hosted locally with [Scramjet](https://github.com/MercuryWorkshop/Scramjet), [Ultraviolet](https://github.com/TitaniumNetwork-Dev/Ultraviolet), [Wisp](https://github.com/MercuryWorkshop/Wisp-Protocol), [Bare-Mux](https://github.com/MercuryWorkshop/Bare-Mux), [EpoxyTransport](https://github.com/MercuryWorkshop/Epoxy-Transport), and [LibcurlTransport](https://github.com/MercuryWorkshop/Libcurl-Transport) built-in.
+This website is hosted locally with [Scramjet](https://github.com/MercuryWorkshop/Scramjet), [Wisp](https://github.com/MercuryWorkshop/Wisp-Protocol), [Merp Obfuscation](https://github.com/sylvieisnton/merp), [EpoxyTransport](https://github.com/MercuryWorkshop/Epoxy-Transport), and [LibcurlTransport](https://github.com/MercuryWorkshop/Libcurl-Transport) built-in.
 
 ### For security reasons when hosting with a reverse proxy PLEASE use NGINX not Caddy. This is due to wispurr using loopbacks. If using Caddy disable this feature or adjust your default Caddy config.
 
@@ -179,11 +186,11 @@ If you wish to self-host however you will first need a VPS or hosting provider:
 
 ### Dependencies
 
-You will then need to setup git, nginx (or caddy) and Node.js. Here is an example for Ubuntu LTS:
+You will then need to setup git, musl, nginx (or caddy) and Node.js. Here is an example for Ubuntu LTS:
 ```
 sudo apt update
 sudo apt upgrade
-sudo apt install curl git nginx
+sudo apt install curl git nginx musl
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
@@ -258,14 +265,14 @@ Alternative Guide (for CLI): https://community.torproject.org/onion-services/set
 
 If you are hosting InvisiProxy LTS on a VPS utilizing Ubuntu consider attaching Tor to systemctl for easier production management. Once Tor is up and running on either Linux or Windows it will work automatically with InvisiProxy LTS when enabled by the user via the Settings menu.
 
-If you wish to use a custom HTTP/HTTPS/SOCKS5 proxy to route all traffic through for Scramjet and Ultraviolet this is handled in `./views/assets/js/register-sw.js.` Modify `proxyUrl` with the respective protocol and address. This is done via the proxy option for Wisp. You can change the cases as needed.
+If you wish to use a custom HTTP/HTTPS/SOCKS5 proxy to route traffic for Scramjet this is handled on the server in `./src/server/wisp.ts`.
 
-```js
-  proxyUrl = {
-    tor: 'socks5h://localhost:9050',
-    eu: 'socks5h://localhost:7000',
-    jp: 'socks5h://localhost:7001',
-  }
+```ts
+export const wispProxies = {
+  tor: 'socks5h://127.0.0.1:9050',
+  eu: 'socks5h://127.0.0.1:7000',
+  jp: 'socks5h://127.0.0.1:7001',
+}
 ```
 
 #### Proxy Configuration
@@ -486,24 +493,19 @@ This project currently uses Scramjet and Ultraviolet as web proxies adhering to 
 
 - <a href="https://github.com/sylvieisnton/wispurr">wispurr</a>
 - <a href="https://github.com/MercuryWorkshop/scramjet">Scramjet</a>
-- <a href="https://github.com/titaniumnetwork-dev/Ultraviolet">Ultraviolet</a>
 - <a href="https://github.com/MercuryWorkshop/wisp-protocol">Wisp Protocol</a>
 - <a href="https://github.com/MercuryWorkshop/Epoxy-Transport">EpoxyTransport</a>
 - <a href="https://github.com/MercuryWorkshop/Libcurl-Transport">libcurl-transport</a>
-- <a href="https://github.com/MercuryWorkshop/bare-mux">Bare-Mux</a>
-- <a href="https://gist.github.com/BinBashBanana/a1fd7345e2d86e69d5a532f16cbdbdaa">DetectorDetector</a>
+- <a href="https://github.com/sylvieisnton/merp">Merp (Obfuscation Module)</a>
 - <a href="https://gitlab.com/fp-production/fp">The Freedom Project (Hard Fork)</a>
 
 ### Other Dependencies:
 
+- <a href="https://github.com/solidjs/solid">SolidJS</a>
+- <a href="https://github.com/vitejs/vite">vite</a>
 - <a href="https://github.com/tsparticles/tsparticles">tsparticles</a>
-- <a href="https://github.com/fastify/fastify">fastify</a>
-- <a href="https://github.com/fastify/fastify-helmet">@fastify/helmet</a>
-- <a href="https://github.com/fastify/fastify-static">@fastify/static</a>
 - <a href="https://github.com/DerpmanDev/modal">Modal</a>
-- <a href="https://github.com/BinBashBanana/webretro">webretro</a>
 - <a href="https://github.com/hagezi/dns-blocklists">hagezi DNS Blocklists</a>
-- <a href="https://ruffle.rs/">Ruffle</a>
 - <a href="https://github.com/michalsnik/aos">AOS</a>
 - <a href="https://github.com/nordtheme">Nord Theme</a>
 - <a href="https://fontawesome.com/">Font Awesome</a>

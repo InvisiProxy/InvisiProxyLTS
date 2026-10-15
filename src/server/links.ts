@@ -4,11 +4,10 @@ export type ExternalPages = Record<string, string | Record<string, string>> & {
 
 export const externalPages: ExternalPages = {
 	github: {
-		default: 'https://github.com/QuiteAFancyEmerald/InvisiProxy',
+		default: 'https://github.com/InvisiProxy/InvisiProxyLTS',
 		aos: 'https://github.com/michalsnik/aos',
-		'bare-module': 'https://github.com/motortruck1221/bare-as-module3',
-		fastify: 'https://github.com/fastify/fastify',
-		'font-awesome': 'https://github.com/FortAwesome/Font-Awesome',
+		solidjs: 'https://github.com/solidjs/solid',
+		merp: 'https://github.com/sylvieisnton/merp',
 		libcurl: 'https://github.com/MercuryWorkshop/libcurl-transport',
 		epoxy: 'https://github.com/MercuryWorkshop/epoxy-transport',
 		'nord-theme': 'https://github.com/nordtheme',
@@ -17,6 +16,8 @@ export const externalPages: ExternalPages = {
 		scramjet: 'https://github.com/MercuryWorkshop/scramjet',
 		wisp: 'https://github.com/MercuryWorkshop/wisp-protocol',
 	},
+	titaniumnetwork: 'https://discord.gg/unblock',
+	chemicaljs: 'https://chemicaljs.github.io',
 	codespaces: 'https://github.com/codespaces',
 	'tor-project':
 		'https://support.torproject.org/little-t-tor/getting-started/installing/',

@@ -49,6 +49,15 @@ export default function Header() {
 							Partners
 						</a>
 					</li>
+					<li>
+						<a
+							class="line"
+							href={route('/documentation')}
+							title="Documentation - Detailed information and guides"
+						>
+							Docs
+						</a>
+					</li>
 				</ul>
 				<ul class="navbar">
 					<li class="dropdown-parent dmenu">
@@ -68,14 +77,6 @@ export default function Header() {
 							aria-label="More options submenu"
 						>
 							<ul class="subnavbar">
-								<li>
-									<a
-										href={route('/documentation')}
-										title="Documentation - Detailed information and guides"
-									>
-										Docs
-									</a>
-								</li>
 								<li>
 									<a
 										href={route('/questions')}

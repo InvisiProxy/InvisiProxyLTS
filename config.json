@@ -8,5 +8,5 @@
 	"usingSEO": false,
 	"verbose": true,
 	"port": 8080,
-	"showSplash": false
+	"showSplash": true
 }

@@ -1,0 +1,4 @@
+.git
+node_modules
+views/dist
+views/dist-new

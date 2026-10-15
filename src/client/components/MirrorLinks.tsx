@@ -7,8 +7,7 @@ export default function MirrorLinks() {
 				type="button"
 				class="link-button mirror-links-toggle"
 				popovertarget="mirror-links-menu"
-				aria-label="Mirror links"
-				title="Get another InvisiProxy link"
+					title="Get another InvisiProxy link"
 			>
 				<svg
 					width="20"
@@ -24,6 +23,7 @@ export default function MirrorLinks() {
 					<path d="M10 13a5 5 0 0 0 7 .5l3-3a5 5 0 0 0-7-7l-2 2" />
 					<path d="M14 11a5 5 0 0 0-7-.5l-3 3a5 5 0 0 0 7 7l2-2" />
 				</svg>
+				<span>Mirrors</span>
 			</button>
 			<section
 				id="mirror-links-menu"
@@ -44,7 +44,8 @@ export default function MirrorLinks() {
 					</button>
 				</div>
 				<p class="setting-description">
-					Get another link to keep using InvisiProxy.
+					Get another link to keep using InvisiProxy. Links are
+					restocked frequently.
 				</p>
 				<button
 					id="dispense-link"
@@ -65,6 +66,11 @@ export default function MirrorLinks() {
 				>
 					Open mirror link
 				</a>
+				<br></br>
+				<p class="setting-description">
+					If you have any issues with links please create a GitHub
+					issue.
+				</p>
 			</section>
 		</>
 	);

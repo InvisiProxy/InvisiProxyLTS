@@ -2,7 +2,7 @@
 	"name": "InvisiProxy v8.1.0",
 	"description": "InvisiProxy is a secure web proxy service supporting numerous sites while concentrating on detail with design, mechanics, and features. Bypass web filters regardless of whether it is an extension or network-based.",
 	"repository": "https://github.com/InvisiProxy/InvisiProxyLTS",
-	"logo": "https://raw.githubusercontent.com/QuiteAFancyEmerald/InvisiProxy/master/views/assets/img/icon.png",
+	"logo": "https://raw.githubusercontent.com/InvisiProxy/InvisiProxy/master/views/assets/img/icon.png",
 	"keywords": [
 		"invisiproxy",
 		"holyunblocker",

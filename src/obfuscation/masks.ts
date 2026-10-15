@@ -2,6 +2,18 @@ import { randomItem, values } from '../site.ts';
 
 const maskPatterns = new WeakMap<string[], RegExp>();
 
+function maskCharacter() {
+	return randomItem(values.characters).replace(
+		/&#(x[\da-f]+|\d+);/gi,
+		(_, code: string) =>
+			String.fromCodePoint(
+				code[0].toLowerCase() === 'x'
+					? Number.parseInt(code.slice(1), 16)
+					: Number.parseInt(code, 10)
+			)
+	);
+}
+
 function termPattern() {
 	let pattern = maskPatterns.get(values.maskedTerms);
 	if (!pattern) {
@@ -20,9 +32,8 @@ function splitWord(word: string) {
 	let split = word[0];
 	for (let i = 1; i < word.length; i++)
 		split +=
-			(i === required || Math.random() < 0.5
-				? randomItem(values.characters)
-				: '') + word[i];
+			(i === required || Math.random() < 0.5 ? maskCharacter() : '') +
+			word[i];
 	return split;
 }
 
@@ -34,9 +45,7 @@ export function maskText(text: string): string {
 	const result = masked.replace(/\S+/g, (term) =>
 		/&#\d+;|&#x[A-z\d]+;|&[A-z]+;/.test(term)
 			? term
-			: term.replace(/(?<=[AEIOUYaeiouy])(?!$)/g, () =>
-					randomItem(values.characters)
-				)
+			: term.replace(/(?<=[AEIOUYaeiouy])(?!$)/g, () => maskCharacter())
 	);
 	return result
 		.replace(/&#173;|&shy;/g, '\u00ad')

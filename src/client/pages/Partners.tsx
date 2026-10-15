@@ -30,7 +30,7 @@ export default function Partners() {
 				<div class="box-hero">
 					<div class="hero-content">
 						<div class="proxy-header text-center">
-							<h1 class="bigtitle">Partner services</h1>
+							<h1 class="bigtitle">Partner Services</h1>
 							<p>
 								Explore our partner projects. Our partners
 								feature a similar model to InvisiProxy so be
@@ -48,6 +48,14 @@ export default function Partners() {
 									/>
 								))}
 							</div>
+							<br></br>
+							<p>
+								{' '}
+								Our partners have features like unblocked games,
+								web ports and emulation. All partners are open
+								source and free to use. Consider joining their
+								communities and supporting them if you can.
+							</p>
 							<ProxySettings />
 						</div>
 					</div>

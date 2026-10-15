@@ -8,3 +8,7 @@
 
 ## Update: Games are no longer supported on this project. Check out Truffled if you want an Unblocked Games site. 
 https://truffled.lol
+
+# If you want emulation use Obsidian
+
+https://github.com/titaniumnetwork-dev/Obsidian

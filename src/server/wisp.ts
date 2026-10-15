@@ -3,8 +3,28 @@ import { serverUrl } from '../config.ts';
 import { getAltPrefix } from '../obfuscation/paths.ts';
 
 export const wispPath = () => getAltPrefix('wisp', serverUrl.pathname);
+
+export const wispProxies = {
+	tor: 'socks5h://127.0.0.1:9050',
+	eu: 'socks5h://127.0.0.1:7000',
+	jp: 'socks5h://127.0.0.1:7001',
+	patreon: 'socks5h://127.0.0.1:7002',
+} as const;
+export type WispRegion = keyof typeof wispProxies;
+
+const isRegion = (name: string): name is WispRegion =>
+	Object.hasOwn(wispProxies, name);
+
+export function wispRegion(url: string | null | undefined): string | null {
+	const path = (url ?? '').split(/[?#]/, 1)[0];
+	const base = wispPath();
+	if (path === base) return '';
+	if (!path.startsWith(base)) return null;
+	const region = path.slice(base.length).replace(/\/$/, '');
+	return isRegion(region) ? region : null;
+}
 export const isWispRequest = (url: string | null | undefined) =>
-	Boolean(url?.endsWith(wispPath()));
+	wispRegion(url) !== null;
 
 const wispConfig = {
 	port: 4432,
@@ -13,7 +33,7 @@ const wispConfig = {
 	allowUDP: false,
 	allowDirectIP: false,
 	allowPrivateIPs: false,
-	allowLoopbackIPs: false,
+	allowLoopbackIPs: true,
 	tcpBufferSize: 262144,
 	socketBufferSize: 16777216,
 	pendingQueueSize: 33554432,
@@ -25,7 +45,7 @@ const wispConfig = {
 	},
 	whitelist: {
 		hostnames: [],
-		ports: [],
+		ports: [80, 443, 9050, 7000, 7001, 7002],
 	},
 	websocketPermessageDeflate: false,
 	frameObfuscation: {

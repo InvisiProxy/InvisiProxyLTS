@@ -1,0 +1,6 @@
+.faq-search {
+	width: 500px;
+    height: 60px;
+    border: 1px solid var(--nord3);
+    border-radius: 15px;
+}

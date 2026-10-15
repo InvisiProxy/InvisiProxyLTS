@@ -4,17 +4,34 @@ import { wispurr } from 'wispurr';
 import { config, serverPort, serverUrl } from '../config.ts';
 import { entryPointFile } from '../constants.ts';
 import { createSiteHandler } from './handler.ts';
-import { isWispRequest, wispOptions } from './wisp.ts';
+import {
+	wispPath,
+	wispOptions,
+	wispProxies,
+	wispRegion,
+	type WispRegion,
+} from './wisp.ts';
 
-const wisp = new wispurr(wispOptions);
-await wisp.start(1);
+const wisps = new Map<string, wispurr>([
+	['', new wispurr(wispOptions)],
+	...(Object.keys(wispProxies) as WispRegion[]).map(
+		(region) =>
+			[
+				region,
+				new wispurr({ ...wispOptions, proxy: wispProxies[region] }),
+			] as const
+	),
+]);
+for (const wisp of wisps.values()) await wisp.start(1);
 
 const server = createServer(createSiteHandler()).on(
 	'upgrade',
 	(req, socket, head) => {
-		if (socket instanceof Socket && isWispRequest(req.url))
-			wisp.route(req, socket, head);
-		else socket.destroy();
+		const region = wispRegion(req.url);
+		if (socket instanceof Socket && region !== null) {
+			req.url = wispPath();
+			wisps.get(region)?.route(req, socket, head);
+		} else socket.destroy();
 	}
 );
 
@@ -22,14 +39,14 @@ let shuttingDown = false;
 const stopServer = async () => {
 	if (shuttingDown) return;
 	shuttingDown = true;
-	await wisp.stop();
+	await Promise.all([...wisps.values()].map((wisp) => wisp.stop()));
 	server.closeAllConnections();
 	server.close();
 };
 process.once('SIGTERM', () => void stopServer());
 process.once('SIGINT', () => void stopServer());
 process.once('exit', () => {
-	if (wisp.isRunning) wisp.kill();
+	for (const wisp of wisps.values()) if (wisp.isRunning) wisp.kill();
 });
 
 server.listen(serverPort, serverUrl.hostname, () => {

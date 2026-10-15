@@ -100,11 +100,11 @@ export function inlineHtml(html: string): string {
 export const sites = Object.freeze([
 	{ name: 'Discord', url: 'https://discord.com/app' },
 	{ name: 'ChatGPT', url: 'https://chat.openai.com/chat' },
+	{ name: 'Gemini', url: 'https://gemini.google.com/app' },
 	{ name: 'Youtube', url: 'https://youtube.com' },
-	{ name: 'Invidious', url: 'https://yt.chocolatemoo53.com' },
-	{ name: 'GitHub', url: 'https://github.com' },
+	{ name: 'Invidious', url: 'https://docs.invidious.io/instances' },
 	{ name: 'FMHY', url: 'https://fmhy.net' },
-	{ name: 'Wikipedia', url: 'https://www.wikipedia.com' },
+	{ name: 'GeForce NOW', url: 'https://play.geforcenow.com' },
 	{ name: 'Twitter', url: 'https://twitter.com' },
 	{ name: 'Instagram', url: 'https://www.instagram.com' },
 	{ name: 'Reddit', url: 'https://www.reddit.com' },
@@ -115,8 +115,10 @@ export const sites = Object.freeze([
 ]);
 
 export const partners = Object.freeze([
+	{ name: 'Titanium Network', url: 'https://titaniumnetwork.org', newtab: false },
 	{ name: 'The Freedom Project', url: 'https://nullatenus.com', newtab: true },
 	{ name: 'Truffled', url: 'https://truffled.lol', newtab: false },
+	{ name: 'Obsidian', url: 'https://playobsidian.com', newtab: false },
 ]);
 
 interface CreditPerson {
@@ -155,7 +157,7 @@ export const credits = Object.freeze<CreditSection[]>([
 			},
 			{
 				name: 'Sylvia',
-				contributions: 'Co-Owner, Main Contributor, English to French',
+				contributions: 'Co-Owner, Main Contributor, SolidJS Rewrite, English to French',
 				url: 'https://sylvieon.dev',
 				contact: '@sylvieisnton',
 			},

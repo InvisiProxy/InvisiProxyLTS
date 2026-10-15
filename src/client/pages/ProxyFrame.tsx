@@ -174,6 +174,18 @@ export default function ProxyFrame() {
         });
       };
 
+      const keyboard = navigator.keyboard;
+      const syncEscapeLock = () => {
+        if (!keyboard || !keyboard.lock) return;
+        if (document.fullscreenElement) {
+          keyboard.lock(['Escape']).catch(() => {});
+        } else if (keyboard.unlock) {
+          keyboard.unlock();
+        }
+      };
+      document.addEventListener('fullscreenchange', syncEscapeLock);
+      window.addEventListener('focus', syncEscapeLock);
+
       windowFrame.addEventListener('load', loadHandler);
       loadHandler();
     `}
