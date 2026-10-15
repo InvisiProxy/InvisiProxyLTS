@@ -1,11 +1,24 @@
+import { route } from '../document-helpers.tsx';
 import { SettingToggle, TransportSelect } from './SettingsControls.tsx';
 
 export default function ProxySettings() {
 	return (
 		<>
+			<p><br></br>
+				We offer premium domains, beta features, residential ISP connections and faster
+				speeds. You can donate on{' '}
+				<a
+					href={route('/patreon')}
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					Patreon
+				</a>
+				.
+			</p>
 			<details id="settings-panel" class="pr-settings">
 				<summary class="proxy-settings-header">
-					<h2>Browsing preferences</h2>
+					<h2>Proxy Preferences</h2>
 					<span class="proxy-settings-arrow" aria-hidden="true" />
 				</summary>
 				<div class="proxy-settings-grid">
@@ -21,6 +34,7 @@ export default function ProxySettings() {
 								<option value="off">Default</option>
 								<option value="eu">Sweden</option>
 								<option value="jp">Japan</option>
+								<option value="patreon">Patreon</option>
 							</select>
 						</div>
 						<SettingToggle

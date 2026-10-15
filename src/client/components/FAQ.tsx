@@ -3,8 +3,8 @@ import { Cooking, iconBookmarklet } from '../document-helpers.tsx';
 export default function FAQ() {
 	return (
 		<>
-			<div class="faq-center">
-				<h2>InvisiProxy FAQ and Support</h2>
+			<div class="faq-center bigtitle">
+				<h1>Frequently Asked Questions</h1>
 			</div>
 			<div class="faq-box">
 				<div id="faq-search-root">
@@ -17,29 +17,35 @@ export default function FAQ() {
 					/>
 				</div>
 			</div>
-			<div class="box-clear text-center textm">
-				<Cooking />
-				<h2 class="bigtitle">Icon Information</h2>
-				<h4>How to find the Icon URL of a Site</h4>
-				<p>
-					Go to the website you want an icon from, then use this
-					bookmarklet (drag it to your bookmarks bar):
-				</p>
-				<div id="bks-parent">
-					<a
-						href={iconBookmarklet()}
-						id="iconfinder"
-						class="fancybutton fb-l glowbutton"
-					>
-						Find Icon URL
-					</a>
-				</div>
-				<p>
-					Copy the URL that the bookmarklet gives you. Then go back to
-					HU and enter in the URL for the Icon URL in Settings. Enjoy!
-				</p>
-			</div>
+			<br></br>
 			<div id="faqs" class="faq">
+				<div class="faq-text">
+					<h3>
+						<strong>
+							How do I obtain Icon URLs for the Tab Cloaking menu?
+						</strong>
+					</h3>
+					<p>
+						Go to the website you want an icon from, then use this
+						bookmarklet (drag it to your bookmarks bar):
+					</p>
+					<br></br>
+					<div id="bks-parent">
+						<a
+							href={iconBookmarklet()}
+							id="iconfinder"
+							class="fancybutton fb-l glowbutton"
+						>
+							Find Icon URL
+						</a>
+					</div>
+					<br></br>
+					<p>
+						Copy the URL that the bookmarklet gives you. Then go
+						back to InvisiProxy and enter in the URL for the Icon
+						URL in Settings. Enjoy!
+					</p>
+				</div>
 				<div class="faq-text">
 					<h3>
 						<strong>
@@ -48,9 +54,11 @@ export default function FAQ() {
 						</strong>
 					</h3>
 					<p>
-						This is a known issue with our modern web proxies.
-						Simply hit the Refresh Page button and reload the page
-						to resolve the issue.
+						This is a known issue with our modern web proxies. Due
+						to the amount of users we get typically after ten
+						minutes of no tab activity the connection is cut. Simply
+						hit the Refresh Page button and reload the page to
+						resolve the issue.
 					</p>
 					<p>
 						This typically happens the first time you use the proxy.
@@ -68,7 +76,9 @@ export default function FAQ() {
 						During peak traffic hours this is very common due to
 						everything going through only two respective IPs. The
 						solution is to swap regions via Region Selection or
-						enable Tor routing.
+						enable Tor routing. You can also join our Patreon for
+						access to a instance with a residential ISP to avoid
+						this issue.
 					</p>
 				</div>
 				<div class="faq-text">
@@ -103,7 +113,8 @@ export default function FAQ() {
 				<div class="faq-text">
 					<h3>
 						<strong>
-							I am getting an error relating to the IDB Database
+							I am getting an error referencing an IDB Database
+							(Scramjet V1 issue)
 						</strong>
 					</h3>
 					<p>
@@ -157,7 +168,9 @@ export default function FAQ() {
 						routed into a single domain. We try to migate this
 						problem by rotating IPs however it is just a common
 						practice to not use personal accounts on public proxies.
-						Self-hosting however you can do so with ease.
+						Self-hosting however you can do so with ease. You can
+						also join the patreon to utilize a residential ISP and
+						avoid this issue.
 					</p>
 				</div>
 				<div class="faq-text">

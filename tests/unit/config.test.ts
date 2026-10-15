@@ -30,7 +30,7 @@ if (!${usingSEO}) {
   assert.equal(new Set(Object.values(aliases)).size, Object.keys(aliases).length);
 }
 assert.equal(getAltPrefix('wisp', serverUrl.pathname), '/school/' + (aliases['prefixes/wisp'] || 'wisp') + '/');
-assert.equal(externalPages.github[(aliases['github/fastify'] || 'github/fastify').split('/').at(-1)], 'https://github.com/fastify/fastify');
+assert.equal(externalPages.github[(aliases['github/solidjs'] || 'github/solidjs').split('/').at(-1)], 'https://github.com/solidjs/solid');
 assert.equal('robots.txt' in pages, ${usingSEO});
 if (${usingSEO}) assert.deepEqual(aliases, {});
 else assert.match(aliases['files/sw.js'], /^[A-Za-z]+\\.js$/);

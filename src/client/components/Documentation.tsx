@@ -18,11 +18,33 @@ export default function Documentation() {
 			</SEO>
 			<br />
 			<p>
-				Read below for information if the official site is blocked or
-				for obtaining more links. Can't deploy using any of the free
-				options below? Check out Railway or look into cheap, paid VPS
-				hosting solutions.
+				Simply click on the Links icon for more mirrors. Can't deploy
+				using any of the free options below? Check out Railway or look
+				into cheap, paid VPS hosting solutions.
 			</p>
+			<br />
+			<p>
+				Try using{' '}
+				<a
+					href={route('/chemicaljs')}
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					Chemical
+				</a>{' '}
+				if you want to create your own web proxy service from scratch.
+			</p>
+			<br></br>
+			<div>
+				<a
+					href={route('/chemicaljs')}
+					target="_blank"
+						rel="noopener noreferrer"
+						class="fancybutton fb-l glowbutton"
+				>
+					Build Your Proxy Site with Chemical
+				</a>
+			</div>
 			<br />
 			<h3>GitHub Codespaces</h3>
 			<details>
@@ -88,7 +110,10 @@ pnpm start
 
 # Build or develop
 pnpm build
-pnpm dev`}</code>
+pnpm dev
+
+# pm2 daemon
+pm2 start ecosystem.config.cjs`}</code>
 			</pre>
 			<p>
 				This website is hosted locally with Scramjet, Wisp, Proxy

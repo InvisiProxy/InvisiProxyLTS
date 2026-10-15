@@ -71,13 +71,13 @@ export default function Home() {
 									{'git clone --recurse-submodules'}
 									<span class="url">
 										{' '}
-										https://github.com/QuiteAFancyEmerald/InvisiProxy.git
+										https://github.com/InvisiProxy/InvisiProxyLTS.git
 									</span>
 								</span>
 								<br />
 								<span class="cmd">
 									{'cd '}
-									InvisiProxy{' '}
+									InvisiProxyLTS{' '}
 								</span>
 								<br />
 								<span class="comment">
@@ -105,7 +105,7 @@ export default function Home() {
 								<br />
 								<span class="comment">Node.js v26.x</span>
 								<br />
-								<span class="comment">Fastify v5.8.5</span>
+								<span class="comment">Solid JS v1.9.17</span>
 								<br />
 								<br />
 								<span class="downarrowgroup">
@@ -134,10 +134,20 @@ export default function Home() {
 									repository and self host for maximum privacy
 									control. In contrast to numerous other web
 									proxy services, InvisiProxy stands out with
-									end-to-end encryption, hidden history,
-									Tor/Onion routing in Chromium, complete
-									transparency and privacy control. We collect
-									no user data on our official instances.
+									end-to-end encryption via TLS, browser
+									history isolation, Tor/Onion routing in
+									Chromium browsers, complete transparency,
+									and privacy control.{' '}
+									<strong>
+										Unlike other proxy services we collect
+										no user data on our official instances.
+										Not even for debugging purposes.
+									</strong>
+									<br></br>Our open-source dependecies (Wisp,
+									Libcurl and Epoxy) are designed to be secure
+									and privacy-focused, ensuring that your
+									browsing experience remains confidential
+									even with malicious self-hosted instances.
 								</p>
 								<div class="brand-logo-container">
 									<i class="far fa-window-restore palered"></i>
@@ -157,7 +167,11 @@ export default function Home() {
 									Transport). Other popular services like
 									CroxyProxy or Proxium often only do half the
 									job of rewriting assets leaking requests
-									while being a privacy concern.
+									while being a privacy concern. This project
+									also supports features like proxychaining,
+									which allows you to route your traffic
+									through multiple proxies for added security
+									and anonymity.
 								</p>
 								<div class="brand-logo-container">
 									<i class="far fa-window-restore palered"></i>
@@ -170,15 +184,20 @@ export default function Home() {
 									projects like Proxy Transports, Wisp, and
 									Scramjet, this project delivers a seamless
 									experience that circumvents web, government
-									and network filters. This is achieved
-									entirely within your browser as a website
-									and our backend (or your own if
-									self-hosting), enabling users to bypass even
-									the most invasive censorship blocks. No need
-									to download anything simply type in the
-									domain for InvisiProxy, join the discord to
-									obtain mirrors if blocked and browse
-									anonymously.
+									and network filters. This project works
+									against filters used in China (GFW - Great
+									Firewall of China), Russia and more{' '}
+									<strong>
+										without the need of downloading software
+									</strong>
+									. This is achieved entirely within your
+									browser as a website and our backend (or
+									your own if self-hosting), enabling users to
+									bypass even the most invasive censorship
+									blocks. No need to download anything simply
+									type in the domain for InvisiProxy, head to
+									the official InvisiProxy site to obtain
+									mirrors if blocked and browse anonymously.
 								</p>
 							</div>
 						</div>
@@ -215,8 +234,8 @@ export default function Home() {
 								<div class="dependencylogo">
 									<img
 										loading="lazy"
-										src={route('/assets/img/fastify.webp')}
-										alt="Fastify"
+										src={route('/assets/img/solid.webp')}
+										alt="SolidJS"
 									/>
 								</div>
 								<div class="dependencylogo">
@@ -242,20 +261,6 @@ export default function Home() {
 											'/assets/img/fontawesome.webp'
 										)}
 										alt="Font Awesome"
-									/>
-								</div>
-								<div class="dependencylogo">
-									<img
-										loading="lazy"
-										src={route('/assets/img/webretro.webp')}
-										alt="Webretro"
-									/>
-								</div>
-								<div class="dependencylogo">
-									<img
-										loading="lazy"
-										src={route('/assets/img/ruffle.webp')}
-										alt="Ruffle"
 									/>
 								</div>
 								<div class="dependencylogo">
@@ -268,8 +273,8 @@ export default function Home() {
 								<div class="dependencylogo">
 									<img
 										loading="lazy"
-										src={route('/assets/img/fastify.webp')}
-										alt="Fastify"
+										src={route('/assets/img/solid.webp')}
+										alt="SolidJS"
 									/>
 								</div>
 								<div class="dependencylogo">
@@ -295,20 +300,6 @@ export default function Home() {
 											'/assets/img/fontawesome.webp'
 										)}
 										alt="Font Awesome"
-									/>
-								</div>
-								<div class="dependencylogo">
-									<img
-										loading="lazy"
-										src={route('/assets/img/webretro.webp')}
-										alt="Webretro"
-									/>
-								</div>
-								<div class="dependencylogo">
-									<img
-										loading="lazy"
-										src={route('/assets/img/ruffle.webp')}
-										alt="Ruffle"
 									/>
 								</div>
 								<div class="dependencylogo">
@@ -327,7 +318,7 @@ export default function Home() {
 					<div class="splashstroke">
 						<div>
 							<h1 class="splashstrokeheader">
-								{'\n              Designed with focus'}
+								{'\n              Designed with privacy'}
 								<span class="underline-svg"></span>
 								{'.\n            '}
 							</h1>
@@ -380,9 +371,9 @@ export default function Home() {
 									of censorship is client-side or
 									network-based. This includes the ability to
 									bypass content blockers overseas put in
-									place by governments, chrome extensions,
-									localized client firewalls, and
-									network-related filters.
+									place by governments (China/GFW, Russia,
+									etc.), chrome extensions, localized client
+									firewalls, and network-related filters.
 								</p>
 								<p>
 									Please consider donating to this project so
@@ -397,7 +388,7 @@ export default function Home() {
 										target="_blank"
 										rel="noopener noreferrer"
 									>
-										here
+										on Patreon here
 									</a>
 									{'.\n              '}
 								</p>
@@ -485,7 +476,8 @@ export default function Home() {
 								<p>
 									InvisiProxy features a collection of
 									pre-linked applications, including YouTube,
-									Spotify,
+									Spotify, GeForce NOW, Discord, ChatGPT,
+									Gemini and more!
 								</p>
 							</div>
 						</div>
@@ -519,12 +511,12 @@ export default function Home() {
 									>
 										GitHub repository
 									</a>
-									{' or '}
+									{' or the '}
 									<a
 										href={route('/documentation')}
 										title="Additional Hosting Information"
 									>
-										the built-in documentation provided here
+										built-in documentation provided here
 									</a>
 									{'.\n              '}
 								</p>
@@ -547,11 +539,10 @@ export default function Home() {
 									<strong>InvisiProxy LTS</strong> thrives due
 									to the dedicated efforts of our amazing
 									contributors. As an open-source project,{' '}
-									<strong>InvisiLTS</strong> relies on the
-									collective skills and passion of its
-									community to drive continuous improvement
-									and deliver the best experience for all
-									users.
+									<strong>InvisiProxy LTS</strong> relies on
+									the passion of its community to bypass
+									internet censorship and help users improve
+									access to information.
 								</p>
 								<p>
 									{
@@ -585,24 +576,24 @@ export default function Home() {
 								<div class="brand-logo-container">
 									<i class="far fa-window-restore palered"></i>
 									<h2 class="hero-content-header">
-										Bypass Censorship and Filters.
+										Bypass Censorship and Filters
 									</h2>
 								</div>
 								<p>
-									Great Firewall of China? Censorship? No
-									problem. InvisiProxy LTS is an open-source{' '}
-									<strong>public web proxy</strong>. Enjoy
+									InvisiProxy LTS is an open-source{' '}
+									<strong>web proxy project</strong>. Enjoy
 									unrestricted access to online content and
-									secure browsing with our advanced{' '}
+									browsing with our advanced{' '}
 									<strong>web proxy unblocking</strong>{' '}
-									features. This project grants you the
-									ability to host it anywhere and bypass
-									regional blocks.
+									features. This project also grants you the
+									ability to self-host anywhere and bypass
+									nation-wide/regional blocks like China
+									(Great Firewall of China - GFW) and Russia.
 								</p>
 								<div class="brand-logo-container">
 									<i class="far fa-window-restore palered"></i>
 									<h2 class="hero-content-header">
-										100% Free Web Proxy Browsing.
+										100% Free Web Proxy
 									</h2>
 								</div>
 								<p>
@@ -617,24 +608,29 @@ export default function Home() {
 								<div class="brand-logo-container">
 									<i class="far fa-window-restore palered"></i>
 									<h2 class="hero-content-header">
-										Utilize Tor Inside Chromium Browsers
-										&amp; Firefox.
+										Utilize Tor Routing Within Chromium
+										Browsers &amp; Firefox
 									</h2>
 								</div>
 								<p>
-									Using InvisiProxy LTS, you can access the
-									Tor network directly within your
+									Using InvisiProxy LTS, you can{' '}
+									<strong>access the Tor network</strong>{' '}
+									directly within your
 									Chromium-based/Firefox-based browser. This
-									allows you to browse the web anonymously,
-									bypassing any regional restrictions. This
-									project also supports setting custom SOCKS5
-									proxies to proxychain.
+									means you can access <strong>.onion</strong>{' '}
+									sites directly within this website. This
+									allows you to browse the web anonymously (at
+									least to some extent; real Tor has better
+									fingerprinting mitigations), bypassing any
+									regional restrictions. This project also
+									supports setting custom SOCKS5 proxies to
+									proxychain.
 								</p>
 							</div>
 						</div>
 						<Cooking />
 						<div class="image-container-hero">
-							<h1>Long Term Support FOSS Project</h1>
+							<h1>Free Unrestricted Browsing</h1>
 							<a
 								class="fancybutton glowbutton"
 								href={route('/browsing')}

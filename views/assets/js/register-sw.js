@@ -10,13 +10,11 @@ import {
 (() => {
   const swScope = route("/"),
     swAllowedHostnames = ['localhost', '127.0.0.1'],
-    wispUrl =
-      `${(location.protocol === 'https:' ? 'wss' : 'ws')}://${location.host}${route("/wisp/")}`,
-    proxyUrl = {
-      tor: 'socks5h://localhost:9050',
-      eu: 'socks5h://localhost:7000',
-      jp: 'socks5h://localhost:7001',
-    },
+    // Regional/Tor proxies are configured server-side (src/server/wisp.ts).
+    // The client only selects the matching Wisp endpoint.
+    regions = ['tor', 'eu', 'jp', 'patreon'],
+    wispUrl = (region) =>
+      `${(location.protocol === 'https:' ? 'wss' : 'ws')}://${location.host}${route("/wisp/")}${region ? region + '/' : ''}`,
     storageId = `${values.storageNamespace}-storage`,
     storageObject = () => JSON.parse(localStorage.getItem(storageId)) || {},
     readStorage = (name) => storageObject()[name];
@@ -25,10 +23,12 @@ import {
     transportUrl = route(`/${transportName}/index.mjs`);
 
   const getTransportOptions = () => {
-    const options = { wisp: wispUrl };
-    if (transportName === 'libcurl' && 'string' === typeof readStorage('UseSocks5'))
-      options.proxy = proxyUrl[readStorage('UseSocks5')];
-    return options;
+    const selected = readStorage('UseSocks5');
+    return {
+      wisp: wispUrl(
+        transportName === 'libcurl' && regions.includes(selected) ? selected : ''
+      ),
+    };
   };
 
   const getSWRoute = () =>
@@ -659,7 +659,7 @@ import {
       }
 
       const transportOptions = getTransportOptions();
-      console.log('Using proxy:', transportOptions.proxy);
+      console.log('Using wisp:', transportOptions.wisp);
       console.log('Transport mode:', transportUrl);
 
       const [registration, transport] = await Promise.all([

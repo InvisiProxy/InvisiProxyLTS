@@ -52,7 +52,8 @@ export default function Scramjet() {
 								<br />
 								<br />
 								For CAPTCHA challenges please solve them slowly.
-								SJ is so fast you might get stuck in a loop.
+								Scramjet is so fast you might get stuck in a loop.
+								<br></br>
 								Enable Tor routing if you are struggling to
 								login to services or view
 								<br />

@@ -20,40 +20,10 @@ export default function Footer() {
 							<a
 								target="_blank"
 								rel="noopener noreferrer"
-								href={route('/github/fastify')}
-								title="Fastify - Fast and low overhead web framework, for Node.js."
+								href={route('/github/solidjs')}
+								title="SolidJS  - Simple and performant reactivity for building user interfaces.."
 							>
-								Fastify
-							</a>
-						</li>
-						<li>
-							<a
-								target="_blank"
-								rel="noopener noreferrer"
-								href={route('/github/nord-theme')}
-								title="Nord Theme - An arctic, north-bluish color palette."
-							>
-								Nord Theme
-							</a>
-						</li>
-						<li>
-							<a
-								target="_blank"
-								rel="noopener noreferrer"
-								href={route('/github/aos')}
-								title="AOS - Animate on scroll library."
-							>
-								AOS
-							</a>
-						</li>
-						<li>
-							<a
-								target="_blank"
-								rel="noopener noreferrer"
-								href={route('/github/font-awesome')}
-								title="Font Awesome  - The iconic SVG, font, and CSS toolkit."
-							>
-								Font Awesome{' '}
+								SolidJS{' '}
 							</a>
 						</li>
 						<li>
@@ -64,6 +34,16 @@ export default function Footer() {
 								title="High-Performance and Feature Focused Wisp v1/v2 Server implementation in Golang."
 							>
 								Wispurr{' '}
+							</a>
+						</li>
+						<li>
+							<a
+								target="_blank"
+								rel="noopener noreferrer"
+								href={route('/github/nord-theme')}
+								title="Nord Theme - An arctic, north-bluish color palette."
+							>
+								Nord Theme
 							</a>
 						</li>
 					</ul>
@@ -99,7 +79,7 @@ export default function Footer() {
 								target="_blank"
 								rel="noopener noreferrer"
 								href={route('/github/scramjet')}
-								title="Scramjet - Browse with Scramjet."
+								title="Scramjet - Scramjet is a versatile web proxy designed to bypass internet censorship."
 							>
 								Scramjet
 							</a>
@@ -122,6 +102,16 @@ export default function Footer() {
 								title="Proxy Transports - The transport interface used by Scramjet."
 							>
 								Proxy Transports
+							</a>
+						</li>
+						<li>
+							<a
+								target="_blank"
+								rel="noopener noreferrer"
+								href={route('/github/merp')}
+								title="Merp - Advanced obfuscation module"
+							>
+								Merp Obfuscation
 							</a>
 						</li>
 					</ul>
@@ -152,9 +142,9 @@ export default function Footer() {
 						<li>
 							<a
 								href={route('/privacy')}
-								title="Privacy Policy and Terms of Service"
+								title="Privacy Policy"
 							>
-								Privacy and Terms of Service
+								Privacy Policy
 							</a>
 						</li>
 						<li>

@@ -87,6 +87,7 @@ const getDomain = () =>
           overflow: 'hidden',
         };
         Object.assign(iframe.style, styles);
+        iframe.allow = 'fullscreen';
         iframe.src = location.href;
         newWindow.document.body.appendChild(iframe);
         return newWindow;
@@ -101,7 +102,7 @@ const getDomain = () =>
         (document.querySelector("link[rel*='icon']") || {}).href || '';
       const html = `<!DOCTYPE html><html><head><title>${
         document.title
-      }</title><link rel="icon" href="${icon}"><style>html,body{height:100%;margin:0;padding:0;overflow:hidden;}</style></head><body><iframe style="border:none;width:100%;height:100%;margin:0;overflow:hidden;" src="${
+      }</title><link rel="icon" href="${icon}"><style>html,body{height:100%;margin:0;padding:0;overflow:hidden;}</style></head><body><iframe allow="fullscreen" style="border:none;width:100%;height:100%;margin:0;overflow:hidden;" src="${
         location.href
       }"></iframe></body></html>`;
       const blob = new Blob([html], { type: 'text/html' });
