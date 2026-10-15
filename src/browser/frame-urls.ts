@@ -39,3 +39,68 @@ export function rewriteFrameUrl(
 	if (normalized.proxyOrigin) return normalized.url;
 	return rewrite(normalized.unwrapped ? normalized.url : value);
 }
+
+/**
+ * Return the clean target when the value is already wrapped by the Scramjet
+ * prefix, otherwise the value untouched. Meant for setter chains where
+ * Scramjet's own rewriter still performs the final wrap: handing it an
+ * already-wrapped value would double-wrap it, so unwrap first.
+ */
+export function unwrapFrameUrl(
+	value: unknown,
+	proxyOrigin: string,
+	networkPrefixPath: string
+): unknown {
+	if (typeof value !== 'string') return value;
+	const normalized = normalizeScramjetTarget(
+		value,
+		proxyOrigin,
+		networkPrefixPath
+	);
+	return normalized.unwrapped ? normalized.url : value;
+}
+
+/**
+ * Normalize every URL inside a `srcset` attribute value. Candidates are
+ * comma-separated `url [descriptor]` pairs; each candidate URL is unwrapped
+ * when already wrapped and handed to `rewrite` otherwise (blob:/data: and
+ * empty candidates pass through), while descriptors like `1x`/`800w` are
+ * preserved. `rewrite` is Scramjet's rewriter, which resolves relative
+ * paths against the frame's page URL.
+ */
+export function rewriteSrcsetFrameUrls(
+	value: unknown,
+	rewrite: FrameUrlRewrite,
+	proxyOrigin: string,
+	networkPrefixPath: string
+): unknown {
+	if (typeof value !== 'string' || !value) return value;
+	const entries: string[] = [];
+	let index = 0;
+	while (index < value.length) {
+		while (index < value.length && /[\s,]/.test(value[index])) index++;
+		if (index >= value.length) break;
+		// A candidate URL runs up to the next whitespace and may itself
+		// contain commas (data: URLs), so collect it as a raw token.
+		const start = index;
+		while (index < value.length && !/\s/.test(value[index])) index++;
+		const url = value.slice(start, index);
+		const descriptorStart = index;
+		while (index < value.length && value[index] !== ',') index++;
+		const descriptor = value.slice(descriptorStart, index);
+		index++;
+		if (!url || url.startsWith('#') || nativeSchemes.test(url)) {
+			entries.push(url + descriptor);
+			continue;
+		}
+		const normalized = normalizeScramjetTarget(
+			url,
+			proxyOrigin,
+			networkPrefixPath
+		);
+		entries.push(
+			`${rewrite(normalized.unwrapped ? normalized.url : url)}${descriptor}`
+		);
+	}
+	return entries.join(', ');
+}

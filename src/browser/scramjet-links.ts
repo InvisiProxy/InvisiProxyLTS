@@ -36,13 +36,12 @@ export function normalizeScramjetTarget(
 		}
 
 		const wrappedTarget = wrapper.pathname.slice(prefixPath.length);
-		const separator = wrappedTarget.indexOf('/');
-		if (separator <= 0) {
-			if (explicitUrl && depth === 0)
-				return { url: wrapper.href, unwrapped, proxyOrigin: true };
-			break;
-		}
-		if (!/^[a-z0-9]{8}$/i.test(wrappedTarget.slice(0, separator))) {
+		// Wrapped targets look like `<frameId>/<encoded url>` under the site
+		// prefix; nested frames add one more 8-character id segment per level
+		// (`<controllerId>/<frameId>/<encoded url>`). The encoded target never
+		// contains a raw slash, so consume every leading id segment.
+		const wrapped = wrappedTarget.match(/^([a-z0-9]{8}\/)+(.+)$/i);
+		if (!wrapped) {
 			if (explicitUrl && depth === 0)
 				return { url: wrapper.href, unwrapped, proxyOrigin: true };
 			break;
@@ -50,7 +49,7 @@ export function normalizeScramjetTarget(
 
 		let target: string;
 		try {
-			target = decode(wrappedTarget.slice(separator + 1));
+			target = decode(wrapped[2]);
 		} catch {
 			if (unwrapped || (explicitUrl && depth === 0))
 				return { url: wrapper.href, unwrapped, proxyOrigin: true };
