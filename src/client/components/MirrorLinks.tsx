@@ -7,7 +7,7 @@ export default function MirrorLinks() {
 				type="button"
 				class="link-button mirror-links-toggle"
 				popovertarget="mirror-links-menu"
-					title="Get another InvisiProxy link"
+				title="Get another InvisiProxy link"
 			>
 				<svg
 					width="20"

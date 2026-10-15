@@ -1,0 +1,53 @@
+[http 404] https://43703-is9po0jmy2ugc1sjco16a.e2b.app/humbler
+[console.error] Failed to load resource: the server responded with a status of 404 ()
+top storage: {"inWindow":true,"type":"object","own":["get","set","enumerable","configurable"],"proto":[]}
+[http 404] https://43703-is9po0jmy2ugc1sjco16a.e2b.app/rousingly
+[console.error] Failed to load resource: the server responded with a status of 404 ()
+press #1: ["https://43703-is9po0jmy2ugc1sjco16a.e2b.app/rousingly","https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/5iq2vjpv/ysoi8i7y/https%3A%2F%2Fdiscord.com%2","about:blank"]
+[http 404] https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/5iq2vjpv/ysoi8i7y/https%3A%2F%2Fdiscord.com%2Fcdn-cgi%2Fchallenge-platform%2Fscripts%2Fjsd%2Fma
+[console.error] Failed to load resource: the server responded with a status of 404 ()
+[console.error] Refused to execute script from 'https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/5iq2vjpv/ysoi8i7y/https%3A%2F%2Fdiscord.com%2Fcdn-cgi%2Fchallenge-platform%2Fscripts%2Fjsd%2Fmain.js?%24io=null' because its MIME type ('image/vnd.microsoft.icon') is not executable, and strict MIME type
+[console.warning] connecting
+frame url: https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/5iq2vjpv/ysoi8i7y/https%3A%2F%2Fdiscord.com%2Flogin
+[console.warning] %c[ConditionalMediation] 
+font-weight: bold;
+color: purple;
+ SecurityError The relying party ID is not a registrable domain suffix of, nor equal to the current domain. Subsequently, an attempt to fetch the .well-known/webauthn resource of the claimed RP ID failed.
+frame storage: {"inWindow":false,"own":null,"proto":[],"type":"undefined","bare":"undefined","roundtrip":"ERR Cannot read properties of undefined (reading 'setItem')","cookie":"","cookieStore":"undefined"}
+cookie set phase: {"status":200,"doc":""}
+cookie read phase: {"status":200,"echoed":{"cookies":{}},"doc":""}
+header echo: {"status":200,"headers":{"Accept":"*/*","Accept-Encoding":"deflate, gzip, br","Authorization":"Bearer probe-token-123","Host":"httpbin.org","Origin":"https://discord.com","Referer":"https://discord.com/","Sec-Ch-Ua":"\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"","Sec-Ch-Ua-Mobile":"?0","Sec-Ch-Ua-Platform":"\"Linux\"","Sec-Fetch-Dest":"empty","Sec-Fetch-Mode":"cors","Sec-Fetch-Site":"cross-site","User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36","X-Amzn-Trace-Id":"Root=1-6ad0d7f4-1187c4903c6af14e1da76469","X-Probe":"probe-yes"}}
+[console.warning] connecting
+ws echo: {"ctor":"ok","events":["open","message:probe-ping-4"],"result":"echoed"}
+[console.warning] connecting
+[console.warning] wisp client warning: received a DATA packet for a stream which doesn't exist
+ws gateway: {"ctor":"ok","events":["open","message:{\"t\":null,\"s\":null,\"op\":10,\"d\":{\"heartbe"],"result":"echoed"}
+controller cookieJar: {"has":true,"jarType":"object","jarKeys":["cookies","byDomain"],"dump":"{\".discord.com@/@_cfuvid\":{\"name\":\"_cfuvid\",\"value\":\"03jjvDVNAge_B.0SFIQ3JOEUMpZv3kp6FrSPW_96T8E-1792071664.0720315-1.0.1.1-214ONhFWYPFr4mZjvRwsgEJXxpRovVEoKn4HDK7D59s\",\"httpOnly\":true,\"sameSite\":\"None\",\"secure\":true,\"path\":\"/\",\"domain\":\".discord.com\",\"hostOnly\":false},\".discord.com@/@__dcfduid\":{\"n"}
+done
+[http 404] https://43703-is9po0jmy2ugc1sjco16a.e2b.app/elephantine
+[console.error] Failed to load resource: the server responded with a status of 404 ()
+top storage: {"inWindow":true,"type":"object","own":["get","set","enumerable","configurable"],"proto":[]}
+press #1: ["https://43703-is9po0jmy2ugc1sjco16a.e2b.app/elephantine","about:blank"]
+[http 404] https://43703-is9po0jmy2ugc1sjco16a.e2b.app/oneirocritics
+[console.error] Failed to load resource: the server responded with a status of 404 ()
+press #2: ["https://43703-is9po0jmy2ugc1sjco16a.e2b.app/oneirocritics","https://43703-is9po0jmy2ugc1sjco16a.e2b.app/thornproofs/network/gdridm4j/fbc2obn7/https%3A%2F%2Fdiscord.com%2F"]
+[http 404] https://43703-is9po0jmy2ugc1sjco16a.e2b.app/thornproofs/network/gdridm4j/fbc2obn7/https%3A%2F%2Fdiscord.com%2Fcdn-cgi%2Fchallenge-platform%2Fscripts%2Fjsd%2Fmai
+[console.error] Failed to load resource: the server responded with a status of 404 ()
+[console.error] Refused to execute script from 'https://43703-is9po0jmy2ugc1sjco16a.e2b.app/thornproofs/network/gdridm4j/fbc2obn7/https%3A%2F%2Fdiscord.com%2Fcdn-cgi%2Fchallenge-platform%2Fscripts%2Fjsd%2Fmain.js?%24io=null' because its MIME type ('image/vnd.microsoft.icon') is not executable, and strict MIME type 
+[console.warning] connecting
+frame url: https://43703-is9po0jmy2ugc1sjco16a.e2b.app/thornproofs/network/gdridm4j/fbc2obn7/https%3A%2F%2Fdiscord.com%2Flogin
+frame storage: {"inWindow":true,"own":{"hasGet":true,"keys":["get","set","enumerable","configurable"]},"proto":[],"type":"object","bare":"object","roundtrip":"yes","cookie":"","cookieStore":"undefined"}
+[console.warning] %c[ConditionalMediation] 
+font-weight: bold;
+color: purple;
+ SecurityError The relying party ID is not a registrable domain suffix of, nor equal to the current domain. Subsequently, an attempt to fetch the .well-known/webauthn resource of the claimed RP ID failed.
+cookie set phase: {"status":200,"doc":""}
+cookie read phase: {"status":200,"echoed":{"cookies":{}},"doc":""}
+header echo: {"status":200,"headers":{"Accept":"*/*","Accept-Encoding":"deflate, gzip, br","Authorization":"Bearer probe-token-123","Host":"httpbin.org","Origin":"https://discord.com","Referer":"https://discord.com/","Sec-Ch-Ua":"\"HeadlessChrome\";v=\"153\", \"Not_A Brand\";v=\"8\", \"Chromium\";v=\"153\"","Sec-Ch-Ua-Mobile":"?0","Sec-Ch-Ua-Platform":"\"Linux\"","Sec-Fetch-Dest":"empty","Sec-Fetch-Mode":"cors","Sec-Fetch-Site":"cross-site","User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36","X-Amzn-Trace-Id":"Root=1-6ad0e7b4-6ef56bba0f93c05c36f29519","X-Probe":"probe-yes"}}
+[console.warning] connecting
+ws echo: {"ctor":"ok","events":["open","message:probe-ping-4"],"result":"echoed"}
+[console.warning] connecting
+[console.warning] wisp client warning: received a DATA packet for a stream which doesn't exist
+ws gateway: {"ctor":"ok","events":["open","message:{\"t\":null,\"s\":null,\"op\":10,\"d\":{\"heartbe"],"result":"echoed"}
+controller cookieJar: {"has":true,"jarType":"object","jarKeys":["cookies","byDomain"],"dump":"{\".discord.com@/@_cfuvid\":{\"name\":\"_cfuvid\",\"value\":\"qMpyMG4SAMVi.UA73QMDcWaFUuf50E7eTvPMcD6rZP0-1792075696.5216703-1.0.1.1-uCkSo3BM1liLAgIx8EhFf0YQZeGQsxM0FscIxQPFGSw\",\"httpOnly\":true,\"sameSite\":\"None\",\"secure\":true,\"path\":\"/\",\"domain\":\".discord.com\",\"hostOnly\":false},\".discord.com@/@__dcfduid\":{\"n"}
+done

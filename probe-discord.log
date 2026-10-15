@@ -1,0 +1,33 @@
+step: open browsing page
+goto https://43703-is9po0jmy2ugc1sjco16a.e2b.app/humbler
+[console.error] Failed to load resource: the server responded with a status of 404 ()
+step: scramjet ready
+[console.error] Failed to load resource: the server responded with a status of 404 ()
+[console.error] Failed to load resource: the server responded with a status of 404 ()
+[console.error] Refused to execute script from 'https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hj6k3olm/2g9ogkp7/https%3A%2F%2Fdiscord.com%2Fcdn-cgi%2Fchallenge-platform%2Fscripts%2Fjsd%2Fmain.js?%24io=null' because its MIME type ('image/vnd.microsoft.icon') is not executable, and strict MIME type checking is enabled.
+[console.warning] connecting
+[console.warning] %c[ConditionalMediation] 
+font-weight: bold;
+color: purple;
+ SecurityError The relying party ID is not a registrable domain suffix of, nor equal to the current domain. Subsequently, an attempt to fetch the .well-known/webauthn resource of the claimed RP ID failed.
+note: url check loose
+step: waiting for discord login form
+step: discord login form visible
+frame url: https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hj6k3olm/2g9ogkp7/https%3A%2F%2Fdiscord.com%2Flogin
+frame probes: {"location":"https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hj6k3olm/2g9ogkp7/https%3A%2F%2Fdiscord.com%2Flogin","origin":"https://discord.com","documentCookie":"","localStorage":"ERR ReferenceError: localStorage is not defined","indexedDB":"open-ok","fetchProbe":"status 200"}
+step: gateway websocket probe from frame
+[console.warning] connecting
+ws probe: {"ctor":"WebSocket","events":[],"done":"timeout"}
+step: submit fake credentials
+clicked submit
+[console.error] Failed to load resource: the server responded with a status of 400 (Bad Request)
+t+4s frame state: {"spinner":6,"toasts":[],"fetchLog":[{"url":"https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hj6k3olm/2g9ogkp7/https%3A%2F%2Fdiscord.com%2Fassets%2F34aec3bbe8b005d0.module.wasm?%24mode=cors&%24io=https%3A%2F%2Fdiscord.com","method":"GET","start":1792064547638,"status":200,"ms":906},{"url":"https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hj6k3olm/2g9ogkp7/https%3A%2F%2Fdiscord.com%2Fapi%2Fv9%2Fexperiments?%24mode=cors&%24cred=include&%24io=https%3A%2F%2Fdiscord.com","method":"GET","start":1792064569500,"status":200,"ms":150},{"url":"https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hj6k3olm/2g9ogkp7/https%3A%2F%2F71c1a3bd5d2b.w.hcaptcha.com%2Flogo.png?%24mode=cors&%24io=https%3A%2F%2Fdiscord.com","method":"GET","start":1792064578390,"status":200,"ms":215}]}
+t+8s frame state: {"spinner":6,"toasts":[],"fetchLog":[{"url":"https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hj6k3olm/2g9ogkp7/https%3A%2F%2Fdiscord.com%2Fassets%2F34aec3bbe8b005d0.module.wasm?%24mode=cors&%24io=https%3A%2F%2Fdiscord.com","method":"GET","start":1792064547638,"status":200,"ms":906},{"url":"https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hj6k3olm/2g9ogkp7/https%3A%2F%2Fdiscord.com%2Fapi%2Fv9%2Fexperiments?%24mode=cors&%24cred=include&%24io=https%3A%2F%2Fdiscord.com","method":"GET","start":1792064569500,"status":200,"ms":150},{"url":"https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hj6k3olm/2g9ogkp7/https%3A%2F%2F71c1a3bd5d2b.w.hcaptcha.com%2Flogo.png?%24mode=cors&%24io=https%3A%2F%2Fdiscord.com","method":"GET","start":1792064578390,"status":200,"ms":215}]}
+t+12s frame state: {"spinner":6,"toasts":[],"fetchLog":[{"url":"https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hj6k3olm/2g9ogkp7/https%3A%2F%2Fdiscord.com%2Fassets%2F34aec3bbe8b005d0.module.wasm?%24mode=cors&%24io=https%3A%2F%2Fdiscord.com","method":"GET","start":1792064547638,"status":200,"ms":906},{"url":"https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hj6k3olm/2g9ogkp7/https%3A%2F%2Fdiscord.com%2Fapi%2Fv9%2Fexperiments?%24mode=cors&%24cred=include&%24io=https%3A%2F%2Fdiscord.com","method":"GET","start":1792064569500,"status":200,"ms":150},{"url":"https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hj6k3olm/2g9ogkp7/https%3A%2F%2F71c1a3bd5d2b.w.hcaptcha.com%2Flogo.png?%24mode=cors&%24io=https%3A%2F%2Fdiscord.com","method":"GET","start":1792064578390,"status":200,"ms":215}]}
+t+16s frame state: {"spinner":6,"toasts":[],"fetchLog":[{"url":"https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hj6k3olm/2g9ogkp7/https%3A%2F%2Fdiscord.com%2Fassets%2F34aec3bbe8b005d0.module.wasm?%24mode=cors&%24io=https%3A%2F%2Fdiscord.com","method":"GET","start":1792064547638,"status":200,"ms":906},{"url":"https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hj6k3olm/2g9ogkp7/https%3A%2F%2Fdiscord.com%2Fapi%2Fv9%2Fexperiments?%24mode=cors&%24cred=include&%24io=https%3A%2F%2Fdiscord.com","method":"GET","start":1792064569500,"status":200,"ms":150},{"url":"https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hj6k3olm/2g9ogkp7/https%3A%2F%2F71c1a3bd5d2b.w.hcaptcha.com%2Flogo.png?%24mode=cors&%24io=https%3A%2F%2Fdiscord.com","method":"GET","start":1792064578390,"status":200,"ms":215}]}
+t+20s frame state: {"spinner":6,"toasts":[],"fetchLog":[{"url":"https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hj6k3olm/2g9ogkp7/https%3A%2F%2Fdiscord.com%2Fassets%2F34aec3bbe8b005d0.module.wasm?%24mode=cors&%24io=https%3A%2F%2Fdiscord.com","method":"GET","start":1792064547638,"status":200,"ms":906},{"url":"https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hj6k3olm/2g9ogkp7/https%3A%2F%2Fdiscord.com%2Fapi%2Fv9%2Fexperiments?%24mode=cors&%24cred=include&%24io=https%3A%2F%2Fdiscord.com","method":"GET","start":1792064569500,"status":200,"ms":150},{"url":"https://43703-is9po0jmy2ugc1sjco16a.e2b.app/slaughtering/network/hj6k3olm/2g9ogkp7/https%3A%2F%2F71c1a3bd5d2b.w.hcaptcha.com%2Flogo.png?%24mode=cors&%24io=https%3A%2F%2Fdiscord.com","method":"GET","start":1792064578390,"status":200,"ms":215}]}
+controller cookieJar: Error: page.evaluate: TypeError: ((intermediate value) || []).map is not a function
+    at eval (eval at evaluate (:311:30), <anonymous>:2:68)
+    at UtilityScript.evaluate (<anonymous>:313:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+done

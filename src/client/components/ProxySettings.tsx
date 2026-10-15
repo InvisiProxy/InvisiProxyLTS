@@ -4,9 +4,10 @@ import { SettingToggle, TransportSelect } from './SettingsControls.tsx';
 export default function ProxySettings() {
 	return (
 		<>
-			<p><br></br>
-				We offer premium domains, beta features, residential ISP connections and faster
-				speeds. You can donate on{' '}
+			<p>
+				<br></br>
+				We offer premium domains, beta features, residential ISP
+				connections and faster speeds. You can donate on{' '}
 				<a
 					href={route('/patreon')}
 					target="_blank"

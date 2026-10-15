@@ -14,7 +14,12 @@ import { preloaded404, tryReadFile } from './files.ts';
 import { type ClientIp, createLinkDispenser } from './link-dispenser.ts';
 import type { ExternalPages } from './links.ts';
 import { loadRoutes } from './routes.ts';
-import { nonWSRedirect, wispOptions, wispPath } from './wisp.ts';
+import {
+	matchesWispPath,
+	nonWSRedirect,
+	wispOptions,
+	wispPath,
+} from './wisp.ts';
 
 export type SiteHandler = (req: IncomingMessage, res: ServerResponse) => void;
 
@@ -91,7 +96,8 @@ function redirect(res: ServerResponse, location: string) {
 
 function disguiseCheck(
 	pages: Record<string, string>,
-	externalPages: ExternalPages
+	externalPages: ExternalPages,
+	wispRoute: string
 ): (url: string) => Disguise {
 	if (!config.disguiseFiles) return () => 'pass';
 	const base = serverUrl.pathname;
@@ -108,12 +114,17 @@ function disguiseCheck(
 	exemptPages.push(...exemptDirs);
 
 	return (url) => {
-		let path: string;
+		let pathname: string;
 		try {
-			path = new URL(url, serverUrl).pathname.slice(base.length);
+			pathname = new URL(url, serverUrl).pathname;
 		} catch {
 			return 'pass';
 		}
+		// The Wisp endpoint must keep its designated non-WS response in every
+		// encoding it can arrive in (query, percent-encoded slashes) instead of
+		// falling through to the loader or a 404 before the upgrade happens.
+		if (matchesWispPath(pathname, wispRoute)) return 'pass';
+		const path = pathname.slice(base.length);
 		if (
 			otherFile.test(path) ||
 			exemptDirs.some((dir) => path.startsWith(`${dir}/`)) ||
@@ -176,7 +187,7 @@ export function createSiteHandler({
 	const dispenserPath = `${base}api/link`;
 	const dispense = createLinkDispenser(undefined, clientIp);
 	const wispRoute = trimSlash(wispPath());
-	const checkDisguise = disguiseCheck(pages, externalPages);
+	const checkDisguise = disguiseCheck(pages, externalPages, wispRoute);
 	const loaderPage = config.disguiseFiles
 		? tryReadFile('pages/misc/deobf/loader.html', siteUrl, false)
 		: '';
@@ -287,7 +298,7 @@ export function createSiteHandler({
 		}
 		if (req.method !== 'GET' && req.method !== 'HEAD') return notFound(res);
 
-		if (path === wispRoute)
+		if (matchesWispPath(path, wispRoute))
 			return wispRedirect
 				? redirect(res, wispRedirect)
 				: reply(res, 200, 'text/plain', wispResponse);

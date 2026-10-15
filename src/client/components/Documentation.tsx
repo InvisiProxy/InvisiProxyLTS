@@ -39,8 +39,8 @@ export default function Documentation() {
 				<a
 					href={route('/chemicaljs')}
 					target="_blank"
-						rel="noopener noreferrer"
-						class="fancybutton fb-l glowbutton"
+					rel="noopener noreferrer"
+					class="fancybutton fb-l glowbutton"
 				>
 					Build Your Proxy Site with Chemical
 				</a>

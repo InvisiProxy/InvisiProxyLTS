@@ -29,6 +29,9 @@ const server = createServer(createSiteHandler()).on(
 	(req, socket, head) => {
 		const region = wispRegion(req.url);
 		if (socket instanceof Socket && region !== null) {
+			// Hand the Wisp backend its canonical path: query strings or
+			// percent-encoded variants must never reach path-sensitive
+			// routing inside the transport.
 			req.url = wispPath();
 			wisps.get(region)?.route(req, socket, head);
 		} else socket.destroy();
