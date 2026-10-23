@@ -267,6 +267,9 @@ proxySettings:
     We offer premium domains, beta features, residential ISP connections and faster speeds. You can donate on <patreon>Patreon</patreon>.
   title: Proxy Preferences
   connection: Connection
+  searchNavFix: Enable site fixes
+  searchNavFixDescription: >-
+    Utilize plugin made by The Freedom Project to fix support for TikTok, DuckDuckGo and other sites. Optional.
   hideHistoryDescription: Reduce saved history. May affect some sites.
   moreSettings: View more settings
   anotherLink: Need another link? Click the <mirrors>mirror links button</mirrors>.
