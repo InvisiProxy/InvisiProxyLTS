@@ -1,4 +1,9 @@
-import { Keywords, route } from '../document-helpers.tsx';
+import {
+	Keywords,
+	route,
+	translate,
+	Translation,
+} from '../document-helpers.tsx';
 import HeadContent from '../components/HeadContent.tsx';
 import AntiExfil from '../components/AntiExfil.tsx';
 
@@ -9,15 +14,15 @@ export default function ScramjetError() {
 			<AntiExfil />
 			<div id="cover"></div>
 			<div id="inner" class="container-fluid text-center">
-				<h1 id="errorTitle">Scramjet Network Error</h1>
+				<h1 id="errorTitle">{translate('scramjetError.title')}</h1>
 				<code>
-					{'Failed to load: '}
+					{`${translate('scramjetError.failed')} `}
 					<b id="fetchedURL"></b>
 				</code>
-				<h2>Reloading the page will fix your problem.</h2>
+				<h2>{translate('scramjetError.reload')}</h2>
 				<br />
 				<button type="button" id="reload">
-					Refresh Page
+					{translate('scramjetError.refresh')}
 				</button>
 				<br />
 				<div id="info">
@@ -29,65 +34,50 @@ export default function ScramjetError() {
 							readonly={true}
 						></textarea>
 						<button type="button" id="copy-button" class="primary">
-							Copy
+							{translate('scramjetError.copy')}
 						</button>
 					</div>
 					<div id="troubleshooting" class="container text-wrap">
-						<p>Try:</p>
+						<p>{translate('scramjetError.try')}</p>
 						<ul>
+							<li>{translate('scramjetError.tips.reload')}</li>
+							<li>{translate('scramjetError.tips.idb')}</li>
+							<li>{translate('scramjetError.tips.cache')}</li>
+							<li>{translate('scramjetError.tips.address')}</li>
 							<li>
-								Reloading the page; this is a known issue with
-								our proxies
+								{translate('scramjetError.tips.maintenance')}
 							</li>
+							<li>{translate('scramjetError.tips.address')}</li>
+							<li>{translate('scramjetError.tips.censored')}</li>
+							<li>{translate('scramjetError.tips.faq')}</li>
 							<li>
-								In the case of an IDB Database error please
-								clear your site data by clicking on the lock
-								icon in the address bar and selecting "Site
-								settings" or "Site data" and then clicking
-								"Clear site data"
+								<Translation
+									id="scramjetError.tips.github"
+									tags={{
+										github: (text) => (
+											<a
+												href={route('/github/scramjet')}
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												{text}
+											</a>
+										),
+									}}
+								/>
 							</li>
-							<li>
-								Clearing your browser or site cache data via
-								Ctrl+Shift+R and browser settings
-							</li>
-							<li>Verifying you entered the correct address</li>
-							<li>
-								In the case of website maintenance or updates,
-								please wait for the issue to be resolved.
-							</li>
-							<li>Verifying you entered the correct address</li>
-							<li>Verify the server isn't censored</li>
-							<li>
-								View the FAQ page for specific site
-								compatibility issues.
-							</li>
-							<li>
-								Troubleshooting the error on the{' '}
-								<a
-									href={route('/github/scramjet')}
-									target="_blank"
-									rel="noopener noreferrer"
-								>
-									Scramjet GitHub.
-								</a>
-							</li>
-							<li>
-								Try a different proxy engine via the settings
-								panel.
-							</li>
+							<li>{translate('scramjetError.tips.engine')}</li>
 						</ul>
 					</div>
 				</div>
 				<code>
 					<i>
-						{
-							'Refresh the network service | Scramjet v1.1.0 - build\n          57ba89e.'
-						}
+						{`${translate('scramjetError.network')} | Scramjet v1.1.0 - build 57ba89e.`}
 					</i>
 				</code>
 				<p class="footer-spacing">
 					<i>
-						<>InvisiProxy LTS © 2020-2026 | Made With Love </>
+						{`InvisiProxy LTS © 2020-2026 | ${translate('scramjetError.love')} `}
 					</i>
 					<i class="nf nf-fa-heart"></i>
 				</p>

@@ -8,9 +8,9 @@ fetch(route("/assets/txt/blacklist.txt"))
   .then((response) => response.text())
   .then((textData) => {
     for (const line of textData.split('\n')) {
-      const domain = line.trim();
-      if (!domain || domain.charCodeAt(0) === 35 /* '#' */) continue;
-      blacklist.add(domain.toLowerCase());
+      const entry = line.trim();
+      if (!entry || '#![@'.includes(entry[0])) continue;
+      blacklist.add(entry.replace(/^\|\||\^$/g, '').toLowerCase());
     }
   })
   .catch(() => {});

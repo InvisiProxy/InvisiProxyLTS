@@ -32,8 +32,7 @@ This project serves mostly as a proof of concept for the ideal clientless soluti
 
 View the <a href="#deploy-InvisiProxy">self-deployment options</a> if you wish to self host this project. Can't deploy using any of the free options? Check out Koyeb or look into cheap, paid VPS hosting solutions. If you don't wish to self-host please click on the Mirror Links Menu on InvisiProxy.
 
-<img align="left" width="20px" src="https://raw.githubusercontent.com/InvisiProxy/InvisiProxyLTS/master/views/assets/img/mirrors.png"></img>
-
+<img align="left" width="50px" src="https://raw.githubusercontent.com/InvisiProxy/InvisiProxyLTS/master/views/assets/img/mirrors.png"></img>
 **Be sure to join TitaniumNetwork's Discord for more official site links:** <a href="https://discord.gg/unblock">https://discord.gg/unblock</a>
 
 <br>
@@ -112,6 +111,7 @@ Replit is no longer free and Heroku has a set policy against web proxies. Try Gi
     - [TOR Routing](#toronionsocks5-routing-setup)
     - [Proxy](#proxy-configuration)
     - [Client Navigation](#client-navigation-configuration)
+    - [Translations](#translations)
   - [Structure](#structure)
     - [Structure Information](#structure-information)
     - [Static Files](#details-of-views)
@@ -255,6 +255,16 @@ Every other localized changes for source randomization, auto-minify, etc. are lo
 - `usingSEO`: Enable Source Randomization which randomizes the source by swapping chunks of data specified in `./src/data.json`. Highly useful for masking keywords that will automatically flag or block InvisiProxy LTS as well as preventing source blocks.
 - `verbose`: Enables compiling and building messages to see progress and possible issues while compiling.
 - `mirrorLinksFile`: Server-only file used by the Links page dispenser, defaulting to `private/mirror-links.txt`. Relative paths are resolved from the project root; absolute paths are also supported. Use one HTTP(S) URL per line and keep the file outside `views/` so it is not publicly served. Restart the server after changing this setting.
+- `geoLanguage`: Enables automatic language selection using Cloudflare's `CF-IPCountry` header. Only enable this behind Cloudflare, since the header can otherwise be set by anyone. Countries are listed per language under `language.countries` in each `./src/locales/*.yaml` file.
+- `singleLanguage`: When `true`, only the language set in `language` is built and every visitor gets it, with the Language setting hidden. Useful for Docker or other deployments that only need one language, since builds are faster and smaller. Defaults to `false`.
+- `language`: The language to build when `singleLanguage` is on, matching a file in `./src/locales/` (e.g. `en` for `en.yaml`). Defaults to `en`. For Docker, set this in `config.json` before running `docker build` or `docker compose build`, since languages are chosen at build time.
+
+#### Translations
+
+InvisiProxy LTS is translated on **[Crowdin](https://crowdin.com/project/invisiproxy)**, and anyone can help without needing to touch code. Join the project, choose a language and start translating. Finished translations are synced into `./src/locales/` automatically.
+
+See [`src/locales/README.md`](src/locales/README.md) for the translation rules (placeholders, tags and masked terms). If your language isn't listed on Crowdin, open an issue or ask in the Discord.
+
 #### Tor/Onion/SOCKS5 Routing Setup
 
 You need to setup Tor (no GUI need/GUI is alright. With GUI replace port 9050 with 9150) in order for the Onion Routing setting to work!

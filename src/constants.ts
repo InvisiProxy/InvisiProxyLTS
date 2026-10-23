@@ -10,6 +10,7 @@ export const stagingDir = join(projectDir, 'views/dist-new');
 export const serverDir = join(projectDir, 'dist');
 export const notFoundFile = 'not-found.html';
 export const routesFile = 'routes.json';
+export const localesFile = 'locales.json';
 export const entryPointFile = 'pages/misc/deobf/entry-point.html';
 
 export const developmentEnv = 'INVISIPROXY_VITE_DEV';

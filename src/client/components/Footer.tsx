@@ -1,4 +1,4 @@
-import { route } from '../document-helpers.tsx';
+import { route, translate } from '../document-helpers.tsx';
 
 export default function Footer() {
 	return (
@@ -6,22 +6,25 @@ export default function Footer() {
 			<div class="footerflex">
 				<div class="footerbrand">
 					<h3>
-						<a href={route('/')} title="InvisiProxy Homepage">
+						<a
+							href={route('/')}
+							title={translate('footer.homeTitle')}
+						>
 							InvisiProxy
 						</a>
 					</h3>
-					<p>Global Web Proxy Innovation, Done Right.</p>
+					<p>{translate('footer.tagline')}</p>
 					<div class="logo-potato"></div>
 				</div>
 				<div class="footerlist">
-					<h3>Dependencies</h3>
+					<h3>{translate('footer.dependencies')}</h3>
 					<ul>
 						<li>
 							<a
 								target="_blank"
 								rel="noopener noreferrer"
 								href={route('/github/solidjs')}
-								title="SolidJS  - Simple and performant reactivity for building user interfaces.."
+								title={translate('footer.solidjs')}
 							>
 								SolidJS{' '}
 							</a>
@@ -31,7 +34,7 @@ export default function Footer() {
 								target="_blank"
 								rel="noopener noreferrer"
 								href={route('/wispurr')}
-								title="High-Performance and Feature Focused Wisp v1/v2 Server implementation in Golang."
+								title={translate('footer.wispurr')}
 							>
 								Wispurr{' '}
 							</a>
@@ -41,7 +44,7 @@ export default function Footer() {
 								target="_blank"
 								rel="noopener noreferrer"
 								href={route('/github/nord-theme')}
-								title="Nord Theme - An arctic, north-bluish color palette."
+								title={translate('footer.nord')}
 							>
 								Nord Theme
 							</a>
@@ -49,7 +52,7 @@ export default function Footer() {
 					</ul>
 				</div>
 				<div class="footerlist">
-					<h3>Transports</h3>
+					<h3>{translate('footer.transports')}</h3>
 					<ul>
 						<li>
 							<a
@@ -72,14 +75,14 @@ export default function Footer() {
 					</ul>
 				</div>
 				<div class="footerlist">
-					<h3>Services</h3>
+					<h3>{translate('footer.services')}</h3>
 					<ul>
 						<li>
 							<a
 								target="_blank"
 								rel="noopener noreferrer"
 								href={route('/github/scramjet')}
-								title="Scramjet - Scramjet is a versatile web proxy designed to bypass internet censorship."
+								title={translate('footer.scramjet')}
 							>
 								Scramjet
 							</a>
@@ -89,9 +92,9 @@ export default function Footer() {
 								target="_blank"
 								rel="noopener noreferrer"
 								href={route('/github/wisp')}
-								title="Wisp - Wisp is a low-overhead, easy to implement protocol for proxying multiple TCP/UDP sockets over a single websocket."
+								title={translate('footer.wisp')}
 							>
-								Wisp Protocol
+								{translate('footer.wispLabel')}
 							</a>
 						</li>
 						<li>
@@ -99,7 +102,7 @@ export default function Footer() {
 								target="_blank"
 								rel="noopener noreferrer"
 								href={route('/github/proxy-transports')}
-								title="Proxy Transports - The transport interface used by Scramjet."
+								title={translate('footer.proxyTransports')}
 							>
 								Proxy Transports
 							</a>
@@ -109,22 +112,22 @@ export default function Footer() {
 								target="_blank"
 								rel="noopener noreferrer"
 								href={route('/github/merp')}
-								title="Merp - Advanced obfuscation module"
+								title={translate('footer.merp')}
 							>
-								Merp Obfuscation
+								{translate('footer.merpLabel')}
 							</a>
 						</li>
 					</ul>
 				</div>
 				<div class="footerlist">
-					<h3>About</h3>
+					<h3>{translate('footer.about')}</h3>
 					<ul>
 						<li>
 							<a
 								target="_blank"
 								rel="noopener noreferrer"
 								href={route('/github')}
-								title="InvisiProxy GitHub Repository"
+								title={translate('footer.githubTitle')}
 							>
 								GitHub
 							</a>
@@ -134,7 +137,7 @@ export default function Footer() {
 								target="_blank"
 								rel="noopener noreferrer"
 								href={route('/patreon')}
-								title="Follow InvisiProxy on Patreon"
+								title={translate('footer.patreonTitle')}
 							>
 								Patreon
 							</a>
@@ -142,24 +145,26 @@ export default function Footer() {
 						<li>
 							<a
 								href={route('/privacy')}
-								title="Privacy Policy"
+								title={translate('footer.privacy')}
 							>
-								Privacy Policy
+								{translate('footer.privacy')}
 							</a>
 						</li>
 						<li>
 							<a
 								href={route('/credits')}
-								title="Credits and Acknowledgements"
+								title={translate('footer.creditsTitle')}
 							>
-								Credits
+								{translate('footer.credits')}
 							</a>
 						</li>
 					</ul>
 				</div>
 				<div class="footerlist">
-					<a href="#top" title="Back to Top">
-						<span class="sr-only">Back to Top</span>
+					<a href="#top" title={translate('footer.backToTop')}>
+						<span class="sr-only">
+							{translate('footer.backToTop')}
+						</span>
 						<i
 							class="fas fa-angle-double-up"
 							aria-hidden="true"
@@ -172,27 +177,33 @@ export default function Footer() {
 					target="_blank"
 					rel="noopener noreferrer"
 					href={route('/github')}
-					title="Follow InvisiProxy on GitHub"
+					title={translate('footer.followGithub')}
 				>
-					<span class="sr-only">Follow InvisiProxy on GitHub</span>
+					<span class="sr-only">
+						{translate('footer.followGithub')}
+					</span>
 					<i class="fab fa-github" aria-hidden="true"></i>
 				</a>
 				<a
 					target="_blank"
 					rel="noopener noreferrer"
 					href={route('/patreon')}
-					title="Follow InvisiProxy on Patreon"
+					title={translate('footer.patreonTitle')}
 				>
-					<span class="sr-only">Follow InvisiProxy on Patreon</span>
+					<span class="sr-only">
+						{translate('footer.patreonTitle')}
+					</span>
 					<i class="fab fa-patreon" aria-hidden="true"></i>
 				</a>
 				<a
 					target="_blank"
 					rel="noopener noreferrer"
 					href={route('/kofi')}
-					title="Follow Developer on Ko-fi"
+					title={translate('footer.followKofi')}
 				>
-					<span class="sr-only">Follow Developer on Ko-fi</span>
+					<span class="sr-only">
+						{translate('footer.followKofi')}
+					</span>
 					<i class="fas fa-coffee" aria-hidden="true"></i>
 				</a>
 			</div>

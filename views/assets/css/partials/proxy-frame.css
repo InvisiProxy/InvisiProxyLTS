@@ -4,7 +4,7 @@
 	left: 0;
 	width: 100vw;
 	height: 100dvh;
-	background-color: rgba(13, 17, 23, 0.65);
+	background-color: #0d1117;
 	background-image:
 		radial-gradient(circle, rgba(131, 131, 131, 0.02) 1px, transparent 1px),
 		radial-gradient(circle, rgba(148, 148, 148, 0.02) 1px, transparent 1px);
@@ -15,6 +15,8 @@
 	z-index: 1;
 	align-items: center;
 	justify-content: center;
+	flex-direction: column;
+	gap: 32px;
 	display: flex;
 	visibility: hidden;
 	opacity: 0;
@@ -24,43 +26,38 @@
 	transition-delay: 0.3s, 0s;
 }
 
+/* https://cssloaders.github.io/ */
 .loader-active {
 	opacity: 1;
 	visibility: visible;
-	transition-delay: 0s, 0.6s;
+	transition-delay: 0s;
+}
+
+.loader-text {
+	color: #fff;
+	font-size: 1.75rem;
+	text-align: center;
+	padding: 0 16px;
 }
 
 .loader-w {
 	width: 80px;
-	aspect-ratio: 1;
-	box-shadow: 0 0 0 3px #fff inset;
+	height: 80px;
 	border-radius: 50%;
-	position: relative;
-	animation: l11 7s infinite;
+	display: inline-block;
+	border-top: 4px solid #fff;
+	border-right: 4px solid transparent;
+	box-sizing: border-box;
+	animation: rotation 1s linear infinite;
 }
 
-.loader-w:before,
-.loader-w:after {
-	content: "";
-	position: absolute;
-	top: calc(100% + 3px);
-	left: calc(50% - 20px);
-	box-shadow: inherit;
-	width: 40px;
-	aspect-ratio: 1;
-	border-radius: 50%;
-	transform-origin: 50% -45px;
-	animation: l11 1.5s infinite;
-}
+@keyframes rotation {
+	0% {
+		transform: rotate(0deg);
+	}
 
-.loader-w:after {
-	animation-delay: -0.75s;
-}
-
-@keyframes l11 {
 	100% {
 		transform: rotate(360deg);
-		transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 }
 

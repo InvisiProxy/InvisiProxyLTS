@@ -1,4 +1,11 @@
-import { Keywords, Inline, route, sites } from '../document-helpers.tsx';
+import {
+	Keywords,
+	Inline,
+	route,
+	sites,
+	translate,
+	Translation,
+} from '../document-helpers.tsx';
 import {
 	ParticlesScript,
 	TooltipScripts,
@@ -15,6 +22,15 @@ import ProxySettings from '../components/ProxySettings.tsx';
 import Footer from '../components/Footer.tsx';
 import App from '../components/AppButton.tsx';
 
+const links = {
+	patreon: (text: string) => (
+		<a href={route('/patreon')} target="_blank" rel="noopener noreferrer">
+			{text}
+		</a>
+	),
+	faq: (text: string) => <a href={route('/questions')}>{text}</a>,
+};
+
 export default function Applications() {
 	return (
 		<>
@@ -29,42 +45,21 @@ export default function Applications() {
 				<div class="box-hero">
 					<div class="hero-content">
 						<div class="proxy-header text-center">
-							<h1 class="bigtitle">Applications</h1>
-							<p>
-								Select a website below to open it through the
-								proxy. Be sure to avoid logging in with primary
-								accounts, as this is a public proxy service. It
-								is recommended you create alternative accounts
-								and enable 2FA as some sites loosen restrictions
-								under those requirements. Millions of requests
-								are going through several IPs so some sites may
-								block access.
-							</p>
+							<h1 class="bigtitle">
+								{translate('header.apps.mobileLabel')}
+							</h1>
+							<p>{translate('apps.intro')}</p>
 							<br />
 							<p>
-								Consider joining our{' '}
-								<a
-									href={route('/patreon')}
-									target="_blank"
-									rel="noopener noreferrer"
-								>
-									Patreon
-								</a>{' '}
-								if you wish to utilize traffic under a reputable
-								residential ISP and faster speeds. You may also
-								enable Tor routing or edit Regional Settings if
-								you have any issues. For GeForce Now support
-								please disable ads via the proxy settings.
+								<Translation id="apps.patreon" tags={links} />
 							</p>
 							<br />
-							{'View the\n            '}
-							<a href={route('/questions')}>FAQ</a> page if you
-							have any issues with the proxy.
+							<Translation id="apps.faq" tags={links} />
 						</div>
 						<div class="proxy-form text-center">
 							<div class="glist">
 								{sites.map((site) => (
-									<App url={site.url} name={site.name} />
+									<App url={site.url} name={site.name} icon={site.icon} />
 								))}
 							</div>
 							<ProxySettings />
@@ -86,7 +81,7 @@ export default function Applications() {
 export function Head() {
 	return (
 		<>
-			<title>InvisiProxy LTS | Applications</title>
+			<title>{`InvisiProxy LTS | ${translate('header.apps.mobileLabel')}`}</title>
 			<PageDescription />
 			<ProxyPreloads />
 			<HeadContent />

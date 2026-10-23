@@ -9,13 +9,13 @@
         <loc>https://invisiproxy.com/</loc>
         <lastmod>2026-10-20T00:00:00+00:00</lastmod>
         <priority>1.00</priority>
-        <changefreq>weekly</changefreq>
+        <changefreq>monthly</changefreq>
     </url>
     <url>
         <loc>https://invisiproxy.com/browsing</loc>
         <lastmod>2026-10-20T00:00:00+00:00</lastmod>
         <priority>0.98</priority>
-        <changefreq>weekly</changefreq>
+        <changefreq>monthly</changefreq>
     </url>
     <url>
         <loc>https://invisiproxy.com/apps</loc>

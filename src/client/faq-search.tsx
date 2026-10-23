@@ -7,7 +7,7 @@ const normalizeSearch = (value: string) =>
 		.trim()
 		.toLocaleLowerCase();
 
-function FAQSearch() {
+function FAQSearch(props: { label?: string; placeholder?: string }) {
 	const [query, setQuery] = createSignal('');
 	const entries = [...document.querySelectorAll<HTMLElement>('#faqs > div')];
 	createEffect(() => {
@@ -23,10 +23,10 @@ function FAQSearch() {
 		<input
 			class="faq-search"
 			type="search"
-			aria-label="Search frequently asked questions"
+			aria-label={props.label}
 			autocomplete="off"
 			spellcheck={false}
-			placeholder="Search"
+			placeholder={props.placeholder}
 			value={query()}
 			onInput={(event) => setQuery(event.currentTarget.value)}
 		/>
@@ -35,6 +35,7 @@ function FAQSearch() {
 
 const root = document.getElementById('faq-search-root');
 if (root) {
+	const { label, placeholder } = root.dataset;
 	root.replaceChildren();
-	render(() => <FAQSearch />, root);
+	render(() => <FAQSearch label={label} placeholder={placeholder} />, root);
 }

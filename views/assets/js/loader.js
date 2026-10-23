@@ -203,7 +203,8 @@ import { values } from 'build:invisiproxy';
                                   event.shiftKey ||
                                   event.altKey ||
                                   (target && target.toLowerCase() !== '_self') ||
-                                  elementCopy.hasAttribute('download')
+                                  elementCopy.hasAttribute('download') ||
+                                  _document.cookie.split('; ').includes('HistoryHide=true')
                                 ) return;
                                 event.preventDefault();
                                 loadPage(new URL(attrValue, origin))();

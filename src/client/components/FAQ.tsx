@@ -1,19 +1,27 @@
-import { Keywords, iconBookmarklet } from '../document-helpers.tsx';
+import {
+	iconBookmarklet,
+	translate,
+	Translation,
+} from '../document-helpers.tsx';
 
 export default function FAQ() {
 	return (
 		<>
 			<div class="faq-center bigtitle">
-				<h1>Frequently Asked Questions</h1>
+				<h1>{translate('faq.title')}</h1>
 			</div>
 			<div class="faq-box">
-				<div id="faq-search-root">
+				<div
+					id="faq-search-root"
+					data-placeholder={translate('faq.search')}
+					data-label={translate('faq.searchLabel')}
+				>
 					<input
 						class="faq-search"
 						type="text"
 						autocomplete="off"
 						spellcheck="false"
-						placeholder="Search"
+						placeholder={translate('faq.search')}
 					/>
 				</div>
 			</div>
@@ -21,14 +29,9 @@ export default function FAQ() {
 			<div id="faqs" class="faq">
 				<div class="faq-text">
 					<h3>
-						<strong>
-							How do I obtain Icon URLs for the Tab Cloaking menu?
-						</strong>
+						<strong>{translate('faq.icons.question')}</strong>
 					</h3>
-					<p>
-						Go to the website you want an icon from, then use this
-						bookmarklet (drag it to your bookmarks bar):
-					</p>
+					<p>{translate('faq.icons.bookmarklet')}</p>
 					<br></br>
 					<div id="bks-parent">
 						<a
@@ -36,182 +39,87 @@ export default function FAQ() {
 							id="iconfinder"
 							class="fancybutton fb-l glowbutton"
 						>
-							Find Icon URL
+							{translate('faq.icons.button')}
 						</a>
 					</div>
 					<br></br>
-					<p>
-						Copy the URL that the bookmarklet gives you. Then go
-						back to InvisiProxy and enter in the URL for the Icon
-						URL in Settings. Enjoy!
-					</p>
+					<p>{translate('faq.icons.copy')}</p>
 				</div>
 				<div class="faq-text">
 					<h3>
 						<strong>
-							I am getting "Network Error" or Site Error every
-							time I use the proxy?
+							{translate('faq.networkError.question')}
 						</strong>
 					</h3>
-					<p>
-						This is a known issue with our modern web proxies. Due
-						to the amount of users we get typically after ten
-						minutes of no tab activity the connection is cut. Simply
-						hit the Refresh Page button and reload the page to
-						resolve the issue.
-					</p>
-					<p>
-						This typically happens the first time you use the proxy.
-						We have a future fix for this.
-					</p>
+					<p>{translate('faq.networkError.answer')}</p>
+					<p>{translate('faq.networkError.note')}</p>
 				</div>
 				<div class="faq-text">
 					<h3>
-						<strong>
-							I am having problems logging into sites or viewing
-							content since it thinks I am a bot.
-						</strong>
+						<strong>{translate('faq.bot.question')}</strong>
 					</h3>
-					<p>
-						During peak traffic hours this is very common due to
-						everything going through only two respective IPs. The
-						solution is to swap regions via Region Selection or
-						enable Tor routing. You can also join our Patreon for
-						access to a instance with a residential ISP to avoid
-						this issue.
-					</p>
+					<p>{translate('faq.bot.answer')}</p>
 				</div>
 				<div class="faq-text">
 					<h3>
-						<strong>
-							I am getting an error similar to: "'cdn.example.com'
-							cannot be reached."
-						</strong>
+						<strong>{translate('faq.unreachable.question')}</strong>
 					</h3>
-					<p>
-						Reload the page. If that doesn't work the first time,
-						simply use the browser's back button or head back to the
-						Scramjet page and try again.
-					</p>
+					<p>{translate('faq.unreachable.answer')}</p>
 				</div>
 				<div class="faq-text">
 					<h3>
-						<strong>
-							Why is my site loading in partially or just blank?
-						</strong>
+						<strong>{translate('faq.blank.question')}</strong>
 					</h3>
-					<p>
-						Not all websites are supported. Naturally this is due to
-						the wide expanses of the web with different technologies
-						and methods of loading content. If you are having issues
-						with a specific site, please report it to us on our
-						Discord server or GitHub. Otherwise try filtering
-						through our proxy options to see if one of them supports
-						the site.
-					</p>
+					<p>{translate('faq.blank.answer')}</p>
 				</div>
 				<div class="faq-text">
 					<h3>
-						<strong>
-							I am getting an error referencing an IDB Database
-							(Scramjet V1 issue)
-						</strong>
+						<strong>{translate('faq.idb.question')}</strong>
 					</h3>
-					<p>
-						This typically happens whenever we do updates to our
-						project. Simply click on the (i) icon in the top left
-						corner of your browser (or lock symbol) and select
-						"Clear Site Data" or "Clear Cookies and Site Data &gt;
-						Manage On-Site Data &gt; Trash Icon". This will clear
-						the IndexedDB database and allow you to use the proxy
-						again.
-					</p>
+					<p>{translate('faq.idb.answer')}</p>
 				</div>
 				<div class="faq-text">
 					<h3>
-						<strong>Is Discord supported?</strong>
+						<strong>{translate('faq.discord.question')}</strong>
 					</h3>
-					<p>Yes, Discord is supported.</p>
+					<p>{translate('faq.discord.answer')}</p>
 					<ul>
-						<li>
-							However, there are some limitations with the free
-							proxies. Ensure that you don't utilize your main
-							account unless if you are self-hosting or using a
-							small domain.
-						</li>
+						<li>{translate('faq.discord.note')}</li>
 					</ul>
 				</div>
 				<div class="faq-text">
 					<h3>
-						<strong>Why are YouTube videos not working?</strong>
+						<strong>{translate('faq.youtube.question')}</strong>
 					</h3>
-					<p>
-						If you are having persistent issues even after doing the
-						steps above there is a chance that the instance is down
-						temporarily, especially if large groups of people are
-						also having the issue. This issue doesn't happen for
-						self-hosting.
-					</p>
-					<p>
-						Try selecting the "Tor" option as this may fix the
-						problem but greatly reduce loading speeds.
-					</p>
+					<p>{translate('faq.youtube.answer')}</p>
+					<p>{translate('faq.youtube.tor')}</p>
 				</div>
 				<div class="faq-text">
 					<h3>
-						<strong>Is it safe for me to login to sites?"</strong>
+						<strong>{translate('faq.login.question')}</strong>
 					</h3>
-					<p>
-						Yes, it is safe to login to sites. However, we recommend
-						that you do not login into sites you do not trust or use
-						personal accounts due to the number of traffic being
-						routed into a single domain. We try to migate this
-						problem by rotating IPs however it is just a common
-						practice to not use personal accounts on public proxies.
-						Self-hosting however you can do so with ease. You can
-						also join the patreon to utilize a residential ISP and
-						avoid this issue.
-					</p>
+					<p>{translate('faq.login.answer')}</p>
+				</div>
+				<div class="faq-text">
+					<h3>
+						<strong>{translate('faq.captcha.question')}</strong>
+					</h3>
+					<p>{translate('faq.captcha.answer')}</p>
 				</div>
 				<div class="faq-text">
 					<h3>
 						<strong>
-							Why is the site I am on not working correctly or
-							having CAPTCHA errors?
+							{translate('faq.youtubeBlank.question')}
 						</strong>
 					</h3>
-					<p>
-						Captcha support works with Scramjet but it will take
-						trial and error. The reason for this is Scramjet is
-						often simply too fast and naturally CAPTCHA is very
-						spotty. The solution is just keep trying to solve the
-						CAPTCHA until it works. Try not to go too fast.
-					</p>
-				</div>
-				<div class="faq-text">
-					<h3>
-						<strong>
-							{' '}
-							When using YouTube on any of the proxy sites, why
-							does the page not load fully or the video is just
-							white?
-						</strong>
-					</h3>
-					<p>There are two methods for fixing this:</p>
+					<p>{translate('faq.youtubeBlank.answer')}</p>
 					<ul>
 						<li>
-							<p>
-								Reloading the page normally when the error above
-								happens should load the video.
-							</p>
+							<p>{translate('faq.youtubeBlank.reload')}</p>
 						</li>
 						<li>
 							<p>
-								{
-									'\n          Or right-clicking the page and doing\n          '
-								}
-								<code>Reload Frame</code> if you are using some
-								form of Stealth Mode.
+								<Translation id="faq.youtubeBlank.reloadFrame" />
 							</p>
 						</li>
 					</ul>

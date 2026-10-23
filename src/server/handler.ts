@@ -1,3 +1,4 @@
+import { existsSync } from 'node:fs';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { join } from 'node:path';
 import send from 'send';
@@ -11,6 +12,7 @@ import {
 } from '../constants.ts';
 import { getPathAliases, getAltPrefix } from '../obfuscation/paths.ts';
 import { preloaded404, tryReadFile } from './files.ts';
+import { loadLanguages, pickLanguage } from './language.ts';
 import { type ClientIp, createLinkDispenser } from './link-dispenser.ts';
 import type { ExternalPages } from './links.ts';
 import { loadRoutes } from './routes.ts';
@@ -156,7 +158,12 @@ function applyResponseHooks(
 		}
 		return (writeHead as (...args: unknown[]) => ServerResponse).call(
 			this,
-			hide && !(statusCode >= 300 && statusCode < 400 && this.hasHeader('Location'))
+			hide &&
+				!(
+					statusCode >= 300 &&
+					statusCode < 400 &&
+					this.hasHeader('Location')
+				)
 				? 404
 				: statusCode,
 			...args
@@ -203,18 +210,51 @@ export function createSiteHandler({
 	};
 	type StaticDir = typeof pagesDir;
 
-	const notFound = (res: ServerResponse) =>
-		reply(res, 404, pageTypes.default, preloaded404());
+	const languages = loadLanguages();
+	const languageVary = config.geoLanguage
+		? 'Cookie, Accept-Language, CF-IPCountry'
+		: 'Cookie, Accept-Language';
+	const prefixedLanguages = config.usingSEO
+		? languages.codes.filter((code) => code !== languages.default)
+		: [];
+	const redirectToLanguage =
+		prefixedLanguages.length > 0 && !config.disguiseFiles;
+	const languageFor = (req: IncomingMessage) => {
+		if (languages.codes.length < 2) return '';
+		const useCountry =
+			config.geoLanguage &&
+			(!config.usingSEO || !!req.headers['accept-language']);
+		const language = pickLanguage(req, languages, useCountry);
+		return language === languages.default ? '' : language;
+	};
+	const translated = (file: string, language: string) => {
+		const copy = `locales/${language}/${file}`;
+		return language &&
+			file.endsWith('.html') &&
+			existsSync(new URL(copy, siteUrl))
+			? copy
+			: file;
+	};
+
+	const notFound = (res: ServerResponse, language: string) =>
+		reply(res, 404, pageTypes.default, preloaded404(language));
 
 	const undisguise = (path: string) =>
 		path.slice(0, path.length - 1 - disguiseExtension.length);
 
-	function servePage(res: ServerResponse, name: string, modified: boolean) {
+	function servePage(
+		req: IncomingMessage,
+		res: ServerResponse,
+		name: string,
+		modified: boolean,
+		language: string,
+		fromPath: boolean
+	) {
 		if (name === 'favicon.ico') return reply(res, 200);
 
 		if (Object.hasOwn(externalPages, name)) {
-			if (modified)
-				return reply(res, 404, pageTypes.html, preloaded404());
+			if (modified || fromPath)
+				return reply(res, 404, pageTypes.html, preloaded404(language));
 			const target = externalPages[name];
 			return redirect(
 				res,
@@ -222,7 +262,7 @@ export function createSiteHandler({
 			);
 		}
 
-		if (!Object.hasOwn(pages, name)) return notFound(res);
+		if (!Object.hasOwn(pages, name)) return notFound(res, language);
 		const file =
 			!name && config.disguiseFiles && !modified
 				? entryPointFile
@@ -230,14 +270,30 @@ export function createSiteHandler({
 		const type = modified
 			? pageTypes[disguiseExtension]
 			: pageTypes[extension(file)] || pageTypes.default;
-		reply(res, 200, type, tryReadFile(file, siteUrl));
+		if (file === entryPointFile)
+			return reply(res, 200, type, tryReadFile(file, siteUrl));
+		if (fromPath && !file.endsWith('.html')) return notFound(res, language);
+		if (!fromPath && languages.codes.length > 1)
+			res.setHeader('Vary', languageVary);
+		if (
+			redirectToLanguage &&
+			!fromPath &&
+			language &&
+			file.endsWith('.html')
+		) {
+			const url = req.url || '';
+			const query = url.includes('?') ? url.slice(url.indexOf('?')) : '';
+			return redirect(res, `${base}${language}/${name}${query}`);
+		}
+		reply(res, 200, type, tryReadFile(translated(file, language), siteUrl));
 	}
 
 	function serveStatic(
 		req: IncomingMessage,
 		res: ServerResponse,
 		dir: StaticDir,
-		file: string
+		file: string,
+		language: string
 	) {
 		res.removeHeader('Content-Type');
 		const type = precompressedTypes[extension(file)];
@@ -257,9 +313,11 @@ export function createSiteHandler({
 				if (encoding) res.setHeader('Content-Encoding', encoding[0]);
 				if (dir.vary) res.setHeader('Vary', 'Accept-Encoding');
 			});
-			stream.on('directory', () => notFound(res));
+			stream.on('directory', () => notFound(res, language));
 			stream.on('error', () =>
-				index < candidates.length ? attempt(index + 1) : notFound(res)
+				index < candidates.length
+					? attempt(index + 1)
+					: notFound(res, language)
 			);
 			stream.pipe(res);
 		};
@@ -268,8 +326,21 @@ export function createSiteHandler({
 
 	return (req, res) => {
 		applyResponseHooks(req, res, development);
-		const url = req.url || '/';
-		const path = trimSlash(url.split('?')[0].replace(/\/{2,}/g, '/'));
+		let url = req.url || '/';
+		let path = trimSlash(url.split('?')[0].replace(/\/{2,}/g, '/'));
+		// /fr/questions is the French copy of /questions.
+		const prefix = prefixedLanguages.find(
+			(code) => path === base + code || path.startsWith(`${base}${code}/`)
+		);
+		if (prefix) {
+			const query = url.indexOf('?');
+			path = trimSlash(
+				base +
+					path.slice(base.length + prefix.length).replace(/^\//, '')
+			);
+			url = path + (query < 0 ? '' : url.slice(query));
+		}
+		const language = prefix || languageFor(req);
 
 		if (req.method === 'POST' && path === dispenserPath)
 			return void dispense(req, res);
@@ -285,7 +356,8 @@ export function createSiteHandler({
 			res.setHeader('Content-Type', pageTypes[disguiseExtension]);
 			res.setHeader('Access-Control-Allow-Origin', 'null');
 		}
-		if (req.method !== 'GET' && req.method !== 'HEAD') return notFound(res);
+		if (req.method !== 'GET' && req.method !== 'HEAD')
+			return notFound(res, language);
 
 		if (path === wispRoute)
 			return wispRedirect
@@ -306,7 +378,14 @@ export function createSiteHandler({
 		const relative = path === baseRoute ? '' : path.slice(base.length);
 		if (!relative.includes('/')) {
 			const name = decode(relative);
-			return servePage(res, modified ? undisguise(name) : name, modified);
+			return servePage(
+				req,
+				res,
+				modified ? undisguise(name) : name,
+				modified,
+				language,
+				!!prefix
+			);
 		}
 
 		const github = /^github\/([^/]+)$/.exec(relative);
@@ -314,12 +393,18 @@ export function createSiteHandler({
 			const name = decode(github[1]);
 			return Object.hasOwn(externalPages.github, name)
 				? redirect(res, externalPages.github[name])
-				: notFound(res);
+				: notFound(res, language);
 		}
 
 		const dir =
 			staticDirs.find((dir) => path.startsWith(dir.prefix)) || pagesDir;
 		const file = path.slice(dir.prefix.length);
-		serveStatic(req, res, dir, modified ? undisguise(file) : file);
+		serveStatic(
+			req,
+			res,
+			dir,
+			modified ? undisguise(file) : file,
+			language
+		);
 	};
 }

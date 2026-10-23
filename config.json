@@ -8,5 +8,8 @@
 	"usingSEO": false,
 	"verbose": true,
 	"port": 8080,
-	"showSplash": true
+	"showSplash": true,
+	"geoLanguage": false,
+	"singleLanguage": false,
+	"language": "en"
 }

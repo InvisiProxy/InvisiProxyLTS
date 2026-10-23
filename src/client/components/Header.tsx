@@ -1,4 +1,4 @@
-import { route } from '../document-helpers.tsx';
+import { route, translate } from '../document-helpers.tsx';
 import Settings from './Settings.tsx';
 import MirrorLinks from './MirrorLinks.tsx';
 
@@ -9,53 +9,56 @@ export default function Header() {
 				<div
 					class="logo"
 					role="img"
-					aria-label="InvisiProxy Logo"
+					aria-label={translate('header.logoLabel')}
 				></div>
 				<a
 					href={route('/')}
 					class="brand pulse"
-					title="InvisiProxy Home Page"
+					title={translate('header.homeTitle')}
 				>
 					{' '}
-					InvisiProxy v8.1.x{' '}
+					InvisiProxy v8.2.x{' '}
 				</a>
 			</div>
 			<div class="navbar-group">
-				<ul class="navbar-1" aria-label="Primary navigation">
+				<ul
+					class="navbar-1"
+					aria-label={translate('header.primaryNav')}
+				>
 					<li style="margin-left: 0">
 						<a
 							class="line"
 							href={route('/browsing')}
-							title="Browse - Bypass restrictions on the web"
+							title={translate('header.browse.title')}
 						>
-							Browse
+							{translate('header.browse.label')}
 						</a>
 					</li>
 					<li>
 						<a
 							class="line"
 							href={route('/apps')}
-							title="Applications - Browse a selection of useful applications"
+							title={translate('header.apps.title')}
 						>
-							Apps
+							{translate('header.apps.label')}
 						</a>
 					</li>
 					<li>
 						<a
 							class="line"
 							href={route('/partners')}
-							title="Partners - Explore our partner projects"
+							title={translate('header.partners.title')}
 						>
-							Partners
+							{translate('header.partners.label')}
 						</a>
 					</li>
 					<li>
 						<a
 							class="line"
 							href={route('/documentation')}
-							title="Documentation - Detailed information and guides"
+							title={translate('header.docs.title')}
 						>
-							Docs
+							{translate('header.docs.label')}
 						</a>
 					</li>
 				</ul>
@@ -66,7 +69,7 @@ export default function Header() {
 								class="link-button"
 								type="button"
 								tabindex="0"
-								aria-label="More navigation options"
+								aria-label={translate('header.moreOptions')}
 							>
 								<i class="fas fa-bars"></i>
 							</button>
@@ -74,31 +77,35 @@ export default function Header() {
 						<section
 							class="dropdown-child"
 							tabindex="0"
-							aria-label="More options submenu"
+							aria-label={translate('header.moreOptionsMenu')}
 						>
 							<ul class="subnavbar">
 								<li>
 									<a
 										href={route('/questions')}
-										title="FAQ - Frequently asked questions and answers"
+										title={translate('header.faq.title')}
 									>
-										FAQ
+										{translate('header.faq.label')}
 									</a>
 								</li>
 								<li>
 									<a
 										href={route('/credits')}
-										title="Credits - Acknowledgements and contributions"
+										title={translate(
+											'header.credits.title'
+										)}
 									>
-										Credits
+										{translate('header.credits.label')}
 									</a>
 								</li>
 								<li>
 									<a
 										href={route('/privacy')}
-										title="Privacy Policy - Information on user privacy"
+										title={translate(
+											'header.privacy.title'
+										)}
 									>
-										Privacy
+										{translate('header.privacy.label')}
 									</a>
 								</li>
 							</ul>
@@ -112,7 +119,7 @@ export default function Header() {
 							<button
 								class="link-button settings-toggle"
 								type="button"
-								aria-label="Settings menu"
+								aria-label={translate('header.settingsMenu')}
 								tabindex="0"
 							>
 								<i class="fas fa-cog" aria-hidden="true"></i>
@@ -121,7 +128,7 @@ export default function Header() {
 						<section
 							class="dropdown-settings"
 							tabindex="0"
-							aria-label="Settings menu"
+							aria-label={translate('header.settingsMenu')}
 						>
 							<div id="csel">
 								<Settings />
@@ -133,37 +140,51 @@ export default function Header() {
 			<input
 				id="mnavecb"
 				type="checkbox"
-				aria-label="Toggle navigation menu"
+				aria-label={translate('header.toggleMenu')}
 			/>
 			<label
 				for="mnavecb"
 				class="mnave"
-				aria-label="Toggle navigation menu"
+				aria-label={translate('header.toggleMenu')}
 			>
 				<span class="mnavebutton" aria-hidden="true"></span>
 			</label>
 			<div class="mobile-overlay">
 				<ul class="navbar-1">
 					<li>
-						<a href={route('/browsing')}>Browse</a>
+						<a href={route('/browsing')}>
+							{translate('header.browse.label')}
+						</a>
 					</li>
 					<li>
-						<a href={route('/partners')}>Partners</a>
+						<a href={route('/partners')}>
+							{translate('header.partners.label')}
+						</a>
 					</li>
 					<li>
-						<a href={route('/apps')}>Applications</a>
+						<a href={route('/apps')}>
+							{translate('header.apps.mobileLabel')}
+						</a>
 					</li>
 					<li>
-						<a href={route('/documentation')}>Docs</a>
+						<a href={route('/documentation')}>
+							{translate('header.docs.label')}
+						</a>
 					</li>
 					<li>
-						<a href={route('/questions')}>FAQ</a>
+						<a href={route('/questions')}>
+							{translate('header.faq.label')}
+						</a>
 					</li>
 					<li>
-						<a href={route('/credits')}>Credits</a>
+						<a href={route('/credits')}>
+							{translate('header.credits.label')}
+						</a>
 					</li>
 					<li>
-						<a href={route('/privacy')}>TOS</a>
+						<a href={route('/privacy')}>
+							{translate('header.privacy.mobileLabel')}
+						</a>
 					</li>
 				</ul>
 			</div>

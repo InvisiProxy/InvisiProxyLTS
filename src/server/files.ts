@@ -6,19 +6,25 @@ import { notFoundFile, projectUrl, siteUrl } from '../constants.ts';
 const isImage = /\.(?:ico|png|jpg|jpeg)$/;
 const notFoundPage = new URL(notFoundFile, siteUrl);
 
-let cached404: { mtimeMs: number; body: string | Buffer } | undefined;
+const cached404 = new Map<string, { mtimeMs: number; body: string | Buffer }>();
 
-export function preloaded404() {
-	const stat = statSync(notFoundPage, { throwIfNoEntry: false });
-	if (!stat) return 'Not Found';
-	if (cached404?.mtimeMs !== stat.mtimeMs) {
-		const html = readFileSync(notFoundPage, 'utf8');
-		cached404 = {
+// Pass a language code to get that translation of the 404 page, if it exists.
+export function preloaded404(language = ''): string | Buffer {
+	const page = language
+		? new URL(`locales/${language}/${notFoundFile}`, siteUrl)
+		: notFoundPage;
+	const stat = statSync(page, { throwIfNoEntry: false });
+	if (!stat) return language ? preloaded404() : 'Not Found';
+	let cached = cached404.get(language);
+	if (cached?.mtimeMs !== stat.mtimeMs) {
+		const html = readFileSync(page, 'utf8');
+		cached = {
 			mtimeMs: stat.mtimeMs,
 			body: config.disguiseFiles ? gzipSync(html) : html,
 		};
+		cached404.set(language, cached);
 	}
-	return cached404.body;
+	return cached.body;
 }
 
 export function tryReadFile(

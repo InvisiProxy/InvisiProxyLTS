@@ -46,17 +46,19 @@ export const pageDefinitions = {
 	},
 	'index.html': {
 		route: ['', 'links'],
+		indexed: true,
 		Page: Home,
 		Head: HomeHead,
-		lang: 'en',
 	},
 	'docs.html': {
 		route: 'documentation',
+		indexed: true,
 		Page: DocumentationPage,
 		Head: DocumentationPageHead,
 	},
 	'faq.html': {
 		route: 'questions',
+		indexed: true,
 		Page: FAQPage,
 		Head: FAQPageHead,
 		bodyScripts: [
@@ -76,27 +78,32 @@ export const pageDefinitions = {
 	},
 	'pages/nav/credits.html': {
 		route: 'credits',
+		indexed: true,
 		Page: Credits,
 		Head: CreditsHead,
 	},
 	'pages/nav/privacy.html': {
 		route: 'privacy',
+		indexed: true,
 		Page: Privacy,
 		Head: PrivacyHead,
 	},
 	'pages/nav/partners.html': {
 		route: 'partners',
+		indexed: true,
 		Page: Partners,
 		Head: PartnersHead,
 	},
 	'pages/nav/icons.html': { Page: Icons, Head: IconsHead },
 	'pages/proxnav/scramjet.html': {
 		route: ['browsing', 'scramjet'],
+		indexed: true,
 		Page: Scramjet,
 		Head: ScramjetHead,
 	},
 	'pages/proxnav/preset/applications.html': {
 		route: 'apps',
+		indexed: true,
 		Page: Applications,
 		Head: ApplicationsHead,
 	},

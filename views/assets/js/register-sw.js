@@ -1,5 +1,6 @@
 import { values, route } from 'build:invisiproxy';
 import { selectedTransport } from '../../../src/browser/transport.ts';
+import { installScramjetSearchUrlGuard } from '../../../src/browser/search-url-guard.ts';
 (() => {
   const swScope = route("/"),
     swAllowedHostnames = ['localhost', '127.0.0.1'],
@@ -88,9 +89,24 @@ import { selectedTransport } from '../../../src/browser/transport.ts';
     return transport;
   };
 
+  const buildSearchUrlGuardPlugin = () =>
+    new (class extends $scramjetController.ManagedPlugin {
+      constructor() {
+        super('search-url-guard', []);
+      }
+      install(frame) {
+        super.install(frame);
+        this.tap(frame.hooks.init.post, ({ window: win, client }) => {
+          if (readStorage('SearchNavFix') === true)
+            installScramjetSearchUrlGuard(win, client);
+        });
+      }
+    })();
+
   const buildFramePlugins = () => {
-    if (typeof $scramjetUtils === 'undefined') return [];
-    const plugins = [new $scramjetUtils.HttpCachePlugin()];
+    const plugins = [buildSearchUrlGuardPlugin()];
+    if (typeof $scramjetUtils === 'undefined') return plugins;
+    plugins.push(new $scramjetUtils.HttpCachePlugin());
 
     const omniInput = document.getElementById('search-input');
     plugins.push(

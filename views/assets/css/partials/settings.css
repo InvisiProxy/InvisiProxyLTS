@@ -109,6 +109,13 @@
 	align-items: start;
 }
 
+.settings-column {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	min-width: 0;
+}
+
 .cseltitle {
 	font-size: 22px;
 	margin: 10px 0;
@@ -473,6 +480,14 @@
 	.settings-content-body,
 	.proxy-settings-grid {
 		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.settings-column {
+		display: contents;
+	}
+
+	.settings-card-last {
+		order: 1;
 	}
 
 	.settings-card {

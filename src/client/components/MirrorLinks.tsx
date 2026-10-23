@@ -1,4 +1,4 @@
-import { route } from '../document-helpers.tsx';
+import { route, translate } from '../document-helpers.tsx';
 
 export default function MirrorLinks() {
 	return (
@@ -7,8 +7,8 @@ export default function MirrorLinks() {
 				type="button"
 				class="link-button mirror-links-toggle"
 				popovertarget="mirror-links-menu"
-				aria-label="Mirror links"
-				title="Get another InvisiProxy link"
+				aria-label={translate('mirrors.title')}
+				title={translate('mirrors.toggleTitle')}
 			>
 				<svg
 					width="20"
@@ -24,7 +24,7 @@ export default function MirrorLinks() {
 					<path d="M10 13a5 5 0 0 0 7 .5l3-3a5 5 0 0 0-7-7l-2 2" />
 					<path d="M14 11a5 5 0 0 0-7-.5l-3 3a5 5 0 0 0 7 7l2-2" />
 				</svg>
-				<span>Mirrors</span>
+				<span>{translate('mirrors.toggle')}</span>
 			</button>
 			<section
 				id="mirror-links-menu"
@@ -33,20 +33,21 @@ export default function MirrorLinks() {
 				aria-labelledby="mirror-links-title"
 			>
 				<div class="mirror-links-header">
-					<h2 id="mirror-links-title">Mirror links</h2>
+					<h2 id="mirror-links-title">
+						{translate('mirrors.title')}
+					</h2>
 					<button
 						type="button"
 						class="mirror-links-close"
 						popovertarget="mirror-links-menu"
 						popovertargetaction="hide"
-						aria-label="Close mirror links"
+						aria-label={translate('mirrors.close')}
 					>
 						×
 					</button>
 				</div>
 				<p class="setting-description">
-					Get another link to keep using InvisiProxy. Links are
-					restocked frequently.
+					{translate('mirrors.description')}
 				</p>
 				<button
 					id="dispense-link"
@@ -54,24 +55,21 @@ export default function MirrorLinks() {
 					class="fancybutton glowbutton link-button"
 					data-endpoint={route('/api/link')}
 				>
-					Get a random link
+					{translate('mirrors.getLink')}
 				</button>
 				<p id="dispenser-status" role="status" />
 				<a
 					id="dispensed-link"
 					href={route('/')}
-					aria-label="Open another InvisiProxy mirror"
+					aria-label={translate('mirrors.openLabel')}
 					hidden
 					target="_blank"
 					rel="noopener noreferrer"
 				>
-					Open mirror link
+					{translate('mirrors.open')}
 				</a>
 				<br></br>
-				<p class="setting-description">
-					If you have any issues with links please create a GitHub
-					issue.
-				</p>
+				<p class="setting-description">{translate('mirrors.issues')}</p>
 			</section>
 		</>
 	);

@@ -1,4 +1,4 @@
-import { Keywords, route, values } from '../document-helpers.tsx';
+import { Keywords, route, values, translate } from '../document-helpers.tsx';
 import {
 	ScramjetScripts,
 	PageScripts,
@@ -15,6 +15,7 @@ export default function ProxyFrame() {
 			<Keywords />
 			<AntiExfil />
 			<div class="loader loader-active">
+				<p class="loader-text">{translate('frame.loading')}</p>
 				<div class="loader-w"></div>
 			</div>
 			<div class="omnibar" id="pr-sj">
@@ -39,7 +40,7 @@ export default function ProxyFrame() {
 						class="glowbutton"
 						id="search-input"
 						type="text"
-						placeholder="Type a URL or search..."
+						placeholder={translate('frame.searchPlaceholder')}
 						spellcheck="false"
 						autocomplete="off"
 					/>

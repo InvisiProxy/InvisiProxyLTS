@@ -2,7 +2,13 @@ import { fileURLToPath } from 'node:url';
 import { runnerImport } from 'vite';
 import solid from 'vite-plugin-solid';
 import { config } from '../config.ts';
-import { notFoundFile, projectDir, routesFile } from '../constants.ts';
+import {
+	entryPointFile,
+	localesFile,
+	notFoundFile,
+	projectDir,
+	routesFile,
+} from '../constants.ts';
 import data from '../data.json' with { type: 'json' };
 import { obfuscateDocument } from '../obfuscation/documents.ts';
 import type { SiteValues } from '../site.ts';
@@ -11,6 +17,14 @@ import {
 	obfuscationState,
 	obfuscationStateFile,
 } from '../obfuscation/state.ts';
+import {
+	builtLocales,
+	loadLocales,
+	localeManifest,
+	localePath,
+	stripLocale,
+	withLocale,
+} from './locales.ts';
 import { rootDataFiles } from './sources.ts';
 import { buildValues } from './values.ts';
 
@@ -35,11 +49,26 @@ export async function renderDocuments(
 	values: SiteValues,
 	load: LoadRenderer = importRenderer
 ): Promise<Record<string, string>> {
-	const documents = (await load()).renderDocuments(values);
+	const renderer = await load();
+	const all = loadLocales();
+	const locales = builtLocales(all);
+	const documents = locales.flatMap((locale, index) =>
+		Object.entries(
+			renderer.renderDocuments(
+				withLocale(values, locales, locale, all[0])
+			)
+		)
+			.filter(([path]) => index === 0 || path !== entryPointFile)
+			.map(([path, html]) => [
+				localePath(locale.code, path, locales[0].code),
+				html,
+				path,
+			])
+	);
 	return Object.fromEntries(
 		await Promise.all(
-			Object.entries(documents).map(async ([path, html]) => [
-				path,
+			documents.map(async ([target, html, path]) => [
+				target,
 				await obfuscateDocument(html, path),
 			])
 		)
@@ -116,13 +145,21 @@ export async function renderSite({
 		const html = head
 			? document.replace('<head>', `<head>${head}`)
 			: document;
-		files[path] = isDisguisedDocument(path) ? await gzip(html) : html;
+		files[path] = isDisguisedDocument(stripLocale(path))
+			? await gzip(html)
+			: html;
 	}
 	files[routesFile] = JSON.stringify(await siteRoutes(load));
 	files[
 		`assets/json/${getPathAliases()['files/splash.json'] || 'splash.json'}`
 	] = JSON.stringify(data.splash);
-	files[notFoundFile] = (await getPlainDocuments(fresh, load))['error.html'];
+	const locales = builtLocales(loadLocales());
+	const root = locales[0].code;
+	const plain = await getPlainDocuments(fresh, load);
+	for (const { code } of locales)
+		files[localePath(code, notFoundFile, root)] =
+			plain[localePath(code, 'error.html', root)];
+	files[localesFile] = JSON.stringify(localeManifest(locales));
 	files[obfuscationStateFile] = JSON.stringify(obfuscationState());
 	return files;
 }

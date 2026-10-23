@@ -1,4 +1,4 @@
-import { Keywords, iconBookmarklet } from '../document-helpers.tsx';
+import { Keywords, iconBookmarklet, translate } from '../document-helpers.tsx';
 import {
 	ParticlesScript,
 	PageScripts,
@@ -22,26 +22,19 @@ export default function Icons() {
 			<div id="mainbody" class="fullwidth">
 				<div class="box-clear text-center textm">
 					<Keywords />
-					<h1 class="bigtitle">Icon Information</h1>
-					<h3>How to find the Icon URL of a Site</h3>
-					<p>
-						Go to the website you want an icon from, then use this
-						bookmarklet (drag it to your bookmarks bar):
-					</p>
+					<h1 class="bigtitle">{translate('icons.title')}</h1>
+					<h3>{translate('icons.subtitle')}</h3>
+					<p>{translate('faq.icons.bookmarklet')}</p>
 					<div id="bks-parent">
 						<a
 							href={iconBookmarklet()}
 							id="iconfinder"
 							class="fancybutton fb-l glowbutton"
 						>
-							Find Icon URL
+							{translate('faq.icons.button')}
 						</a>
 					</div>
-					<p>
-						Copy the URL that the bookmarklet gives you. Then go
-						back to InvisiLTS and enter in the URL for the Icon URL
-						in Settings. Enjoy!
-					</p>
+					<p>{translate('icons.copy')}</p>
 				</div>
 			</div>
 			<div id="footer" class="fullwidth">

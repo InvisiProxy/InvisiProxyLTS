@@ -19,7 +19,7 @@ export function pageRoutes(): Record<string, string> {
 }
 
 export function renderDocuments(context: SiteValues) {
-	setSiteValues(context);
+	setSiteValues({ ...context, pageNames: Object.keys(pageRoutes()) });
 	const documents = Object.fromEntries(
 		Object.entries(pageDefinitions).map(([path, definition]) => [
 			path,

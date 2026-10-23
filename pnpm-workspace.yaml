@@ -2,6 +2,13 @@ minimumReleaseAge: 1440
 
 minimumReleaseAgeExclude:
   - merp-obfuscator
+  - '@mercuryworkshop/epoxy-tls'
+  - '@mercuryworkshop/epoxy-transport'
+  - '@mercuryworkshop/libcurl-transport'
+  - '@mercuryworkshop/proxy-transports'
+  - '@mercuryworkshop/scramjet'
+  - '@mercuryworkshop/scramjet-controller'
+  - '@mercuryworkshop/scramjet-utils'
 
 allowBuilds:
   '@mercuryworkshop/scramjet': true

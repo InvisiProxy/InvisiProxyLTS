@@ -1,14 +1,11 @@
-import { Inline, route, SEO } from '../document-helpers.tsx';
+import { Inline, route, SEO, translate } from '../document-helpers.tsx';
 
 export function PageDescription(props: { content?: string }) {
 	return (
 		<SEO>
 			<meta
 				name="description"
-				content={
-					props.content ??
-					'InvisiProxy is a secure web proxy service with support for many sites. Bypass filters and freely enjoy a safer private browsing experience or unblock websites on devices such as Chromebooks and at places like school or work without downloading anything.'
-				}
+				content={props.content ?? translate('common.description')}
 			/>
 		</SEO>
 	);

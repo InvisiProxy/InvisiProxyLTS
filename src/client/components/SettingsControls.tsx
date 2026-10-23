@@ -1,3 +1,5 @@
+import { translate } from '../document-helpers.tsx';
+
 export function SettingToggle(props: {
 	label: string;
 	description: string;
@@ -22,8 +24,14 @@ export function SettingToggle(props: {
 export function TransportSelect(props: { id: string; containerId: string }) {
 	return (
 		<div id={props.containerId} class="transport-setting setting-field">
-			<label for={props.id}>Transport</label>
-			<select id={props.id} class="transport-list" aria-label="Transport">
+			<label for={props.id}>
+				{translate('settings.browsing.transport')}
+			</label>
+			<select
+				id={props.id}
+				class="transport-list"
+				aria-label={translate('settings.browsing.transport')}
+			>
 				<option value="libcurl" selected>
 					Libcurl
 				</option>

@@ -1,4 +1,9 @@
-import { Keywords, route } from '../document-helpers.tsx';
+import {
+	Keywords,
+	route,
+	translate,
+	Translation,
+} from '../document-helpers.tsx';
 import {
 	ParticlesScript,
 	PageScripts,
@@ -17,27 +22,26 @@ export default function NotFound() {
 			<Keywords />
 			<div id="mainbody" class="fullwidth">
 				<div class="box-error text-center">
-					<h1>Site Error!</h1>
-					<h2>
-						Reload the page or do Ctrl+R!!! This fixes a lot of
-						issues
-					</h2>
-					<h2>
-						The proxy connection is unavailable.... reloading the
-						page will resolve this issue.
-					</h2>
-					<p>
-						Might be doing some maintenance or the web server is
-						down.
-					</p>
-					<p>In that case wait a bit until it is resolved!</p>
+					<h1>{translate('error.title')}</h1>
+					<h2>{translate('error.reload')}</h2>
+					<h2>{translate('error.unavailable')}</h2>
+					<p>{translate('error.maintenance')}</p>
+					<p>{translate('error.wait')}</p>
 					<br />
 					<p>
-						{'\n          Invalid URL? View the\n          '}
-						<a href={route('/questions')} class="bluelink">
-							FAQ page
-						</a>
-						{' for\n          help!\n        '}
+						<Translation
+							id="error.faq"
+							tags={{
+								faq: (text) => (
+									<a
+										href={route('/questions')}
+										class="bluelink"
+									>
+										{text}
+									</a>
+								),
+							}}
+						/>
 					</p>
 				</div>
 			</div>
@@ -53,7 +57,7 @@ export function Head() {
 	return (
 		<>
 			<base href={route('/')} />
-			<title>InvisiProxy LTS | Error</title>
+			<title>{`InvisiProxy LTS | ${translate('error.pageTitle')}`}</title>
 			<meta itemprop="http-status" content="404" />
 			<PageDescription />
 			<HeadContent />

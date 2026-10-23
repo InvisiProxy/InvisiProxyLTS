@@ -1,12 +1,17 @@
+import { values } from '../site.ts';
+import LocaleLinks from './components/LocaleLinks.tsx';
 import type { PageDefinition } from './types';
 
 export default function Document(props: PageDefinition) {
 	const Head = props.Head;
 	const Page = props.Page;
 	return (
-		<html lang={props.lang}>
+		<html lang={values.locale}>
 			<head>
 				<Head />
+				{props.indexed && (
+					<LocaleLinks route={[props.route ?? ''].flat()[0]} />
+				)}
 			</head>
 			<body id="top" style={props.bodyStyle}>
 				<Page />

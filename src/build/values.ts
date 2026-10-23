@@ -5,6 +5,7 @@ import { isDevelopment, siteDir, stagingDir } from '../constants.ts';
 import data from '../data.json' with { type: 'json' };
 import { getPathAliases } from '../obfuscation/paths.ts';
 import { type SiteValues, setSiteValues } from '../site.ts';
+import { builtLocales, loadLocales } from './locales.ts';
 
 const labelKeys = [
 	'Bing',
@@ -15,6 +16,9 @@ const labelKeys = [
 	'libcurl',
 ];
 const labels = Object.fromEntries(labelKeys.map((name) => [name, name]));
+
+const [english, ...others] = loadLocales();
+const locales = builtLocales([english, ...others]);
 
 let assetDir = siteDir;
 export function readFromStaging(staging: boolean) {
@@ -61,8 +65,10 @@ export const buildValues: SiteValues = {
 	keywordText: [...data.content],
 	keywordFacts: [...data.keywords],
 	characters: [...data.masks.characters],
-	maskedTerms: [...data.masks.terms],
+	maskedTerms: [...english.maskedTerms],
 	errors: {},
+	locale: locales[0].code,
+	locales: locales.map(({ code, name }) => ({ code, name })),
 	readAsset,
 };
 

@@ -38,7 +38,8 @@ import {
 	proxyErrorTemplates,
 	renderSite,
 } from './render.ts';
-import { faqSearch, siteFiles, siteScripts } from './sources.ts';
+import { builtLocales, loadLocales, localizeSitemap } from './locales.ts';
+import { faqSearch, type SiteFile, siteFiles, siteScripts } from './sources.ts';
 import { buildValues, readFromStaging } from './values.ts';
 
 export const scriptEnvironment = (index: number) => `script_${index}`;
@@ -75,6 +76,13 @@ function rewriteAssetReferences(text: string) {
 		/(["'])(\/?assets\/[^"']+)\1/g,
 		(_match, quote, path) => `${quote}${route(path)}${quote}`
 	);
+}
+
+function readText(file: SiteFile) {
+	const text = readFileSync(file.source, 'utf8');
+	if (file.target !== 'sitemap.xml' || !config.usingSEO) return text;
+	const codes = builtLocales(loadLocales()).map(({ code }) => code);
+	return localizeSitemap(text, codes);
 }
 
 function dropChunks(bundle: Rolldown.OutputBundle) {
@@ -288,9 +296,7 @@ export function siteBuildPlugin(): Plugin[] {
 											)
 										)
 									)
-								: rewriteAssetReferences(
-										readFileSync(file.source, 'utf8')
-									);
+								: rewriteAssetReferences(readText(file));
 					const source =
 						!config.usingSEO && file.kind === 'vendor-script'
 							? obfuscateVendorScript(

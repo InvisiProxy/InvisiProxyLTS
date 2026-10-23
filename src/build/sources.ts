@@ -13,12 +13,29 @@ export interface SiteFile {
 
 const modulePath = (path: string) => join(projectDir, 'node_modules', path);
 
-const vendorDirs = [
-	['epoxy', modulePath('@mercuryworkshop/epoxy-transport/dist')],
-	['libcurl', modulePath('@mercuryworkshop/libcurl-transport/dist')],
-	['scram', scramjetPath],
-	['scram', modulePath('@mercuryworkshop/scramjet-controller/dist')],
-	['scram', modulePath('@mercuryworkshop/scramjet-utils/dist')],
+// Merp fix
+const vendorDirs: [prefix: string, dir: string, files: string[]][] = [
+	[
+		'epoxy',
+		modulePath('@mercuryworkshop/epoxy-transport/dist'),
+		['index.mjs'],
+	],
+	[
+		'libcurl',
+		modulePath('@mercuryworkshop/libcurl-transport/dist'),
+		['index.mjs'],
+	],
+	['scram', scramjetPath, ['scramjet.js', 'scramjet.wasm']],
+	[
+		'scram',
+		modulePath('@mercuryworkshop/scramjet-controller/dist'),
+		['controller.api.js', 'controller.inject.js', 'controller.sw.js'],
+	],
+	[
+		'scram',
+		modulePath('@mercuryworkshop/scramjet-utils/dist'),
+		['scramjet-utils.js'],
+	],
 ];
 
 export const faqSearch: SiteFile = {
@@ -37,9 +54,14 @@ export function siteFiles(): SiteFile[] {
 	const alias = (name: string) =>
 		(!config.usingSEO && getPathAliases()[`files/${name}`]) || name;
 
-	const collect = (dir: string, outDir: string, fromViews: boolean) => {
+	const collect = (
+		dir: string,
+		outDir: string,
+		fromViews: boolean,
+		only?: string[]
+	) => {
 		if (fromViews && outDir === 'assets/css/partials/') return;
-		for (const file of readdirSync(dir)) {
+		for (const file of only ?? readdirSync(dir)) {
 			if (
 				(fromViews && ignoredDirs.includes(file)) ||
 				ignoredFiles.test(file)
@@ -70,12 +92,15 @@ export function siteFiles(): SiteFile[] {
 	};
 
 	collect(join(projectDir, 'views/assets'), 'assets/', true);
-	for (const [prefix, path] of vendorDirs) {
-		if (!existsSync(path)) {
-			console.warn(`[Build] Skipping "${prefix}": ${path} not found.`);
+	for (const [prefix, path, only] of vendorDirs) {
+		const missing = only.filter((file) => !existsSync(join(path, file)));
+		if (missing.length) {
+			console.warn(
+				`[Build] Skipping "${prefix}": ${missing.join(', ')} not found in ${path}.`
+			);
 			continue;
 		}
-		collect(path, `${prefix}/`, false);
+		collect(path, `${prefix}/`, false, only);
 	}
 	collect(join(projectDir, 'views'), '', true);
 	return files;

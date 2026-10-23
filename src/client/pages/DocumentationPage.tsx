@@ -1,4 +1,10 @@
-import { Keywords, Inline, route, SEO } from '../document-helpers.tsx';
+import {
+	Keywords,
+	Inline,
+	route,
+	SEO,
+	translate,
+} from '../document-helpers.tsx';
 import {
 	ParticlesScript,
 	PageScripts,
@@ -79,37 +85,25 @@ export default function DocumentationPage() {
 export function Head() {
 	return (
 		<>
-			<title>
-				InvisiProxy Docs | Self-Hosting, Configuration &amp; Tor Setup
-			</title>
+			<title>{translate('docs.meta.title')}</title>
 			<SEO>
 				<meta
 					name="robots"
 					content="index, follow, max-image-preview:large"
 				/>
-				<link
-					rel="canonical"
-					href="https://invisiproxy.com/documentation"
-				/>
 				<meta
 					name="description"
-					content="Self-host InvisiProxy: install it with pnpm, set it up in config.json, route traffic through Tor or a SOCKS5 proxy, and see what each dependency does."
+					content={translate('docs.meta.description')}
 				/>
 				<meta property="og:site_name" content="InvisiProxy LTS" />
 				<meta
-					property="og:url"
-					content="https://invisiproxy.com/documentation"
-				/>
-				<meta
 					property="og:title"
-					content={
-						'InvisiProxy Docs | Self-Hosting, Configuration & Tor Setup'
-					}
+					content={translate('docs.meta.title')}
 				/>
 				<meta property="og:type" content="website" />
 				<meta
 					property="og:description"
-					content="Run your own InvisiProxy instance. Covers install, config.json, Tor and SOCKS5 routing, and the libraries the project is built on."
+					content={translate('docs.meta.social')}
 				/>
 			</SEO>
 			<meta property="og:image" content={route('assets/img/hero.webp')} />
@@ -118,26 +112,29 @@ export function Head() {
 				content={route('assets/img/hero.webp')}
 			/>
 			<SEO>
-				<meta property="og:image:alt" content="InvisiProxy logo" />
-				<meta property="og:locale" content="en_US" />
+				<meta
+					property="og:image:alt"
+					content={translate('common.logoAlt')}
+				/>
 				<meta name="twitter:card" content="summary_large_image" />
 				<meta name="twitter:site" content="@titaniumnetdev" />
 				<meta name="twitter:creator" content="@titaniumnetdev" />
 				<meta
 					name="twitter:title"
-					content={
-						'InvisiProxy Docs | Self-Hosting, Configuration & Tor Setup'
-					}
+					content={translate('docs.meta.title')}
 				/>
 				<meta
 					name="twitter:description"
-					content="Run your own InvisiProxy instance. Covers install, config.json, Tor and SOCKS5 routing, and the libraries the project is built on."
+					content={translate('docs.meta.social')}
 				/>
 				<meta
 					name="twitter:image"
 					content={route('assets/img/hero.webp')}
 				/>
-				<meta name="twitter:image:alt" content="InvisiProxy logo" />
+				<meta
+					name="twitter:image:alt"
+					content={translate('common.logoAlt')}
+				/>
 			</SEO>
 			<HeadContent />
 			<ParticlesScript />
