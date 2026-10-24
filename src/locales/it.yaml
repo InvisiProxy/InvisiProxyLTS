@@ -178,9 +178,16 @@ settings:
     hideAds: Hide ads
     hideAdsDescription: Block ads while browsing.
     hideHistory: Hide history
-    hideHistoryDescription: Reduce saved browsing history. May affect some sites.
-    preventLeaks: Prevent tab leaks
-    preventLeaksDescription: Restrict popups and new tabs. May break some sites.
+    hideHistoryDescription: Eliminate browsing history within local browser. Networks can still see masked activity.
+    preventLeaks: Block window leaks
+    preventLeaksDescription: Restrict popups and new tabs. Will break some sites.
+    blockWebrtc: Block WebRTC
+    blockWebrtcDescription: Further obscure your IP from sites. Breaks video calls and game streaming.
+    clearData: Clear site data
+    clearDataDescription: Sign out of every site and reset your settings.
+    clearDataButton: Clear
+    clearDataConfirm: >-
+      Clear all site data? This signs you out of every site you visited here and resets your settings.
   advanced:
     title: Advanced
     tor: Tor browsing
@@ -200,6 +207,7 @@ header:
   moreOptionsMenu: More options submenu
   settingsMenu: Settings menu
   toggleMenu: Toggle navigation menu
+  donate: Support us on Patreon
   browse:
     label: Browse
     title: Browse - Bypass restrictions on the web
@@ -231,6 +239,7 @@ footer:
   services: Services
   about: About
   solidjs: SolidJS - Simple and performant reactivity for building user interfaces.
+  vite: Vite - Next generation frontend tooling.
   wispurr: High-Performance and Feature Focused Wisp v1/v2 Server implementation in Golang.
   nord: Nord Theme - An arctic, north-bluish color palette.
   scramjet: Scramjet - Scramjet is a versatile web proxy designed to bypass internet censorship.
@@ -271,15 +280,12 @@ proxySettings:
   searchNavFixDescription: >-
     Utilize plugin made by The Freedom Project to fix support for TikTok, DuckDuckGo and other sites. Optional.
   hideHistoryDescription: Reduce saved history. May affect some sites.
+  customWisp: Custom Wisp server
+  customWispDescription: >-
+    Route proxy traffic through your own Wisp server for better privacy control. Leave empty to turn off.
+  invalidWisp: Enter a ws:// or wss:// address.
   moreSettings: View more settings
   anotherLink: Need another link? Click the <mirrors>mirror links button</mirrors>.
-bookmarks:
-  title: Bookmarks
-  newSave: New Save
-  titlePlaceholder: Create a bookmark title!
-  urlPlaceholder: Paste the site URL here!
-  saved: Saved Bookmarks
-  bookmark: Bookmark
 faq:
   meta:
     title: InvisiProxy FAQ | Network Errors, CAPTCHAs & YouTube Fixes
@@ -518,25 +524,33 @@ scramjet:
 frame:
   searchPlaceholder: Type a URL or search...
   loading: Loading the web proxy...
+  tabs: Proxy Tabs
+  newTab: New tab
+  closeTab: Close tab
+  closeMenu: Close
+  bookmarks: Bookmarks
+  addBookmark: Bookmark this page
+  removeBookmark: Remove bookmark
+  noBookmarks: No bookmarks yet. Use the star in the address bar to save the page you're on.
 scramjetError:
   title: Scramjet Network Error
   failed: 'Failed to load:'
-  reload: Reloading the page will fix your problem.
+  reload: Reloading the page may fix your problem.
   refresh: Refresh Page
   copy: Copy
   try: 'Try:'
   tips:
-    reload: Reloading the page; this is a known issue with our proxies
+    reload: Reloading the page; this is a known issue with Scramjet
     idb: >-
       In the case of an IDB Database error please clear your site data by clicking on the lock icon in the address bar and selecting "Site settings" or "Site data" and then clicking "Clear site data"
     cache: >-
-      Clearing your browser or site cache data via Ctrl+Shift+R and browser settings
+      Clearing your browser or site cache data via Ctrl+Shift+R. You can also go to Settings > Privacy > Clear Site Data on Invisi
     address: Verifying you entered the correct address
     maintenance: >-
       In the case of website maintenance or updates, please wait for the issue to be resolved.
-    censored: Verify the server isn't censored
+    censored: Verifying the server isn't censored by your network (WebRTC, etc.)
     faq: View the FAQ page for specific site compatibility issues.
     github: Troubleshooting the error on the <github>Scramjet GitHub.</github>
-    engine: Try a different proxy engine via the settings panel.
+    engine: Try a different proxy transport or region via the settings panel.
   network: Refresh the network service
   love: Made With Love
