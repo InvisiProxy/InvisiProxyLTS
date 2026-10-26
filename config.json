@@ -11,5 +11,6 @@
 	"showSplash": true,
 	"geoLanguage": false,
 	"singleLanguage": false,
-	"language": "en"
+	"language": "en",
+	"patreon": false
 }

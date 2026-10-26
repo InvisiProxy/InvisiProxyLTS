@@ -13,3 +13,5 @@ src/.shutdown
 views/archive/gfiles/rarch/roms
 .idea
 private/mirror-links.txt
+.env
+analysis/

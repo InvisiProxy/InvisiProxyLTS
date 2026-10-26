@@ -135,9 +135,9 @@ Replit is no longer free and Heroku has a set policy against web proxies. Try Gi
 
 Either use the button above to deploy to the deployment options above or type the commands below on a dedicated server
 
-**THIS PROJECT REQUIRES NGINX NOT CADDY.** 
+**THIS PROJECT IS MADE TO SUPPORT NGINX; NOT CADDY.** 
 
-Please ensure you are using `Node 20.x` as well. `git` and `curl` are required dependencies:
+Please ensure you are using `Node 26.x` as well. `git` and `curl` are required dependencies:
 
 ```bash
 git clone https://github.com/InvisiProxy/InvisiProxyLTS.git
@@ -255,15 +255,15 @@ Every other localized changes for source randomization, auto-minify, etc. are lo
 - `usingSEO`: Enable Source Randomization which randomizes the source by swapping chunks of data specified in `./src/data.json`. Highly useful for masking keywords that will automatically flag or block InvisiProxy LTS as well as preventing source blocks.
 - `verbose`: Enables compiling and building messages to see progress and possible issues while compiling.
 - `mirrorLinksFile`: Server-only file used by the Links page dispenser, defaulting to `private/mirror-links.txt`. Relative paths are resolved from the project root; absolute paths are also supported. Use one HTTP(S) URL per line and keep the file outside `views/` so it is not publicly served. Restart the server after changing this setting.
-- `geoLanguage`: Enables automatic language selection using Cloudflare's `CF-IPCountry` header. Only enable this behind Cloudflare, since the header can otherwise be set by anyone. Countries are listed per language under `language.countries` in each `./src/locales/*.yaml` file.
+- `geoLanguage`: Enables automatic language selection using Cloudflare's `CF-IPCountry` header. Only enable this behind Cloudflare, since the header can otherwise be set by anyone. Countries are listed per language under `language.countries` in each `./locales/*.yaml` file.
 - `singleLanguage`: When `true`, only the language set in `language` is built and every visitor gets it, with the Language setting hidden. Useful for Docker or other deployments that only need one language, since builds are faster and smaller. Defaults to `false`.
-- `language`: The language to build when `singleLanguage` is on, matching a file in `./src/locales/` (e.g. `en` for `en.yaml`). Defaults to `en`. For Docker, set this in `config.json` before running `docker build` or `docker compose build`, since languages are chosen at build time.
+- `language`: The language to build when `singleLanguage` is on, matching a file in `./locales/` (e.g. `en` for `en.yaml`). Defaults to `en`. For Docker, set this in `config.json` before running `docker build` or `docker compose build`, since languages are chosen at build time.
 
 #### Translations
 
-InvisiProxy LTS is translated on **[Crowdin](https://crowdin.com/project/invisiproxy)**, and anyone can help without needing to touch code. Join the project, choose a language and start translating. Finished translations are synced into `./src/locales/` automatically.
+InvisiProxy LTS is translated on **[Crowdin](https://crowdin.com/project/invisiproxy)**, and anyone can help without needing to touch code. Join the project, choose a language and start translating. Finished translations are synced into `./locales/` automatically.
 
-See [`src/locales/README.md`](src/locales/README.md) for the translation rules (placeholders, tags and masked terms). If your language isn't listed on Crowdin, open an issue or ask in the Discord.
+See [`locales/README.md`](locales/README.md) for the translation rules (placeholders, tags and masked terms). If your language isn't listed on Crowdin, open an issue or ask in the Discord.
 
 #### Tor/Onion/SOCKS5 Routing Setup
 
@@ -274,6 +274,8 @@ Simply host Tor using this guide: https://tb-manual.torproject.org/installation/
 Alternative Guide (for CLI): https://community.torproject.org/onion-services/setup/install/
 
 If you are hosting InvisiProxy LTS on a VPS utilizing Ubuntu consider attaching Tor to systemctl for easier production management. Once Tor is up and running on either Linux or Windows it will work automatically with InvisiProxy LTS when enabled by the user via the Settings menu.
+
+Users can also set their own Wisp server in Proxy Preferences.
 
 If you wish to use a custom HTTP/HTTPS/SOCKS5 proxy to route traffic for Scramjet this is handled on the server in `./src/server/wisp.ts`.
 

@@ -2,7 +2,9 @@ import assert from 'node:assert/strict';
 import { describe, test } from 'node:test';
 import {
 	isMobileBrowser,
+	proxyRegions,
 	selectedTransport,
+	selectedWisp,
 } from '../../src/browser/transport.ts';
 
 describe('Transport selection', () => {
@@ -53,5 +55,31 @@ describe('Transport selection', () => {
 		assert.equal(selectedTransport('retired-transport', false), 'libcurl');
 		assert.equal(selectedTransport('libcurl', false), 'libcurl');
 		assert.equal(selectedTransport('epoxy', false), 'epoxy');
+	});
+
+	test('Custom wisp works, regions only apply to libcurl, and unknown regions use the default endpoint.', () => {
+		const base = 'wss://example.com/wisp/';
+		const regions = proxyRegions(false);
+		assert.equal(
+			selectedWisp({ UseSocks5: 'tor' }, 'libcurl', regions, base),
+			'wss://example.com/wisp/tor/'
+		);
+		assert.equal(
+			selectedWisp({ UseSocks5: 'tor' }, 'epoxy', regions, base),
+			base
+		);
+		assert.equal(
+			selectedWisp({ UseSocks5: 'patreon' }, 'libcurl', regions, base),
+			base
+		);
+		assert.equal(
+			selectedWisp(
+				{ UseSocks5: 'tor', CustomWisp: 'wss://wisp.example.net' },
+				'libcurl',
+				regions,
+				base
+			),
+			'wss://wisp.example.net/'
+		);
 	});
 });

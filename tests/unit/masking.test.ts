@@ -31,6 +31,8 @@ describe('Masking', () => {
 		assert.ok(!masked.includes('title="Proxy"'));
 		assert.notEqual(maskText('Proxy'), 'Proxy');
 		assert.equal(unmask(maskText('Proxy')), 'Proxy');
+		for (const word of ['proxy', 'PROXY', 'webProxy'])
+			assert.doesNotMatch(maskText(word), /pr|ro|ox|xy/i, word);
 	});
 
 	test('SEO mode leaves all text unmasked.', () => {

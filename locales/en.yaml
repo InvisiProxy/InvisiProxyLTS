@@ -1,5 +1,5 @@
 # Adding a language:
-#   1. Copy this file to src/locales/<code>.yaml, named like Crowdin names it
+#   1. Copy this file to locales/<code>.yaml, named like Crowdin names it
 #      (fr.yaml, ja.yaml, zh-Hans.yaml, pt_BR.yaml, ...).
 #   2. Set language.name to the language's own name (Français, 日本語, ...).
 #      It appears in the Language dropdown in Settings automatically.
@@ -43,6 +43,34 @@ language:
     - Games
     - Croxy
     - CroxyProxy
+    - Proxium
+    - SOCKS
+    - SOCKS5
+    - Proxychain
+    - Proxychaining
+    - Censorship
+    - Firewall
+    - Firewalls
+    - Anonymous
+    - Anonymity
+    - Block
+    - Filter
+    - Restrict
+    - Censor
+    - Evade
+    - Evasion
+    - Stealth
+    - Cloak
+    - Incognito
+    - Disguise
+    - Chromebook
+    - School
+    - Libcurl
+    - Epoxy
+    - Bare-Mux
+    - Mercury Workshop
+    - WebRTC
+    - Mirror
     - Proxy
     - Proxies
     - Proxied
@@ -252,7 +280,7 @@ settings:
     automatic: Automatic
 
   tab:
-    title: Tab appearance
+    title: Disguise Browser Tab
     description: Customize the title and icon shown in your browser tab.
     iconPreset: Icon preset
     selectPreset: Select an icon preset
@@ -261,6 +289,27 @@ settings:
     iconUrl: Icon URL
     apply: Apply
     findIcon: Find an icon URL →
+
+  fingerprint:
+    title: Disguise Fingerprinting
+    description: >-
+      Choose which browser proxied sites see. This changes the user agent sent
+      with requests and the one reported to page scripts.
+    current: 'Current: {name}'
+    default: Browser default
+    reset: Use browser default
+    views:
+      desktop: Desktop
+      mobile: Mobile
+      console: Console
+      bot: Search engine
+      custom: Custom
+    botWarning: >-
+      Many sites verify search engine crawlers and may block or change pages
+      for this view.
+    customLabel: Custom user agent
+    customPlaceholder: Mozilla/5.0 (…)
+    invalidCustom: Enter a single line user agent of up to 512 characters.
 
   browsing:
     title: Browsing
@@ -279,9 +328,17 @@ settings:
     hideAds: Hide ads
     hideAdsDescription: Block ads while browsing.
     hideHistory: Hide history
-    hideHistoryDescription: Reduce saved browsing history. May affect some sites.
-    preventLeaks: Prevent tab leaks
-    preventLeaksDescription: Restrict popups and new tabs. May break some sites.
+    hideHistoryDescription: Eliminate browsing history within local browser. Networks can still see masked activity.
+    preventLeaks: Block window leaks
+    preventLeaksDescription: Restrict popups and new tabs. Will break some sites.
+    blockWebrtc: Block WebRTC
+    blockWebrtcDescription: Further obscure your IP from sites. Breaks video calls and game streaming.
+    clearData: Clear site data
+    clearDataDescription: Sign out of every site and reset your settings.
+    clearDataButton: Clear
+    clearDataConfirm: >-
+      Clear all site data? This signs you out of every site you visited here
+      and resets your settings.
 
   advanced:
     title: Advanced
@@ -303,6 +360,10 @@ header:
   moreOptionsMenu: More options submenu
   settingsMenu: Settings menu
   toggleMenu: Toggle navigation menu
+  donate: Support us on Patreon
+  overview:
+    label: Overview
+    title: Overview - Learn what this site offers
   browse:
     label: Browse
     title: Browse - Bypass restrictions on the web
@@ -311,8 +372,8 @@ header:
     mobileLabel: Applications
     title: Applications - Browse a selection of useful applications
   partners:
-    label: Partners
-    title: Partners - Explore our partner projects
+    label: Utilities
+    title: Utilities - Explore our partner projects
   docs:
     label: Docs
     title: Documentation - Detailed information and guides
@@ -335,6 +396,7 @@ footer:
   services: Services
   about: About
   solidjs: SolidJS - Simple and performant reactivity for building user interfaces.
+  vite: Vite - Next generation frontend tooling.
   wispurr: High-Performance and Feature Focused Wisp v1/v2 Server implementation in Golang.
   nord: Nord Theme - An arctic, north-bluish color palette.
   scramjet: Scramjet - Scramjet is a versatile web proxy designed to bypass internet censorship.
@@ -375,24 +437,30 @@ mirrors:
 proxySettings:
   donate: >-
     We offer premium domains, beta features, residential ISP connections and
-    faster speeds. You can donate on <patreon>Patreon</patreon>.
+    faster speeds. You can donate on <patreon>Patreon</patreon>.<br/>
+    Enable Tor or Regional routing if you are struggling to use services. View the
+    <faq>FAQ</faq> page if you have any issues with the proxy.
   title: Proxy Preferences
   connection: Connection
   searchNavFix: Enable site fixes
   searchNavFixDescription: >-
-    Utilize plugin made by The Freedom Project to fix support for TikTok, DuckDuckGo
-    and other sites. Optional.
-  hideHistoryDescription: Reduce saved history. May affect some sites.
+    Utilize plugin made by The Freedom Project to fix errors like "undefined"
+    when browsing. Optional.
+  experimentalSiteFixes: Experimental site fixes
+  experimentalSiteFixesDescription: >-
+    Mix of manual site support fixes. May break sites and leak real IP; use at own risk.
+  hideHistoryDescription: Hide local browsing history. Networks can still sniff history but it is proxied.
+  randomizeFingerprint: Randomize browser fingerprint
+  randomizeFingerprintDescription: >-
+    Uses a random desktop browser for each tab session and adds noise to
+    canvas, WebGL, CPU and memory readings. A chosen user agent still wins.
+    May break some sites.
+  customWisp: Custom Wisp server
+  customWispDescription: >-
+    Route proxy traffic through your own Wisp server for better privacy control. If you wish to route all your traffic via self-hosting this is a lightweight method. Utilize the frontend here but have respective traffic go to your own servers. Leave empty to turn off.
+  invalidWisp: Enter a ws:// or wss:// address.
   moreSettings: View more settings
   anotherLink: Need another link? Click the <mirrors>mirror links button</mirrors>.
-
-bookmarks:
-  title: Bookmarks
-  newSave: New Save
-  titlePlaceholder: Create a bookmark title!
-  urlPlaceholder: Paste the site URL here!
-  saved: Saved Bookmarks
-  bookmark: Bookmark
 
 faq:
   meta:
@@ -647,15 +715,113 @@ privacy:
       email at
 
 docs:
-  ciBadge: GitHub Actions Status
-  mirrors: >-
-    Simply click on the Links icon for more mirrors. Can't deploy using any of
-    the free options below? Check out Railway or look into cheap, paid VPS
-    hosting solutions.
   chemical: >-
     Try using <chemical>Chemical</chemical> if you want to create your own web
     proxy service from scratch.
   chemicalButton: Build Your Proxy Site with Chemical
+  formerly: Formerly Holy Unblocker LTS
+  badges:
+    ci: GitHub Actions Status
+    dockerVersion: Docker Image Version
+    dockerPulls: Docker Pulls
+  intro: >-
+    <strong>InvisiProxy LTS</strong> (formerly Holy Unblocker LTS) is an
+    experimental web proxy service that can bypass web filters or "blockers"
+    regardless of whether the method of censorship is client-side or
+    network-based. This includes the ability to bypass content blockers from
+    governments, chrome extensions, localized client firewalls, and
+    network-related filters. The project even allows the ability to browse
+    Tor/Onion sites in any browser (even Chromium) all through a website!
+  star: You can support InvisiProxy by starring the repository!
+  about: >-
+    This project serves mostly as a proof of concept for the ideal clientless
+    solution to bypassing censorship. A good use case of this project would be
+    if you ever needed a method to use Tor, swap regions when browsing (or use
+    an external proxy), browse websites without making accounts (reduces
+    fingerprinting), bypass adblocking, and/or leave minimal traces of device
+    activity. Simply host this project on any domain and have an alternative
+    solution to a VPN without needing to download anything on said device.
+    Being a secure web proxy service, it supports numerous sites while being
+    updated frequently and concentrating on being easy to self-host.
+    InvisiProxy LTS works with a large number of sites, including YouTube,
+    Gemini, ChatGPT, Discord, GeForce NOW and more! This project also features
+    good amount of exclusive features compared to other web proxies in terms of
+    bypassing web filters (DOM Masquerading and Source Randomization) and global
+    censorship from countries. Current countries supported are China (GFW) and
+    Russia.
+  users: >-
+    Over 30M+ users since 2020. Thank you so much for the support I could have
+    never imagined how massive the web proxy community has become.
+  branches:
+    current: 'Current Branch: Latest'
+    title: Branch Types
+    latest: Latest (master; built for FOSS and SEO)
+    beta: Beta (pending changes; changes that may break things)
+    production: >-
+      Production (v4, v5, v6; stable version of InvisiProxy LTS. Changes for
+      self hosting in production settings; max filtering evasion and request
+      handling)
+    switch: Considering switching branches for self-hosting to a production branch!
+  selfHost: >-
+    View the <deploy>self-deployment options</deploy> if you wish to self host
+    this project. Can't deploy using any of the free options? Check out Koyeb
+    or look into cheap, paid VPS hosting solutions. If you don't wish to
+    self-host please click on the Mirror Links Menu on InvisiProxy.
+  discord: "Be sure to join TitaniumNetwork's Discord for more official site links:"
+  caution:
+    title: Caution
+    body: >-
+      If you are going to self-host InvisiProxy LTS please switch to the
+      PRODUCTION branch for filter evasion features enabled automatically. The
+      master branch will feature work-in-progress changes that are not ready
+      for self hosting. If you wish to contribute to this project however
+      please PR to the master branch.
+  tip:
+    title: Tip
+    body: >-
+      InvisiProxy LTS is optimized for self-hosting to provide you with maximum
+      privacy control! Fork this repository and consider starring. You can
+      self-host using either free or paid deployment options, or set it up on a
+      dedicated instance (VPS) for enhanced performance.
+  sites:
+    site: Supported Sites
+    features: Features
+    youtube: >-
+      Built-in variety of open source web proxies with both a focus on speed
+      and/or security
+    reddit: >-
+      Features Source Randomization and DOM Masquerading to circumvent major
+      filters effectively along with randomizations to proxy globals
+    discord: >-
+      Tab title + icon customization using the Settings Menu for improved
+      browsing history stealth
+    instagram: >-
+      Adblocking support across all websites while surfing and low latency DNS
+      on official servers
+    tor: >-
+      SOCKS5 and Onion routing support with Tor within the Settings Menu. Use
+      Tor/Onion sites in any browser!
+    geforce: >-
+      Exclusive features compared to other web proxies in terms of bypassing
+      web filters and global censorship from countries.
+    chatgpt: >-
+      Local browsing history hidden, tab leak prevention and network traffic is
+      obscured!
+    spotify: Bypass regional proxy blocks by swapping regions or enabling Tor
+    more: And essentially most sites!
+    moreFeature: Built for intensive production loads and ease of setup
+  deploy:
+    title: Deploy InvisiProxy
+    free: Free Deployments
+    alternatives: Alternative Free Sources
+    paid: Production Paid/Free Options (Requires Payment Info)
+    to: Deploy to {name}
+    run: Run on {name}
+    replitTitle: What happened to Replit/Heroku Deployment?
+    replit: >-
+      Replit is no longer free and Heroku has a set policy against web proxies.
+      Try GitHub Codespaces or Gitpod instead for development on the cloud OR
+      Koyeb for free hosting.
   codespaces:
     title: Setup Instructions
     fork: Fork (and star!) this repository to your GitHub account
@@ -675,6 +841,32 @@ docs:
     ports: >-
       Click "Make public" on the application popup, then access the deployed
       website via the ports tab.
+  partners:
+    title: Partners
+    hardFork: '{name} (Hard Fork)'
+    partner: '{name} (Partner)'
+  toc:
+    title: 'Table of contents:'
+    setup: Setup
+    terminal: Terminal
+    configuration: Project Configuration
+    server: Server Configuration
+    tor: TOR Routing
+    proxy: Proxy
+    navigation: Client Navigation
+    translations: Translations
+    structure: Structure
+    structureInfo: Structure Information
+    views: Static Files
+    scripts: Scripts
+    future: Future Additions
+    beginners: Beginner's Explanation
+    hosting: Hosting Providers
+    domain: Domain Setup
+    cloudflare: Cloudflare Setup
+    workspace: Workspace Configurations
+    faq: Detailed FAQ
+    more: More Information
   setup:
     title: How to Setup
     branchWarning: >-
@@ -685,52 +877,391 @@ docs:
     terminal: Terminal
     terminalIntro: >-
       Either use the button above to deploy to the deployment options above or
-      type the commands below on a dedicated server:
-    restartComment: Stop with Ctrl+C, then run pnpm start again to restart
-    buildComment: Build or develop
-    pm2Comment: pm2 daemon
+      type the commands below on a dedicated server
+    nginxOnly: THIS PROJECT IS MADE TO SUPPORT NGINX; NOT CADDY.
+    requirements: >-
+      Please ensure you are using <code>Node 26.x</code> as well.
+      <code>git</code> and <code>curl</code> are required dependencies:
     builtIn: >-
-      This website is hosted locally with Scramjet, Wisp, Proxy Transports,
-      EpoxyTransport, and LibcurlTransport built-in.
+      This website is hosted locally with <scramjet>Scramjet</scramjet>,
+      <wisp>Wisp</wisp>, <merp>Merp Obfuscation</merp>,
+      <epoxy>EpoxyTransport</epoxy>, and <libcurl>LibcurlTransport</libcurl>
+      built-in.
+    caddyWarning: >-
+      For security reasons when hosting with a reverse proxy PLEASE use NGINX
+      not Caddy. This is due to wispurr using loopbacks. If using Caddy disable
+      this feature or adjust your default Caddy config.
+    resources: 'Resources for self-hosting:'
+  commands:
+    pm2Config: >-
+      Edit config.js and set production to true if you want to use pm2 (Allows
+      for easier VPS hosting)
+    pm2: pm2 daemon utilization
+    restart: Or on subsequent uses...
+    kill: For killing any production processes made with pm2
+    buildErrors: If you encounter any build errors...
+    serviceErrors: If you encounter any service errors...
+    nodeVersion: 26 or latest
+    start: If you wish to start the project
+    test: For testing endpoints and errors
+    prSet: prSet function code here....
+  ubuntu:
+    title: Detailed Setup (Ubuntu Example)
+    intro: >-
+      You will need <code>Node.js 26.x</code>, <code>curl</code> and
+      <code>git</code> installed; below is an example for Debian/Ubuntu setup.
+    summary: Step-by-Step Guide
+    mirrors: >-
+      For simplicity sake you can join the TN discord at discord.gg/unblock and
+      request for mirror site links (that are restocked and unblocked).
+    hosting: Hosting
+    hostingBody: >-
+      If you wish to self-host however you will first need a VPS or hosting
+      provider:
+    dependencies: Dependencies
+    dependenciesBody: >-
+      You will then need to setup git, musl, nginx (or caddy) and Node.js. Here
+      is an example for Ubuntu LTS:
+    tor: Tor Support (Optional)
+    configure: Configurating InvisiProxy
+    configureBody: >-
+      Most important options are production along with the obfuscation and DOM
+      masquerading techniques.
+    configureMore: 'From there just configure as needed:'
+    run: Cloning and Running InvisiProxy
+    runBody: >-
+      Then run the respective process; if you have production set to true in
+      the configuration pm2 will be automatically enabled with our own
+      workers/cache system.
+    restart: Then of course if you used NGINX or caddy please restart/reload it
   config:
     title: Configuration
     server: Server Configuration Setup
-    serverBody: >-
-      The default place for the proxy when its started is
-      <code>http://localhost:8080</code>, but you can change it if needed in
-      <code>./config.json</code>. You can also modify the other configuration
-      values at <code>./config.json</code>. Set the port in configuration or
-      override it with the PORT environment variable. Other settings are in
-      <code>./config.json</code>. Localized changes for source randomization,
-      auto-minify, etc. are located in <code>./config.json</code>.
-    tor: Tor/Onion Routing Setup
-    torGuide: 'Simply host Tor using this guide:'
-    torBody: >-
+    port: >-
+      The default PORT for the proxy when started is
+      <code>http://localhost:8080</code>. You can change the PORT and other
+      production metrics if needed in <code>./ecosystem.config.js</code>.
+    local: >-
+      Every other localized changes for source randomization, auto-minify, etc.
+      are located in <code>./config.json</code>.
+    options:
+      minifyScripts: >-
+        Automatically minify respective static assets upon starting the server.
+      randomizeIdentifiers: >-
+        Enable experimental proxy global randomization for Ultraviolet. This
+        reduces the chances of UV being detected by any extension based filters.
+      production: >-
+        Utilize a pre-configured production setup for server hosting.
+        Automatically has cache control and source rewrites setup.
+      disguiseFiles: >-
+        Enable DOM masquerading which obfuscates real the real content fetches
+        for InvisiLTS. This is done through disguising requests, decompressing
+        and then reconstructing the DOM tree.
+      usingSEO: >-
+        Enable Source Randomization which randomizes the source by swapping
+        chunks of data specified in <code>./src/data.json</code>. Highly useful
+        for masking keywords that will automatically flag or block InvisiProxy
+        LTS as well as preventing source blocks.
+      verbose: >-
+        Enables compiling and building messages to see progress and possible
+        issues while compiling.
+      mirrorLinksFile: >-
+        Server-only file used by the Links page dispenser, defaulting to
+        <code>private/mirror-links.txt</code>. Relative paths are resolved from
+        the project root; absolute paths are also supported. Use one HTTP(S) URL
+        per line and keep the file outside <code>views/</code> so it is not
+        publicly served. Restart the server after changing this setting.
+      geoLanguage: >-
+        Enables automatic language selection using Cloudflare's
+        <code>CF-IPCountry</code> header. Only enable this behind Cloudflare,
+        since the header can otherwise be set by anyone. Countries are listed
+        per language under <code>language.countries</code> in each
+        <code>./locales/*.yaml</code> file.
+      singleLanguage: >-
+        When <code>true</code>, only the language set in <code>language</code>
+        is built and every visitor gets it, with the Language setting hidden.
+        Useful for Docker or other deployments that only need one language,
+        since builds are faster and smaller. Defaults to <code>false</code>.
+      language: >-
+        The language to build when <code>singleLanguage</code> is on, matching a
+        file in <code>./locales/</code> (e.g. <code>en</code> for
+        <code>en.yaml</code>). Defaults to <code>en</code>. For Docker, set this
+        in <code>config.json</code> before running <code>docker build</code> or
+        <code>docker compose build</code>, since languages are chosen at build
+        time.
+  translations:
+    title: Translations
+    crowdin: >-
+      InvisiProxy LTS is translated on <crowdin>Crowdin</crowdin>, and anyone
+      can help without needing to touch code. Join the project, choose a
+      language and start translating. Finished translations are synced into
+      <code>./locales/</code> automatically.
+    rules: >-
+      See <readme/> for the translation rules (placeholders, tags and masked
+      terms). If your language isn't listed on Crowdin, open an issue or ask in
+      the Discord.
+  tor:
+    title: Tor/Onion/SOCKS5 Routing Setup
+    intro: >-
+      You need to setup Tor (no GUI need/GUI is alright. With GUI replace port
+      9050 with 9150) in order for the Onion Routing setting to work!
+    guide: 'Simply host Tor using this guide:'
+    cliGuide: 'Alternative Guide (for CLI):'
+    body: >-
       If you are hosting InvisiProxy LTS on a VPS utilizing Ubuntu consider
       attaching Tor to systemctl for easier production management. Once Tor is
       up and running on either Linux or Windows it will work automatically with
       InvisiProxy LTS when enabled by the user via the Settings menu.
-    proxy: Proxy Configuration
-    proxyBody: >-
+    customWisp: Users can also set their own Wisp server in Proxy Preferences.
+    customProxy: >-
+      If you wish to use a custom HTTP/HTTPS/SOCKS5 proxy to route traffic for
+      Scramjet this is handled on the server in
+      <code>./src/server/wisp.ts</code>.
+  proxy:
+    title: Proxy Configuration
+    body: >-
       The primary location for tweaking any web proxy related settings assigned
       via the Settings menu is <code>./views/assets/js/register-sw.js</code>.
-      Here you can modify the provided transport options set locally via
-      localStorage, swap out SOCKS5 proxies, change Onion routing ports,
-      specify a blacklist, and more.
-  options:
-    option: Option
-    description: Description
-    getSWRoute: Selects the Scramjet service worker based on adblocking.
-    proxyUrl: >-
-      Specifies a SOCKS5 protocol URL defaulting to the default Tor proxy port.
-    transportUrl: >-
-      The selected libcurl or Epoxy module implementing Proxy Transports for use
-      with Wisp. Mobile browsers always use Epoxy.
-    wispUrl: Modify the pathname or url handling for Wisp.
-    getTransportOptions: Configures Wisp and the optional SOCKS5 proxy for Libcurl.
-    Controller: >-
-      This constructor allows you to swap out the prefix used for Scramjet
-      dynamically and specify file locations.
+      Here you can modify the provided transport options set locally via a
+      cookie, swap out SOCKS5 proxies, change Onion routing ports, specify a
+      blacklist, and more.
+    options:
+      stockSW: >-
+        The default service worker configuration file for Ultraviolet. For
+        InvisiProxy however adblocking is automatically enabled so this is not
+        used by default.
+      blacklistSW: >-
+        A modified version of Ultraviolet that allows for blacklisting domains
+        and adblocking.
+      proxyUrl: >-
+        Specifies a SOCKS5/HTTPS/HTTP protocol URL defaulting to the default Tor
+        proxy port. This can be swapped out with any valid port or SOCK5s proxy.
+        This is done via the proxy option for both epoxy and libcurl.
+      transports: >-
+        Specifies any provided ports to be swapped via Bare-Mux and utilize
+        Wisp.
+      wispUrl: Modify the pathname or url handling for Wisp
+      defaultMode: >-
+        Specify the default transport used globally (can be swapped by the users
+        still via the Settings menu)
+      ScramjetController: >-
+        This constructor allows you to swap out the prefix used for Scramjet
+        dynamically and specify file locations. Note you may need to edit
+        <code>./views/scram/scramjet.sw</code> when changing file names.
+  navigation:
+    title: Client Navigation Configuration
+    body: >-
+      The primary location for any client side navigation scripts is
+      <code>./views/assets/js/common.js</code>. This file is primary used for
+      Omnibox (Search Engine) functionality, swapping proxy options and other
+      client settings.
+    options:
+      getDomain: >-
+        This constant is used for specifying any subdomains to remove when
+        appending a URL into the omnibox.
+      goFrame: This specifies the stealth frame used for InvisiProxy LTS
+      sx: >-
+        This constant specifies the search engine you want to be proxied
+        whenever a user types something in that isn't a URL
+      search: These functions specify and parse the queries used for submitted URLs
+      urlHandler: Used to set functions for the goProx object.
+      goProx: >-
+        This constant allows for the mapping of URL handling for specific
+        proxies or links that need to fall under a web proxy.
+      prSet: Attaches event listeners using goProx for any buttons or inputs needed
+      huLinks: >-
+        Automatically takes paths stated in <code>./views/assets/json</code> and
+        appends them depending on the page and usage. This is used for hiding
+        links that would lead to filter blocks and create an easier system for
+        adding apps.
+  structure:
+    title: Structure
+    summary: Web Pages
+    info: Structure Information
+    root:
+      views: >-
+        The physical site base of InvisiProxy goes here where static assets are
+        served.
+      src: For future implementation of obfuscation and keyword removing features.
+    views: Details of <code>/views/</code>
+    folders:
+      dist: is used for minfied files. Created on build.
+      pages: is used for the HTML for the site.
+      assets: is used for storing various CSS, JS, image, and JSON files.
+      scram: >-
+        contains the respective local Scramjet implementation. Some files are
+        overridden by the node module.
+      uv: contains the UV implementation.
+    scripts: Scripts located in <code>/views/assets/js/</code>
+    files:
+      card: adds a fancy visual effect to the box cards displayed on the welcome screen.
+      common: >-
+        is used on all pages and allows most site features to function such as
+        autocomplete.
+      csel: >-
+        manages the settings menu, omnibox function and other additional
+        features.
+      loader: is used as an asset for DOM masquerading.
+      registerSw: >-
+        creates and manages service workers that allow Ultraviolet to function,
+        and also uses bare transport.
+  future:
+    title: Future Additions
+    body: <todo>This</todo> is our nonexhaustive todo list for InvisiProxy LTS.
+  beginners:
+    title: Vague Explanation for Beginners With External Proxies and Hosting
+    intro: You will first want to host your proxies locally or externally.
+    hosting: 'List of some good hosting options:'
+    current: Current Hosting Provider
+    paid: Paid
+    freePaidDedicated: Free, Paid, Dedicated
+    freeAndPaid: Free and Paid
+    preference: >-
+      Out of the list of hosting providers Dedipath and Azure rank first as a
+      preference. You may also self-host.
+    cloudflare: >-
+      After you have selected a decent VPS, use Cloudflare for the DNS records
+      for both the site and the subdomains for the proxies.
+    dns: >-
+      This is an example of DNS records. Self-hosting will require <code>A
+      records</code> preferably.
+    dnsAlt: DNS records
+    root: >-
+      <code>@</code> and <code>www.example.com</code> are being used for
+      InvisiProxy LTS.
+    subdomain: >-
+      <code>a.example.com</code> is being used for other instances like
+      Libreddit or Invidious depending on what the site maintainer needs.
+    local: >-
+      As stated previously, InvisiProxy is hosted locally with Scramjet and
+      Ultraviolet out of the box. No need for external instances.
+  domain:
+    title: Domain Steps
+    porkbun: >-
+      If you prefer to obtain premium domains (TLDs) then use
+      <porkbun>Porkbun</porkbun>, which offers domains for amazing prices.
+      Literally a <code>.org</code> domain normally costs around $5 first year.
+  cloudflare:
+    title: Cloudflare Steps
+    account: >-
+      Use Cloudflare (make an account), add your site and then add your various
+      DNS targets to Cloudflare. Make sure you add Cloudflare's Nameservers
+      which will be given later when you are adding your site.
+    records: >-
+      Make sure they are CNAME although A records also work and try to follow
+      this structure:
+    columns: Type | Name | Target
+    ip: VPS IP GOES HERE
+    ssl: >-
+      Make sure HTTPS is forced and have SSL set to Flexible (if you don't use
+      LetsEncrypt). Otherwise you can have SSL set to Full.
+  workspace:
+    title: Workspace Configurations
+    vsc: >-
+      Preferably if you have your own device use <vsc>Visual Studio Code</vsc>.
+      Pretty much the best option you can get but obviously this is an opinion.
+      Also make sure you have <node>Node.JS</node> installed on your machine.
+    fork: >-
+      Not going to go too in depth with this part but first fork this
+      repository. The clone it locally through a Terminal of some sort
+      depending on what OS you are on. Make sure you navigate to the folder you
+      want to set this up in.
+    gitignore: >-
+      Now simply add the folder you cloned this repo in in VSC. Then run
+      <code>pnpm install</code>. I recommend that if you are releasing this
+      publically on GitHub that you add a <code>.gitignore</code> in your root
+      directory with the following exclusions:
+    deploy: >-
+      Now you have your following workspace environment setup. To deploy the
+      following workspace you just created you will need to look up depending
+      on your hosting provider.
+    gitpod: >-
+      For an online IDE that you can use on your school computer and/or
+      chromebook use GitPod. Basically the equivalent of Visual Studio Code but
+      with in-browser support.
+    gitpodAccount: 'Make an account:'
+    gitpodFork: 'Fork this repo and enter in this URL to setup your workspace:'
+    gitpodSteps: >-
+      Use the same steps above by running <code>pnpm install</code> in your
+      repository and adding a <code>.gitignore</code> in your root directory
+      specifying to exclude <code>node_modules</code>.
+  faq:
+    title: Detailed FAQ
+    summary: Quick FAQ
+    games: Where can I find the games for this repo? (404 errors, etc.)
+    gamesBody: Please read over <games>here</games>.
+    captcha: >-
+      Why is the site I am on not working correctly or having CAPTCHA errors?
+    captchaBody: >-
+      Captcha support is spotty on all of the current proxies sadly. It is
+      primarily supported by Scramjet. Therefore some sites may not work with
+      any of the sites.
+    badGateway: I am getting 502 errors. What do I do?
+    badGatewayBody: >-
+      When this happens you may either switch sites to fix the error or wait a
+      bit. Sometimes clearing your cache can help.
+    questions: >-
+      If you still have any questions feel free to ask them in the discord
+      linked here.
+    domains: >-
+      Why are official domains now numbered? Is this project maintained again?
+    domainsBody: >-
+      Yes, this project is active again for LTS support! However, the approach
+      is now much simpler to ensure functionality: domain restocks as needed and
+      a highly maintained source. More than ever, this project serves as a proof
+      of concept for the brave souls willing to innovate in the web proxy
+      service space.
+  closing:
+    summary: Former Closing Message (Original - 2022)
+    announcement: >-
+      This isn’t the greatest announcement sorry. After lots of thought and
+      severe hesitation I’m shutting down Holy Unblocker and leaving TN. It's
+      just been something that I’ve been super conflicted with for months hence
+      the lack of updates and the massive gaps that happened last year. I just
+      didn’t want to throw away a project that I passionately enjoyed and spent
+      time on while making amazing friends and meeting epic devs here. I could
+      go on forever for who these people are but ima like leave it here. They
+      know who they are :D
+    reasons: >-
+      The main change of thought is that I’m finally just putting an end right
+      now due to 1) the lack of motivation 2) the community is NOT the greatest
+      at time and not the nicest at times (have to put that out here) 3) the
+      future doesn’t look so good for HU/TN as a project.
+    secrets: >-
+      Some things I’ll be keeping secret since there are more reasons to this
+      choice unless otherwise for those who don’t find this enough information.
+      Good friends here will know that I’ve been super stressed about this
+      choice for months now. Also regardless a good motivator for this choice is
+      the fact that I’ll be graduating soon.
+    future: >-
+      It’s possible that I may continue/come back for this in the future or keep
+      it on GitHub only. I leave this here because even now I am still doubting
+      myself about this change. But for now I’d check out other proxy sites like
+      Incognito (Duce DOES a ton of updates frequently and he is the
+      creator/developer of Ultraviolet so give him some love) :yayy_hopi:
+    patreon: >-
+      Check out his Patreon also! For current HU patrons you will not be billed
+      next month and the HU Patreon will be archived so head over to Duce’s
+      patron so he can purchase more domains for Incognito.
+    signoff: With love <3
+  more:
+    title: More Information
+    maintained: >-
+      This project is maintained by the InvisiProxy LTS team and is an official
+      flagship TitaniumNetwork web proxy site.
+    website: View the official website for more detail and credits.
+    sources: 'Web Proxy Sources:'
+    sourcesBody: >-
+      This project currently uses Scramjet and Ultraviolet as web proxies
+      adhering to the Wisp protocol. Bare-Mux is utilized for swapping transport
+      systems to be utilized with Wisp. The included transport systems are
+      EpoxyTransport and libcurl-transport.
+    wispProtocol: Wisp Protocol
+    merp: Merp (Obfuscation Module)
+    dnsBlocklists: hagezi DNS Blocklists
+    dependencies: 'Other Dependencies:'
+    mentions: 'Notable Mentions:'
+    hostingProvider: Hosting Provider
   meta:
     title: InvisiProxy Docs | Self-Hosting, Configuration & Tor Setup
     description: >-
@@ -754,16 +1285,27 @@ apps:
     enable Tor routing or edit Regional Settings if you have any issues. For
     GeForce Now support please disable ads via the proxy settings.
   faq: View the <faq>FAQ</faq> page if you have any issues with the proxy.
+  loading: Loading applications…
+  categories:
+    all: All
+    social: Social
+    chat: Chat
+    video: Video
+    music: Music
+    games: Games
+    ai: AI
+    education: Education
+    opensource: Open source
 
 partners:
   title: Partner Services
   intro: >-
-    Explore our partner projects. Our partners feature a similar model to
-    InvisiProxy so be sure to join their respective discords for more links.
+    Explore our partner projects. These projects run under the proxy so you can utilize them here unblocked.
   features: >-
     Our partners have features like unblocked games, web ports and emulation.
     All partners are open source and free to use. Consider joining their
-    communities and supporting them if you can.
+    communities and supporting them if you can. All feature a similar model to
+    InvisiProxy so be sure to join their respective discords for more links.
 
 credits:
   title: Credits
@@ -807,46 +1349,43 @@ scramjet:
     as service workers and sophisticated rewriting techniques with CAPTCHA
     support. Scramjet focuses on speed with YouTube, now.gg, Spotify,
     CoolMathGames and various .io sites!
-  intro: >-
-    <scramjet>Scramjet</scramjet> is a web proxy designed with performance and
-    security in mind to evade internet censorship, bypass arbitrary web browser
-    restrictions and innovate web proxy technologies. This allows you to browse
-    various websites with higher level of privacy and access popular resources
-    like Discord, GeForce NOW, Twitter and YouTube on restricted
-    networks.<br/><br/>For CAPTCHA challenges please solve them slowly.
-    Scramjet is so fast you might get stuck in a loop.<br/>Enable Tor routing
-    if you are struggling to login to services or view<br/>View the
-    <faq>FAQ</faq> page if you have any issues with the proxy.
   searchPlaceholder: Type a URL here or enter a search query!
   search: SEARCH
 
 frame:
   searchPlaceholder: Type a URL or search...
   loading: Loading the web proxy...
+  tabs: Proxy Tabs
+  newTab: New tab
+  closeTab: Close tab
+  closeMenu: Close
+  bookmarks: Bookmarks
+  addBookmark: Bookmark this page
+  removeBookmark: Remove bookmark
+  noBookmarks: No bookmarks yet. Use the star in the address bar to save the page you're on.
 
 scramjetError:
   title: Scramjet Network Error
   failed: 'Failed to load:'
-  reload: Reloading the page will fix your problem.
+  reload: Reloading the page may fix your problem.
   refresh: Refresh Page
   copy: Copy
   try: 'Try:'
   tips:
-    reload: Reloading the page; this is a known issue with our proxies
+    reload: Reloading the page; this is a known issue with Scramjet
     idb: >-
       In the case of an IDB Database error please clear your site data by
       clicking on the lock icon in the address bar and selecting "Site
       settings" or "Site data" and then clicking "Clear site data"
     cache: >-
-      Clearing your browser or site cache data via Ctrl+Shift+R and browser
-      settings
+      Clearing your browser or site cache data via Ctrl+Shift+R. You can also go to Settings > Privacy > Clear Site Data on Invisi
     address: Verifying you entered the correct address
     maintenance: >-
       In the case of website maintenance or updates, please wait for the issue
       to be resolved.
-    censored: Verify the server isn't censored
+    censored: Verifying the server isn't censored by your network (WebRTC, etc.)
     faq: View the FAQ page for specific site compatibility issues.
     github: Troubleshooting the error on the <github>Scramjet GitHub.</github>
-    engine: Try a different proxy engine via the settings panel.
+    engine: Try a different proxy transport or region via the settings panel.
   network: Refresh the network service
   love: Made With Love

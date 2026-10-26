@@ -11,6 +11,8 @@ import {
 export {
 	values,
 	sites,
+	appLibrary,
+	appPresets,
 	credits,
 	route,
 	ifSEO,
@@ -69,7 +71,7 @@ export function Keywords() {
 	return (
 		<span
 			style={{ display: 'none' }}
-			data-fact={randomItem(values.keywordFacts)}
+			{...{ [values.factAttribute]: randomItem(values.keywordFacts) }}
 		>
 			{randomItem(values.keywordText)}
 		</span>

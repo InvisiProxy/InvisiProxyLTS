@@ -1,5 +1,8 @@
 @charset "UTF-8";
 
+@import "tippy.js/dist/tippy.css";
+@import "./partials/icons.css";
+@import "./partials/fonts.css";
 @import "./partials/theme.css";
 @import "./partials/base.css";
 @import "./partials/branding.css";

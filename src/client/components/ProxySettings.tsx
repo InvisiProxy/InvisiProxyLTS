@@ -1,5 +1,9 @@
-import { route, translate, Translation } from '../document-helpers.tsx';
-import { SettingToggle, TransportSelect } from './SettingsControls.tsx';
+import { route, translate, Translation, values } from '../document-helpers.tsx';
+import {
+	AddressField,
+	SettingToggle,
+	TransportSelect,
+} from './SettingsControls.tsx';
 
 const links = {
 	patreon: (text: string) => (
@@ -16,6 +20,7 @@ const links = {
 			{text}
 		</button>
 	),
+	faq: (text: string) => <a href={route('/questions')}>{text}</a>,
 };
 
 export default function ProxySettings() {
@@ -59,7 +64,9 @@ export default function ProxySettings() {
 										'settings.advanced.regions.japan'
 									)}
 								</option>
-								<option value="patreon">Patreon</option>
+								{values.patreon && (
+									<option value="patreon">Patreon</option>
+								)}
 							</select>
 						</div>
 						<SettingToggle
@@ -70,11 +77,27 @@ export default function ProxySettings() {
 							class="useonion"
 						/>
 						<SettingToggle
+							label={translate('settings.privacy.blockWebrtc')}
+							description={translate(
+								'settings.privacy.blockWebrtcDescription'
+							)}
+							class="block-webrtc"
+						/>
+						<SettingToggle
 							label={translate('proxySettings.searchNavFix')}
 							description={translate(
 								'proxySettings.searchNavFixDescription'
 							)}
 							class="search-nav-fix"
+						/>
+						<SettingToggle
+							label={translate(
+								'proxySettings.experimentalSiteFixes'
+							)}
+							description={translate(
+								'proxySettings.experimentalSiteFixesDescription'
+							)}
+							class="experimental-site-fixes"
 						/>
 					</div>
 					<div class="proxy-settings-grid-right">
@@ -98,6 +121,37 @@ export default function ProxySettings() {
 									'proxySettings.hideHistoryDescription'
 								)}
 								class="history-toggle"
+							/>
+							<SettingToggle
+								label={translate(
+									'proxySettings.randomizeFingerprint'
+								)}
+								description={translate(
+									'proxySettings.randomizeFingerprintDescription'
+								)}
+								class="randomize-fingerprint"
+							/>
+							<div class="setting-field">
+								<label for="settings-window">
+									{translate('settings.advanced.window')}
+								</label>
+								<select id="settings-window" class="cloak-type-list">
+									<option value={values.cloakTypes.none} selected>
+										{translate('settings.advanced.windowDefault')}
+									</option>
+									<option value={values.cloakTypes.blank}>about:blank</option>
+									<option value={values.cloakTypes.blob}>blob</option>
+								</select>
+							</div>
+							<AddressField
+								id="custom-wisp"
+								formId="wispform"
+								label={translate('proxySettings.customWisp')}
+								description={translate(
+									'proxySettings.customWispDescription'
+								)}
+								placeholder="wss://wisp.example.com/"
+								invalid={translate('proxySettings.invalidWisp')}
 							/>
 						</div>
 						<button

@@ -10,7 +10,7 @@ export interface Languages {
 	countries: Record<string, string>;
 }
 
-// Written by the build from src/locales (see src/build/locales.ts).
+// Written by the build from locales (see src/build/locales.ts).
 export function loadLanguages(): Languages {
 	const file = new URL(localesFile, siteUrl);
 	if (!existsSync(file))

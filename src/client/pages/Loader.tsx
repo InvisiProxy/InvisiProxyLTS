@@ -1,4 +1,4 @@
-import { Keywords, Inline, route, SEO } from '../document-helpers.tsx';
+import { Keywords, Inline, route, values, SEO } from '../document-helpers.tsx';
 
 export default function Loader() {
 	return (
@@ -20,7 +20,7 @@ export function Head() {
 	return (
 		<>
 			<title>Page Loader</title>
-			<meta charset="utf-8" />
+			{!values.usingSEO && <meta charset="utf-8" />}
 			<meta
 				name="viewport"
 				content="width=device-width, initial-scale=1.0, shrink-to-fit=no"

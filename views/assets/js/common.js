@@ -1,5 +1,6 @@
-import { values, route, maskText } from 'build:invisiproxy';
+import { values, route, appPresets, appIcon } from 'build:invisiproxy';
 import { BareCompatibleClient } from '@mercuryworkshop/proxy-transports';
+import { proxiedFrameUrl } from '../../../src/browser/frame-url.ts';
 /* -----------------------------------------------
 /* Authors: QuiteAFancyEmerald, Yoct, b4kt, and OlyB
 /* GNU Affero General Public License v3.0: https://www.gnu.org/licenses/agpl-3.0.en.html
@@ -15,28 +16,22 @@ import { BareCompatibleClient } from '@mercuryworkshop/proxy-transports';
 // To be defined after the document has fully loaded.
 let sjBundle = null;
 const FRAME_URL_KEY = `${values.storageNamespace}-frame-url`;
+const OPEN_URL_KEY = `${values.storageNamespace}-open-url`;
 const SJ_PREFIX_TAG = 'sj:';
 
-// Get the preferred apex domain name. Not exactly apex, as any
-// subdomain other than those listed will be ignored.
-const getDomain = () =>
-    location.host.replace(/^(?:www|beta)\./, ''),
-  // This is used for stealth mode when visiting external sites.
-  goFrame = (url) => {
+// This is used for stealth mode when visiting external sites.
+const goFrame = (url) => {
     localStorage.setItem(FRAME_URL_KEY, url);
-    if (location.pathname !== route("/s"))
+    if (location.pathname !== route("/s")) {
+      localStorage.setItem(OPEN_URL_KEY, url);
       location.href = route("/s") + (values.development ? '' : `?cache=${values.cacheKey}`);
-    else navigateLocalFrame(url);
+    } else navigateLocalFrame(url);
   },
   navigateLocalFrame = (target) => {
     const windowFrame = document.getElementById('frame');
-    if (!windowFrame || !target) return;
+    const rawUrl = proxiedFrameUrl(target);
+    if (!windowFrame || !rawUrl) return;
     document.getElementsByClassName('loader')[0]?.classList.add('loader-active');
-    if (!target.startsWith(SJ_PREFIX_TAG)) {
-      windowFrame.src = target;
-      return;
-    }
-    const rawUrl = target.slice(SJ_PREFIX_TAG.length);
     const tryGo = () => {
       const f = sjBundle && sjBundle.frame;
       if (f && typeof f.go === 'function') f.go(rawUrl);
@@ -49,30 +44,14 @@ const getDomain = () =>
    * See the goProx object at the bottom for some usage examples
    * on the URL handlers, omnibox functions, and the sjUrl function.
    */
-  urlHandler = (parser) =>
-    typeof parser === 'function'
-      ? // Return different functions based on whether a URL has already been set.
-        // Should help avoid confusion when using or adding to the goProx object.
-        (url, mode) => {
-          if (!url) return;
-          if (parser === sjUrl) mode = 'stealth';
-          url = parser(url);
-          mode = `${mode}`.toLowerCase();
-          if (mode === 'stealth' || mode == 1) goFrame(url);
-          else if (mode === 'window' || mode == 0) location.href = url;
-          else return url;
-        }
-      : (mode) => {
-          mode = `${mode}`.toLowerCase();
-          if (mode === 'stealth' || mode == 1) goFrame(parser);
-          else if (mode === 'window' || mode == 0) location.href = parser;
-          else return parser;
-        },
-  sjPreset = (rawUrl) => (mode) => {
+  urlHandler = (parser) => (url, mode) => {
+    if (!url) return;
+    if (parser === sjUrl) mode = 'stealth';
+    url = parser(url);
     mode = `${mode}`.toLowerCase();
-    if (mode === 'window' || mode == 0 || mode === 'stealth' || mode == 1)
-      goFrame(sjUrl(rawUrl));
-    else return sjUrl(rawUrl);
+    if (mode === 'stealth' || mode == 1) goFrame(url);
+    else if (mode === 'window' || mode == 0) location.href = url;
+    else return url;
   },
   openBlankCloak = () => {
       try {
@@ -113,15 +92,6 @@ const getDomain = () =>
       console.error('Blob cloaking failed:', e);
       return null;
     }
-  },
-  // An asynchronous version of the function above, just in case.
-  asyncUrlHandler = (parser) => async (url, mode) => {
-    if (!url) return;
-    if (typeof parser === 'function') url = await parser(url);
-    mode = `${mode}`.toLowerCase();
-    if (mode === 'stealth' || mode == 1) goFrame(url);
-    else if (mode === 'window' || mode == 0) location.href = url;
-    else return url;
   };
 
 /* READ SETTINGS */
@@ -179,13 +149,7 @@ const searchEngines = Object.freeze({
 
 // Get the autocomplete results for a given search query in JSON format.
 let activeACController = null;
-const requestAC = async (
-  baseUrl,
-  query,
-  parserFunc = (url) => url,
-  params = {}
-) => {
-  if (parserFunc !== sjUrl) return;
+const requestAC = async (baseUrl, query, params = {}) => {
   if (!sjBundle?.ready || !sjBundle.frame) return;
 
   const transport =
@@ -319,32 +283,7 @@ const getSearchTemplate = (
   },
   sjUrl = (url) => SJ_PREFIX_TAG + search(url)
 
-/* To use:
- * goProx.proxy(url-string, mode-as-string-or-number);
- *
- * Key: 1 = "stealth"
- *      0 = "window"
- *      Nothing = return URL as a string
- *
- * Examples:
- * Stealth mode -
- * goProx.scramjet("https://google.com", 1);
- * goProx.scramjet("https://google.com", "stealth");
- *
- * goProx.searx(1);
- * goProx.searx("stealth");
- *
- * Window mode -
- * goProx.scramjet("https://google.com", "window");
- *
- * goProx.searx("window");
- *
- * Return string value mode (default) -
- * goProx.scramjet("https://google.com");
- *
- * goProx.searx();
- */
-const preparePage = async () => {
+const preparePage = () => {
   if (window.$invisiScramjet?.ready) sjBundle = window.$invisiScramjet;
   else
     window.addEventListener(
@@ -358,62 +297,33 @@ const preparePage = async () => {
   // Object.freeze prevents goProx from accidentally being edited.
   const goProx = Object.freeze({
     scramjet: urlHandler(sjUrl),
-
-    tru: sjPreset('https://truffled.lol/g'),
-
   });
 
-  // Call a function after a given number of service workers are active.
-  // Workers are appended as additional arguments to the callback.
-  const callAfterWorkers = async (
-    urls,
-    callback,
-    afterHowMany = 1,
-    tries = 10,
-    ...params
-  ) => {
-    // For 10 tries, stop after 10 seconds of no response from workers.
-    if (tries <= 0) return console.log('Failed to recognize service workers.');
-    const workers = await Promise.all(
-      urls.map((url) => navigator.serviceWorker.getRegistration(url))
-    );
-    let newUrls = [],
-      finishedWorkers = [];
-    for (let i = 0; i < workers.length; i++) {
-      if (workers[i] && workers[i].active) {
-        afterHowMany--;
-        finishedWorkers.push(workers[i]);
-      } else newUrls.push(urls[i]);
-    }
-    if (afterHowMany <= 0) return await callback(...params, ...finishedWorkers);
-    else
-      await Promise.race([
-        navigator.serviceWorker.ready,
-        new Promise((resolve) => {
-          setTimeout(() => {
-            tries--;
-            resolve();
-          }, 1000);
-        }),
-      ]);
-    return await callAfterWorkers(
-      newUrls,
-      callback,
-      afterHowMany,
-      tries,
-      ...params,
-      ...finishedWorkers
-    );
+  const iconLifetime = 7 * 24 * 60 * 60 * 1000;
+  const iconCache =
+    'caches' in window
+      ? caches.open(`${values.storageNamespace}-app-icons`).catch(() => null)
+      : Promise.resolve(null);
+  try {
+    for (const key of Object.keys(localStorage))
+      if (key.startsWith(`${values.storageNamespace}-app-icon-`)) localStorage.removeItem(key);
+  } catch {}
+
+  const showIcon = (image, blob) => {
+    const objectUrl = URL.createObjectURL(blob);
+    image.addEventListener('load', () => URL.revokeObjectURL(objectUrl), { once: true });
+    image.addEventListener('error', () => URL.revokeObjectURL(objectUrl), { once: true });
+    image.src = objectUrl;
   };
 
   // Attach event listeners using goProx to specific app menus that need it.
-  const loadAppIcon = async (image, destination) => {
-    const cacheKey = `${values.storageNamespace}-app-icon-${destination}`;
-    const cacheLifetime = 7 * 24 * 60 * 60 * 1000;
+  const loadAppIcon = async (image, destination, iconUrl) => {
+    const cacheKey = `${location.origin}/${values.storageNamespace}-icon/${encodeURIComponent(`${destination} ${iconUrl}`)}`;
+    const cache = await iconCache;
     try {
-      const cached = JSON.parse(localStorage.getItem(cacheKey));
-      if (cached?.data?.startsWith('data:image/') && Date.now() - cached.savedAt < cacheLifetime) {
-        image.src = cached.data;
+      const cached = await cache?.match(cacheKey);
+      if (cached && Date.now() - Number(cached.headers.get('x-saved')) < iconLifetime) {
+        showIcon(image, await cached.blob());
         return;
       }
     } catch {}
@@ -436,34 +346,36 @@ const preparePage = async () => {
           return null;
         }
       };
+      const pageIcon = async () => {
+        try {
+          const page = await client.fetch(siteUrl.href);
+          if (!page.ok) return null;
+          const html = new DOMParser().parseFromString(await page.text(), 'text/html');
+          const icon = html.querySelector('link[rel~="icon"][href], link[rel="apple-touch-icon"][href]');
+          if (!icon) return null;
+          const pageUrl = page.url || siteUrl.href;
+          const base = html.querySelector('base[href]');
+          return fetchIcon(new URL(icon.getAttribute('href'), base ? new URL(base.getAttribute('href'), pageUrl) : pageUrl));
+        } catch {
+          return null;
+        }
+      };
+      const parent = siteUrl.hostname.split('.').slice(-2).join('.');
 
-      let blob = await fetchIcon(new URL(image.dataset.proxyIcon || '/favicon.ico', siteUrl));
-      if (!blob) {
-        const page = await client.fetch(siteUrl.href);
-        if (!page.ok) return;
-        const html = new DOMParser().parseFromString(await page.text(), 'text/html');
-        const icon = html.querySelector('link[rel~="icon"][href], link[rel="apple-touch-icon"][href]');
-        if (!icon) return;
-        const pageUrl = page.url || siteUrl.href;
-        const base = html.querySelector('base[href]');
-        blob = await fetchIcon(new URL(icon.getAttribute('href'), base ? new URL(base.getAttribute('href'), pageUrl) : pageUrl));
-      }
+      let blob =
+        (iconUrl && (await fetchIcon(new URL(iconUrl, siteUrl)))) ||
+        (await fetchIcon(new URL('/favicon.ico', siteUrl))) ||
+        (await pageIcon());
+      if (!blob && parent !== siteUrl.hostname)
+        blob = await fetchIcon(new URL(`https://www.google.com/s2/favicons?domain=${parent}&sz=128`));
       if (!blob) return;
-      const objectUrl = URL.createObjectURL(blob);
-      image.addEventListener('load', () => URL.revokeObjectURL(objectUrl), { once: true });
-      image.addEventListener('error', () => URL.revokeObjectURL(objectUrl), { once: true });
-      image.src = objectUrl;
+      showIcon(image, blob);
 
-      // Keep small icons across visits, including before the proxy initializes.
-      if (blob.size <= 256 * 1024) {
-        const reader = new FileReader();
-        reader.addEventListener('load', () => {
-          try {
-            localStorage.setItem(cacheKey, JSON.stringify({ data: reader.result, savedAt: Date.now() }));
-          } catch {}
-        }, { once: true });
-        reader.readAsDataURL(blob);
-      }
+      // Keep icons across visits, including before the proxy initializes.
+      if (blob.size <= 256 * 1024)
+        cache
+          ?.put(cacheKey, new Response(blob, { headers: { 'content-type': blob.type, 'x-saved': String(Date.now()) } }))
+          .catch(() => {});
     } catch (error) {
       console.warn('Unable to load application icon:', destination, error);
     }
@@ -475,35 +387,19 @@ const preparePage = async () => {
 
     let prUrl = formElement.querySelector('input[type=text]'),
       prAC = formElement.querySelector('#autocomplete'),
-      prGo1 = document.querySelectorAll(`#${id}.pr-go1, #${id} .pr-go1`),
       prGo2 = document.querySelectorAll(`#${id}.pr-go2, #${id} .pr-go2`);
 
-    // Handle the other menu buttons differently if there is no omnibox. Menus
-    // which lack an omnibox likely use buttons as mere links.
-    const goProxMethod = prUrl
-        ? (mode) => () => {
-            goProx[type](prUrl.value, mode);
-          }
-        : (mode) => () => {
-            goProx[type](mode);
-          },
+    const goProxMethod = (mode) => () => {
+        goProx[type](prUrl.value, mode);
+      },
       searchMode = type === 'scramjet' ? 'stealth' : 'window';
 
     if (prUrl) {
       let enableSearch = false,
         onCooldown = false;
 
-      prUrl.addEventListener('keydown', async (e) => {
+      prUrl.addEventListener('keydown', (e) => {
         if (e.code === 'Enter') goProxMethod(searchMode)();
-        // This is exclusively used for the validator script.
-        else if (e.code === 'Validator Test') {
-          const rawValue = e.target.value;
-          let resolved;
-          if (type === 'scramjet') resolved = sjUrl(rawValue);
-          else resolved = search(rawValue);
-          e.target.value = resolved == null ? '' : resolved;
-          e.target.dispatchEvent(new Event('change'));
-        }
       });
 
       if (prAC) {
@@ -530,7 +426,7 @@ const preparePage = async () => {
             let searchType = readStorage('SearchEngine');
             if (!(searchType in autocompletes)) searchType = defaultSearch;
             const requestTime = new Date().toUTCString();
-            requestAC('https://' + autocompletes[searchType], query, sjUrl, {
+            requestAC('https://' + autocompletes[searchType], query, {
               searchType: searchType,
               listElement: prAC,
               time: requestTime,
@@ -568,73 +464,64 @@ const preparePage = async () => {
       }
     }
 
-    prGo1.forEach((element) => {
-      element.addEventListener('click', goProxMethod('window'));
-    });
     prGo2.forEach((element) => {
       element.addEventListener('click', goProxMethod('stealth'));
     });
   };
 
-  document.querySelectorAll('[data-app-url]').forEach((button) => {
-    const destination = button.dataset.appUrl;
+  const iconSettled = (image) =>
+    !image.src || image.complete
+      ? Promise.resolve()
+      : new Promise((resolve) => {
+          image.addEventListener('load', resolve, { once: true });
+          image.addEventListener('error', resolve, { once: true });
+        });
+
+  const letterIcon = (name) =>
+    `data:image/svg+xml,${encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#d5484f"/><text x="32" y="43" font-family="sans-serif" font-size="30" font-weight="700" fill="#fff" text-anchor="middle">${
+        [...name][0]?.toUpperCase().replace(/[&<>]/g, '') || '?'
+      }</text></svg>`
+    )}`;
+
+  const appIcons = [...document.querySelectorAll('[data-app]')].map((button) => {
+    const app = appPresets[button.dataset.app];
+    if (!app) return null;
     if (button.tagName === 'BUTTON')
-      button.addEventListener('click', () => goProx.scramjet(destination, 'stealth'));
-    const image = button.querySelector('img[data-proxy-icon]');
-    if (image) loadAppIcon(image, destination);
+      button.addEventListener('click', () => goProx.scramjet(app.url, 'stealth'));
+    const image = button.querySelector('img');
+    return (
+      image &&
+      loadAppIcon(image, app.url, appIcon(app)).then(() => {
+        if (!image.src) image.src = letterIcon(app.name);
+        return iconSettled(image);
+      })
+    );
   });
 
+  const appTabs = [...document.querySelectorAll('.app-tab')];
+  appTabs.forEach((tab, index) =>
+    tab.addEventListener('click', () => {
+      appTabs.forEach((other) => {
+        other.classList.toggle('is-active', other === tab);
+        other.setAttribute('aria-selected', String(other === tab));
+      });
+      document.querySelectorAll('.app-grid [data-group]').forEach((card) => {
+        card.hidden = index > 0 && card.dataset.group !== String(index - 1);
+      });
+    })
+  );
+
+  const appsLoader = document.getElementById('apps-loader');
+  if (appsLoader) {
+    let loaderGone = false;
+    appsLoader.addEventListener('animationend', () => (loaderGone = true), { once: true });
+    Promise.allSettled(appIcons).then(() => {
+      if (!loaderGone) appsLoader.classList.add('apps-loader-done');
+    });
+  }
+
   prSet('pr-sj', 'scramjet');
-  prSet('pr-trl', 'tru');
-
-  // Load the frame for stealth mode if it exists.
-  const windowFrame = document.getElementById('frame');
-  if (windowFrame) {
-    const sjReady = sjBundle?.ready
-      ? Promise.resolve()
-      : new Promise((resolve) =>
-          window.addEventListener('s-ready', resolve, {
-            once: true,
-          })
-        );
-    await sjReady;
-    const target = localStorage.getItem(FRAME_URL_KEY);
-    if (target) navigateLocalFrame(target);
-  }
-
-  const useModule = (moduleFunc, tries = 0) => {
-    try {
-      moduleFunc();
-    } catch (e) {
-      if (tries <= 5)
-        setTimeout(() => {
-          useModule(moduleFunc, tries + 1);
-        }, 600);
-    }
-  };
-
-  if (document.getElementsByClassName('tippy-button').length >= 0)
-    useModule(() => {
-      tippy('.tippy-button', {
-        delay: 50,
-        animateFill: true,
-        placement: 'bottom',
-      });
-    });
-  if (document.getElementsByClassName('pr-tippy').length >= 0)
-    useModule(() => {
-      tippy('.pr-tippy', {
-        delay: 50,
-        animateFill: true,
-        placement: 'bottom',
-      });
-    });
-
-  if (document.querySelector('[data-aos]')) {
-    useModule(() => {
-      AOS.init();
-    });
-  }
 
   const banner = document.getElementById('banner');
   if (banner) {
@@ -648,119 +535,21 @@ const preparePage = async () => {
     });
   }
 
-  // Load in relevant JSON files used to organize large sets of data.
-  // This first one is for links, whereas the rest are for navigation menus.
-  fetch(route("/assets/json/links.json"), {
-    mode: 'same-origin',
-  }).then((response) => {
-    response.json().then((huLinks) => {
-      for (let items = Object.entries(huLinks), i = 0; i < items.length; i++)
-        // Replace all placeholder links with the corresponding entry in huLinks.
-        (document.getElementById(items[i][0]) || {}).href = items[i][1];
-    });
-  });
+  if (window.self === window.top) {
+    const launchType = readStorage('LaunchType');
+    let newWindow = null;
 
-  const navLists = {
-    // Pair an element ID with a JSON file name. They are identical for now.
-    'par-nav': 'par-nav',
-  };
-
-  for (const [listId, filename] of Object.entries(navLists)) {
-    let navList = document.getElementById(listId);
-
-    if (navList) {
-      // List items stored in JSON format will be returned as a JS object.
-      const data = await fetch(route(`/assets/json/${filename}.json`), {
-        mode: 'same-origin',
-      }).then((response) => response.json());
-
-      // Load the JSON lists into specific HTML parent elements as groups of
-      // child elements, if the parent element is found.
-      switch (filename) {
-        case 'par-nav': {
-          const dirnames = {
-              // Set the directory of where each item of the corresponding JSON
-              // list will be retrieved from.
-              'par-nav': 'par',
-            },
-            dir = dirnames[filename],
-            // Add a little functionality for each list item when clicked on.
-            clickHandler = (parser, a) => (e) => {
-              if (e.target == a || e.target.tagName != 'A') {
-                e.preventDefault();
-                parser();
-              }
-            };
-
-          for (let i = 0; i < data.length; i++) {
-            // Load each item as an anchor tag with an image, heading,
-            // and click event listener.
-            const item = data[i],
-              a = document.createElement('a'),
-              img = document.createElement('img'),
-              title = document.createElement('h3');
-            ((desc = document.createElement('p')),
-              (credits = document.createElement('p')));
-
-            a.href = '#';
-            img.src = route(`/assets/img/${dir}/${item.img}`);
-            title.textContent = item.name;
-            desc.textContent = item.description;
-            credits.textContent = item.credits;
-
-            if (filename === 'par-nav') {
-              if (item.credits === 'truf')
-                desc.innerHTML +=
-                  `<br>${maskText("Credits: Check out the full site at ")}<a target="_blank" rel="noopener noreferrer" href="${route("/truffled")}">${maskText("truffled.lol")}</a> //${maskText(" discord.gg/vVqY36mzvj")}`;
-            }
-
-            a.appendChild(img);
-            a.appendChild(title);
-            a.appendChild(desc);
-
-            // Which function is used for the click event is determined by
-            // the corresponding location/index in the dirnames object.
-            const functionsList = [
-              // par-nav
-              item.custom && goProx[item.custom]
-                ? () => goProx[item.custom]('stealth')
-                : () => {},
-            ];
-
-            a.addEventListener(
-              'click',
-              clickHandler(
-                functionsList[Object.values(dirnames).indexOf(dir)],
-                a
-              )
-            );
-
-            navList.appendChild(a);
-          }
-          break;
-        }
-
-
-        }
-      }
+    if (launchType === 'blank') {
+      newWindow = openBlankCloak();
+    } else if (launchType === 'blob') {
+      newWindow = openBlobCloak();
     }
 
-    const isTopLevel = window.self === window.top;
-    if (isTopLevel) {
-      const launchType = readStorage('LaunchType');
-      let newWindow = null;
-
-      if (launchType === 'blank') {
-        newWindow = openBlankCloak();
-      } else if (launchType === 'blob') {
-        newWindow = openBlobCloak();
-      }
-
-      if (newWindow) {
-        window.location.replace('about:blank');
-        setTimeout(() => {
-          window.close();
-        }, 100);
+    if (newWindow) {
+      window.location.replace('about:blank');
+      setTimeout(() => {
+        window.close();
+      }, 100);
     }
   }
 };

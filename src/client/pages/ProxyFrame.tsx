@@ -1,4 +1,5 @@
-import { Keywords, route, values, translate } from '../document-helpers.tsx';
+import type { JSX, ParentProps } from 'solid-js';
+import { Inline, Keywords, route, translate } from '../document-helpers.tsx';
 import {
 	ScramjetScripts,
 	PageScripts,
@@ -9,12 +10,59 @@ import ProxyPreloads from '../components/ProxyPreloads.tsx';
 import AntiExfil from '../components/AntiExfil.tsx';
 import Settings from '../components/Settings.tsx';
 
+function FrameMenu(
+	props: ParentProps<{
+		buttonId: string;
+		menuId: string;
+		title: string;
+		button: JSX.Element;
+	}>
+) {
+	return (
+		<div class="dropdown-parent" title={props.title}>
+			<button
+				type="button"
+				class="link-button"
+				id={props.buttonId}
+				aria-label={props.title}
+			>
+				{props.button}
+			</button>
+			<section
+				class="dropdown-settings"
+				id={props.menuId}
+				tabindex="0"
+				aria-label={props.title}
+			>
+				<div class="settings-content frame-menu">
+					<div class="settings-header">
+						<p class="cseltitle-main">{props.title}</p>
+						<button
+							type="button"
+							class="close-settings-btn"
+							aria-label={translate('frame.closeMenu')}
+						>
+							×
+						</button>
+					</div>
+					{props.children}
+				</div>
+			</section>
+		</div>
+	);
+}
+
 export default function ProxyFrame() {
 	return (
 		<>
 			<Keywords />
 			<AntiExfil />
 			<div class="loader loader-active">
+				<img
+					class="pr-logo"
+					src={route('/assets/img/hero.webp')}
+					alt="Scramjet"
+				/>
 				<p class="loader-text">{translate('frame.loading')}</p>
 				<div class="loader-w"></div>
 			</div>
@@ -44,8 +92,60 @@ export default function ProxyFrame() {
 						spellcheck="false"
 						autocomplete="off"
 					/>
+					<button
+						type="button"
+						id="bookmark-toggle"
+						title={translate('frame.addBookmark')}
+						aria-label={translate('frame.addBookmark')}
+						aria-pressed="false"
+						data-add={translate('frame.addBookmark')}
+						data-remove={translate('frame.removeBookmark')}
+					>
+						<i class="far fa-star" aria-hidden="true"></i>
+					</button>
 					<ul id="autocomplete"></ul>
 				</div>
+				<FrameMenu
+					buttonId="tabs-button"
+					menuId="tabs-menu"
+					title={translate('frame.tabs')}
+					button={
+						<>
+							<i class="fas fa-columns" aria-hidden="true"></i>
+							<span id="tab-count">1</span>
+						</>
+					}
+				>
+					<ul
+						id="tabs-list"
+						class="frame-menu-list"
+						data-untitled={translate('frame.newTab')}
+						data-close={translate('frame.closeTab')}
+					></ul>
+					<button
+						type="button"
+						id="new-tab"
+						class="frame-menu-action"
+					>
+						<i class="fas fa-plus" aria-hidden="true"></i>
+						{translate('frame.newTab')}
+					</button>
+				</FrameMenu>
+				<FrameMenu
+					buttonId="bookmarks-button"
+					menuId="bookmarks-menu"
+					title={translate('frame.bookmarks')}
+					button={<i class="fas fa-bookmark" aria-hidden="true"></i>}
+				>
+					<ul
+						id="bookmarks-list"
+						class="frame-menu-list"
+						data-remove={translate('frame.removeBookmark')}
+					></ul>
+					<p id="bookmarks-empty" class="setting-description">
+						{translate('frame.noBookmarks')}
+					</p>
+				</FrameMenu>
 				<div title="Settings" class="dropdown-parent">
 					<button
 						class="link-button"
@@ -70,127 +170,16 @@ export default function ProxyFrame() {
 				</button>
 			</div>
 			<Keywords />
-			<iframe
-				title="Proxied page"
-				id="frame"
-				allow="fullscreen"
-				autofocus={true}
-			></iframe>
+			<div id="tab-frames">
+				<iframe
+					title="Proxied page"
+					id="frame"
+					class="proxy-tab active-tab"
+					allow="fullscreen"
+					autofocus={true}
+				></iframe>
+			</div>
 			<Keywords />
-			<script
-				innerHTML={`
-      const windowFrame = document.getElementById('frame');
-      const omnibar = document.getElementById('pr-sj');
-      const toggle = document.getElementById('omnibar-toggle');
-      const backArrow = document.getElementById('omnibar-back');
-      const forwardArrow = document.getElementById('omnibar-forward');
-      const reloadArrow = document.getElementById('omnibar-reload');
-      let hidden = false;
-
-      toggle.addEventListener('click', () => {
-        hidden = !hidden;
-        omnibar.classList.toggle('omnibar-hidden', hidden);
-        toggle.classList.toggle('omnibar-s', hidden);
-        toggle.innerHTML = \`<i class="fas fa-chevron-\${hidden ? 'down' : 'up'}"></i>\`;
-        (hidden ? document.body : omnibar).appendChild(toggle);
-        toggle.title = hidden ? 'Show Bar' : 'Hide Bar';
-      });
-
-      backArrow.addEventListener('click', () => {
-        history.back();
-      });
-      forwardArrow.addEventListener('click', () => {
-        history.forward();
-      });
-      reloadArrow.addEventListener('click', () => {
-        loader.classList.add('loader-active');
-        windowFrame.contentWindow.location.reload();
-      });
-
-      let statusObject = { isLoading: true, timesErrored: 0 };
-
-      const errorRefresh = () => {
-        const shouldRefresh =
-          statusObject.timesErrored <= 5 &&
-          windowFrame.contentWindow.document.head.querySelector(
-            "meta[itemprop='http-status'][content='404']"
-          );
-        if (shouldRefresh) {
-          statusObject.timesErrored++;
-          windowFrame.contentWindow.location.reload();
-        } else statusObject.timesErrored = 0;
-        return shouldRefresh;
-      };
-
-      const applySandbox = () => {
-        const sandboxEnabled =
-          localStorage.getItem('${values.storageNamespace}-storage') &&
-          JSON.parse(localStorage.getItem('${values.storageNamespace}-storage')).Sandbox;
-        const sandboxPermissions =
-          'allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-presentation allow-same-origin allow-scripts allow-downloads';
-
-        if (sandboxEnabled) {
-          windowFrame.setAttribute('sandbox', sandboxPermissions);
-        } else {
-          windowFrame.removeAttribute('sandbox');
-        }
-      };
-
-      const loader = document.getElementsByClassName('loader')[0];
-      const updateLoader = () => {
-        const frameDocument = windowFrame.contentDocument;
-        if (frameDocument?.URL === 'about:blank') return;
-
-        statusObject.isLoading =
-          frameDocument ? frameDocument.readyState !== 'complete' : false;
-
-        // Do not remove the loading screen if the page is an error page
-        // and should be reloaded.
-        if (!statusObject.isLoading && frameDocument && errorRefresh()) {
-          statusObject.isLoading = true;
-          return;
-        }
-
-        // Display the loading screen if statusObject.isLoading is true.
-        loader.classList.toggle('loader-active', statusObject.isLoading);
-      };
-
-      // Reattach load events whenever the content window has changed.
-      const loadHandler = () => {
-        setTimeout(() => {
-          const frameDocument = windowFrame.contentDocument;
-          if (!frameDocument) {
-            updateLoader();
-            return;
-          }
-          windowFrame.contentWindow.addEventListener('beforeunload', () => {
-            loader.classList.toggle('loader-active', true);
-          });
-          frameDocument.addEventListener(
-            'readystatechange',
-            updateLoader
-          );
-          updateLoader();
-          applySandbox();
-        });
-      };
-
-      const keyboard = navigator.keyboard;
-      const syncEscapeLock = () => {
-        if (!keyboard || !keyboard.lock) return;
-        if (document.fullscreenElement) {
-          keyboard.lock(['Escape']).catch(() => {});
-        } else if (keyboard.unlock) {
-          keyboard.unlock();
-        }
-      };
-      document.addEventListener('fullscreenchange', syncEscapeLock);
-      window.addEventListener('focus', syncEscapeLock);
-
-      windowFrame.addEventListener('load', loadHandler);
-      loadHandler();
-    `}
-			/>
 		</>
 	);
 }
@@ -203,15 +192,14 @@ export function Head() {
 			<ProxyPreloads />
 			<HeadContent />
 			<ScramjetScripts utilities />
-			<link
-				rel="stylesheet"
-				href="https://unpkg.com/tippy.js@6/dist/backdrop.css"
-			/>
-			<link
-				rel="stylesheet"
-				href="https://unpkg.com/tippy.js@6/animations/shift-away.css"
-			/>
 			<PageScripts registerServiceWorker />
+			<Inline>
+				<script
+					src={route('assets/js/frame.js', 'inline')}
+					defer={true}
+					innerHTML=""
+				/>
+			</Inline>
 		</>
 	);
 }

@@ -45,7 +45,7 @@
 	z-index: 6;
 	overflow-y: auto;
 	font-weight: 500;
-	font-family: "Figtree", sans-serif;
+	font-family: "Figtree", "Figtree Fallback", sans-serif;
 	display: flex;
 	flex-direction: column;
 	backdrop-filter: blur(10px);
@@ -97,8 +97,8 @@
 
 .proxy-settings-grid-right {
 	display: grid;
+	grid-template-rows: 1fr auto;
 	gap: 18px;
-	align-items: start;
 }
 
 .settings-content-body,
@@ -106,7 +106,6 @@
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 18px;
-	align-items: start;
 }
 
 .settings-column {
@@ -114,6 +113,10 @@
 	flex-direction: column;
 	gap: 18px;
 	min-width: 0;
+}
+
+.settings-column > :last-child {
+	flex-grow: 1;
 }
 
 .cseltitle {
@@ -185,6 +188,12 @@
 	min-width: 0;
 }
 
+.clear-data-button {
+	flex: 0 0 auto;
+	cursor: pointer;
+	color: var(--nord11);
+}
+
 .setting-row:has(input:disabled) {
 	opacity: 0.55;
 	cursor: default;
@@ -202,7 +211,7 @@
 	padding: 10px 12px;
 	border-radius: 5px;
 	margin: 5px 0;
-	font-family: "Figtree", sans-serif;
+	font-family: "Figtree", "Figtree Fallback", sans-serif;
 	font-size: 16px;
 	background-color: var(--nord0);
 	border: var(--nord11) 1px solid;
@@ -235,6 +244,7 @@
 }
 
 #settings-panel select,
+#settings-panel .address-form input,
 #csel .setting-field select,
 #csel .cloakform input {
 	box-sizing: border-box;
@@ -361,12 +371,23 @@
 	margin: -8px 0 0;
 }
 
-#csel .cloakform input[type="text"] {
+#settings-panel .address-form {
+	gap: 8px;
+	margin: 0;
+}
+
+#csel .cloakform input[type="text"],
+#settings-panel .address-form input[type="text"] {
 	flex: 1;
 	min-width: 0;
 }
 
-#csel .cloakform input[type="submit"] {
+#settings-panel .address-form input[type="submit"] {
+	cursor: pointer;
+}
+
+#csel .cloakform input[type="submit"],
+#settings-panel .address-form input[type="submit"] {
 	width: auto;
 	flex: 0 0 auto;
 	border-color: transparent;
@@ -421,11 +442,117 @@
 	margin-right: 4px;
 	border-right: 2px solid currentColor;
 	border-bottom: 2px solid currentColor;
-	transform: rotate(-45deg);
+	transform: rotate(-45deg) translate(-25%, -25%);
 }
 
 .pr-settings[open] > .proxy-settings-header .proxy-settings-arrow {
-	transform: rotate(45deg);
+	transform: rotate(45deg) translate(-25%, -25%);
+}
+
+.settings-collapse {
+	gap: 0;
+}
+
+.settings-collapse-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	list-style: none;
+	cursor: pointer;
+}
+
+.settings-collapse-header::-webkit-details-marker {
+	display: none;
+}
+
+.settings-collapse-header .proxy-settings-arrow {
+	width: 9px;
+	height: 9px;
+	opacity: 0.7;
+}
+
+.settings-collapse[open] > .settings-collapse-header .proxy-settings-arrow {
+	transform: rotate(45deg) translate(-25%, -25%);
+}
+
+.settings-collapse-body {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	margin-top: 16px;
+}
+
+.fingerprint-views {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+#csel .fingerprint-view {
+	cursor: pointer;
+	padding: 6px 12px;
+	border-radius: 5px;
+	border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	font-size: 13px;
+}
+
+#csel .fingerprint-view.is-active {
+	border-color: transparent;
+	background: var(--nord8);
+	color: var(--nord18);
+	font-weight: 700;
+}
+
+.fingerprint-panel {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.fingerprint-panel[hidden] {
+	display: none;
+}
+
+.fingerprint-presets {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+	gap: 8px;
+}
+
+#csel input.fingerprint-preset,
+#csel input.fingerprint-reset {
+	cursor: pointer;
+	margin: 0;
+	padding: 8px 10px;
+	border: 1px solid transparent;
+	border-radius: 5px;
+	background: var(--nord0);
+	color: var(--nord4);
+	font-size: 14px;
+}
+
+#csel input.fingerprint-preset.is-selected {
+	border-color: var(--nord11);
+}
+
+#csel input.fingerprint-preset:hover {
+	transform: none;
+}
+
+#csel .fingerprint-custom {
+	margin: 0;
+}
+
+.fingerprint-status-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	flex-wrap: wrap;
 }
 
 .proxy-settings-footer {

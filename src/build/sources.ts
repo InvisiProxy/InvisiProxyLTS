@@ -27,6 +27,11 @@ const vendorDirs: [prefix: string, dir: string, files: string[]][] = [
 	],
 	['scram', scramjetPath, ['scramjet.js', 'scramjet.wasm']],
 	[
+		'assets/webfonts',
+		modulePath('@fortawesome/fontawesome-free/webfonts'),
+		['fa-brands-400.woff2', 'fa-regular-400.woff2', 'fa-solid-900.woff2'],
+	],
+	[
 		'scram',
 		modulePath('@mercuryworkshop/scramjet-controller/dist'),
 		['controller.api.js', 'controller.inject.js', 'controller.sw.js'],
@@ -38,13 +43,21 @@ const vendorDirs: [prefix: string, dir: string, files: string[]][] = [
 	],
 ];
 
-export const faqSearch: SiteFile = {
-	source: join(projectDir, 'src/client/faq-search.tsx'),
+const clientScript = (name: string): SiteFile => ({
+	source: join(projectDir, `src/client/${name}.tsx`),
 	get target() {
-		return `assets/js/${getPathAliases()['files/faq-search.js'] || 'faq-search.js'}`;
+		return `assets/js/${getPathAliases()[`files/${name}.js`] || `${name}.js`}`;
 	},
 	kind: 'script',
-};
+});
+
+export const faqSearch = clientScript('faq-search');
+export const clientScripts = [
+	faqSearch,
+	clientScript('particles'),
+	clientScript('tooltips'),
+	clientScript('aos'),
+];
 
 export function siteFiles(): SiteFile[] {
 	const files: SiteFile[] = [];
@@ -108,7 +121,7 @@ export function siteFiles(): SiteFile[] {
 
 export const siteScripts = () => [
 	...siteFiles().filter((file) => file.kind === 'script'),
-	faqSearch,
+	...clientScripts,
 ];
 
 export const rootDataFiles = () =>

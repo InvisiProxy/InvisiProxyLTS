@@ -2,9 +2,10 @@ import {
 	Keywords,
 	Inline,
 	route,
+	sites,
+	Splash,
 	values,
 	translate,
-	Translation,
 } from '../document-helpers.tsx';
 import {
 	ParticlesScript,
@@ -20,19 +21,7 @@ import AntiExfil from '../components/AntiExfil.tsx';
 import Header from '../components/Header.tsx';
 import ProxySettings from '../components/ProxySettings.tsx';
 import Footer from '../components/Footer.tsx';
-
-const links = {
-	scramjet: (text: string) => (
-		<a
-			href={route('/github/scramjet')}
-			target="_blank"
-			rel="noopener noreferrer"
-		>
-			<strong>{text}</strong>
-		</a>
-	),
-	faq: (text: string) => <a href={route('/questions')}>{text}</a>,
-};
+import App from '../components/AppButton.tsx';
 
 export default function Scramjet() {
 	return (
@@ -42,20 +31,24 @@ export default function Scramjet() {
 			<div id="header" class="fullwidth">
 				<Header />
 			</div>
+			{values.showSplash && (
+				<div id="banner" class="fullwidth">
+					<p class="text-center">
+						<Splash />
+					</p>
+				</div>
+			)}
 			<div id="background" class="fullwidth"></div>
 			<Keywords />
 			<div data-aos="fade-right" class="hero-grid-container">
 				<div class="box-hero">
-					<div class="hero-content">
-						<div class="proxy-header text-center">
+					<div class="hero-content browse-hero">
+						<div class="browse-brand">
 							<img
-								class="pr-logo"
-								src={route('/assets/img/scramjet.webp')}
-								alt="Scramjet"
+								class="browse-logo"
+								src={route('/assets/img/logo_brand.webp')}
+								alt=""
 							/>
-							<p>
-								<Translation id="scramjet.intro" tags={links} />
-							</p>
 						</div>
 						<div class="proxy-form text-center">
 							<div id="pr-sj" class="pr-form">
@@ -103,6 +96,11 @@ export default function Scramjet() {
 								>
 									{translate('scramjet.search')}
 								</button>
+							</div>
+							<div class="glist browse-presets">
+								{sites.map((site) => (
+									<App url={site.url} name={site.name} />
+								))}
 							</div>
 							<ProxySettings />
 						</div>

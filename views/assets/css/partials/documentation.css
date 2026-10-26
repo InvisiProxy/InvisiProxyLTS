@@ -1,5 +1,5 @@
 :is(#documentation, #credits) {
-	font-family: "Lato", sans-serif;
+	font-family: "Lato", "Lato Fallback", sans-serif;
 }
 
 :is(#documentation, #credits) > .box-hero,
@@ -85,4 +85,125 @@
 #credits .documentation-table {
 	table-layout: fixed;
 	overflow-wrap: anywhere;
+}
+
+#documentation .box-noflex {
+	line-height: 1.6;
+	text-wrap: pretty;
+}
+
+#documentation :is(p, ul, details, blockquote) {
+	margin: 0 0 16px;
+}
+
+#documentation :is(li ul, details > :last-child, blockquote > :last-child) {
+	margin-bottom: 0;
+}
+
+#documentation :is(h1, h2, h3, h4) {
+	line-height: 1.3;
+	text-wrap: balance;
+}
+
+#documentation h2 {
+	margin: 48px 0 16px;
+}
+
+#documentation h3 {
+	margin: 32px 0 12px;
+}
+
+#documentation h4 {
+	margin: 24px 0 8px;
+}
+
+#documentation :is(h2 + :is(h3, h4), h3 + h4, h4 + h4) {
+	margin-top: 0;
+}
+
+#documentation details {
+	padding: 12px 16px;
+	border: 1px solid color-mix(in srgb, var(--nord4) 12%, transparent);
+	border-radius: 10px;
+}
+
+#documentation details > :is(h3, h4):nth-child(2) {
+	margin-top: 0;
+}
+
+#documentation img {
+	max-width: 100%;
+	height: auto;
+}
+
+#documentation .docs-actions {
+	margin-bottom: 24px;
+}
+
+#documentation .docs-banner,
+#documentation .docs-preview {
+	display: block;
+	margin: 24px auto;
+}
+
+#documentation .docs-title {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin: 24px 0 16px;
+}
+
+#documentation .docs-title :is(h1, h4) {
+	margin: 0;
+}
+
+#documentation .docs-logo {
+	width: 56px;
+	flex-shrink: 0;
+}
+
+#documentation .docs-discord {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+#documentation .docs-icon {
+	width: 40px;
+	flex-shrink: 0;
+}
+
+#documentation .docs-dns {
+	width: 500px;
+	margin-bottom: 16px;
+}
+
+#documentation .docs-badges {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+}
+
+#documentation .docs-badges img {
+	display: block;
+}
+
+#documentation .docs-callout {
+	margin: 16px 0;
+	padding: 12px 16px;
+	border-left: 4px solid var(--nord8);
+	background-color: color-mix(in srgb, var(--nord4) 4%, transparent);
+}
+
+#documentation .docs-callout > p:first-child {
+	margin-bottom: 4px;
+}
+
+#documentation .docs-caution {
+	border-left-color: var(--nord11);
+}
+
+#documentation .docs-tip {
+	border-left-color: var(--nord14);
 }

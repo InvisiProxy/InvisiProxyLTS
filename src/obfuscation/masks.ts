@@ -28,12 +28,8 @@ function termPattern() {
 
 function splitWord(word: string) {
 	if (word.length < 2) return word;
-	const required = 1 + Math.floor(Math.random() * (word.length - 1));
 	let split = word[0];
-	for (let i = 1; i < word.length; i++)
-		split +=
-			(i === required || Math.random() < 0.5 ? maskCharacter() : '') +
-			word[i];
+	for (let i = 1; i < word.length; i++) split += maskCharacter() + word[i];
 	return split;
 }
 

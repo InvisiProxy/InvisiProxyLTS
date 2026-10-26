@@ -9,21 +9,46 @@ export interface SiteValues {
 	cacheBust: Record<string, string>;
 	version: string;
 	cacheKey: number;
+	proxyCodecKey: string;
+	honeypot: HoneypotForm;
+	cloakTypes: Record<'none' | 'blank' | 'blob', string>;
 	storageNamespace: string;
 	labels: Record<string, string>;
 	defaultSearch: string;
 	splash: string[];
 	keywordText: string[];
 	keywordFacts: string[];
+	factAttribute: string;
 	characters: string[];
 	maskedTerms: string[];
-	errors: Record<string, { beforeScript: string; afterScript: string }>;
+	errors: Record<
+		string,
+		{
+			beforeScript: string;
+			afterScript: string;
+			ids?: Record<string, string>;
+		}
+	>;
 	locale: string;
 	locales: { code: string; name: string }[];
+	patreon: boolean;
 	pageNames?: string[];
 	messages?: Messages;
 	fallbackMessages?: Messages;
 	readAsset?: (path: string) => string | undefined;
+}
+
+export interface HoneypotField {
+	id: string;
+	name: string;
+	type: string;
+	placeholder: string;
+	autocomplete: string;
+	label: string;
+}
+export interface HoneypotForm {
+	formId: string;
+	fields: HoneypotField[];
 }
 
 export type Messages = { [key: string]: string | Messages };
@@ -75,7 +100,7 @@ export function languageTag(code: string) {
 }
 
 export function route(path: string, conditional?: 'inline'): string {
-	const endPoint = /((?<![^/])github\/)?[^/]+$/;
+	const endPoint = /((?<![^/])(?:github|api)\/)?[^/]+$/;
 	const page = /^\/?([^/.]*)$/.exec(path);
 	const base =
 		page && values.pageNames?.includes(page[1])
@@ -150,7 +175,7 @@ export function inlineHtml(html: string): string {
 
 export const sites = Object.freeze([
 	{ name: 'Discord', url: 'https://discord.com/app' },
-	{ name: 'ChatGPT', url: 'https://chat.openai.com/chat' },
+	{ name: 'ChatGPT', url: 'https://chatgpt.com' },
 	{ name: 'Gemini', url: 'https://gemini.google.com/app' },
 	{ name: 'Youtube', url: 'https://youtube.com', icon: 'https://www.youtube.com/img/favicon_144.png',},
 	{ name: 'Invidious', url: 'https://docs.invidious.io/instances' },
@@ -163,6 +188,153 @@ export const sites = Object.freeze([
 	{ name: 'TikTok', url: 'https://www.tiktok.com' },
 	{ name: 'Animetsu', url: 'https://animetsu.site' },
 	{ name: 'Spotify', url: 'https://open.spotify.com' },
+]);
+
+export interface AppPreset {
+	name: string;
+	url: string;
+	icon?: string;
+}
+
+const favicon = (domain: string) =>
+	`https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+
+export const appLibrary = Object.freeze<{ id: string; apps: AppPreset[] }[]>([
+	{
+		id: 'social',
+		apps: [
+			{ name: 'Twitter', url: 'https://x.com' },
+			{ name: 'Instagram', url: 'https://www.instagram.com' },
+			{ name: 'Facebook', url: 'https://www.facebook.com' },
+			{ name: 'Reddit', url: 'https://www.reddit.com' },
+			{ name: 'TikTok', url: 'https://www.tiktok.com' },
+			{ name: 'Snapchat', url: 'https://web.snapchat.com', icon: favicon('snapchat.com') },
+			{ name: 'Threads', url: 'https://www.threads.com' },
+			{ name: 'Bluesky', url: 'https://bsky.app' },
+			{ name: 'Pinterest', url: 'https://www.pinterest.com' },
+		],
+	},
+	{
+		id: 'chat',
+		apps: [
+			{ name: 'Discord', url: 'https://discord.com/app' },
+			{ name: 'WhatsApp', url: 'https://web.whatsapp.com', icon: 'https://github.com/WhatsApp.png' },
+			{ name: 'Telegram', url: 'https://web.telegram.org', icon: favicon('telegram.org') },
+			{ name: 'Slack', url: 'https://app.slack.com', icon: favicon('slack.com') },
+		],
+	},
+	{
+		id: 'video',
+		apps: [
+			{
+				name: 'YouTube',
+				url: 'https://youtube.com',
+				icon: 'https://www.youtube.com/img/favicon_144.png',
+			},
+			{ name: 'Twitch', url: 'https://www.twitch.tv' },
+			{ name: 'Animetsu', url: 'https://animetsu.site' },
+		],
+	},
+	{
+		id: 'music',
+		apps: [
+			{ name: 'Spotify', url: 'https://open.spotify.com', icon: favicon('spotify.com') },
+			{ name: 'Apple Music', url: 'https://music.apple.com' },
+			{ name: 'YouTube Music', url: 'https://music.youtube.com' },
+			{ name: 'SoundCloud', url: 'https://soundcloud.com' },
+			{ name: 'Tidal', url: 'https://listen.tidal.com', icon: favicon('tidal.com') },
+			{ name: 'Bandcamp', url: 'https://bandcamp.com' },
+		],
+	},
+	{
+		id: 'games',
+		apps: [
+			{ name: 'GeForce NOW', url: 'https://play.geforcenow.com' },
+			{ name: 'Xbox Cloud Gaming', url: 'https://www.xbox.com/play' },
+			{ name: 'Chess.com', url: 'https://www.chess.com' },
+			{ name: 'GeoGuessr', url: 'https://www.geoguessr.com' },
+			{ name: 'Wordle', url: 'https://www.nytimes.com/games/wordle/index.html' },
+			{ name: 'Cool Math Games', url: 'https://www.coolmathgames.com' },
+			{ name: 'Newgrounds', url: 'https://www.newgrounds.com' },
+			{ name: 'Armor Games', url: 'https://armorgames.com' },
+			{ name: 'itch.io', url: 'https://itch.io', icon: 'https://static.itch.io/images/app-icon.png' },
+			{ name: 'Neal.fun', url: 'https://neal.fun' },
+			{ name: 'Skribbl.io', url: 'https://skribbl.io' },
+			{ name: 'Gartic Phone', url: 'https://garticphone.com' },
+			{ name: 'Krunker', url: 'https://krunker.io' },
+			{ name: 'Shell Shockers', url: 'https://shellshock.io', icon: 'https://shellshock.io/favicon192.png' },
+			{ name: 'Slither.io', url: 'https://slither.io' },
+			{ name: 'Agar.io', url: 'https://agar.io' },
+			{ name: 'TypeRacer', url: 'https://play.typeracer.com', icon: 'https://data.typeracer.com/public/images/tr_logo_200.cache.png' },
+			{ name: 'Scratch', url: 'https://scratch.mit.edu' },
+			{ name: 'GBA Games', url: 'https://gba.js.org' },
+		],
+	},
+	{
+		id: 'ai',
+		apps: [
+			{ name: 'ChatGPT', url: 'https://chatgpt.com' },
+			{ name: 'Gemini', url: 'https://gemini.google.com/app' },
+			{ name: 'Claude', url: 'https://claude.ai' },
+			{ name: 'Copilot', url: 'https://copilot.microsoft.com' },
+			{ name: 'DeepSeek', url: 'https://chat.deepseek.com', icon: favicon('deepseek.com') },
+			{ name: 'DeepAI', url: 'https://deepai.org' },
+		],
+	},
+	{
+		id: 'education',
+		apps: [
+			{ name: 'Khan Academy', url: 'https://www.khanacademy.org' },
+			{ name: 'Quizlet', url: 'https://quizlet.com' },
+			{ name: 'Blooket', url: 'https://www.blooket.com' },
+			{ name: 'Gimkit', url: 'https://www.gimkit.com', icon: 'https://github.com/gimkit.png' },
+			{ name: 'Desmos', url: 'https://www.desmos.com/calculator' },
+			{ name: 'GeoGebra', url: 'https://www.geogebra.org' },
+			{ name: 'Wolfram Alpha', url: 'https://www.wolframalpha.com' },
+			{ name: 'Wikipedia', url: 'https://en.wikipedia.org' },
+			{ name: 'Google Scholar', url: 'https://scholar.google.com' },
+			{ name: 'Coursera', url: 'https://www.coursera.org' },
+			{ name: 'MIT OpenCourseWare', url: 'https://ocw.mit.edu' },
+			{ name: 'SparkNotes', url: 'https://www.sparknotes.com' },
+			{ name: 'Grammarly', url: 'https://www.grammarly.com' },
+			{ name: 'Merriam-Webster', url: 'https://www.merriam-webster.com' },
+		],
+	},
+	{
+		id: 'opensource',
+		apps: [
+			{ name: 'DeepL', url: 'https://www.deepl.com/translator' },
+			{ name: 'Photopea', url: 'https://www.photopea.com' },
+			{ name: 'Pixlr', url: 'https://pixlr.com' },
+			{ name: 'remove.bg', url: 'https://www.remove.bg' },
+			{ name: 'Speedtest', url: 'https://www.speedtest.net' },
+			{ name: 'FMHY', url: 'https://fmhy.net' },
+			{ name: 'Invidious', url: 'https://docs.invidious.io/instances' },
+			{ name: 'Piped', url: 'https://piped.video' },
+			{ name: 'PeerTube', url: 'https://joinpeertube.org' },
+			{ name: 'Mastodon', url: 'https://mastodon.social' },
+			{ name: 'Element', url: 'https://app.element.io', icon: favicon('element.io') },
+			{ name: 'OpenStreetMap', url: 'https://www.openstreetmap.org' },
+			{ name: 'Stellarium Web', url: 'https://stellarium-web.org', icon: 'https://github.com/Stellarium.png' },
+			{ name: 'Lichess', url: 'https://lichess.org' },
+			{ name: 'Monkeytype', url: 'https://monkeytype.com' },
+			{ name: 'Excalidraw', url: 'https://excalidraw.com' },
+			{ name: 'tldraw', url: 'https://www.tldraw.com' },
+			{ name: 'draw.io', url: 'https://app.diagrams.net', icon: favicon('diagrams.net') },
+			{ name: 'Squoosh', url: 'https://squoosh.app' },
+			{ name: 'Wavacity', url: 'https://wavacity.com' },
+			{ name: 'CyberChef', url: 'https://gchq.github.io/CyberChef/', icon: 'https://raw.githubusercontent.com/gchq/CyberChef/master/src/web/static/images/cyberchef-128x128.png' },
+			{ name: 'CryptPad', url: 'https://cryptpad.fr' },
+			{ name: 'LibreTranslate', url: 'https://libretranslate.com' },
+			{ name: 'Open Library', url: 'https://openlibrary.org' },
+			{ name: 'Project Gutenberg', url: 'https://www.gutenberg.org', icon: 'https://www.gutenberg.org/apple-touch-icon.png' },
+			{ name: 'Compiler Explorer', url: 'https://godbolt.org' },
+			{ name: 'Hoppscotch', url: 'https://hoppscotch.io' },
+			{ name: 'Codeberg', url: 'https://codeberg.org', icon: 'https://codeberg.org/assets/img/logo.png' },
+			{ name: 'GitLab', url: 'https://gitlab.com' },
+			{ name: 'Godot Editor', url: 'https://editor.godotengine.org/releases/latest/', icon: favicon('godotengine.org') },
+		],
+	},
 ]);
 
 export const partners = Object.freeze([
@@ -180,6 +352,20 @@ export const partners = Object.freeze([
 		newtab: false,
 	},
 ]);
+
+export const appPresets: readonly AppPreset[] = (() => {
+	const presets = new Map<string, AppPreset>();
+	for (const app of [
+		...sites,
+		...appLibrary.flatMap((category) => category.apps),
+		...partners,
+	])
+		if (!presets.get(app.url)?.icon) presets.set(app.url, app);
+	return Object.freeze([...presets.values()]);
+})();
+
+export const appIcon = (app: AppPreset) =>
+	app.icon ?? favicon(new URL(app.url).hostname);
 
 interface CreditPerson {
 	name: string;
@@ -228,10 +414,22 @@ export const credits = Object.freeze<CreditSection[]>([
 		id: 'contributors',
 		people: [
 			{
+				name: 'b4kt',
+				contributions: 'The Freedom Project (Former Hard Fork), Scramjet-Utils Plugin (Search Guard), Hidden History',
+				url: 'https://discord.gg/jMm65ktMCz',
+				contact: '@b4kt',
+			},
+			{
 				name: 'MUATEX',
 				contributions: 'Designer for Logo/Branding',
 				url: 'https://www.muatex.com',
 				contact: '@muatex',
+			},
+			{
+				name: 'Toast',
+				contributions: 'Scramjet-Utils Plugin (Custom Error Page)',
+				url: 'https://github.com/havi11368',
+				contact: '@havi11368',
 			},
 			{
 				name: 'Kinglalu',
@@ -262,12 +460,6 @@ export const credits = Object.freeze<CreditSection[]>([
 				name: 'greiyn NOT H',
 				contributions: 'Bug Hunter, Translations',
 				contact: '@greiyn',
-			},
-			{
-				name: 'b4kt',
-				contributions: 'The Freedom Project (Former Hard Fork)',
-				url: 'https://discord.gg/jMm65ktMCz',
-				contact: '@b4kt',
 			},
 		],
 	},

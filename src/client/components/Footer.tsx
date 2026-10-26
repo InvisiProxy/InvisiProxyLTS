@@ -33,6 +33,16 @@ export default function Footer() {
 							<a
 								target="_blank"
 								rel="noopener noreferrer"
+								href={route('/github/vite')}
+								title={translate('footer.vite')}
+							>
+								Vite{' '}
+							</a>
+						</li>
+						<li>
+							<a
+								target="_blank"
+								rel="noopener noreferrer"
 								href={route('/wispurr')}
 								title={translate('footer.wispurr')}
 							>

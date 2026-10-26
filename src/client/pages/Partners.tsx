@@ -75,14 +75,6 @@ export function Head() {
 			<PageDescription />
 			<ProxyPreloads />
 			<HeadContent />
-			<link
-				rel="stylesheet"
-				href="https://unpkg.com/tippy.js@6/dist/backdrop.css"
-			/>
-			<link
-				rel="stylesheet"
-				href="https://unpkg.com/tippy.js@6/animations/shift-away.css"
-			/>
 			<ScramjetScripts />
 			<RegisterServiceWorkerScript />
 			<ParticlesScript />

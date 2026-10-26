@@ -11,6 +11,7 @@ import {
 } from './state.ts';
 
 type Routes = Record<string, string>;
+const apiEndpoints = ['link', 'clear'] as const;
 type Links = Record<string, string | Record<string, string>>;
 
 export function getPathAliases(): Record<string, string> {
@@ -40,13 +41,14 @@ export function getPathAliases(): Record<string, string> {
 	}
 	visit(source);
 	for (const [name, target] of Object.entries(externalPages)) {
-		if (typeof target === 'string') keys.add(name);
-		else
+		keys.add(name);
+		if (typeof target !== 'string')
 			for (const child of Object.keys(target))
 				if (child !== 'default') keys.add(`${name}/${child}`);
 	}
-	for (const prefix of ['scram', 'libcurl', 'epoxy', 'wisp'])
+	for (const prefix of ['scram', 'libcurl', 'epoxy', 'wisp', 'network', 'api'])
 		keys.add(`prefixes/${prefix}`);
+	for (const endpoint of apiEndpoints) keys.add(`api/${endpoint}`);
 	const assetDir = join(projectDir, 'views/assets');
 	const files = (
 		existsSync(assetDir)
@@ -58,7 +60,24 @@ export function getPathAliases(): Record<string, string> {
 	)
 		.filter((file) => extname(file) && !file.endsWith('.map'))
 		.map((file) => basename(file).replace(/\.ts$/, '.js'));
-	files.push('sw.js', 'sw-blacklist.js', 'faq-search.js', 'splash.json');
+	files.push(
+		'sw.js',
+		'sw-blacklist.js',
+		'faq-search.js',
+		'particles.js',
+		'tooltips.js',
+		'aos.js',
+		'splash.json',
+		'scramjet.js',
+		'scramjet.wasm',
+		'controller.api.js',
+		'controller.inject.js',
+		'controller.sw.js',
+		'scramjet-utils.js',
+		'fa-brands-400.woff2',
+		'fa-regular-400.woff2',
+		'fa-solid-900.woff2'
+	);
 	for (const file of files) keys.add(`files/${file}`);
 	const names = generatedNames(keys, 'paths');
 	state.aliases = Object.fromEntries(
@@ -71,6 +90,12 @@ export function getPathAliases(): Record<string, string> {
 	);
 	saveObfuscationState(state);
 	return state.aliases;
+}
+
+export function apiPath(endpoint: (typeof apiEndpoints)[number]) {
+	const aliases = getPathAliases();
+	const name = aliases[`api/${endpoint}`]?.split('/').at(-1) || endpoint;
+	return `${aliases['prefixes/api'] || 'api'}/${name}`;
 }
 
 export const getAltPrefix = (prefix: string, serverPathname = '/') =>

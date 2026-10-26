@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, test } from 'node:test';
 import {
+	needsSearchUrlGuard,
 	readProxiedSearchInputQuery,
 	sanitizeScramjetNavigateUrl,
 } from '../../src/browser/search-url-guard.ts';
@@ -9,6 +10,22 @@ const base = 'https://duckduckgo.com/?q=old';
 const recover = () => 'cats';
 
 describe('Search URL guard', () => {
+	test('DuckDuckGo and TikTok get the guard automatically, other sites do not.', () => {
+		for (const url of [
+			'https://duckduckgo.com/?q=cats',
+			'https://html.duckduckgo.com/html/',
+			{ href: 'https://www.tiktok.com/@user' },
+		])
+			assert.equal(needsSearchUrlGuard(url), true, String(url));
+		for (const url of [
+			'https://example.com/',
+			'https://notduckduckgo.com/',
+			'https://tiktok.com.example.net/',
+			'not a url',
+		])
+			assert.equal(needsSearchUrlGuard(url), false, url);
+	});
+
 	test('Normal navigations pass through untouched.', () => {
 		for (const href of [
 			'/?q=cats&ia=web',

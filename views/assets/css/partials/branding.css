@@ -9,7 +9,7 @@
 	line-height: 30px;
 	white-space: nowrap;
 	margin-right: 20px;
-	font-family: "Figtree", sans-serif;
+	font-family: "Figtree", "Figtree Fallback", sans-serif;
 	font-weight: 900;
 	letter-spacing: 1px;
 	text-decoration: none;

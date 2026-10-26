@@ -1,41 +1,32 @@
-import { Disguise } from '../document-helpers.tsx';
+import { Disguise, values } from '../document-helpers.tsx';
+
+const hidden = {
+	position: 'absolute',
+	width: '1px',
+	height: '1px',
+	margin: '-1px',
+	overflow: 'hidden',
+	clip: 'rect(0 0 0 0)',
+} as const;
+
 export default function AntiExfil() {
+	const { formId, fields } = values.honeypot;
 	return (
 		<Disguise>
-			<form id="password-field" class="flex flex-col space-y-2">
-				<label for="username" class="text-sm font-medium text-gray-700">
-					Username
-				</label>
-				<input
-					type="text"
-					autocomplete="username"
-					id="username"
-					name="username"
-					placeholder="user"
-					class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-					required
-				/>
-				<label for="pwd" class="text-sm font-medium text-gray-700">
-					Password
-				</label>
-				<input
-					type="password"
-					autocomplete="current-password"
-					id="pwd"
-					name="pwd"
-					placeholder="********"
-					class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-					required
-				/>
-				<input
-					type="text"
-					id="cc"
-					name="cc"
-					placeholder="1234 5678 9012 3456"
-					class="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400"
-					readOnly
-					title=""
-				/>
+			<form id={formId} style={hidden} aria-hidden="true">
+				{fields.map((field) => (
+					<>
+						<label for={field.id}>{field.label}</label>
+						<input
+							type={field.type}
+							autocomplete={field.autocomplete}
+							id={field.id}
+							name={field.name}
+							placeholder={field.placeholder}
+							tabindex={-1}
+						/>
+					</>
+				))}
 			</form>
 		</Disguise>
 	);

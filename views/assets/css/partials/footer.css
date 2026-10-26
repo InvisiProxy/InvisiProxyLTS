@@ -1,5 +1,5 @@
 #footer {
-	font-family: "Lato", sans-serif;
+	font-family: "Lato", "Lato Fallback", sans-serif;
 	padding-top: 15vw;
 	background:
 		var(--footer-img, url("/assets/img/waves.svg")),

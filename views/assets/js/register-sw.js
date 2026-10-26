@@ -1,29 +1,58 @@
 import { values, route } from 'build:invisiproxy';
-import { selectedTransport } from '../../../src/browser/transport.ts';
-import { installScramjetSearchUrlGuard } from '../../../src/browser/search-url-guard.ts';
+import { renderProxyError } from 'build:invisiproxy-errors';
+import {
+  openTransport,
+  proxyRegions,
+  selectedTransport,
+  selectedWisp,
+} from '../../../src/browser/transport.ts';
+import {
+  installScramjetSearchUrlGuard,
+  needsSearchUrlGuard,
+} from '../../../src/browser/search-url-guard.ts';
+import { leakFrame } from '../../../src/browser/leak-guard.ts';
+import { blockWebrtc } from '../../../src/browser/webrtc.ts';
+import {
+  profileFromUserAgent,
+  randomizeFingerprint,
+  rewriteHeaders,
+  sessionFingerprint,
+  spoofNavigator,
+  storedUserAgent,
+} from '../../../src/browser/fingerprint.ts';
+import {
+  autoSiteFixes,
+  fixFetchHandler,
+  headlessBody,
+  keepHistoryUrl,
+  obsidianSameTab,
+  scriptSafeBody,
+  stableCacheKeys,
+} from '../../../src/browser/site-fixes.ts';
+import {
+  errorPageScript,
+  errorTrace,
+  proxiedUrl,
+} from '../../../src/browser/error-page.ts';
+import { proxyCodec } from '../../../src/browser/proxy-codec.ts';
 (() => {
   const swScope = route("/"),
     swAllowedHostnames = ['localhost', '127.0.0.1'],
     // Regional/Tor proxies are configured server-side (src/server/wisp.ts).
     // The client only selects the matching Wisp endpoint.
-    regions = ['tor', 'eu', 'jp', 'patreon'],
-    wispUrl = (region) =>
-      `${(location.protocol === 'https:' ? 'wss' : 'ws')}://${location.host}${route("/wisp/")}${region ? region + '/' : ''}`,
+    regions = proxyRegions(values.patreon),
+    wispBase = `${(location.protocol === 'https:' ? 'wss' : 'ws')}://${location.host}${route("/wisp/")}`,
     storageId = `${values.storageNamespace}-storage`,
     storageObject = () => JSON.parse(localStorage.getItem(storageId)) || {},
     readStorage = (name) => storageObject()[name];
 
   const transportName = selectedTransport(readStorage('Transport')),
-    transportUrl = route(`/${transportName}/index.mjs`);
+    transportUrl = route(`/${transportName}/index.mjs`),
+    siteFixes = readStorage('ExperimentalSiteFixes') === true;
 
-  const getTransportOptions = () => {
-    const selected = readStorage('UseSocks5');
-    return {
-      wisp: wispUrl(
-        transportName === 'libcurl' && regions.includes(selected) ? selected : ''
-      ),
-    };
-  };
+  const getTransportOptions = () => ({
+    wisp: selectedWisp(storageObject(), transportName, regions, wispBase),
+  });
 
   const getSWRoute = () =>
     route(readStorage('HideAds') !== false ? '/sw-blacklist.js' : '/sw.js');
@@ -80,14 +109,15 @@ import { installScramjetSearchUrlGuard } from '../../../src/browser/search-url-g
     return registration;
   };
 
-  /** @returns {Promise<import("@mercuryworkshop/proxy-transports").ProxyTransport>} */
-  const buildScramjetTransport = async (options) => {
-    const mod = await import(transportUrl);
-    const TransportClient = mod.default;
-    const transport = new TransportClient(options);
-    await transport.init();
-    return transport;
+  const clearHttpCache = async () => {
+    if (typeof $scramjetUtils === 'undefined' || !self.caches) return;
+    try {
+      await caches.delete($scramjetUtils.CACHE_NAME);
+    } catch {}
   };
+
+  /** @returns {Promise<import("@mercuryworkshop/proxy-transports").ProxyTransport>} */
+  const buildScramjetTransport = (options) => openTransport(transportUrl, options.wisp);
 
   const buildSearchUrlGuardPlugin = () =>
     new (class extends $scramjetController.ManagedPlugin {
@@ -97,29 +127,171 @@ import { installScramjetSearchUrlGuard } from '../../../src/browser/search-url-g
       install(frame) {
         super.install(frame);
         this.tap(frame.hooks.init.post, ({ window: win, client }) => {
-          if (readStorage('SearchNavFix') === true)
+          if (readStorage('SearchNavFix') === true || needsSearchUrlGuard(client.url))
             installScramjetSearchUrlGuard(win, client);
         });
       }
     })();
 
-  const buildFramePlugins = () => {
-    const plugins = [buildSearchUrlGuardPlugin()];
+  const buildLeakGuardPlugin = () =>
+    new (class extends $scramjetController.ManagedPlugin {
+      constructor() {
+        super('leak-guard', []);
+      }
+      install(frame) {
+        super.install(frame);
+        this.tap(frame.hooks.init.post, ({ window: win, client }) =>
+          leakFrame(win, client)
+        );
+      }
+    })();
+
+  const buildBlockWebrtcPlugin = () =>
+    new (class extends $scramjetController.ManagedPlugin {
+      constructor() {
+        super('block-webrtc', []);
+      }
+      install(frame) {
+        super.install(frame);
+        this.tap(frame.hooks.init.post, ({ window: win }) => {
+          if (readStorage('BlockWebRTC') === true) blockWebrtc(win);
+        });
+      }
+    })();
+
+  const buildFingerprintPlugin = () => {
+    const session =
+      readStorage('RandomizeFingerprint') === true
+        ? sessionFingerprint(sessionStorage, `${storageId}-fingerprint`)
+        : null;
+    const userAgent =
+      storedUserAgent(readStorage('UserAgent')) ?? session?.preset.userAgent;
+    const profile = userAgent ? profileFromUserAgent(userAgent) : null;
+    return new (class extends $scramjetController.ManagedPlugin {
+      constructor() {
+        super('browser-fingerprint', []);
+      }
+      install(frame) {
+        super.install(frame);
+        if (profile)
+          this.tap(frame.hooks.fetch.request, (_context, props) => {
+            props.init.headers = rewriteHeaders(props.init.headers, profile);
+          });
+        this.tap(frame.hooks.init.post, ({ window: win }) => {
+          if (profile) spoofNavigator(win, profile);
+          if (session) randomizeFingerprint(win, session.noise, profile);
+        });
+      }
+    })();
+  };
+
+  const buildSiteFixesPlugin = () =>
+    new (class extends $scramjetController.ManagedPlugin {
+      constructor() {
+        super('experimental-site-fixes', []);
+      }
+      install(frame) {
+        super.install(frame);
+        const active = () => {
+          if (siteFixes) return true;
+          try {
+            return autoSiteFixes(
+              proxiedUrl(frame.element.contentWindow.location.href, frame.prefix)
+            );
+          } catch {
+            return false;
+          }
+        };
+        const replaceBody = (response, body) => {
+          const fixed = $scramjet.BareResponse.fromNativeResponse(
+            body instanceof Response
+              ? body
+              : new Response(body, {
+                  status: response.status,
+                  statusText: response.statusText,
+                  headers: response.headers,
+                })
+          );
+          fixed.url = response.url;
+          fixed.rawHeaders = response.rawHeaders;
+          return fixed;
+        };
+        fixFetchHandler(frame.fetchHandler, frame.prefix, active);
+        if (transportName === 'libcurl')
+          this.tap(frame.hooks.fetch.request, ({ request }, props) => {
+            if (request.method === 'HEAD' && active()) props.init.method = 'GET';
+          });
+        this.tap(
+          frame.hooks.fetch.preresponse,
+          ({ request, parsed }, props) => {
+            const response = props.response;
+            if (!response.body || !active()) return;
+            if (request.method === 'HEAD')
+              props.response = replaceBody(response, headlessBody(response));
+            else if (
+              ['script', 'worker', 'sharedworker'].includes(parsed.destination) &&
+              response.ok
+            )
+              props.response = replaceBody(response, scriptSafeBody(response));
+          },
+          { before: ['scramjet-http-cache'] }
+        );
+        this.tap(frame.hooks.init.post, ({ window: win, client }) => {
+          if (!active()) return;
+          keepHistoryUrl(win, client);
+          stableCacheKeys(win, client);
+          obsidianSameTab(win.localStorage, client);
+        });
+      }
+    })();
+
+  const buildErrorPagePlugin = () =>
+    new (class extends $scramjetController.ManagedPlugin {
+      constructor() {
+        super('error-page', []);
+      }
+      install(frame) {
+        super.install(frame);
+        const { version, build } = $scramjet.versionInfo;
+        this.tap(frame.hooks.error.request, ({ rawrequest, error }, props) => {
+          if (!['document', 'iframe'].includes(rawrequest.destination)) return;
+          props.setResponse = {
+            body: renderProxyError(
+              'scramjet',
+              errorPageScript({
+                url: proxiedUrl(rawrequest.rawUrl, frame.prefix),
+                trace: errorTrace(error),
+                version: `v${version} - build ${build}`,
+                ids: values.errors.scramjet?.ids,
+              })
+            ),
+            headers: [['content-type', 'text/html; charset=utf-8']],
+            status: 500,
+            statusText: 'Internal Server Error',
+          };
+        });
+      }
+    })();
+
+  const buildFramePlugins = (onUrl) => {
+    const plugins = [
+      buildErrorPagePlugin(),
+      buildSearchUrlGuardPlugin(),
+      buildLeakGuardPlugin(),
+      buildBlockWebrtcPlugin(),
+      buildFingerprintPlugin(),
+      buildSiteFixesPlugin(),
+    ];
     if (typeof $scramjetUtils === 'undefined') return plugins;
     plugins.push(new $scramjetUtils.HttpCachePlugin());
 
-    const omniInput = document.getElementById('search-input');
-    plugins.push(
-      new $scramjetUtils.UrlWatcherPlugin((url) => {
-        if (omniInput && document.activeElement !== omniInput)
-          omniInput.value = url;
-      })
-    );
+    if (onUrl) plugins.push(new $scramjetUtils.UrlWatcherPlugin(onUrl));
 
     plugins.push(
       new $scramjetUtils.CatchEscapedLinksPlugin((url) => {
         try {
           localStorage.setItem(`${values.storageNamespace}-frame-url`, 'sj:' + url.href);
+          localStorage.setItem(`${values.storageNamespace}-open-url`, 'sj:' + url.href);
         } catch (e) {}
         return new URL(location.pathname + location.search, location.origin);
       })
@@ -131,16 +303,6 @@ import { installScramjetSearchUrlGuard } from '../../../src/browser/search-url-g
   const initialize = async () => {
     try {
       if (window.$invisiScramjet?.ready) {
-        const existing = window.$invisiScramjet;
-        const visibleFrame = document.getElementById('frame');
-        if (
-          visibleFrame instanceof HTMLIFrameElement &&
-          existing.frame?.element !== visibleFrame
-        ) {
-          existing.frame = existing.controller.createFrame(visibleFrame, {
-            plugins: buildFramePlugins(),
-          });
-        } 
         window.dispatchEvent(new Event('s-ready'));
         return;
       }
@@ -152,6 +314,7 @@ import { installScramjetSearchUrlGuard } from '../../../src/browser/search-url-g
       const [registration, transport] = await Promise.all([
         registerScramjetSW(),
         buildScramjetTransport(transportOptions),
+        clearHttpCache(),
       ]);
 
       const serviceworker =
@@ -169,13 +332,14 @@ import { installScramjetSearchUrlGuard } from '../../../src/browser/search-url-g
           scramjetPath: route("/scram/scramjet.js"),
           wasmPath: route("/scram/scramjet.wasm"),
           injectPath: route("/scram/controller.inject.js"),
+          codec: proxyCodec(),
         },
         scramjetConfig: {
           ...defaultConfig,
           flags: {
             ...defaultConfig.flags,
             allowFailedIntercepts: true,
-            allowInvalidJs: true,
+            allowInvalidJs: false,
           },
         },
       });
@@ -196,13 +360,10 @@ import { installScramjetSearchUrlGuard } from '../../../src/browser/search-url-g
       }
       console.log('Scramjet controller initialized');
 
-      const visibleFrame = document.getElementById('frame');
-      let frame;
-      if (visibleFrame instanceof HTMLIFrameElement) {
-        frame = controller.createFrame(visibleFrame, {
-          plugins: buildFramePlugins(),
-        });
-      } else {
+      const createFrame = (element, onUrl) =>
+        controller.createFrame(element, { plugins: buildFramePlugins(onUrl) });
+      let frame = null;
+      if (!(document.getElementById('frame') instanceof HTMLIFrameElement)) {
         const hidden = document.createElement('iframe');
         hidden.setAttribute('aria-hidden', 'true');
         hidden.tabIndex = -1;
@@ -212,7 +373,7 @@ import { installScramjetSearchUrlGuard } from '../../../src/browser/search-url-g
         frame = controller.createFrame(hidden);
       }
 
-      window.$invisiScramjet = { controller, frame, ready: true };
+      window.$invisiScramjet = { controller, frame, createFrame, ready: true };
       window.dispatchEvent(new Event('s-ready'));
     } catch (err) {
       console.error(
@@ -229,6 +390,7 @@ import { installScramjetSearchUrlGuard } from '../../../src/browser/search-url-g
       if (window.$invisiScramjet?.ready) initialize();
     });
   } else {
+    fetch(route("/scram/scramjet.wasm")).catch(() => {});
     window.$invisiScramjetInitializing = initialize().finally(() => {
       delete window.$invisiScramjetInitializing;
     });

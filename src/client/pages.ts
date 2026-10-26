@@ -45,7 +45,7 @@ export const pageDefinitions = {
 		Head: ScramjetErrorHead,
 	},
 	'index.html': {
-		route: ['', 'links'],
+		route: ['', 'links', 'overview'],
 		indexed: true,
 		Page: Home,
 		Head: HomeHead,

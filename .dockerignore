@@ -12,8 +12,10 @@ src/.shutdown
 views/archive/gfiles/rarch/roms
 .idea
 private/mirror-links.txt
+.env
 .git
 .github
 tests
 docker-compose.yml
 views/dist-new
+.env

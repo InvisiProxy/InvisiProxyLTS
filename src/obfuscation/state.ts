@@ -12,6 +12,7 @@ export interface ObfuscationState {
 	seed: string;
 	aliases: Record<string, string>;
 	classes: Record<string, string>;
+	ids: Record<string, string>;
 }
 let cached: ObfuscationState | undefined;
 let serialized: string | undefined;
@@ -28,6 +29,7 @@ export function beginObfuscationBuild() {
 		seed: randomBytes(32).toString('hex'),
 		aliases: {},
 		classes: {},
+		ids: {},
 	});
 }
 
@@ -44,6 +46,7 @@ export function obfuscationState(): ObfuscationState {
 				: '';
 	if (source) {
 		const state: ObfuscationState = JSON.parse(source);
+		state.ids ??= {};
 		if (
 			state.version !== 1 ||
 			!state.seed ||

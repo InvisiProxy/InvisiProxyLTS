@@ -12,7 +12,7 @@ const { createSiteHandler } = await load<
 >('src/server/handler.ts');
 const { config, serverUrl } =
 	await load<typeof import('../../src/config.ts')>('src/config.ts');
-const { getPathAliases } = await load<
+const { apiPath, getPathAliases } = await load<
 	typeof import('../../src/obfuscation/paths.ts')
 >('src/obfuscation/paths.ts');
 const { pages } = (
@@ -27,6 +27,9 @@ const { siteFiles } = await load<typeof import('../../src/build/sources.ts')>(
 const base = serverUrl.pathname;
 const disguise = config.disguiseFiles ? '.ico' : '';
 const built = (file: string) => readFile(join('views/dist', file));
+const home = config.usingSEO ? 'index.html' : 'pages/proxnav/scramjet.html';
+const serves = async (payload: Buffer, file: string) =>
+	assert.ok(payload.equals(await built(file)), `${file} was not served as built`);
 const decode = (buffer: Buffer) =>
 	(buffer[0] === 0x1f && buffer[1] === 0x8b
 		? gunzipSync(buffer)
@@ -39,7 +42,7 @@ try {
 		const page = file.endsWith('.html');
 		const response = await app.inject(base + name + (page ? disguise : ''));
 		assert.equal(response.statusCode, 200, name);
-		assert.deepEqual(response.rawPayload, await built(file), name);
+		await serves(response.rawPayload, name ? file : home);
 		if (page) {
 			const html = decode(response.rawPayload);
 			assert.match(html, /^<!doctype html>/i, file);
@@ -50,19 +53,15 @@ try {
 
 	const root = await app.inject(base);
 	assert.equal(root.statusCode, 200);
-	assert.deepEqual(
+	await serves(
 		root.rawPayload,
-		await built(
-			config.disguiseFiles
-				? 'pages/misc/deobf/entry-point.html'
-				: 'index.html'
-		)
+		config.disguiseFiles ? 'pages/misc/deobf/entry-point.html' : home
 	);
 	const links = base + (getPathAliases().links || 'links');
 	if (config.disguiseFiles)
-		assert.deepEqual(
+		await serves(
 			(await app.inject(links)).rawPayload,
-			await built('pages/misc/deobf/loader.html')
+			'pages/misc/deobf/loader.html'
 		);
 	const hidden = await app.inject({
 		url: links + disguise,
@@ -91,7 +90,7 @@ try {
 		assert.ok(!response.body.includes('PRIVATE_TEST_MARKER'), path);
 	}
 
-	const api = await app.inject({ method: 'POST', url: `${base}api/link` });
+	const api = await app.inject({ method: 'POST', url: `${base}${apiPath('link')}` });
 	assert.equal(api.statusCode, 200);
 	assert.equal(api.headers['cache-control'], 'no-store');
 	assert.ok(
@@ -100,9 +99,24 @@ try {
 		)
 	);
 	assert.equal(
-		(await app.inject({ method: 'POST', url: `${base}api/link` }))
+		(await app.inject({ method: 'POST', url: `${base}${apiPath('link')}` }))
 			.statusCode,
 		429
+	);
+
+	const clear = (site: string) =>
+		app.inject({
+			method: 'POST',
+			url: `${base}${apiPath('clear')}`,
+			headers: { 'sec-fetch-site': site },
+		});
+	assert.equal(
+		(await clear('same-origin')).headers['clear-site-data'],
+		'"cache", "storage"'
+	);
+	assert.equal(
+		(await clear('cross-site')).headers['clear-site-data'],
+		undefined
 	);
 } finally {
 	await app.close();

@@ -10,7 +10,11 @@ import {
 	languageTag,
 } from '../document-helpers.tsx';
 import { Show } from 'solid-js';
-import { ParticlesScript, PageScripts } from '../components/HeadScripts.tsx';
+import {
+	AosScripts,
+	ParticlesScript,
+	PageScripts,
+} from '../components/HeadScripts.tsx';
 import HeadContent from '../components/HeadContent.tsx';
 import AntiExfil from '../components/AntiExfil.tsx';
 import Header from '../components/Header.tsx';
@@ -84,7 +88,7 @@ export default function Home() {
 							<span>{translate('home.headline')}</span>
 						</h1>
 						<h1>{translate('home.tagline')}</h1>
-						<a class="homebutton" href={route('/browsing')}>
+						<a class="homebutton" href="#scrollfix">
 							{translate('home.browseNow')}
 						</a>
 						<a class="homebutton mobile" href="#scrollfix">
@@ -224,6 +228,13 @@ export default function Home() {
 								<div class="dependencylogo">
 									<img
 										loading="lazy"
+										src={route('/assets/img/vite.webp')}
+										alt="Vite"
+									/>
+								</div>
+								<div class="dependencylogo">
+									<img
+										loading="lazy"
 										src={route('/assets/img/solid.webp')}
 										alt="SolidJS"
 									/>
@@ -258,6 +269,13 @@ export default function Home() {
 										loading="lazy"
 										src={route('/assets/img/scramjet.png')}
 										alt="Scramjet"
+									/>
+								</div>
+								<div class="dependencylogo">
+									<img
+										loading="lazy"
+										src={route('/assets/img/vite.webp')}
+										alt="Vite"
 									/>
 								</div>
 								<div class="dependencylogo">
@@ -546,8 +564,8 @@ export function Head() {
 	return (
 		<>
 			<meta http-equiv="x-ua-compatible" content="IE=edge" />
-			<meta name="version" content={values.version} />
 			<SEO>
+				<meta name="version" content={values.version} />
 				<meta name="googlebot" content="index, follow, snippet" />
 				<meta
 					name="robots"
@@ -619,12 +637,7 @@ export function Head() {
 			</SEO>
 			<HeadContent />
 			<ParticlesScript />
-			<script
-				src="https://unpkg.com/aos@next/dist/aos.js"
-				defer={true}
-				data-module=""
-				innerHTML=""
-			/>
+			<AosScripts />
 			<PageScripts />
 			<link
 				rel="mask-icon"
@@ -632,10 +645,6 @@ export function Head() {
 				color="#b4213b"
 			/>
 			<link rel="manifest" href={route('manifest.json')} />
-			<link
-				rel="stylesheet"
-				href="https://unpkg.com/aos@next/dist/aos.css"
-			/>
 			<meta name="mobile-web-app-capable" content="yes" />
 			<SEO>
 				<script

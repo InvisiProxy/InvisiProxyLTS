@@ -5,10 +5,6 @@ import { maskText } from './masks.ts';
 const literalElements = new Set([
 	'script',
 	'style',
-	'pre',
-	'code',
-	'kbd',
-	'samp',
 	'textarea',
 	'iframe',
 	'xmp',
@@ -23,6 +19,16 @@ const textAttributes = new Set([
 	'aria-description',
 	'aria-valuetext',
 	'data-tippy-content',
+	'data-placeholder',
+	'data-label',
+	'data-default',
+	'data-template',
+	'data-confirm',
+	'data-invalid',
+	'data-untitled',
+	'data-close',
+	'data-add',
+	'data-remove',
 ]);
 
 function escapeText(text: string) {
@@ -63,7 +69,10 @@ export function maskDocument(html: string): string {
 				const location =
 					node.sourceCodeLocation?.attrs?.[attribute.name];
 				if (!location) continue;
-				const masked = maskText(attribute.value);
+				const masked = attribute.value
+					.split(/(\{\w+\})/)
+					.map((part, index) => (index % 2 ? part : maskText(part)))
+					.join('');
 				if (masked !== attribute.value)
 					edits.push({
 						start: location.startOffset,

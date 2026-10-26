@@ -1,0 +1,44 @@
+@font-face {
+	font-family: "Figtree Fallback";
+	src: local("Arial");
+	size-adjust: 100.72%;
+	ascent-override: 94.32%;
+	descent-override: 24.82%;
+	line-gap-override: 0%;
+}
+
+@font-face {
+	font-family: "Rethink Sans Fallback";
+	src: local("Arial");
+	size-adjust: 104.76%;
+	ascent-override: 94.7%;
+	descent-override: 29.59%;
+	line-gap-override: 0%;
+}
+
+@font-face {
+	font-family: "Lato Fallback";
+	src: local("Arial");
+	size-adjust: 97.69%;
+	ascent-override: 101.03%;
+	descent-override: 21.8%;
+	line-gap-override: 0%;
+}
+
+@font-face {
+	font-family: "Montserrat Alternates Fallback";
+	src: local("Arial");
+	size-adjust: 115.3%;
+	ascent-override: 83.96%;
+	descent-override: 21.77%;
+	line-gap-override: 0%;
+}
+
+@font-face {
+	font-family: "Source Code Pro Fallback";
+	src: local("Courier New");
+	size-adjust: 99.98%;
+	ascent-override: 98.42%;
+	descent-override: 27.3%;
+	line-gap-override: 0%;
+}

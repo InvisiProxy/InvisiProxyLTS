@@ -26,7 +26,7 @@ describe('Locales', () => {
 			for (const [key, text] of Object.entries(
 				flatten(locale.messages)
 			)) {
-				const file = `src/locales/${locale.code}.yaml`;
+				const file = `locales/${locale.code}.yaml`;
 				assert.ok(
 					key in reference,
 					`${file}: "${key}" is not in en.yaml`

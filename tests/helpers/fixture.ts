@@ -36,7 +36,7 @@ export async function fixture(
 		shutdowns.delete(root);
 		await rm(root, { recursive: true, force: true, maxRetries: 5 });
 	});
-	for (const file of ['src', 'package.json', 'vite.config.ts'])
+	for (const file of ['src', 'locales', 'package.json', 'vite.config.ts'])
 		await cp(join(project, file), join(root, file), { recursive: true });
 	await symlink(
 		join(project, 'node_modules'),

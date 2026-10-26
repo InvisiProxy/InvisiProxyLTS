@@ -13,13 +13,6 @@ export default function ProxyPreloads() {
 				as="script"
 				href={route('/scram/controller.api.js')}
 			/>
-			<link
-				rel="preload"
-				as="fetch"
-				type="application/wasm"
-				crossorigin="anonymous"
-				href={route('/scram/scramjet.wasm')}
-			/>
 		</>
 	);
 }

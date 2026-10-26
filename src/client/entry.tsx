@@ -1,6 +1,5 @@
 import { renderToString } from 'solid-js/web';
 import { setSiteValues, type SiteValues } from '../site.ts';
-import Bookmarks from './components/Bookmarks.tsx';
 import Document from './Document.tsx';
 import { pageDefinitions } from './pages.ts';
 import type { PageDefinition } from './types.ts';
@@ -28,9 +27,6 @@ export function renderDocuments(context: SiteValues) {
 					renderToString(() => <Document {...definition} />)
 			),
 		])
-	);
-	documents['pages/misc/deobf/bookmarks.html'] = maskDocument(
-		renderToString(() => <Bookmarks />)
 	);
 	return documents;
 }

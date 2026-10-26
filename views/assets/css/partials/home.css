@@ -82,7 +82,7 @@
 
 .mac-content {
 	color: var(--nord4);
-	font-family: "Source Code Pro", monospace;
+	font-family: "Source Code Pro", "Source Code Pro Fallback", monospace;
 	font-optical-sizing: auto;
 	font-weight: 500;
 	-webkit-font-smoothing: antialiased;
@@ -221,7 +221,8 @@
 
 .dependencylogo img {
 	width: 50px;
-	height: 50;
+	height: 50px;
+	object-fit: contain;
 	padding: 10px;
 	border-radius: 20px;
 	background-color: var(--nord2);

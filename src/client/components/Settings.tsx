@@ -1,5 +1,10 @@
 import { route, translate, values } from '../document-helpers.tsx';
-import { SettingToggle, TransportSelect } from './SettingsControls.tsx';
+import FingerprintSettings from './FingerprintSettings.tsx';
+import {
+	SettingsSection,
+	SettingToggle,
+	TransportSelect,
+} from './SettingsControls.tsx';
 
 export default function Settings() {
 	return (
@@ -40,10 +45,10 @@ export default function Settings() {
 							</select>
 						</div>
 					</section>
-					<section class="settings-card">
-						<h2 class="cseltitle">
-							{translate('settings.browsing.title')}
-						</h2>
+					<SettingsSection
+						title={translate('settings.browsing.title')}
+						class="collapse-browsing"
+					>
 						<TransportSelect
 							id="settings-transport"
 							containerId="transport-setting"
@@ -103,7 +108,7 @@ export default function Settings() {
 							class="useac"
 							checked
 						/>
-					</section>
+					</SettingsSection>
 					<section class="settings-card settings-card-last">
 						<h2 class="cseltitle">
 							{translate('settings.advanced.title')}
@@ -114,6 +119,22 @@ export default function Settings() {
 								'settings.advanced.torDescription'
 							)}
 							class="useonion"
+						/>
+						<SettingToggle
+							label={translate(
+								'proxySettings.experimentalSiteFixes'
+							)}
+							description={translate(
+								'proxySettings.experimentalSiteFixesDescription'
+							)}
+							class="experimental-site-fixes"
+						/>
+						<SettingToggle
+							label={translate('proxySettings.randomizeFingerprint')}
+							description={translate(
+								'proxySettings.randomizeFingerprintDescription'
+							)}
+							class="randomize-fingerprint"
 						/>
 						<div class="setting-field">
 							<label for="settings-region">
@@ -129,7 +150,9 @@ export default function Settings() {
 								<option value="jp">
 									{translate('settings.advanced.regions.japan')}
 								</option>
-								<option value="patreon">Patreon</option>
+								{values.patreon && (
+									<option value="patreon">Patreon</option>
+								)}
 							</select>
 						</div>
 						<div class="setting-field">
@@ -137,18 +160,20 @@ export default function Settings() {
 								{translate('settings.advanced.window')}
 							</label>
 							<select id="settings-window" class="cloak-type-list">
-								<option value="none" selected>
+								<option value={values.cloakTypes.none} selected>
 									{translate('settings.advanced.windowDefault')}
 								</option>
-								<option value="blank">about:blank</option>
-								<option value="blob">blob</option>
+								<option value={values.cloakTypes.blank}>about:blank</option>
+								<option value={values.cloakTypes.blob}>blob</option>
 							</select>
 						</div>
 					</section>
 				</div>
 				<div class="settings-column">
-					<section class="settings-card">
-						<h2 class="cseltitle">{translate('settings.tab.title')}</h2>
+					<SettingsSection
+						title={translate('settings.tab.title')}
+						class="collapse-tab"
+					>
 						<p class="setting-description">
 							{translate('settings.tab.description')}
 						</p>
@@ -207,7 +232,8 @@ export default function Settings() {
 						<a class="settings-help-link" href={route('/questions')}>
 							{translate('settings.tab.findIcon')}
 						</a>
-					</section>
+					</SettingsSection>
+					<FingerprintSettings />
 					<section class="settings-card">
 						<h2 class="cseltitle">
 							{translate('settings.privacy.title')}
@@ -234,6 +260,43 @@ export default function Settings() {
 							)}
 							class="sandbox"
 						/>
+						<SettingToggle
+							label={translate('settings.privacy.blockWebrtc')}
+							description={translate(
+								'settings.privacy.blockWebrtcDescription'
+							)}
+							class="block-webrtc"
+						/>
+						<SettingToggle
+							label={translate('proxySettings.searchNavFix')}
+							description={translate(
+								'proxySettings.searchNavFixDescription'
+							)}
+							class="search-nav-fix"
+						/>
+						<label class="setting-row">
+							<span class="setting-copy">
+								<span class="setting-label">
+									{translate('settings.privacy.clearData')}
+								</span>
+								<span class="setting-description">
+									{translate(
+										'settings.privacy.clearDataDescription'
+									)}
+								</span>
+							</span>
+							<input
+								type="button"
+								id="clear-site-data"
+								class="clear-data-button"
+								value={translate(
+									'settings.privacy.clearDataButton'
+								)}
+								data-confirm={translate(
+									'settings.privacy.clearDataConfirm'
+								)}
+							/>
+						</label>
 					</section>
 				</div>
 			</div>

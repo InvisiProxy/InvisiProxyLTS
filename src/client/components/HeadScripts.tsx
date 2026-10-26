@@ -14,29 +14,38 @@ export function PageDescription(props: { content?: string }) {
 export function ParticlesScript() {
 	return (
 		<script
-			src="https://unpkg.com/tsparticles@3.8.1/tsparticles.bundle.min.js"
+			src={route('assets/js/particles.js')}
 			defer={true}
-			data-module=""
 			innerHTML=""
 		/>
 	);
 }
 
-export function TooltipScripts() {
+export function AosScripts() {
 	return (
 		<>
+			<Inline>
+				<link
+					rel="stylesheet"
+					href={route('assets/css/aos.css', 'inline')}
+				/>
+			</Inline>
 			<script
-				src="https://unpkg.com/@popperjs/core@2"
-				defer={true}
-				data-module=""
-				innerHTML=""
-			/>
-			<script
-				src="https://unpkg.com/tippy.js@6"
+				src={route('assets/js/aos.js')}
 				defer={true}
 				innerHTML=""
 			/>
 		</>
+	);
+}
+
+export function TooltipScripts() {
+	return (
+		<script
+			src={route('assets/js/tooltips.js')}
+			defer={true}
+			innerHTML=""
+		/>
 	);
 }
 

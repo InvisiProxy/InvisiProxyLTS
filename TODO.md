@@ -2,20 +2,32 @@ This will be our nonexhaustive todo list for InvisiProxy LTS v8.x.x and above. R
 
 ## Priority
 
-- [ ] Fix abnormal search handling
 - [ ] Class managling and DOM masquerading functionality to Scramjet (or stealth window) 
-- [ ] Implement multi-lang support!
 - [ ] Update Scramjet to V3
+- [ ] Finish translations
 
 #### Known Regressions
 - Bing will leak out of the respective stealth frame
 - Clean epoxy errors if unreleated to ProxyTransports
 
 ## Proxy/Site Functionality
-- [ ] Implement sandboxing techniques to prevent new tab leaks
-- [ ] Add bookmarks menu (source wise already present pretty much)
 - [ ] Add Chii + ensuring users can access devtools while browsing; or utilize Scramjet playground instead - partial
-- [ ] Allow for custom SOCK5 proxy layering (HTTP and SOCKS4 scheme as well)
+- [ ] Ads are being implemented into the project. This will be on loading pages.
+- [x] Improve obfuscation to include basic managling for classes, ids and exposed keywords - partial
+- [x] Implement Browser Fingerprinting randomization setting and UA changing menu - done
+- [x] On non SEO instances default page becomes Browsing instead of the homepage. Homepage will now be added as Overview - done
+- [x] Browsing page will have the input form like a search engine centered, Invisi branding above it and have the applications page under it as presets. - done
+- [x] Applications page will go back to being an extensive library of presets all running under the proxy. It will have a loading page to prevent the cursed behavior speed was mentioning with icons loading. - done
+- [x] Implement multi-lang support!
+- [x] Fix abnormal search handling
+- [x] Add tabs system - done
+- [x] Add bookmarks menu - done
+- [x] Add WebRTC block feature - done
+- [x] Clean up CI tests for rewrite - done
+- [x] Implement specific site fixes via Clauda (cursed) - done
+- [x] Improve custom error page via plugin - done
+- [x] Implement plugins to prevent new tab leaks and search guard - done
+- [x] Allow for wisp servers - done
 - [x] Improve InvisiProxy Firefox support - partial
 - [x] Improve onboarding 
 - [x] Improve mobile support (fix UI bugs)

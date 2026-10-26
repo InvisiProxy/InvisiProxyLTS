@@ -50,7 +50,7 @@
 	background:
 		url("/assets/img/noise.webp") repeat,
 		rgba(255, 255, 255, 0.03);
-	opacity: var(--noise-opacity, 0.02);
+	opacity: var(--noise-opacity, 0.06);
 	pointer-events: none;
 	-webkit-mask-image: radial-gradient(circle, white 30%, transparent 50%);
 	-webkit-mask-size: 800px 800px;
@@ -164,7 +164,7 @@
 	background:
 		url("/assets/img/noise.webp") repeat,
 		rgba(46, 52, 64, 0.03);
-	opacity: var(--noise-opacity, 0.02);
+	opacity: var(--noise-opacity, 0.06);
 	pointer-events: none;
 	-webkit-mask-image: radial-gradient(circle, white 30%, transparent 50%);
 	-webkit-mask-size: 800px 800px;
@@ -237,7 +237,7 @@
 
 .box-error {
 	margin: 40dvh 0;
-	font-family: "Lato", sans-serif;
+	font-family: "Lato", "Lato Fallback", sans-serif;
 }
 
 .box-error h1 {

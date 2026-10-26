@@ -1,6 +1,6 @@
 html {
 	color: var(--html-color, white);
-	font-family: "Rethink Sans", sans-serif;
+	font-family: "Rethink Sans", "Rethink Sans Fallback", sans-serif;
 	font-weight: 300;
 	scroll-behavior: smooth;
 	text-wrap: balance;
@@ -15,6 +15,16 @@ body {
 	top: 0;
 	margin: 0;
 	background-color: var(--nord0);
+}
+
+body:has(> #footer) {
+	display: flex;
+	flex-direction: column;
+	min-height: 100dvh;
+}
+
+body:has(> #footer) > #footer {
+	margin-top: auto;
 }
 
 canvas {
@@ -49,7 +59,7 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: "Figtree", sans-serif;
+	font-family: "Figtree", "Figtree Fallback", sans-serif;
 	font-weight: 900;
 }
 
@@ -63,7 +73,7 @@ img {
 
 code {
 	font-family:
-		"Source Code Pro", ui-monospace, SFMono-Regular, Consolas, monospace;
+		"Source Code Pro", "Source Code Pro Fallback", ui-monospace, SFMono-Regular, Consolas, monospace;
 	font-size: 0.9em;
 	font-weight: 400;
 	background-color: var(--nord0m1);
@@ -85,7 +95,7 @@ pre {
 	border: 1px solid color-mix(in srgb, var(--nord4) 20%, transparent);
 	border-radius: 12px;
 	font-family:
-		"Source Code Pro", ui-monospace, SFMono-Regular, Consolas, monospace;
+		"Source Code Pro", "Source Code Pro Fallback", ui-monospace, SFMono-Regular, Consolas, monospace;
 	font-size: 0.875rem;
 	font-weight: 400;
 	line-height: 1.7;
@@ -204,15 +214,6 @@ details[open] summary {
 	display: none;
 }
 
-#password-field {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	margin: -1px;
-	overflow: hidden;
-	clip: rect(0 0 0 0);
-}
-
 .bigtitle {
 	font-size: 42px;
 	color: var(--bigtitle-color, rgb(255, 88, 97));
@@ -224,7 +225,7 @@ details[open] summary {
 	top: 0;
 	font-size: 16px;
 	padding: 20px;
-	font-family: "Rethink Sans", sans-serif;
+	font-family: "Rethink Sans", "Rethink Sans Fallback", sans-serif;
 	font-weight: 400;
 	z-index: 1;
 	animation: fadeInAnimation ease-in-out 0.3s;

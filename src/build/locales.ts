@@ -6,7 +6,7 @@ import { projectDir } from '../constants.ts';
 import { type Messages, type SiteValues, siteOrigin } from '../site.ts';
 
 export const defaultLocale = 'en';
-export const localesDir = join(projectDir, 'src/locales');
+export const localesDir = join(projectDir, 'locales');
 
 export interface Locale {
 	code: string;
@@ -64,7 +64,7 @@ export function loadLocales(): Locale[] {
 		.sort()
 		.map(readLocale);
 	const index = locales.findIndex(({ code }) => code === defaultLocale);
-	if (index < 0) throw new Error(`Missing src/locales/${defaultLocale}.yaml`);
+	if (index < 0) throw new Error(`Missing locales/${defaultLocale}.yaml`);
 	return [locales[index], ...locales.filter((_, other) => other !== index)];
 }
 
@@ -79,7 +79,7 @@ export function builtLocales(
 	const locale = locales.find((other) => other.code === code);
 	if (!locale)
 		throw new Error(
-			`config.json: language "${code}" needs src/locales/${code}.yaml`
+			`config.json: language "${code}" needs locales/${code}.yaml`
 		);
 	return [locale];
 }

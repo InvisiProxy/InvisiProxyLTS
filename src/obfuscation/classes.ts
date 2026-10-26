@@ -14,15 +14,22 @@ import {
 
 const vendorClass =
 	/^(?:fa(?:[brsld])?(?:-|$)|aos(?:-|$)|tippy-(?:box|content|arrow|backdrop)|eruda(?:-|$))/;
+const vendorId = /^tsparticles$/;
+const idAttribute = /^(?:id|for|containerId|formId|buttonId|menuId)$/;
+const elementId = /^[A-Za-z][\w-]*$/;
 
-export function classNames(): Record<string, string> {
-	if (config.usingSEO) return {};
-	const state = obfuscationState();
-	if (Object.keys(state.classes).length) return state.classes;
-	const names = new Set<string>();
-	const add = (value: string) => {
+let collected: { classes: Set<string>; ids: Set<string> } | undefined;
+
+function sourceNames() {
+	if (collected) return collected;
+	const classes = new Set<string>();
+	const ids = new Set<string>();
+	const addClasses = (value: string) => {
 		for (const name of value.split(/\s+/))
-			if (name && !vendorClass.test(name)) names.add(name);
+			if (name && !vendorClass.test(name)) classes.add(name);
+	};
+	const addId = (value: string) => {
+		if (elementId.test(value) && !vendorId.test(value)) ids.add(value);
 	};
 	const cssRoot = new URL('views/assets/css/', projectUrl);
 	for (const file of existsSync(cssRoot)
@@ -34,7 +41,10 @@ export function classNames(): Record<string, string> {
 			.walkRules((rule) => {
 				selectorParser((selectors) => {
 					selectors.walkClasses((node) => {
-						add(node.value);
+						addClasses(node.value);
+					});
+					selectors.walkIds((node) => {
+						addId(node.value);
 					});
 				}).processSync(rule.selector);
 			});
@@ -53,53 +63,89 @@ export function classNames(): Record<string, string> {
 			ts.ScriptKind.TSX
 		);
 		function visit(node: ts.Node) {
-			if (
-				ts.isJsxAttribute(node) &&
-				node.name.getText(source) === 'class'
-			) {
+			if (ts.isJsxAttribute(node)) {
+				const name = node.name.getText(source);
 				const value = node.initializer;
 				const literal =
 					value && ts.isJsxExpression(value)
 						? value.expression
 						: value;
-				if (literal && ts.isStringLiteralLike(literal))
-					add(literal.text);
+				if (literal && ts.isStringLiteralLike(literal)) {
+					if (name === 'class') addClasses(literal.text);
+					else if (idAttribute.test(name)) addId(literal.text);
+				}
 			}
 			ts.forEachChild(node, visit);
 		}
 		visit(source);
 	}
-	state.classes = generatedNames(names, 'classes');
+	collected = { classes, ids };
+	return collected;
+}
+
+export function classNames(): Record<string, string> {
+	if (config.usingSEO) return {};
+	const state = obfuscationState();
+	if (Object.keys(state.classes).length) return state.classes;
+	state.classes = generatedNames(sourceNames().classes, 'classes');
 	saveObfuscationState(state);
 	return state.classes;
+}
+
+export function elementIds(): Record<string, string> {
+	if (config.usingSEO) return {};
+	const state = obfuscationState();
+	if (Object.keys(state.ids).length) return state.ids;
+	state.ids = generatedNames(sourceNames().ids, 'ids');
+	saveObfuscationState(state);
+	return state.ids;
 }
 
 export function rewriteClasses(value: string, names = classNames()) {
 	return value.replace(/\S+/g, (name) => names[name] || name);
 }
 
-export function rewriteSelector(value: string, names = classNames()) {
+export function rewriteIds(value: string, ids = elementIds()) {
+	return value.replace(/\S+/g, (name) => ids[name] || name);
+}
+
+export function rewriteSelector(
+	value: string,
+	names = classNames(),
+	ids = elementIds()
+) {
 	return selectorParser((selectors) => {
 		selectors.walkClasses((node) => {
 			node.value = names[node.value] || node.value;
 		});
+		selectors.walkIds((node) => {
+			node.value = ids[node.value] || node.value;
+		});
 		selectors.walkAttributes((node) => {
 			if (
-				node.attribute === 'class' &&
-				node.value &&
-				['=', '~='].includes(node.operator || '')
+				!node.value ||
+				!['=', '~='].includes(node.operator || '') ||
+				!['class', 'id'].includes(node.attribute)
 			)
-				node.setValue(rewriteClasses(node.value, names), {
-					quoteMark: node.quoteMark,
-				});
+				return;
+			node.setValue(
+				node.attribute === 'class'
+					? rewriteClasses(node.value, names)
+					: rewriteIds(node.value, ids),
+				{ quoteMark: node.quoteMark }
+			);
 		});
 	}).processSync(value);
 }
 
-export function rewriteStylesheet(css: string, names = classNames()) {
+export function rewriteStylesheet(
+	css: string,
+	names = classNames(),
+	ids = elementIds()
+) {
 	const root = postcss.parse(css);
 	root.walkRules((rule) => {
-		rule.selector = rewriteSelector(rule.selector, names);
+		rule.selector = rewriteSelector(rule.selector, names, ids);
 	});
 	return root.toString();
 }
@@ -107,7 +153,8 @@ export function rewriteStylesheet(css: string, names = classNames()) {
 export function rewriteClassReferences(
 	code: string,
 	name: string,
-	names = classNames()
+	names = classNames(),
+	ids = elementIds()
 ) {
 	const source = ts.createSourceFile(
 		name,
@@ -120,18 +167,25 @@ export function rewriteClassReferences(
 	const suffix = randomBytes(8).toString('hex');
 	const classes = `__invisiClasses_${suffix}`;
 	const selector = `__invisiSelector_${suffix}`;
+	const id = `__invisiId_${suffix}`;
+	const runtimeNames = { classes, selector, id };
 	let runtime = false;
-	function argument(node: ts.Expression, kind: 'classes' | 'selector') {
+	function argument(
+		node: ts.Expression,
+		kind: 'classes' | 'selector' | 'id'
+	) {
 		let value: string;
 		if (ts.isStringLiteralLike(node)) {
 			value = JSON.stringify(
 				kind === 'classes'
 					? rewriteClasses(node.text, names)
-					: rewriteSelector(node.text, names)
+					: kind === 'id'
+						? ids[node.text] || node.text
+						: rewriteSelector(node.text, names, ids)
 			);
 		} else {
 			runtime = true;
-			value = `${kind === 'classes' ? classes : selector}(${node.getText(source)})`;
+			value = `${runtimeNames[kind]}(${node.getText(source)})`;
 		}
 		edits.push({ start: node.getStart(source), end: node.end, value });
 	}
@@ -150,12 +204,16 @@ export function rewriteClassReferences(
 						'querySelectorAll',
 						'closest',
 						'matches',
-						'tippy',
 					].includes(method)
 				) {
 					argument(node.arguments[0], 'selector');
 					visit(call);
 					for (const arg of node.arguments.slice(1)) visit(arg);
+					return;
+				}
+				if (method === 'getElementById') {
+					argument(node.arguments[0], 'id');
+					visit(call);
 					return;
 				}
 				if (
@@ -176,10 +234,13 @@ export function rewriteClassReferences(
 				if (
 					method === 'setAttribute' &&
 					ts.isStringLiteralLike(node.arguments[0]) &&
-					node.arguments[0].text === 'class' &&
+					['class', 'id', 'for'].includes(node.arguments[0].text) &&
 					node.arguments[1]
 				) {
-					argument(node.arguments[1], 'classes');
+					argument(
+						node.arguments[1],
+						node.arguments[0].text === 'class' ? 'classes' : 'id'
+					);
 					visit(call);
 					return;
 				}
@@ -189,17 +250,23 @@ export function rewriteClassReferences(
 			ts.isBinaryExpression(node) &&
 			node.operatorToken.kind === ts.SyntaxKind.EqualsToken &&
 			ts.isPropertyAccessExpression(node.left) &&
-			node.left.name.text === 'className'
+			['className', 'id', 'htmlFor'].includes(node.left.name.text)
 		) {
-			argument(node.right, 'classes');
+			argument(
+				node.right,
+				node.left.name.text === 'className' ? 'classes' : 'id'
+			);
 			visit(node.left);
 			return;
 		}
-		if (ts.isStringLiteralLike(node) && /\bclass\s*=/.test(node.text)) {
-			const text = node.text.replace(
-				/(\bclass\s*=\s*)(?:"([^"]*)"|'([^']*)'|([^\s"'=<>]+))/g,
-				(_match, before, doubleQuoted, singleQuoted, unquoted) =>
-					`${before}"${rewriteClasses(doubleQuoted ?? singleQuoted ?? unquoted, names)}"`
+		if (ts.isStringLiteralLike(node)) {
+			const text = rewriteIdAttributes(
+				node.text.replace(
+					/(\bclass\s*=\s*)(?:"([^"]*)"|'([^']*)'|([^\s"'=<>]+))/g,
+					(_match, before, doubleQuoted, singleQuoted, unquoted) =>
+						`${before}"${rewriteClasses(doubleQuoted ?? singleQuoted ?? unquoted, names)}"`
+				),
+				ids
 			);
 			if (text !== node.text)
 				edits.push({
@@ -216,8 +283,21 @@ export function rewriteClassReferences(
 	if (!runtime) return code;
 	return `(() => {
 		const names = ${JSON.stringify(names)};
+		const ids = ${JSON.stringify(ids)};
 		function ${classes}(value) { return typeof value === 'string' ? value.replace(/\\S+/g, name => names[name] || name) : value; }
-		function ${selector}(value) { return typeof value === 'string' ? value.replace(/"[^"]*"|'[^']*'|\\.([a-zA-Z_][\\w-]*)/g, (match, name) => name && names[name] ? '.' + names[name] : match) : value; }
+		function ${selector}(value) { return typeof value === 'string' ? value.replace(/"[^"]*"|'[^']*'|\\.([a-zA-Z_][\\w-]*)|#([a-zA-Z_][\\w-]*)/g, (match, name, id) => name && names[name] ? '.' + names[name] : id && ids[id] ? '#' + ids[id] : match) : value; }
+		function ${id}(value) { return typeof value === 'string' && ids[value] || value; }
 		${code}
 	})();`;
+}
+
+function rewriteIdAttributes(text: string, ids: Record<string, string>) {
+	if (!text.includes('<')) return text;
+	return text.replace(
+		/((?<![\w-])(?:id|for)\s*=\s*)(?:"([^"]*)"|'([^']*)'|([^\s"'=<>]+))/g,
+		(match, before, doubleQuoted, singleQuoted, unquoted) => {
+			const value = doubleQuoted ?? singleQuoted ?? unquoted;
+			return ids[value] ? `${before}"${ids[value]}"` : match;
+		}
+	);
 }

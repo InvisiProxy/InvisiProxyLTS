@@ -31,6 +31,8 @@ import {
 	obfuscateVendorScript,
 	stripObfuscatedMarker,
 } from '../obfuscation/scripts.ts';
+import { maskText } from '../obfuscation/masks.ts';
+import { hideScramjetParams } from '../obfuscation/scramjet-params.ts';
 import { route } from '../site.ts';
 import { beginObfuscationBuild } from '../obfuscation/state.ts';
 import {
@@ -39,7 +41,13 @@ import {
 	renderSite,
 } from './render.ts';
 import { builtLocales, loadLocales, localizeSitemap } from './locales.ts';
-import { faqSearch, type SiteFile, siteFiles, siteScripts } from './sources.ts';
+import {
+	clientScripts,
+	faqSearch,
+	type SiteFile,
+	siteFiles,
+	siteScripts,
+} from './sources.ts';
 import { buildValues, readFromStaging } from './values.ts';
 
 export const scriptEnvironment = (index: number) => `script_${index}`;
@@ -78,6 +86,14 @@ function rewriteAssetReferences(text: string) {
 	);
 }
 
+function maskManifest(data: Record<string, unknown>) {
+	for (const key of ['name', 'short_name', 'description']) {
+		const value = data[key];
+		if (typeof value === 'string') data[key] = maskText(value);
+	}
+	return data;
+}
+
 function readText(file: SiteFile) {
 	const text = readFileSync(file.source, 'utf8');
 	if (file.target !== 'sitemap.xml' || !config.usingSEO) return text;
@@ -109,7 +125,7 @@ function environments(): Record<string, EnvironmentOptions> {
 					outDir: join(outDir, dirname(script.target)),
 					watch,
 					minify: config.minifyScripts,
-					target: 'esnext',
+					target: clientScripts.includes(script) ? 'es2021' : 'esnext',
 					lib: {
 						entry: script.source,
 						formats: ['iife'],
@@ -118,7 +134,7 @@ function environments(): Record<string, EnvironmentOptions> {
 						fileName: () => basename(script.target),
 					},
 					rolldownOptions:
-						script === faqSearch
+						clientScripts.includes(script)
 							? {}
 							: {
 									treeshake: false,
@@ -288,10 +304,12 @@ export function siteBuildPlugin(): Plugin[] {
 							: file.kind === 'json'
 								? rewriteAssetReferences(
 										JSON.stringify(
-											JSON.parse(
-												readFileSync(
-													file.source,
-													'utf8'
+											maskManifest(
+												JSON.parse(
+													readFileSync(
+														file.source,
+														'utf8'
+													)
 												)
 											)
 										)
@@ -300,7 +318,12 @@ export function siteBuildPlugin(): Plugin[] {
 					const source =
 						!config.usingSEO && file.kind === 'vendor-script'
 							? obfuscateVendorScript(
-									original.toString(),
+									basename(file.source) === 'scramjet.js'
+										? hideScramjetParams(
+												original.toString(),
+												buildValues.proxyCodecKey
+											)
+										: original.toString(),
 									file.target
 								)
 							: original;

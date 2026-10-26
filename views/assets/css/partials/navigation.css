@@ -12,14 +12,15 @@
 
 .mobile-overlay a {
 	display: block;
-	width: 110px;
+	box-sizing: border-box;
+	width: min(80vw, 360px);
 	text-decoration: none;
-	padding: 15px 25px;
+	padding: 16px 25px;
 	border: var(--nord11) 1px solid;
 	border-radius: 5px;
 	color: var(--box-btn-color, white);
 	background-color: var(--mac-title-bg, var(--dark2));
-	font-size: 16px;
+	font-size: clamp(16px, 2vw, 19px);
 	transition: background-color 0.3s ease;
 }
 
@@ -132,7 +133,7 @@
 }
 
 .navbar > .smenu {
-	margin-left: 25px;
+	margin-left: 10px;
 }
 
 .navbar .dropdown-child {
@@ -145,7 +146,7 @@
 	cursor: auto;
 	padding: 15px 25px;
 	margin-top: 15px;
-	font-family: "Rethink Sans", sans-serif;
+	font-family: "Rethink Sans", "Rethink Sans Fallback", sans-serif;
 	opacity: 0;
 	transition:
 		opacity 0.3s ease,
@@ -252,6 +253,9 @@
 	flex-direction: column;
 	align-items: center;
 	padding-top: calc(10% + 90px);
+	padding-bottom: 40px;
+	box-sizing: border-box;
+	overflow-y: auto;
 	opacity: 0;
 	pointer-events: none;
 	visibility: hidden;

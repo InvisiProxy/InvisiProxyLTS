@@ -8,6 +8,7 @@ export default function Document(props: PageDefinition) {
 	return (
 		<html lang={values.locale}>
 			<head>
+				{values.usingSEO && <meta charset="utf-8" />}
 				<Head />
 				{props.indexed && (
 					<LocaleLinks route={[props.route ?? ''].flat()[0]} />

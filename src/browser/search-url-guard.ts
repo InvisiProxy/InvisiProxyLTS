@@ -10,11 +10,23 @@ const searchInputSelectors = [
 	"input[name='query']",
 	"textarea[name='q']",
 ];
+const guardedSites = ['duckduckgo.com', 'tiktok.com', 'animetsu.site', 'fmhy.net', 'twitch.tv'];
 
 export type ScramjetClientUrlGuardTarget = {
 	url: { href: string } | string;
 	rewriteUrl: (url: string | URL, options?: unknown) => string;
 };
+
+export function needsSearchUrlGuard(url: { href: string } | string): boolean {
+	try {
+		const { hostname } = new URL(typeof url === 'string' ? url : url.href);
+		return guardedSites.some(
+			(site) => hostname === site || hostname.endsWith(`.${site}`)
+		);
+	} catch {
+		return false;
+	}
+}
 
 function isGarbageValue(value: string): boolean {
 	return garbageValues.has(value.trim().toLowerCase());

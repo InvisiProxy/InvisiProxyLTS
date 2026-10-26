@@ -1,8 +1,8 @@
 import {
+	appLibrary,
 	Keywords,
 	Inline,
 	route,
-	sites,
 	translate,
 	Translation,
 } from '../document-helpers.tsx';
@@ -34,6 +34,10 @@ const links = {
 export default function Applications() {
 	return (
 		<>
+			<div id="apps-loader" class="apps-loader" role="status">
+				<span class="loader-w" aria-hidden="true"></span>
+				<p>{translate('apps.loading')}</p>
+			</div>
 			<Keywords />
 			<AntiExfil />
 			<div id="header" class="fullwidth">
@@ -57,10 +61,31 @@ export default function Applications() {
 							<Translation id="apps.faq" tags={links} />
 						</div>
 						<div class="proxy-form text-center">
-							<div class="glist">
-								{sites.map((site) => (
-									<App url={site.url} name={site.name} icon={site.icon} />
-								))}
+							<div class="app-tabs" role="tablist">
+								{['all', ...appLibrary.map((category) => category.id)].map(
+									(id, index) => (
+										<button
+											type="button"
+											role="tab"
+											class={index ? 'app-tab' : 'app-tab is-active'}
+											aria-selected={index ? 'false' : 'true'}
+										>
+											{translate(`apps.categories.${id}`)}
+										</button>
+									)
+								)}
+							</div>
+							<div class="glist app-grid">
+								{appLibrary.flatMap((category, group) =>
+									category.apps.map((app) => (
+										<App
+											url={app.url}
+											name={app.name}
+											group={group}
+											card
+										/>
+									))
+								)}
 							</div>
 							<ProxySettings />
 						</div>
@@ -85,14 +110,6 @@ export function Head() {
 			<PageDescription />
 			<ProxyPreloads />
 			<HeadContent />
-			<link
-				rel="stylesheet"
-				href="https://unpkg.com/tippy.js@6/dist/backdrop.css"
-			/>
-			<link
-				rel="stylesheet"
-				href="https://unpkg.com/tippy.js@6/animations/shift-away.css"
-			/>
 			<ScramjetScripts />
 			<RegisterServiceWorkerScript />
 			<ParticlesScript />

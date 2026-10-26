@@ -1,6 +1,6 @@
 files:
-  - source: /src/locales/en.yaml
-    translation: /src/locales/%osx_locale%.yaml
+  - source: /locales/en.yaml
+    translation: /locales/%osx_locale%.yaml
     languages_mapping:
       osx_locale:
         pt-PT: pt-PT

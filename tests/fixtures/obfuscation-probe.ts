@@ -7,9 +7,10 @@ const load = <T>(path: string): Promise<T> =>
 	import(pathToFileURL(join(process.cwd(), path)).href);
 const { config } =
 	await load<typeof import('../../src/config.ts')>('src/config.ts');
-const { classNames, rewriteClassReferences, rewriteStylesheet } = await load<
-	typeof import('../../src/obfuscation/classes.ts')
->('src/obfuscation/classes.ts');
+const { classNames, elementIds, rewriteClassReferences, rewriteStylesheet } =
+	await load<typeof import('../../src/obfuscation/classes.ts')>(
+		'src/obfuscation/classes.ts'
+	);
 const { obfuscateDocument } = await load<
 	typeof import('../../src/obfuscation/documents.ts')
 >('src/obfuscation/documents.ts');
@@ -20,7 +21,7 @@ const { obfuscateScript, obfuscateVendorScript, stripObfuscatedMarker } =
 
 const source =
 	"(() => { const privateValue = 'private-value'; globalThis.result = privateValue; })();";
-const html = `<html><head><style>.fancybutton { color: red; }</style></head><body><button class="fancybutton">Test</button><script>${source}</script></body></html>`;
+const html = `<html><head><style>.fancybutton { color: red; }</style></head><body><button id="csel" class="fancybutton">Test</button><script>${source}</script></body></html>`;
 const scripts = [
 	stripObfuscatedMarker(obfuscateScript(source, 'probe.js')),
 	stripObfuscatedMarker(obfuscateVendorScript(source, 'vendor.js')),
@@ -28,12 +29,13 @@ const scripts = [
 const document = await obfuscateDocument(html, 'probe.html');
 const css = rewriteStylesheet('.fancybutton { color: red; }');
 const lookup = rewriteClassReferences(
-	"document.querySelector('.fancybutton');",
+	"document.querySelector('.fancybutton'); document.getElementById('csel');",
 	'lookup.js'
 );
 
 if (config.usingSEO) {
 	assert.deepEqual(classNames(), {});
+	assert.deepEqual(elementIds(), {});
 	assert.deepEqual(scripts, [source, source]);
 	assert.equal(document, html);
 	assert.equal(css, '.fancybutton { color: red; }');
@@ -51,4 +53,9 @@ if (config.usingSEO) {
 	assert.ok(document.includes(`.${name}`));
 	assert.ok(css.includes(`.${name}`));
 	assert.ok(lookup.includes(`.${name}`));
+	const id = elementIds().csel;
+	assert.ok(id);
+	assert.ok(document.includes(`id="${id}"`));
+	assert.ok(lookup.includes(`"${id}"`));
+	assert.doesNotMatch(document + lookup, /csel/);
 }

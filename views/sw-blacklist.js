@@ -1,4 +1,5 @@
 import { route } from 'build:invisiproxy';
+import { decodeUrl } from '../src/browser/proxy-codec.ts';
 importScripts(route("/scram/controller.sw.js"));
 
 const SJ_CONTROLLER_PREFIX = route("/scram/network/");
@@ -33,7 +34,7 @@ const targetHostnameForScramjet = (reqUrl) => {
     if (rest.length < 3) return null;
     const encoded = rest.slice(2).join('/');
     if (!encoded) return null;
-    return new URL(decodeURIComponent(encoded)).hostname;
+    return new URL(decodeUrl(encoded)).hostname;
   } catch {
     return null;
   }

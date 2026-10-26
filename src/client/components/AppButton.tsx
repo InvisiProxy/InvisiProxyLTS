@@ -1,9 +1,28 @@
+import { appPresets } from '../document-helpers.tsx';
+
 export default function App(props: {
 	url: string;
 	name: string;
 	newtab?: boolean;
-	icon?: string;
+	card?: boolean;
+	group?: number;
 }) {
+	const shared = {
+		class: props.card ? 'app-card' : 'dependencylogo tippy-button',
+		'data-app': appPresets.findIndex((app) => app.url === props.url),
+		'data-group': props.group,
+		'data-tippy-content': props.card ? undefined : props.name,
+		'aria-label': props.card ? undefined : props.name,
+	};
+	const content = () =>
+		props.card ? (
+			<>
+				<img alt="" />
+				<span class="app-name">{props.name}</span>
+			</>
+		) : (
+			<img alt={props.name} />
+		);
 	return (
 		<>
 			{props.newtab ? (
@@ -11,22 +30,13 @@ export default function App(props: {
 					href={props.url}
 					target="_blank"
 					rel="noopener noreferrer"
-					class="dependencylogo tippy-button"
-					data-app-url={props.url}
-					data-tippy-content={props.name}
-					aria-label={props.name}
+					{...shared}
 				>
-					<img data-proxy-icon={props.icon ?? ''} alt={props.name} />
+					{content()}
 				</a>
 			) : (
-				<button
-					type="button"
-					class="dependencylogo tippy-button"
-					data-app-url={props.url}
-					data-tippy-content={props.name}
-					aria-label={props.name}
-				>
-					<img data-proxy-icon={props.icon ?? ''} alt={props.name} />
+				<button type="button" {...shared}>
+					{content()}
 				</button>
 			)}
 		</>

@@ -1,5 +1,6 @@
+import type { IncomingMessage } from 'node:http';
 import type { wispurrOptions } from 'wispurr';
-import { serverUrl } from '../config.ts';
+import { config, serverUrl } from '../config.ts';
 import { getAltPrefix } from '../obfuscation/paths.ts';
 
 export const wispPath = () => getAltPrefix('wisp', serverUrl.pathname);
@@ -12,8 +13,22 @@ export const wispProxies = {
 } as const;
 export type WispRegion = keyof typeof wispProxies;
 
+export const wispRegions = (Object.keys(wispProxies) as WispRegion[]).filter(
+	(region) => region !== 'patreon' || config.patreon === true
+);
+
 const isRegion = (name: string): name is WispRegion =>
-	Object.hasOwn(wispProxies, name);
+	(wispRegions as string[]).includes(name);
+
+export function fromOwnSite(req: IncomingMessage): boolean {
+	const { origin, host } = req.headers;
+	if (!origin) return true;
+	try {
+		return new URL(origin).hostname === new URL(`http://${host}`).hostname;
+	} catch {
+		return false;
+	}
+}
 
 export function wispRegion(url: string | null | undefined): string | null {
 	const path = (url ?? '').split(/[?#]/, 1)[0];
@@ -34,9 +49,9 @@ const wispConfig = {
 	allowDirectIP: false,
 	allowPrivateIPs: false,
 	allowLoopbackIPs: true,
-	tcpBufferSize: 262144,
-	socketBufferSize: 16777216,
-	pendingQueueSize: 33554432,
+	tcpBufferSize: 1048576,
+	socketBufferSize: 33554432,
+	pendingQueueSize: 268435456,
 	bufferRemainingLength: 32768,
 	tcpNoDelay: true,
 	blacklist: {
@@ -79,7 +94,7 @@ const wispConfig = {
 	nonWSRedirect: '/pages/404.html',
 	logLevel: 'none',
 	proxy: '',
-	maxMessageSize: 262144,
+	maxMessageSize: 1048581,
 	staticDir: '',
 	bandwidthLimitKbps: 0,
 	connectionsLimitPerIP: 200,
@@ -90,7 +105,7 @@ const wispConfig = {
 		maxConnectsPerDestPerSecond: 250,
 		maxConnectsPerDestPerMinute: 6000,
 		maxInFlightSyns: 4096,
-		maxConcurrentStreamsPerConnection: 512,
+		maxConcurrentStreamsPerConnection: 2048,
 		maxConcurrentConnections: 16384,
 		synFloodSignature: {
 			enabled: false,

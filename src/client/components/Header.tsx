@@ -1,8 +1,9 @@
-import { route, translate } from '../document-helpers.tsx';
+import { route, translate, values } from '../document-helpers.tsx';
 import Settings from './Settings.tsx';
 import MirrorLinks from './MirrorLinks.tsx';
 
 export default function Header() {
+	const overview = route(values.usingSEO ? '/' : '/overview');
 	return (
 		<>
 			<div class="brand-logo-container">
@@ -26,6 +27,15 @@ export default function Header() {
 					aria-label={translate('header.primaryNav')}
 				>
 					<li style="margin-left: 0">
+						<a
+							class="line"
+							href={overview}
+							title={translate('header.overview.title')}
+						>
+							{translate('header.overview.label')}
+						</a>
+					</li>
+					<li>
 						<a
 							class="line"
 							href={route('/browsing')}
@@ -114,6 +124,20 @@ export default function Header() {
 					<li class="mirror-links-nav">
 						<MirrorLinks />
 					</li>
+					<li class="donate-nav">
+						<a
+							class="donate-link"
+							href={route('/patreon')}
+							target="_blank"
+							rel="noopener noreferrer"
+							title={translate('header.donate')}
+						>
+							<i class="fab fa-patreon" aria-hidden="true"></i>
+							<span class="sr-only">
+								{translate('header.donate')}
+							</span>
+						</a>
+					</li>
 					<li class="dropdown-parent smenu">
 						<div class="white-text">
 							<button
@@ -151,6 +175,11 @@ export default function Header() {
 			</label>
 			<div class="mobile-overlay">
 				<ul class="navbar-1">
+					<li>
+						<a href={overview}>
+							{translate('header.overview.label')}
+						</a>
+					</li>
 					<li>
 						<a href={route('/browsing')}>
 							{translate('header.browse.label')}

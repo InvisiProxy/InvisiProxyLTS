@@ -29,6 +29,6 @@ Crowdin will flag mismatched placeholders or tags. Fix those before saving.
 - Crowdin names files by its locale code, so variants get their own file: `zh-Hans.yaml` (Simplified), `zh-Hant.yaml` (Traditional), `zh_HK.yaml`
 - Visitors get the closest match by script and region: `zh-HK` and `zh-TW` get Traditional, `zh` and `zh-SG` get Simplified
 - Run `pnpm test:unit` before merging a Crowdin PR. It checks every file against `en.yaml` for missing placeholders and tags.
-- Intergration lives in [`crowdin.yml`](../../crowdin.yml).
+- Intergration lives in [`crowdin.yml`](../crowdin.yml).
 
 [crowdin]: https://crowdin.com/project/invisiproxy

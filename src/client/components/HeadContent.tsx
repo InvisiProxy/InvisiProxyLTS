@@ -1,9 +1,20 @@
-import { Inline, route } from '../document-helpers.tsx';
+import { Inline, route, values } from '../document-helpers.tsx';
+
+declare module 'solid-js' {
+	namespace JSX {
+		interface ExplicitAttributes {
+			onload: string;
+		}
+	}
+}
+
+const fonts =
+	'https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Lato:ital,wght@0,400;0,700;1,400&family=Montserrat+Alternates&family=Rethink+Sans:ital,wght@0,400..800;1,400..800&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap';
 
 export default function HeadContent() {
 	return (
 		<>
-			<meta charset="utf-8" />
+			{!values.usingSEO && <meta charset="utf-8" />}
 			<meta
 				name="viewport"
 				content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
@@ -84,7 +95,7 @@ export default function HeadContent() {
 			/>
 			<link rel="icon" href={route('assets/ico/favicon.ico')} />
 			<link rel="preconnect" href="https://fonts.googleapis.com" />
-			<link rel="preconnect" href="https://unpkg.com" />
+			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
 			<Inline>
 				<link
 					rel="stylesheet"
@@ -93,37 +104,9 @@ export default function HeadContent() {
 			</Inline>
 			<link
 				rel="stylesheet"
-				href={
-					'https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap'
-				}
-			/>
-			<link
-				rel="stylesheet"
-				href={
-					'https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400..800;1,400..800&display=swap'
-				}
-			/>
-			<link
-				rel="stylesheet"
-				href={
-					'https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap'
-				}
-			/>
-			<link
-				rel="stylesheet"
-				href={
-					'https://fonts.googleapis.com/css?family=Lato:400,700,400italic&display=swap'
-				}
-			/>
-			<link
-				rel="stylesheet"
-				href={
-					'https://fonts.googleapis.com/css?family=Montserrat+Alternates&display=swap'
-				}
-			/>
-			<link
-				rel="stylesheet"
-				href="https://unpkg.com/@fortawesome/fontawesome-free@5.15.4/css/all.min.css"
+				href={fonts}
+				media="print"
+				attr:onload="this.media='all'"
 			/>
 		</>
 	);

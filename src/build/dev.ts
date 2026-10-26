@@ -171,7 +171,7 @@ export function siteDevPlugin(): Plugin {
 				if (
 					path === 'config.json' ||
 					(event !== 'change' &&
-						/^(?:views\/(?!dist)|src\/(?:client|locales)\/)/.test(
+						/^(?:views\/(?!dist)|src\/client\/|locales\/)/.test(
 							path
 						))
 				)
@@ -191,8 +191,8 @@ export function siteDevPlugin(): Plugin {
 				file
 			).replaceAll('\\', '/');
 			if (path.startsWith('views/')) return [];
-			if (path.startsWith('src/')) {
-				schedule(/^src\/(?:client|locales)\//.test(path));
+			if (/^(?:src|locales)\//.test(path)) {
+				schedule(/^(?:src\/client|locales)\//.test(path));
 				return [];
 			}
 		},

@@ -10,7 +10,7 @@ import {
 	siteDir,
 	siteUrl,
 } from '../constants.ts';
-import { getPathAliases, getAltPrefix } from '../obfuscation/paths.ts';
+import { apiPath, getPathAliases, getAltPrefix } from '../obfuscation/paths.ts';
 import { preloaded404, tryReadFile } from './files.ts';
 import { loadLanguages, pickLanguage } from './language.ts';
 import { type ClientIp, createLinkDispenser } from './link-dispenser.ts';
@@ -91,6 +91,12 @@ function redirect(res: ServerResponse, location: string) {
 	reply(res, 302);
 }
 
+function clearSiteData(res: ServerResponse) {
+	res.setHeader('Clear-Site-Data', '"cache", "storage"');
+	res.setHeader('Cache-Control', 'no-store');
+	reply(res, 200);
+}
+
 function disguiseCheck(
 	pages: Record<string, string>,
 	externalPages: ExternalPages
@@ -135,8 +141,10 @@ function applyResponseHooks(
 	development: boolean
 ) {
 	for (const [name, value] of securityHeaders) res.setHeader(name, value);
-	const historyHide = (req.headers.cookie || '')
-		.split('; ')
+	const cookies = (req.headers.cookie || '').split('; ');
+	if (cookies.includes('ExperimentalSiteFixes=true'))
+		res.setHeader('Cross-Origin-Embedder-Policy', 'credentialless');
+	const historyHide = cookies
 		.find((cookie) => cookie.startsWith('HistoryHide='))
 		?.split('=')[1];
 	const hide =
@@ -180,7 +188,8 @@ export function createSiteHandler({
 	const base = serverUrl.pathname;
 	const baseRoute = trimSlash(base);
 	const development = isDevelopment();
-	const dispenserPath = `${base}api/link`;
+	const dispenserPath = `${base}${apiPath('link')}`;
+	const clearDataPath = `${base}${apiPath('clear')}`;
 	const dispense = createLinkDispenser(undefined, clientIp);
 	const wispRoute = trimSlash(wispPath());
 	const checkDisguise = disguiseCheck(pages, externalPages);
@@ -236,6 +245,8 @@ export function createSiteHandler({
 			: file;
 	};
 
+	const browsingFile = 'pages/proxnav/scramjet.html';
+
 	const notFound = (res: ServerResponse, language: string) =>
 		reply(res, 404, pageTypes.default, preloaded404(language));
 
@@ -266,7 +277,9 @@ export function createSiteHandler({
 		const file =
 			!name && config.disguiseFiles && !modified
 				? entryPointFile
-				: pages[name];
+				: !name && !config.usingSEO
+					? browsingFile
+					: pages[name];
 		const type = modified
 			? pageTypes[disguiseExtension]
 			: pageTypes[extension(file)] || pageTypes.default;
@@ -344,6 +357,12 @@ export function createSiteHandler({
 
 		if (req.method === 'POST' && path === dispenserPath)
 			return void dispense(req, res);
+		if (
+			req.method === 'POST' &&
+			path === clearDataPath &&
+			req.headers['sec-fetch-site'] === 'same-origin'
+		)
+			return clearSiteData(res);
 
 		if (path !== baseRoute && !path.startsWith(base))
 			return reply(res, 404, 'text/plain', 'Not Found');
@@ -388,11 +407,15 @@ export function createSiteHandler({
 			);
 		}
 
-		const github = /^github\/([^/]+)$/.exec(relative);
-		if (github) {
-			const name = decode(github[1]);
-			return Object.hasOwn(externalPages.github, name)
-				? redirect(res, externalPages.github[name])
+		const link = /^([^/]+)\/([^/]+)$/.exec(relative);
+		const links =
+			link && Object.hasOwn(externalPages, decode(link[1]))
+				? externalPages[decode(link[1])]
+				: undefined;
+		if (link && links && typeof links !== 'string') {
+			const name = decode(link[2]);
+			return Object.hasOwn(links, name)
+				? redirect(res, links[name])
 				: notFound(res, language);
 		}
 
