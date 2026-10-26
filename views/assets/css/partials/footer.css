@@ -1,0 +1,81 @@
+#footer {
+	font-family: "Lato", "Lato Fallback", sans-serif;
+	padding-top: 15vw;
+	background:
+		var(--footer-img, url("/assets/img/waves.svg")),
+		linear-gradient(
+			to bottom,
+			transparent 0 15vw,
+			var(--footer-grad, #1d2029) 15vw 100%
+		);
+	background-repeat: no-repeat;
+	background-size: 100vw auto;
+	position: relative;
+}
+
+.footersocials a {
+	display: inline-grid;
+	align-items: center;
+	width: 25px;
+	height: 25px;
+	line-height: 25px;
+	padding: 8px;
+	margin: 0 5px;
+	border: 1px solid var(--nord4);
+	border-radius: 50%;
+}
+
+#footer a {
+	text-decoration: inherit;
+	color: var(--nord6);
+}
+
+.footerbrand h3 a:hover {
+	text-decoration: underline;
+}
+
+#footer a:hover {
+	color: var(--margin-hover, white);
+}
+
+#footer .footerbrand h3 a {
+	color: var(--html-color, white);
+}
+
+.footerflex {
+	display: flex;
+	justify-content: center;
+}
+
+.footerflex > div {
+	margin: 25px 50px;
+}
+
+.copyright {
+	text-align: center;
+	padding: 25px 0;
+}
+
+.footerbrand p {
+	margin-top: 20px;
+}
+
+.footerlist ul {
+	list-style: none;
+	padding: 0;
+}
+
+.footerlist ul > li {
+	padding: 2px;
+}
+
+.footersocials {
+	text-align: center;
+	font-size: 20px;
+}
+
+@media only screen and (max-width: 800px) {
+	.footerflex {
+		flex-direction: column;
+	}
+}

@@ -1,0 +1,31 @@
+{
+	"vcs": { "enabled": false },
+	"files": {
+		"includes": [
+			"**/*.ts",
+			"**/*.tsx",
+			"**/*.json",
+			"**/*.css",
+			"!!**/.git",
+			"!!**/node_modules",
+			"!!views/dist",
+			"!!views/dist-new"
+		]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab",
+		"indentWidth": 4,
+		"lineWidth": 80
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "single",
+			"trailingCommas": "es5",
+			"semicolons": "always",
+			"arrowParentheses": "always"
+		}
+	},
+	"linter": { "enabled": true },
+	"assist": { "enabled": false }
+}

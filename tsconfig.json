@@ -1,0 +1,24 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"lib": ["ESNext", "DOM", "DOM.Iterable"],
+		"jsx": "preserve",
+		"jsxImportSource": "solid-js",
+		"strict": true,
+		"noEmit": true,
+		"allowImportingTsExtensions": true,
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"verbatimModuleSyntax": true,
+		"skipLibCheck": true,
+		"erasableSyntaxOnly": true
+	},
+	"include": [
+		"src/**/*.ts",
+		"src/**/*.tsx",
+		"src/browser/**/*.d.ts",
+		"vite.config.ts"
+	]
+}

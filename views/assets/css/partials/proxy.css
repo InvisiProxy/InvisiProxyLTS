@@ -1,0 +1,58 @@
+.pr-form input[type="text"],
+.pr-form :is(a, button),
+.pr-form select {
+	vertical-align: baseline;
+	outline: none;
+	border-radius: 5px;
+	padding: 10px 12px;
+	color: var(--nord4);
+	background-color: var(--mac-title-bg, var(--dark2));
+	font-family: "Figtree", "Figtree Fallback", sans-serif;
+	font-size: 20px;
+	height: 60px;
+	background-color: var(--nord0);
+	font-weight: 300;
+}
+
+.pr-form input[type="text"]:focus {
+	animation: glowshadow 2s linear infinite;
+}
+
+.pr-logo {
+	width: 100%;
+	max-width: 310px;
+	height: auto;
+	margin: 0 auto 30px auto;
+}
+
+.pr-tippy {
+	color: rgb(255, 136, 142);
+}
+
+.pr-form {
+	margin-top: 30px;
+	margin-bottom: 16px;
+}
+
+.pr-form input {
+	border: 1px solid var(--nord1);
+}
+
+.pr-form input[type="text"]::placeholder {
+	color: var(--gray);
+}
+
+.pr-button {
+	cursor: pointer;
+	text-decoration: none;
+	display: inline-block;
+	background-color: var(--nord0);
+	border: 1px solid var(--nord1);
+	transition: 0.3s ease-in-out;
+	-webkit-transition: 0.3s ease-in-out;
+	margin: 5px;
+}
+
+.pr-button:hover {
+	background-color: var(--nord0e3);
+}

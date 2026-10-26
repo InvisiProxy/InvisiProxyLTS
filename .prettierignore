@@ -1,3 +1,4 @@
-/lib
-/views/assets/js/*.js
-/views/dist
+.git
+node_modules
+views/dist
+views/dist-new

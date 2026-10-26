@@ -9,8 +9,12 @@ export NVM_DIR="$NVM_HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
 # --lts would be your desired version, i.e. 10, 12, --latest-npm. --lts is (obviously) the LTS version.
-nvm install 20
+nvm install node
 
-npm install
+# Enable pnpm via corepack (bundled with modern Node.js)
+corepack enable
+corepack prepare pnpm@latest --activate
 
-node --max_old_space_size=2560 ./backend.js
+pnpm install
+
+pnpm start

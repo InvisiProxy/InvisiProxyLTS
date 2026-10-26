@@ -1,3 +1,4 @@
+import { values } from 'build:invisiproxy';
 (() => {
   const windowEventListeners = [],
     documentEventListeners = [],
@@ -8,9 +9,9 @@
     origin = location;
   _addEventListener('keydown', (event) => {
     if (event.ctrlKey && event.code === 'KeyM' && event.isTrusted) {
-      if (localStorage.getItem('{{hu-lts}}-loader-key') !== navigator.userAgent)
-        localStorage.setItem('{{hu-lts}}-loader-key', navigator.userAgent);
-      else localStorage.removeItem('{{hu-lts}}-loader-key');
+      if (localStorage.getItem(`${values.storageNamespace}-loader-key`) !== navigator.userAgent)
+        localStorage.setItem(`${values.storageNamespace}-loader-key`, navigator.userAgent);
+      else localStorage.removeItem(`${values.storageNamespace}-loader-key`);
       _window.location.reload();
     }
   });
@@ -43,15 +44,16 @@
     if (currentDoc.currentScript) currentDoc.currentScript.remove();
   };
   if (
-    _window.localStorage.getItem('{{hu-lts}}-loader-key') !==
+    _window.localStorage.getItem(`${values.storageNamespace}-loader-key`) !==
     navigator.userAgent
   )
     return displayErrorPage();
-  const lastUpdated = '{{cacheVal}}',
+  const lastUpdated = values.cacheKey,
     retrieveUrl = (pathname) => {
       let capturedUrl = new URL(pathname, origin),
         capturedParams = new URLSearchParams(capturedUrl.search);
-      capturedParams.set('cache', lastUpdated);
+      if (values.development) capturedParams.delete('cache');
+      else capturedParams.set('cache', lastUpdated);
       capturedUrl.search = capturedParams.toString();
       return capturedUrl;
     };
@@ -66,15 +68,20 @@
     });
   };
 
+  const disguisedPath = (pathname) => {
+    pathname = pathname.replace(/\/+/g, '/');
+    return (
+      (pathname === values.basePath ? pathname : pathname.replace(/\/$/, '')) +
+      '.ico'
+    );
+  };
+
   const loadPage =
     (destination = origin, pushState = true) =>
     () => {
       _window
         .fetch(
-          retrieveUrl(
-            destination.pathname.replace(/\/+/g, '/').replace(/\/$/, '') +
-              '.ico'
-          ),
+          retrieveUrl(disguisedPath(destination.pathname)),
           { mode: 'same-origin' }
         )
         .then((response) => {
@@ -187,9 +194,19 @@
                               attrValue.indexOf('#') === -1
                             )
                               elementCopy.addEventListener('click', (event) => {
+                                const target = elementCopy.getAttribute('target');
+                                if (
+                                  event.defaultPrevented ||
+                                  event.button !== 0 ||
+                                  event.ctrlKey ||
+                                  event.metaKey ||
+                                  event.shiftKey ||
+                                  event.altKey ||
+                                  (target && target.toLowerCase() !== '_self') ||
+                                  elementCopy.hasAttribute('download') ||
+                                  _document.cookie.split('; ').includes('HistoryHide=true')
+                                ) return;
                                 event.preventDefault();
-                                if (attrValue === '{{route}}{{/}}')
-                                  attrValue = '{{route}}{{/index}}';
                                 loadPage(new URL(attrValue, origin))();
                               });
                             else if (nodeName === 'link') {

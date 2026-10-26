@@ -1,0 +1,117 @@
+@keyframes fadeInAnimation {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+.pulse {
+	will-change: transform;
+}
+
+.pulse:hover {
+	transition:
+		background-color 0.3s ease,
+		color 0.3s ease,
+		transform 0.3s ease;
+	transform: scale(1.05) translateZ(0);
+}
+
+@keyframes glowshadow {
+	0%,
+	100% {
+		box-shadow: 0 0 8px 2px var(--glowshadow1, var(--nord0));
+	}
+
+	50% {
+		box-shadow: 0 0 8px 2px var(--glowshadow2, var(--nord1));
+	}
+}
+
+@keyframes glowbg {
+	0% {
+		background-position: 0;
+	}
+
+	100% {
+		background-position: 100px 0;
+	}
+}
+
+.glowbutton {
+	position: relative;
+	z-index: 1;
+}
+
+.glowbutton::after {
+	content: "";
+	border-radius: inherit;
+	display: inline-block;
+	position: absolute;
+	z-index: -1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	transition: opacity 0.3s ease-out;
+}
+
+.glowbutton:hover::after {
+	opacity: 1;
+	animation: glowshadow 2s linear infinite;
+}
+
+.glowbutton:active::after {
+	background: linear-gradient(
+		90deg,
+		var(--nord7),
+		var(--nord8),
+		var(--nord7)
+	);
+	background-size: 100px auto;
+	animation:
+		glowshadow 2s linear infinite,
+		glowbg 2s linear infinite;
+}
+
+.ad {
+	position: absolute;
+	margin: 0px 20px;
+	width: 100px;
+	height: 100%;
+	background-color: var(--nord1);
+	overflow: hidden;
+	display: block;
+	z-index: 1;
+}
+
+#ad-right {
+	right: 0px;
+}
+
+.ad::before {
+	content: "Advertisement";
+	font-family: "Titillium Web", sans-serif;
+	position: absolute;
+	z-index: -1;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+@media only screen and (max-width: 800px) {
+	.ad {
+		position: relative;
+		margin: 20px;
+		width: calc(100% - 40px);
+		height: 100px;
+	}
+
+	#ad-right {
+		display: none;
+	}
+}

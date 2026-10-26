@@ -1,0 +1,66 @@
+.brand-logo-container {
+	display: flex;
+	align-items: center;
+}
+
+.brand {
+	font-size: 21px;
+	height: 30px;
+	line-height: 30px;
+	white-space: nowrap;
+	margin-right: 20px;
+	font-family: "Figtree", "Figtree Fallback", sans-serif;
+	font-weight: 900;
+	letter-spacing: 1px;
+	text-decoration: none;
+	color: var(--nord4);
+}
+
+.logo {
+	width: 70px;
+	height: 70px;
+	background-image: var(--logo-img, url("/assets/img/logo.webp"));
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+.brand-logo-container > i {
+	margin-right: 10px;
+}
+
+.logo-potato {
+	width: 20px;
+	height: 20px;
+	background-image: url("/assets/img/potato.webp");
+	background-size: cover;
+	opacity: 0.5;
+	overflow: hidden;
+}
+
+.omnibar > .logo {
+	width: 40px;
+	height: 40px;
+	margin-right: 5px;
+}
+
+@media (max-width: 1400px) {
+	.brand {
+		font-size: 21px;
+	}
+
+	.logo {
+		width: 50px;
+		height: 50px;
+	}
+}
+
+@media (max-width: 600px) {
+	.logo {
+		width: 25px;
+		height: 25px;
+	}
+
+	.brand {
+		font-size: 14px;
+	}
+}

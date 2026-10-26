@@ -1,0 +1,24 @@
+minimumReleaseAge: 1440
+
+minimumReleaseAgeExclude:
+  - merp-obfuscator
+  - '@mercuryworkshop/epoxy-tls'
+  - '@mercuryworkshop/epoxy-transport'
+  - '@mercuryworkshop/libcurl-transport'
+  - '@mercuryworkshop/proxy-transports'
+  - '@mercuryworkshop/scramjet'
+  - '@mercuryworkshop/scramjet-controller'
+  - '@mercuryworkshop/scramjet-utils'
+
+allowBuilds:
+  '@mercuryworkshop/scramjet': true
+  core-js: true
+  esbuild: true
+  utf-8-validate: true
+  '@tsparticles/engine': false
+  '@fortawesome/fontawesome-free': false
+
+updateConfig:
+  ignoreDependencies:
+    - '@fortawesome/fontawesome-free'
+    - aos

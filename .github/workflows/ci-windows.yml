@@ -2,34 +2,34 @@ name: CI-Win
 
 on:
   push:
-    branches: [master]
   pull_request:
     branches: [master]
 
 jobs:
   build-windows:
     runs-on: windows-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6.1.0
+        with:
+          version: 12.15.0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
-          node-version: '20.8.0'
+          cache: 'pnpm'
+          node-version: '26'
 
       - name: Install dependencies
-        run: npm run fresh-install
+        run: pnpm install --frozen-lockfile
 
       - name: Build libraries
-        run: npm run build
+        run: pnpm run build
 
-      - name: Start server
-        run: npm run workflow-test
-
-      - name: Test server response
-        run: npm test
-
-      - name: Stop server after testing
-        run: npm stop
+      - name: Test configuration, privacy and production routes
+        run: pnpm test

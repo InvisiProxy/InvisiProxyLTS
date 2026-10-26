@@ -2,7 +2,7 @@ services:
   - type: web
     runtime: docker
     name: invisi-lts
-    repo: https://github.com/QuiteAFancyEmerald/InvisiProxy
+    repo: https://github.com/InvisiProxy/InvisiProxyLTS
     region: oregon
     plan: free
     branch: master

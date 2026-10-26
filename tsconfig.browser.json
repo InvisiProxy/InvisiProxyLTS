@@ -1,0 +1,10 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"lib": ["ESNext", "DOM", "DOM.Iterable", "WebWorker"],
+		"types": [],
+		"moduleDetection": "force"
+	},
+	"include": ["views/**/*.ts", "src/browser/**/*.d.ts"],
+	"exclude": ["views/dist", "views/dist-new"]
+}

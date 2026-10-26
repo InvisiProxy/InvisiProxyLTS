@@ -1,21 +1,49 @@
-This will be our nonexhaustive todo list for InvisiProxy LTS v6.x.x and above. Release for production will be v8.x.x and above.
+This will be our nonexhaustive todo list for InvisiProxy LTS v8.x.x and above. Release for production is now.
 
 ## Priority
 
 - [ ] Class managling and DOM masquerading functionality to Scramjet (or stealth window) 
-- [ ] Font obfuscation middleware
-- [ ] Update to Scramjet V2.0.6
-- [ ] Update to use scramjetFrame instead of our own window handling
-- [ ] Implement multi-lang support!
+- [ ] Update Scramjet to V3
+- [ ] Finish translations
+
+#### Known Regressions
+- Bing will leak out of the respective stealth frame
+- Clean epoxy errors if unreleated to ProxyTransports
 
 ## Proxy/Site Functionality
-- [ ] Add booksmark menu (source wise already present pretty much)
-- [ ] Add Chii + ensuring users can access devtools while browsing - partial
-- [ ] Omnibox should state what the current site the user is on like a proper URL bar 
-- [ ] Improve adblocking functions on site using Workerware + a pre-bundled uBlock Origin
-- [ ] Implement advanced data URI system
-- [ ] Allow custom Wisp urls from the settings menu (not config side)
-- [ ] Setting to open multiple stealth frames; basically about:blank but using our system. Pops out in another tab
+- [ ] Add Chii + ensuring users can access devtools while browsing; or utilize Scramjet playground instead - partial
+- [ ] Ads are being implemented into the project. This will be on loading pages.
+- [x] Improve obfuscation to include basic managling for classes, ids and exposed keywords - partial
+- [x] Implement Browser Fingerprinting randomization setting and UA changing menu - done
+- [x] On non SEO instances default page becomes Browsing instead of the homepage. Homepage will now be added as Overview - done
+- [x] Browsing page will have the input form like a search engine centered, Invisi branding above it and have the applications page under it as presets. - done
+- [x] Applications page will go back to being an extensive library of presets all running under the proxy. It will have a loading page to prevent the cursed behavior speed was mentioning with icons loading. - done
+- [x] Implement multi-lang support!
+- [x] Fix abnormal search handling
+- [x] Add tabs system - done
+- [x] Add bookmarks menu - done
+- [x] Add WebRTC block feature - done
+- [x] Clean up CI tests for rewrite - done
+- [x] Implement specific site fixes via Clauda (cursed) - done
+- [x] Improve custom error page via plugin - done
+- [x] Implement plugins to prevent new tab leaks and search guard - done
+- [x] Allow for wisp servers - done
+- [x] Improve InvisiProxy Firefox support - partial
+- [x] Improve onboarding 
+- [x] Improve mobile support (fix UI bugs)
+- [x] Add selector for default proxy; behavior is upon clicking on logo in omnibox it will direct back to the selected proxy in Settings
+- [x] SolidJS rewrite
+- [x] Browsing obfuscation middleware
+- [x] Swap to wispurr over mrrowisp for security and performance - done
+- [x] Update to Scramjet v2.0.67-alpha.2 fixing several regressions - done
+- [x] Omnibox should state what the current site the user is on like a proper URL bar 
+- [x] Improve adblocking functions on site using Workerware + a pre-bundled uBlock Origin
+- [x] Implement advanced data URI system
+- [x] Allow custom Wisp urls from the settings menu (not config side)
+- [x] Setting to open multiple stealth frames; basically about:blank but using our system. Pops out in another tab
+- [x] Update to Scramjet v2.0.67-alpha - done
+- [x] Update to use scramjetFrame instead of our own window handling (or whatever 2.0.67-alpha requires) - done
+- [x] Swap to pnpm and node 26 - done
 - [x] Swap to mrrowisp over wisp-js for security and performance - done
 - [x] Hide local browser history on launch - done
 - [x] Setting to open about:blank and blob frames - done

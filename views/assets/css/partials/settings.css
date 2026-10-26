@@ -1,0 +1,634 @@
+.navbar .dropdown-settings,
+.omnibar .dropdown-settings {
+	display: flex;
+	pointer-events: none;
+	visibility: hidden;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: var(--dropdown-bg, rgba(0, 0, 0, 0.5));
+	backdrop-filter: blur(10px);
+	z-index: 5;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transition:
+		opacity 0.3s ease,
+		visibility 0.3s ease;
+}
+
+.dropdown-parent:focus-within
+	.dropdown-settings:not(:is(:has(.close-settings-btn:active))) {
+	visibility: visible;
+	pointer-events: auto;
+	opacity: 1;
+}
+
+.dropdown-parent:focus-within .dropdown-settings {
+	opacity: 1;
+}
+
+.close-settings-btn:hover {
+	color: var(--close-btn-color, lightgray);
+	transition:
+		background-color 0.3s ease,
+		color 0.3s ease,
+		transform 0.3s ease;
+	transform: scale(1.05);
+}
+
+.settings-content {
+	pointer-events: auto;
+	border: 1px solid var(--settings-border, var(--nord3));
+	z-index: 6;
+	overflow-y: auto;
+	font-weight: 500;
+	font-family: "Figtree", "Figtree Fallback", sans-serif;
+	display: flex;
+	flex-direction: column;
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	transition: opacity 0.3s ease;
+	box-sizing: border-box;
+	background: var(--nord0);
+	color: var(--settings-color, var(--nord6));
+	width: min(900px, calc(100vw - 32px));
+	max-height: calc(100dvh - 32px);
+	margin: 16px auto;
+	padding: 28px;
+	border-radius: 20px;
+	letter-spacing: normal;
+	box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
+	gap: 24px;
+}
+
+.settings-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin: 0;
+	gap: 16px;
+}
+
+.cseltitle-main {
+	color: var(--cseltitle-main-color, rgb(255, 88, 97));
+	font-weight: 900;
+	margin: 0;
+	font-size: 30px;
+	letter-spacing: -0.03em;
+}
+
+.settings-header .close-settings-btn {
+	cursor: pointer;
+	margin-left: auto;
+	width: 40px;
+	height: 40px;
+	flex-shrink: 0;
+	border: 1px solid var(--settings-border, var(--nord3));
+	border-radius: 12px;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	font-size: 28px;
+	line-height: 1;
+}
+
+.proxy-settings-grid-right {
+	display: grid;
+	grid-template-rows: 1fr auto;
+	gap: 18px;
+}
+
+.settings-content-body,
+.proxy-settings-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 18px;
+}
+
+.settings-column {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	min-width: 0;
+}
+
+.settings-column > :last-child {
+	flex-grow: 1;
+}
+
+.cseltitle {
+	font-size: 22px;
+	margin: 10px 0;
+}
+
+.settings-card {
+	min-width: 0;
+	padding: 20px;
+	border-radius: 14px;
+	border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+	background: color-mix(in srgb, currentColor 4%, transparent);
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	text-align: left;
+}
+
+.settings-card .cseltitle {
+	font-size: 18px;
+	font-weight: 700;
+	margin: 0;
+}
+
+.setting-field {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	min-width: 0;
+}
+
+.setting-field[hidden] {
+	display: none;
+}
+
+.setting-field > label,
+.setting-label {
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.setting-description {
+	display: block;
+	margin: 0;
+	font-size: 13px;
+	line-height: 1.5;
+	opacity: 0.7;
+}
+
+.setting-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 18px;
+	margin: 0;
+	padding: 12px 0;
+	cursor: pointer;
+}
+
+.setting-row + .setting-row {
+	border-top: 1px solid color-mix(in srgb, currentColor 10%, transparent);
+}
+
+.setting-copy {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	min-width: 0;
+}
+
+.clear-data-button {
+	flex: 0 0 auto;
+	cursor: pointer;
+	color: var(--nord11);
+}
+
+.setting-row:has(input:disabled) {
+	opacity: 0.55;
+	cursor: default;
+}
+
+#settings-panel .setting-field > label {
+	margin: 0;
+	display: block;
+}
+
+#csel input:not([type="checkbox"]),
+#csel select {
+	outline: none;
+	box-sizing: border-box;
+	padding: 10px 12px;
+	border-radius: 5px;
+	margin: 5px 0;
+	font-family: "Figtree", "Figtree Fallback", sans-serif;
+	font-size: 16px;
+	background-color: var(--nord0);
+	border: var(--nord11) 1px solid;
+	transition:
+		background-color 0.3s ease,
+		color 0.3s ease,
+		transform 0.3s ease;
+}
+
+@media (max-width: 600px) {
+	.cseltitle {
+		font-size: 15px;
+	}
+
+	#csel input:not([type="checkbox"]),
+	#csel select {
+		padding: 7px 8px;
+		margin: 3.5px 1.75px;
+		font-size: 11px;
+	}
+
+	#csel .cseltitle ~ input:not([type="checkbox"]),
+	#csel select {
+		width: calc(100% - 94.5px);
+	}
+
+	#csel .cseltitle ~ p:not(:last-child) {
+		margin-top: 7px;
+	}
+}
+
+#settings-panel select,
+#settings-panel .address-form input,
+#csel .setting-field select,
+#csel .cloakform input {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: none;
+	margin: 0;
+	padding: 11px 12px;
+	border: 1px solid var(--settings-border, var(--nord3));
+	border-radius: 9px;
+	background: var(--settings-bg, var(--nord0));
+	color: inherit;
+	font-family: inherit;
+	font-size: 14px;
+}
+
+.setting-row .switch:disabled,
+.setting-field select:disabled {
+	cursor: not-allowed;
+}
+
+.switch {
+	cursor: pointer;
+	position: relative;
+	display: inline-block;
+	margin: 0;
+	border-radius: 34px;
+	appearance: none;
+	flex: 0 0 44px;
+	width: 44px;
+	height: 26px;
+	border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+	background: var(--switch-bg, var(--nord3));
+	transition: background 0.2s;
+}
+
+.switch::after {
+	position: absolute;
+	content: "";
+	background-color: white;
+	transition: 0.4s;
+	border-radius: 50%;
+	width: 18px;
+	height: 18px;
+	left: 3px;
+	bottom: 3px;
+}
+
+.switch:checked {
+	background: var(--switch-checked-bg, var(--nord8));
+}
+
+.switch:checked::after {
+	transform: translateX(18px);
+}
+
+.csel-container-left,
+.settings-right-column {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+.csel-container-left {
+	flex: 1;
+	max-width: 400px;
+}
+
+.cloakform {
+	display: flex;
+	gap: 10px;
+	margin-bottom: 15px;
+}
+
+.cloakform input[type="text"] {
+	flex: 1;
+	background-color: var(--cf-bg, var(--nord1));
+	border: 1px solid var(--nord3);
+	border-radius: 5px;
+	padding: 10px;
+	color: var(--cf-color, var(--nord6));
+	box-sizing: border-box;
+}
+
+.cloakform input[type="button"] {
+	background-color: var(--nord10);
+	border: none;
+	border-radius: 5px;
+	padding: 10px;
+	color: var(--cf-color, var(--nord6));
+	cursor: pointer;
+}
+
+.cloakform input[type="button"]:hover {
+	background-color: var(--nord9);
+}
+
+#csel {
+	color: var(--nord4);
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+#csel input[type="text"]:focus {
+	box-shadow: inset 0 0 5px 0 var(--csel-input, var(--nord3));
+	transition: box-shadow 0.15s ease-out;
+}
+
+#csel input:is([type="submit"], [type="button"]):hover {
+	transition:
+		background-color 0.3s ease,
+		color 0.3s ease,
+		transform 0.3s ease;
+	transform: scale(1.05);
+}
+
+#csel input:is([type="submit"], [type="button"]):active {
+	background-color: #78b0c0;
+}
+
+#csel .cloakform {
+	display: flex;
+	gap: 8px;
+	margin: -8px 0 0;
+}
+
+#settings-panel .address-form {
+	gap: 8px;
+	margin: 0;
+}
+
+#csel .cloakform input[type="text"],
+#settings-panel .address-form input[type="text"] {
+	flex: 1;
+	min-width: 0;
+}
+
+#settings-panel .address-form input[type="submit"] {
+	cursor: pointer;
+}
+
+#csel .cloakform input[type="submit"],
+#settings-panel .address-form input[type="submit"] {
+	width: auto;
+	flex: 0 0 auto;
+	border-color: transparent;
+	background: var(--nord8);
+	color: var(--nord18);
+	font-weight: 700;
+}
+
+.settings-help-link {
+	font-size: 13px;
+	color: var(--nord8);
+}
+
+.pr-settings {
+	margin-top: 24px;
+	padding: 24px 20px 0;
+	border-top: 1px solid var(--nord3);
+}
+
+.proxy-settings-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	list-style: none;
+	cursor: pointer;
+	text-align: left;
+	background: var(--nord8);
+	padding: 12px 16px;
+	border-radius: 12px;
+}
+
+.proxy-settings-header::-webkit-details-marker {
+	display: none;
+}
+
+.proxy-settings-header:focus-visible {
+	outline: 2px solid var(--nord8);
+	outline-offset: 3px;
+}
+
+.proxy-settings-header h2 {
+	margin: 0;
+	color: var(--nord0);
+	font-size: 22px;
+}
+
+.proxy-settings-arrow {
+	width: 12px;
+	height: 12px;
+	flex-shrink: 0;
+	margin-right: 4px;
+	border-right: 2px solid currentColor;
+	border-bottom: 2px solid currentColor;
+	transform: rotate(-45deg) translate(-25%, -25%);
+}
+
+.pr-settings[open] > .proxy-settings-header .proxy-settings-arrow {
+	transform: rotate(45deg) translate(-25%, -25%);
+}
+
+.settings-collapse {
+	gap: 0;
+}
+
+.settings-collapse-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	list-style: none;
+	cursor: pointer;
+}
+
+.settings-collapse-header::-webkit-details-marker {
+	display: none;
+}
+
+.settings-collapse-header .proxy-settings-arrow {
+	width: 9px;
+	height: 9px;
+	opacity: 0.7;
+}
+
+.settings-collapse[open] > .settings-collapse-header .proxy-settings-arrow {
+	transform: rotate(45deg) translate(-25%, -25%);
+}
+
+.settings-collapse-body {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	margin-top: 16px;
+}
+
+.fingerprint-views {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+#csel .fingerprint-view {
+	cursor: pointer;
+	padding: 6px 12px;
+	border-radius: 5px;
+	border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	font-size: 13px;
+}
+
+#csel .fingerprint-view.is-active {
+	border-color: transparent;
+	background: var(--nord8);
+	color: var(--nord18);
+	font-weight: 700;
+}
+
+.fingerprint-panel {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.fingerprint-panel[hidden] {
+	display: none;
+}
+
+.fingerprint-presets {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+	gap: 8px;
+}
+
+#csel input.fingerprint-preset,
+#csel input.fingerprint-reset {
+	cursor: pointer;
+	margin: 0;
+	padding: 8px 10px;
+	border: 1px solid transparent;
+	border-radius: 5px;
+	background: var(--nord0);
+	color: var(--nord4);
+	font-size: 14px;
+}
+
+#csel input.fingerprint-preset.is-selected {
+	border-color: var(--nord11);
+}
+
+#csel input.fingerprint-preset:hover {
+	transform: none;
+}
+
+#csel .fingerprint-custom {
+	margin: 0;
+}
+
+.fingerprint-status-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+
+.proxy-settings-footer {
+	margin: 18px 0 0;
+	font-size: 13px;
+	line-height: 1.6;
+}
+
+.settings-content :is(input, select, button):focus-visible,
+#settings-panel :is(input, select):focus-visible {
+	outline: 2px solid var(--nord8);
+	outline-offset: 3px;
+}
+
+.settings-toggle:not(.settings-card) {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 42px;
+	height: 42px;
+	border: 1px solid color-mix(in srgb, var(--nord11) 50%, transparent);
+	border-radius: 12px;
+	background: color-mix(in srgb, var(--nord11) 12%, transparent);
+	color: white;
+}
+
+.settings-card.settings-toggle {
+	width: 100%;
+	box-sizing: border-box;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	color: inherit;
+	cursor: pointer;
+}
+
+.settings-card.settings-toggle:hover {
+	background: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+.settings-card.settings-toggle:focus-visible {
+	outline: 2px solid var(--nord8);
+	outline-offset: 3px;
+}
+
+@media (max-width: 680px) {
+	.settings-content {
+		padding: 18px;
+		gap: 18px;
+	}
+
+	.settings-content-body,
+	.proxy-settings-grid {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.settings-column {
+		display: contents;
+	}
+
+	.settings-card-last {
+		order: 1;
+	}
+
+	.settings-card {
+		padding: 16px;
+	}
+
+	.cseltitle-main {
+		font-size: 26px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.setting-row .switch,
+	.setting-row .switch::after {
+		transition: none;
+	}
+}

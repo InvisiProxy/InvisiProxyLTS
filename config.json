@@ -1,10 +1,16 @@
 {
-  "title": "Invisi LTS",
-  "host": "0.0.0.0",
-  "pathname": "/",
-  "minifyScripts": true,
-  "randomizeIdentifiers": true,
-  "production": false,
-  "disguiseFiles": true,
-  "usingSEO": false
+	"title": "Invisi LTS",
+	"host": "0.0.0.0",
+	"pathname": "/",
+	"mirrorLinksFile": "private/mirror-links.txt",
+	"minifyScripts": true,
+	"disguiseFiles": true,
+	"usingSEO": false,
+	"verbose": true,
+	"port": 8080,
+	"showSplash": true,
+	"geoLanguage": false,
+	"singleLanguage": false,
+	"language": "en",
+	"patreon": false
 }
