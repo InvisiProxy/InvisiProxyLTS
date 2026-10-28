@@ -65,6 +65,7 @@ View the <a href="#deploy-InvisiProxy">self-deployment options</a> if you wish t
 [![Deploy to Koyeb](https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg)](https://app.koyeb.com/deploy?name=InvisiProxyLTS&type=git&repository=InvisiProxy%2FInvisiProxyLTS&branch=production&builder=dockerfile&ports=8080%3Bhttp%3B%2F)
 [![Deploy to Oracle Cloud](https://binbashbanana.github.io/deploy-buttons/buttons/remade/oraclecloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/BinBashBanana/deploy-buttons/archive/refs/heads/main.zip)
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FIssla1997%2FInvisiProxyLTS%2Ftree%2Fproduction)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/integration/start/deploy?repository=https://github.com/Issla1997/InvisiProxyLTS&branch=production)
 
 <details><summary>Alternative Free Sources</summary>
 
