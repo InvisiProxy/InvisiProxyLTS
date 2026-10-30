@@ -34,7 +34,9 @@ export default function Settings() {
 							<select
 								id="settings-language"
 								class="language-list"
-								aria-label={translate('settings.language.title')}
+								aria-label={translate(
+									'settings.language.title'
+								)}
 							>
 								<option value="auto" selected>
 									{translate('settings.language.automatic')}
@@ -73,7 +75,9 @@ export default function Settings() {
 								].map((engine) => (
 									<option
 										value={engine}
-										selected={engine === values.defaultSearch}
+										selected={
+											engine === values.defaultSearch
+										}
 									>
 										{engine}
 									</option>
@@ -87,13 +91,17 @@ export default function Settings() {
 							<select
 								id="settings-theme"
 								class="theme-list"
-								aria-label={translate('settings.browsing.theme')}
+								aria-label={translate(
+									'settings.browsing.theme'
+								)}
 							>
 								<option value="dark" selected>
 									{translate('settings.browsing.themes.dark')}
 								</option>
 								<option value="light">
-									{translate('settings.browsing.themes.light')}
+									{translate(
+										'settings.browsing.themes.light'
+									)}
 								</option>
 								<option value="nord">
 									{translate('settings.browsing.themes.nord')}
@@ -130,7 +138,9 @@ export default function Settings() {
 							class="experimental-site-fixes"
 						/>
 						<SettingToggle
-							label={translate('proxySettings.randomizeFingerprint')}
+							label={translate(
+								'proxySettings.randomizeFingerprint'
+							)}
 							description={translate(
 								'proxySettings.randomizeFingerprintDescription'
 							)}
@@ -142,13 +152,19 @@ export default function Settings() {
 							</label>
 							<select id="settings-region" class="region-list">
 								<option value="off">
-									{translate('settings.advanced.regions.default')}
+									{translate(
+										'settings.advanced.regions.default'
+									)}
 								</option>
 								<option value="eu">
-									{translate('settings.advanced.regions.sweden')}
+									{translate(
+										'settings.advanced.regions.sweden'
+									)}
 								</option>
 								<option value="jp">
-									{translate('settings.advanced.regions.japan')}
+									{translate(
+										'settings.advanced.regions.japan'
+									)}
 								</option>
 								{values.patreon && (
 									<option value="patreon">Patreon</option>
@@ -159,12 +175,21 @@ export default function Settings() {
 							<label for="settings-window">
 								{translate('settings.advanced.window')}
 							</label>
-							<select id="settings-window" class="cloak-type-list">
+							<select
+								id="settings-window"
+								class="cloak-type-list"
+							>
 								<option value={values.cloakTypes.none} selected>
-									{translate('settings.advanced.windowDefault')}
+									{translate(
+										'settings.advanced.windowDefault'
+									)}
 								</option>
-								<option value={values.cloakTypes.blank}>about:blank</option>
-								<option value={values.cloakTypes.blob}>blob</option>
+								<option value={values.cloakTypes.blank}>
+									about:blank
+								</option>
+								<option value={values.cloakTypes.blob}>
+									blob
+								</option>
 							</select>
 						</div>
 					</section>
@@ -229,7 +254,10 @@ export default function Settings() {
 								value={translate('settings.tab.apply')}
 							/>
 						</form>
-						<a class="settings-help-link" href={route('/questions')}>
+						<a
+							class="settings-help-link"
+							href={route('/questions')}
+						>
 							{translate('settings.tab.findIcon')}
 						</a>
 					</SettingsSection>

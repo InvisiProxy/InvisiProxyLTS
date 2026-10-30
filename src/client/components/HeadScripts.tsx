@@ -30,11 +30,7 @@ export function AosScripts() {
 					href={route('assets/css/aos.css', 'inline')}
 				/>
 			</Inline>
-			<script
-				src={route('assets/js/aos.js')}
-				defer={true}
-				innerHTML=""
-			/>
+			<script src={route('assets/js/aos.js')} defer={true} innerHTML="" />
 		</>
 	);
 }
