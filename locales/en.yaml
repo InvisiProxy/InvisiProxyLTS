@@ -1333,14 +1333,14 @@ icons:
 
 error:
   pageTitle: Error
-  title: Site Error!
-  reload: Reload the page or do Ctrl+R!!! This fixes a lot of issues
+  title: Site Error (Go back to the Homepage)
+  reload: Reload the page or do Ctrl+R. This fixes a lot of issues.
   unavailable: >-
-    The proxy connection is unavailable.... reloading the page will resolve
-    this issue.
-  maintenance: Might be doing some maintenance or the web server is down.
+    The proxy connection is unavailable and the server has refreshed the source code.
+  maintenance: This happens at random intervals to randomize the source. Sorry for any problems! This keeps mirrors alive.
   wait: In that case wait a bit until it is resolved!
   faq: Invalid URL? View the <faq>FAQ page</faq> for help!
+  home: Back to Homepage
 
 scramjet:
   pageTitle: Scramjet Proxy
@@ -1355,6 +1355,8 @@ scramjet:
 frame:
   searchPlaceholder: Type a URL or search...
   loading: Loading the web proxy...
+  restarting: The server is restarting, please wait. This helps randomize the source...
+  title: Browsing
   tabs: Proxy Tabs
   newTab: New tab
   closeTab: Close tab

@@ -70,7 +70,7 @@
 	margin-bottom: 30px;
 }
 
-.faq-text *:not(h4, strong) {
+.faq-text :not(h4, strong, h4 *, strong *) {
 	color: var(--nord4);
 }
 

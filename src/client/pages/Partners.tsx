@@ -1,4 +1,10 @@
-import { Keywords, Inline, route, translate } from '../document-helpers.tsx';
+import {
+	Keywords,
+	Inline,
+	route,
+	translate,
+	titled,
+} from '../document-helpers.tsx';
 import {
 	ParticlesScript,
 	TooltipScripts,
@@ -71,7 +77,12 @@ export default function Partners() {
 export function Head() {
 	return (
 		<>
-			<title>{`InvisiProxy LTS | ${translate('header.partners.label')}`}</title>
+			<title>
+				{titled(
+					`InvisiProxy LTS | ${translate('header.partners.label')}`,
+					translate('header.partners.label')
+				)}
+			</title>
 			<PageDescription />
 			<ProxyPreloads />
 			<HeadContent />

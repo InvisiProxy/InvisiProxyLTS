@@ -27,11 +27,6 @@ const vendorDirs: [prefix: string, dir: string, files: string[]][] = [
 	],
 	['scram', scramjetPath, ['scramjet.js', 'scramjet.wasm']],
 	[
-		'assets/webfonts',
-		modulePath('@fortawesome/fontawesome-free/webfonts'),
-		['fa-brands-400.woff2', 'fa-regular-400.woff2', 'fa-solid-900.woff2'],
-	],
-	[
 		'scram',
 		modulePath('@mercuryworkshop/scramjet-controller/dist'),
 		['controller.api.js', 'controller.inject.js', 'controller.sw.js'],

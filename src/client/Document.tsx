@@ -1,4 +1,5 @@
 import { values } from '../site.ts';
+import FontLoader from './components/FontLoader.tsx';
 import LocaleLinks from './components/LocaleLinks.tsx';
 import type { PageDefinition } from './types';
 
@@ -15,6 +16,7 @@ export default function Document(props: PageDefinition) {
 				)}
 			</head>
 			<body id="top" style={props.bodyStyle}>
+				{!props.bare && <FontLoader />}
 				<Page />
 				{(props.bodyScripts || []).map((script) => (
 					<script {...script} />

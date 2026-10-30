@@ -1,9 +1,10 @@
 import { createSignal, createEffect } from 'solid-js';
 import { render } from 'solid-js/web';
+import { plainText } from 'build:invisiproxy';
 
 const normalizeSearch = (value: string) =>
 	value
-		.replace(/[\u00ad\u200b-\u200d\ufeff]/g, '')
+		.replace(/[\u00ad\u200b-\u200d\u2060-\u206f\ufeff]|\ufe0f/g, '')
 		.trim()
 		.toLocaleLowerCase();
 
@@ -13,7 +14,9 @@ function FAQSearch(props: { label?: string; placeholder?: string }) {
 	createEffect(() => {
 		const search = normalizeSearch(query());
 		for (const entry of entries) {
-			const heading = entry.firstElementChild?.textContent || '';
+			const heading = plainText(
+				entry.firstElementChild?.textContent || ''
+			);
 			entry.style.display = normalizeSearch(heading).includes(search)
 				? ''
 				: 'none';

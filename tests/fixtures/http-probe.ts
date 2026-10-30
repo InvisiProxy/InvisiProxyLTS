@@ -29,7 +29,10 @@ const disguise = config.disguiseFiles ? '.ico' : '';
 const built = (file: string) => readFile(join('views/dist', file));
 const home = config.usingSEO ? 'index.html' : 'pages/proxnav/scramjet.html';
 const serves = async (payload: Buffer, file: string) =>
-	assert.ok(payload.equals(await built(file)), `${file} was not served as built`);
+	assert.ok(
+		payload.equals(await built(file)),
+		`${file} was not served as built`
+	);
 const decode = (buffer: Buffer) =>
 	(buffer[0] === 0x1f && buffer[1] === 0x8b
 		? gunzipSync(buffer)
@@ -90,7 +93,10 @@ try {
 		assert.ok(!response.body.includes('PRIVATE_TEST_MARKER'), path);
 	}
 
-	const api = await app.inject({ method: 'POST', url: `${base}${apiPath('link')}` });
+	const api = await app.inject({
+		method: 'POST',
+		url: `${base}${apiPath('link')}`,
+	});
 	assert.equal(api.statusCode, 200);
 	assert.equal(api.headers['cache-control'], 'no-store');
 	assert.ok(
@@ -112,7 +118,7 @@ try {
 		});
 	assert.equal(
 		(await clear('same-origin')).headers['clear-site-data'],
-		'"cache", "storage"'
+		'"cache", "cookies", "storage"'
 	);
 	assert.equal(
 		(await clear('cross-site')).headers['clear-site-data'],

@@ -52,7 +52,7 @@ const wispConfig = {
 	tcpBufferSize: 1048576,
 	socketBufferSize: 33554432,
 	pendingQueueSize: 268435456,
-	bufferRemainingLength: 32768,
+	bufferRemainingLength: 2147483647,
 	tcpNoDelay: true,
 	blacklist: {
 		hostnames: [],

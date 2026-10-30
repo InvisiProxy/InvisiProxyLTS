@@ -1,15 +1,12 @@
 import {
 	Keywords,
+	titled,
 	Inline,
 	route,
 	SEO,
 	translate,
 } from '../document-helpers.tsx';
-import {
-	ParticlesScript,
-	PageScripts,
-	PageDescription,
-} from '../components/HeadScripts.tsx';
+import { ParticlesScript, PageScripts } from '../components/HeadScripts.tsx';
 import HeadContent from '../components/HeadContent.tsx';
 import AntiExfil from '../components/AntiExfil.tsx';
 import Header from '../components/Header.tsx';
@@ -85,7 +82,12 @@ export default function DocumentationPage() {
 export function Head() {
 	return (
 		<>
-			<title>{translate('docs.meta.title')}</title>
+			<title>
+				{titled(
+					translate('docs.meta.title'),
+					translate('header.docs.label')
+				)}
+			</title>
 			<SEO>
 				<meta
 					name="robots"

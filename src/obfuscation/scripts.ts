@@ -4,6 +4,7 @@ import type { Plugin } from 'vite';
 import { config } from '../config.ts';
 import { obfuscatedMarker as marker } from '../constants.ts';
 import { rewriteClassReferences } from './classes.ts';
+import { scrubScramjetSignatures } from './scramjet-signatures.ts';
 import { obfuscationState } from './state.ts';
 
 export function stripObfuscatedMarker(source: string): string {
@@ -19,11 +20,12 @@ function transformScript(
 ): string {
 	if (config.usingSEO) return source;
 	if (!source.trim() || source.trimStart().startsWith(marker)) return source;
+	const scrubbed = scrubScramjetSignatures(source);
 	const result = transformSources(
 		{
 			[rewriteClasses ? 'script.js' : name]: rewriteClasses
-				? rewriteClassReferences(source, name)
-				: source,
+				? rewriteClassReferences(scrubbed, name)
+				: scrubbed,
 		},
 		{
 			seed: `${obfuscationState().seed}:${randomBytes(16).toString('hex')}`,

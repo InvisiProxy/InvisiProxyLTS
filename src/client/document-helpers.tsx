@@ -63,6 +63,9 @@ export function Translation(props: {
 export function Splash() {
 	return randomItem(values.splash);
 }
+export function titled(seo: string, normal: string) {
+	return values.usingSEO ? seo : normal;
+}
 export function iconBookmarklet() {
 	return `javascript:alert((Array.from(document.head.querySelectorAll("link[rel*='icon']")).slice(-1)[0]||0).href||location.origin+"${route('/favicon.ico')}")`;
 }

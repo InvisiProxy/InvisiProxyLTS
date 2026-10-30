@@ -12,6 +12,19 @@ module.exports = {
 			restart_delay: 3000,
 			kill_timeout: 5000,
 			time: true,
+			env: {
+				NODE_ENV: 'production',
+			},
+		},
+		{
+			name: 'invisiproxy-rebuild',
+			cwd: __dirname,
+			script: 'pnpm',
+			args: 'run rebuild',
+			interpreter: 'none',
+			autorestart: false,
+			watch: false,
+			time: true,
 			cron_restart: '0 */6 * * *',
 			env: {
 				NODE_ENV: 'production',

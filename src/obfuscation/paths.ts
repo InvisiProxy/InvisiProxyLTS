@@ -4,6 +4,8 @@ import ts from 'typescript';
 import { config } from '../config.ts';
 import { projectDir } from '../constants.ts';
 import { externalPages } from '../server/links.ts';
+import { withoutFlaggedWords } from './flagged-words.ts';
+import { fontFileNames } from './fonts.ts';
 import {
 	generatedNames,
 	obfuscationState,
@@ -46,7 +48,14 @@ export function getPathAliases(): Record<string, string> {
 			for (const child of Object.keys(target))
 				if (child !== 'default') keys.add(`${name}/${child}`);
 	}
-	for (const prefix of ['scram', 'libcurl', 'epoxy', 'wisp', 'network', 'api'])
+	for (const prefix of [
+		'scram',
+		'libcurl',
+		'epoxy',
+		'wisp',
+		'network',
+		'api',
+	])
 		keys.add(`prefixes/${prefix}`);
 	for (const endpoint of apiEndpoints) keys.add(`api/${endpoint}`);
 	const assetDir = join(projectDir, 'views/assets');
@@ -76,10 +85,13 @@ export function getPathAliases(): Record<string, string> {
 		'scramjet-utils.js',
 		'fa-brands-400.woff2',
 		'fa-regular-400.woff2',
-		'fa-solid-900.woff2'
+		'fa-solid-900.woff2',
+		...fontFileNames()
 	);
 	for (const file of files) keys.add(`files/${file}`);
-	const names = generatedNames(keys, 'paths');
+	const names = withoutFlaggedWords(keys, (all) =>
+		generatedNames(all, 'paths')
+	);
 	state.aliases = Object.fromEntries(
 		Object.entries(names).map(([key, value]) => {
 			if (key.startsWith('files/')) return [key, value + extname(key)];

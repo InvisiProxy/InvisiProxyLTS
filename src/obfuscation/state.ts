@@ -3,6 +3,8 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { Indraughts as transformSources } from 'merp-obfuscator';
 import { projectDir, siteDir } from '../constants.ts';
+import type { FontCipher } from '../site.ts';
+import type { ScramjetTokens } from './scramjet-signatures.ts';
 
 export const obfuscationStateFile = '.obfuscation.json';
 const stateEnv = 'INVISIPROXY_OBFUSCATION_STATE';
@@ -13,6 +15,8 @@ export interface ObfuscationState {
 	aliases: Record<string, string>;
 	classes: Record<string, string>;
 	ids: Record<string, string>;
+	fontCipher?: FontCipher;
+	scramjet?: ScramjetTokens;
 }
 let cached: ObfuscationState | undefined;
 let serialized: string | undefined;

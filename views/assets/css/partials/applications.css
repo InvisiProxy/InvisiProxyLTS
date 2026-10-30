@@ -96,7 +96,7 @@
 	background: var(--nord0);
 	color: var(--nord4);
 	width: 120px;
-	font: "Figtree", "Figtree Fallback", sans-serif;
+	font-family: "Figtree", "Figtree Fallback", sans-serif;
 	font-size: 14px;
 	font-weight: 300;
 	cursor: pointer;

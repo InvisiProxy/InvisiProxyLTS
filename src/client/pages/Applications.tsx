@@ -5,6 +5,7 @@ import {
 	route,
 	translate,
 	Translation,
+	titled,
 } from '../document-helpers.tsx';
 import {
 	ParticlesScript,
@@ -62,18 +63,25 @@ export default function Applications() {
 						</div>
 						<div class="proxy-form text-center">
 							<div class="app-tabs" role="tablist">
-								{['all', ...appLibrary.map((category) => category.id)].map(
-									(id, index) => (
-										<button
-											type="button"
-											role="tab"
-											class={index ? 'app-tab' : 'app-tab is-active'}
-											aria-selected={index ? 'false' : 'true'}
-										>
-											{translate(`apps.categories.${id}`)}
-										</button>
-									)
-								)}
+								{[
+									'all',
+									...appLibrary.map(
+										(category) => category.id
+									),
+								].map((id, index) => (
+									<button
+										type="button"
+										role="tab"
+										class={
+											index
+												? 'app-tab'
+												: 'app-tab is-active'
+										}
+										aria-selected={index ? 'false' : 'true'}
+									>
+										{translate(`apps.categories.${id}`)}
+									</button>
+								))}
 							</div>
 							<div class="glist app-grid">
 								{appLibrary.flatMap((category, group) =>
@@ -106,7 +114,12 @@ export default function Applications() {
 export function Head() {
 	return (
 		<>
-			<title>{`InvisiProxy LTS | ${translate('header.apps.mobileLabel')}`}</title>
+			<title>
+				{titled(
+					`InvisiProxy LTS | ${translate('header.apps.mobileLabel')}`,
+					translate('header.apps.label')
+				)}
+			</title>
 			<PageDescription />
 			<ProxyPreloads />
 			<HeadContent />

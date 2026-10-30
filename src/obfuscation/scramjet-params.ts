@@ -80,7 +80,9 @@ export function hideScramjetParams(source: string, key: string): string {
 	}
 	visit(file, false);
 	if (!renames.length) {
-		console.warn('[Build] Scramjet query parameters not found; left as is.');
+		console.warn(
+			'[Build] Scramjet query parameters not found; left as is.'
+		);
 		return source;
 	}
 	const literal = JSON.stringify(key);
@@ -104,6 +106,7 @@ export function hideScramjetParams(source: string, key: string): string {
 			'[Build] Scramjet query parameter values could not be encoded; only the names are changed.'
 		);
 	for (const edit of edits.sort((a, b) => b.start - a.start))
-		source = source.slice(0, edit.start) + edit.value + source.slice(edit.end);
+		source =
+			source.slice(0, edit.start) + edit.value + source.slice(edit.end);
 	return source;
 }

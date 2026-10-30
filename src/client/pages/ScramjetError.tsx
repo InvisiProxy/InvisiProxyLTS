@@ -3,6 +3,7 @@ import {
 	route,
 	translate,
 	Translation,
+	titled,
 } from '../document-helpers.tsx';
 import HeadContent from '../components/HeadContent.tsx';
 import AntiExfil from '../components/AntiExfil.tsx';
@@ -15,7 +16,7 @@ export default function ScramjetError() {
 			<div id="cover"></div>
 			<div id="inner" class="container-fluid text-center">
 				<h1 id="errorTitle">{translate('scramjetError.title')}</h1>
-				<code>
+				<code data-plain>
 					{`${translate('scramjetError.failed')} `}
 					<b id="fetchedURL"></b>
 				</code>
@@ -69,7 +70,7 @@ export default function ScramjetError() {
 						</ul>
 					</div>
 				</div>
-				<code>
+				<code data-plain>
 					<i>
 						{`${translate('scramjetError.network')} | Scramjet `}
 						<span id="scramjetVersion"></span>
@@ -90,7 +91,7 @@ export default function ScramjetError() {
 export function Head() {
 	return (
 		<>
-			<title>Scramjet</title>
+			<title>{titled('Scramjet', translate('error.pageTitle'))}</title>
 			<meta itemprop="http-status" content="404" />
 			<HeadContent />
 			<link
@@ -99,7 +100,7 @@ export function Head() {
 			/>
 			<link
 				href={
-					'https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap'
+					'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap'
 				}
 				rel="stylesheet"
 			/>

@@ -15,3 +15,5 @@ views/archive/gfiles/rarch/roms
 private/mirror-links.txt
 .env
 analysis/
+.server.err.log
+.server.out.log

@@ -1,4 +1,9 @@
-import { Keywords, iconBookmarklet, translate } from '../document-helpers.tsx';
+import {
+	Keywords,
+	iconBookmarklet,
+	translate,
+	titled,
+} from '../document-helpers.tsx';
 import {
 	ParticlesScript,
 	PageScripts,
@@ -48,7 +53,7 @@ export default function Icons() {
 export function Head() {
 	return (
 		<>
-			<title>InvisiProxy LTS</title>
+			<title>{titled('InvisiProxy LTS', translate('icons.title'))}</title>
 			<PageDescription />
 			<HeadContent />
 			<ParticlesScript />

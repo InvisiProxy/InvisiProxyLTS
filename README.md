@@ -150,7 +150,7 @@ pnpm fetch-adblock
 pnpm build
 pnpm start
 
-# pm2 daemon utilization
+# pm2 daemon utilization (rebuilds and restarts every 6 hours to re-randomize obfuscation)
 pm2 start ecosystem.config.cjs
 
 # Or on subsequent uses...

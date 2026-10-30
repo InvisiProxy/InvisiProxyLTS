@@ -8,6 +8,7 @@ import {
 	translate,
 	Translation,
 	languageTag,
+	titled,
 } from '../document-helpers.tsx';
 import { Show } from 'solid-js';
 import {
@@ -574,7 +575,12 @@ export function Head() {
 				<meta name="author" content="QuiteAFancyEmerald" />
 				<meta name="application-name" content="InvisiProxy LTS" />
 			</SEO>
-			<title>{translate('home.title')}</title>
+			<title>
+				{titled(
+					translate('home.title'),
+					translate('header.overview.label')
+				)}
+			</title>
 			<SEO>
 				<meta
 					name="description"

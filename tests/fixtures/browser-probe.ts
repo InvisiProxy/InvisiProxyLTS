@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -28,6 +29,23 @@ const aliases = getPathAliases();
 const transportValue = (name: string) => aliases[`prefixes/${name}`] ?? name;
 const strip = (text: string) =>
 	text.replace(/[\u00ad\u200b-\u200f\u2060-\u206f]|\ufe0f/g, '');
+const { fontCipher } = await load<
+	typeof import('../../src/obfuscation/fonts.ts')
+>('src/obfuscation/fonts.ts');
+const { scramjetTokens } = await load<
+	typeof import('../../src/obfuscation/scramjet-signatures.ts')
+>('src/obfuscation/scramjet-signatures.ts');
+const scramjetReady = (wrapper: string) =>
+	(window as unknown as Record<string, { ready?: boolean }>)[`$${wrapper}`]
+		?.ready === true;
+const { letters, homoglyphs } =
+	await load<typeof import('../../src/site.ts')>('src/site.ts');
+const cipher = fontCipher();
+const plain = (text: string) =>
+	strip(text).replace(
+		/[A-Za-z]/g,
+		(letter) => letters[cipher.key.indexOf(letter)]
+	);
 const origin = String(process.env.INVISIPROXY_ORIGIN);
 const base = origin + serverUrl.pathname;
 const route = (file: string) =>
@@ -77,7 +95,44 @@ try {
 	page.on('pageerror', (error) => errors.push(error.message));
 
 	await page.goto(route('pages/nav/partners.html'));
-	await page.getByText('403 Forbidden').waitFor();
+	const challenge = page.locator(cls('challenge'));
+	await challenge.waitFor();
+	const lookalikes = Object.fromEntries(
+		Object.entries(homoglyphs).map(([letter, glyph]) => [glyph, letter])
+	);
+	const servedTitle =
+		/<title>(.*?)<\/title>/.exec(
+			await page.evaluate(async (url) => {
+				const response = await fetch(url);
+				return new TextDecoder('utf-8').decode(
+					await response.arrayBuffer()
+				);
+			}, route('pages/nav/partners.html'))
+		)?.[1] ?? '';
+	assert.notEqual(servedTitle, 'Just a moment...');
+	assert.equal(
+		strip(servedTitle.replace(/./gu, (char) => lookalikes[char] ?? char)),
+		'Just a moment...',
+		'The served stub title should use lookalikes instead of plain text.'
+	);
+	const runtimeTitle = await page.title();
+	assert.notEqual(runtimeTitle, 'Just a moment...');
+	assert.equal(
+		runtimeTitle.replace(/./gu, (char) => lookalikes[char] ?? char),
+		'Just a moment...',
+		'The runtime loader should swap in the Cloudflare-style title with lookalikes.'
+	);
+	const challengeTitle =
+		(await page.locator(cls('challenge-title')).first().textContent()) ??
+		'';
+	assert.equal(plain(challengeTitle), 'Performing security verification');
+	await page.locator('[data-verify] input').check();
+	await page.locator('[data-notice]').waitFor();
+	const notice = (await page.locator('[data-notice]').textContent()) ?? '';
+	assert.ok(
+		plain(notice).includes('403 Forbidden'),
+		'The challenge notice should explain the 403 behavior.'
+	);
 	await page.goto(base);
 	await page.locator(id('dispense-link')).waitFor({ state: 'attached' });
 	await page.goto(route('pages/nav/partners.html'));
@@ -86,7 +141,17 @@ try {
 	const toggle = page.locator(cls('mirror-links-toggle'));
 	const label = (await toggle.locator('span').textContent()) ?? '';
 	assert.notEqual(label, strip(label), 'Button text should be masked.');
-	assert.equal(strip(label), 'Mirrors');
+	assert.notEqual(strip(label), 'Mirrors', 'Button text should be ciphered.');
+	assert.equal(plain(label), 'Mirrors');
+	assert.ok(
+		await page.evaluate(async (family) => {
+			await document.fonts.ready;
+			return [...document.fonts].some(
+				(font) => font.family === family && font.status === 'loaded'
+			);
+		}, cipher.families['Rethink Sans']),
+		'The ciphered font should load.'
+	);
 
 	const button = page.locator(id('dispense-link'));
 	const buttonClass = (await button.getAttribute('class')) ?? '';
@@ -140,9 +205,7 @@ try {
 
 	for (const transport of ['libcurl', 'epoxy']) {
 		await page.goto(route('pages/proxnav/scramjet.html'));
-		await page.waitForFunction(
-			() => window.$invisiScramjet?.ready === true
-		);
+		await page.waitForFunction(scramjetReady, scramjetTokens().wrapper);
 		if (transport === 'epoxy') {
 			await page.locator(`${id('settings-panel')} > summary`).click();
 			await Promise.all([
@@ -151,9 +214,7 @@ try {
 					.locator(id('browsing-transport'))
 					.selectOption(transportValue(transport)),
 			]);
-			await page.waitForFunction(
-				() => window.$invisiScramjet?.ready === true
-			);
+			await page.waitForFunction(scramjetReady, scramjetTokens().wrapper);
 		}
 		assert.equal(
 			await page.locator(id('browsing-transport')).inputValue(),
@@ -186,9 +247,15 @@ try {
 		})
 		.waitFor();
 	assert.match(await errorPage.locator(id('errorTrace')).inputValue(), /\S/);
-	assert.match(
-		(await errorPage.locator(id('scramjetVersion')).textContent()) ?? '',
-		/^v\d\S* - build \w+$/
+	const version =
+		(await errorPage.locator(id('scramjetVersion')).textContent()) ?? '';
+	assert.match(version, /^v\d\S* - build \w+$/);
+	const scramjetVersion = JSON.parse(
+		readFileSync(join(process.cwd(), 'package.json'), 'utf8')
+	).dependencies['@mercuryworkshop/scramjet'];
+	assert.ok(
+		version.startsWith(`v${scramjetVersion} `),
+		`Scramjet version should stay pinned to v${scramjetVersion}, got ${version}`
 	);
 
 	const webrtcResult = async () =>
@@ -211,7 +278,7 @@ try {
 	});
 
 	await page.goto(route('pages/proxnav/scramjet.html'));
-	await page.waitForFunction(() => window.$invisiScramjet?.ready === true);
+	await page.waitForFunction(scramjetReady, scramjetTokens().wrapper);
 	await page
 		.locator(`input${cls('block-webrtc')}`)
 		.first()

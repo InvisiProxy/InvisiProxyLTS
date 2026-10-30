@@ -21,6 +21,7 @@ export interface SiteValues {
 	factAttribute: string;
 	characters: string[];
 	maskedTerms: string[];
+	fontCipher: FontCipher;
 	errors: Record<
 		string,
 		{
@@ -36,6 +37,15 @@ export interface SiteValues {
 	messages?: Messages;
 	fallbackMessages?: Messages;
 	readAsset?: (path: string) => string | undefined;
+}
+
+export interface FontCipher {
+	key: string;
+	tag: string;
+	property: string;
+	families: Record<string, string>;
+	icons: Record<string, string>;
+	preload: string[];
 }
 
 export interface HoneypotField {
@@ -70,6 +80,59 @@ export function translate(key: string, params: MessageParams = {}): string {
 		Object.hasOwn(params, name) ? String(params[name]) : match
 	);
 }
+
+export const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+export const homoglyphs: Record<string, string> = {
+	a: '\u0430',
+	b: '\u15af',
+	c: '\u0441',
+	d: '\u0501',
+	e: '\u0435',
+	g: '\u0261',
+	h: '\u04bb',
+	i: '\u0456',
+	j: '\u0458',
+	l: '\u04cf',
+	n: '\u0578',
+	o: '\u043e',
+	p: '\u0440',
+	q: '\u051b',
+	r: '\u0433',
+	s: '\u0455',
+	u: '\u057d',
+	v: '\u0475',
+	w: '\u051d',
+	x: '\u0445',
+	y: '\u0443',
+	z: '\u1d22',
+	A: '\u0410',
+	B: '\u0412',
+	C: '\u0421',
+	D: '\u13a0',
+	E: '\u0415',
+	F: '\u03dc',
+	G: '\u050c',
+	H: '\u041d',
+	I: '\u0406',
+	J: '\u0408',
+	K: '\u041a',
+	L: '\u13de',
+	M: '\u041c',
+	N: '\u039d',
+	O: '\u041e',
+	P: '\u0420',
+	Q: '\u051a',
+	R: '\u13a1',
+	S: '\u0405',
+	T: '\u0422',
+	U: '\u054d',
+	V: '\u0474',
+	W: '\u051c',
+	X: '\u0425',
+	Y: '\u04ae',
+	Z: '\u0396',
+};
 
 export let values: SiteValues;
 export function setSiteValues(next: SiteValues) {
@@ -177,7 +240,11 @@ export const sites = Object.freeze([
 	{ name: 'Discord', url: 'https://discord.com/app' },
 	{ name: 'ChatGPT', url: 'https://chatgpt.com' },
 	{ name: 'Gemini', url: 'https://gemini.google.com/app' },
-	{ name: 'Youtube', url: 'https://youtube.com', icon: 'https://www.youtube.com/img/favicon_144.png',},
+	{
+		name: 'Youtube',
+		url: 'https://youtube.com',
+		icon: 'https://www.youtube.com/img/favicon_144.png',
+	},
 	{ name: 'Invidious', url: 'https://docs.invidious.io/instances' },
 	{ name: 'FMHY', url: 'https://fmhy.net' },
 	{ name: 'GeForce NOW', url: 'https://play.geforcenow.com' },
@@ -208,7 +275,11 @@ export const appLibrary = Object.freeze<{ id: string; apps: AppPreset[] }[]>([
 			{ name: 'Facebook', url: 'https://www.facebook.com' },
 			{ name: 'Reddit', url: 'https://www.reddit.com' },
 			{ name: 'TikTok', url: 'https://www.tiktok.com' },
-			{ name: 'Snapchat', url: 'https://web.snapchat.com', icon: favicon('snapchat.com') },
+			{
+				name: 'Snapchat',
+				url: 'https://web.snapchat.com',
+				icon: favicon('snapchat.com'),
+			},
 			{ name: 'Threads', url: 'https://www.threads.com' },
 			{ name: 'Bluesky', url: 'https://bsky.app' },
 			{ name: 'Pinterest', url: 'https://www.pinterest.com' },
@@ -218,9 +289,21 @@ export const appLibrary = Object.freeze<{ id: string; apps: AppPreset[] }[]>([
 		id: 'chat',
 		apps: [
 			{ name: 'Discord', url: 'https://discord.com/app' },
-			{ name: 'WhatsApp', url: 'https://web.whatsapp.com', icon: 'https://github.com/WhatsApp.png' },
-			{ name: 'Telegram', url: 'https://web.telegram.org', icon: favicon('telegram.org') },
-			{ name: 'Slack', url: 'https://app.slack.com', icon: favicon('slack.com') },
+			{
+				name: 'WhatsApp',
+				url: 'https://web.whatsapp.com',
+				icon: 'https://github.com/WhatsApp.png',
+			},
+			{
+				name: 'Telegram',
+				url: 'https://web.telegram.org',
+				icon: favicon('telegram.org'),
+			},
+			{
+				name: 'Slack',
+				url: 'https://app.slack.com',
+				icon: favicon('slack.com'),
+			},
 		],
 	},
 	{
@@ -238,11 +321,19 @@ export const appLibrary = Object.freeze<{ id: string; apps: AppPreset[] }[]>([
 	{
 		id: 'music',
 		apps: [
-			{ name: 'Spotify', url: 'https://open.spotify.com', icon: favicon('spotify.com') },
+			{
+				name: 'Spotify',
+				url: 'https://open.spotify.com',
+				icon: favicon('spotify.com'),
+			},
 			{ name: 'Apple Music', url: 'https://music.apple.com' },
 			{ name: 'YouTube Music', url: 'https://music.youtube.com' },
 			{ name: 'SoundCloud', url: 'https://soundcloud.com' },
-			{ name: 'Tidal', url: 'https://listen.tidal.com', icon: favicon('tidal.com') },
+			{
+				name: 'Tidal',
+				url: 'https://listen.tidal.com',
+				icon: favicon('tidal.com'),
+			},
 			{ name: 'Bandcamp', url: 'https://bandcamp.com' },
 		],
 	},
@@ -253,19 +344,34 @@ export const appLibrary = Object.freeze<{ id: string; apps: AppPreset[] }[]>([
 			{ name: 'Xbox Cloud Gaming', url: 'https://www.xbox.com/play' },
 			{ name: 'Chess.com', url: 'https://www.chess.com' },
 			{ name: 'GeoGuessr', url: 'https://www.geoguessr.com' },
-			{ name: 'Wordle', url: 'https://www.nytimes.com/games/wordle/index.html' },
+			{
+				name: 'Wordle',
+				url: 'https://www.nytimes.com/games/wordle/index.html',
+			},
 			{ name: 'Cool Math Games', url: 'https://www.coolmathgames.com' },
 			{ name: 'Newgrounds', url: 'https://www.newgrounds.com' },
 			{ name: 'Armor Games', url: 'https://armorgames.com' },
-			{ name: 'itch.io', url: 'https://itch.io', icon: 'https://static.itch.io/images/app-icon.png' },
+			{
+				name: 'itch.io',
+				url: 'https://itch.io',
+				icon: 'https://static.itch.io/images/app-icon.png',
+			},
 			{ name: 'Neal.fun', url: 'https://neal.fun' },
 			{ name: 'Skribbl.io', url: 'https://skribbl.io' },
 			{ name: 'Gartic Phone', url: 'https://garticphone.com' },
 			{ name: 'Krunker', url: 'https://krunker.io' },
-			{ name: 'Shell Shockers', url: 'https://shellshock.io', icon: 'https://shellshock.io/favicon192.png' },
+			{
+				name: 'Shell Shockers',
+				url: 'https://shellshock.io',
+				icon: 'https://shellshock.io/favicon192.png',
+			},
 			{ name: 'Slither.io', url: 'https://slither.io' },
 			{ name: 'Agar.io', url: 'https://agar.io' },
-			{ name: 'TypeRacer', url: 'https://play.typeracer.com', icon: 'https://data.typeracer.com/public/images/tr_logo_200.cache.png' },
+			{
+				name: 'TypeRacer',
+				url: 'https://play.typeracer.com',
+				icon: 'https://data.typeracer.com/public/images/tr_logo_200.cache.png',
+			},
 			{ name: 'Scratch', url: 'https://scratch.mit.edu' },
 			{ name: 'GBA Games', url: 'https://gba.js.org' },
 		],
@@ -277,7 +383,11 @@ export const appLibrary = Object.freeze<{ id: string; apps: AppPreset[] }[]>([
 			{ name: 'Gemini', url: 'https://gemini.google.com/app' },
 			{ name: 'Claude', url: 'https://claude.ai' },
 			{ name: 'Copilot', url: 'https://copilot.microsoft.com' },
-			{ name: 'DeepSeek', url: 'https://chat.deepseek.com', icon: favicon('deepseek.com') },
+			{
+				name: 'DeepSeek',
+				url: 'https://chat.deepseek.com',
+				icon: favicon('deepseek.com'),
+			},
 			{ name: 'DeepAI', url: 'https://deepai.org' },
 		],
 	},
@@ -287,7 +397,11 @@ export const appLibrary = Object.freeze<{ id: string; apps: AppPreset[] }[]>([
 			{ name: 'Khan Academy', url: 'https://www.khanacademy.org' },
 			{ name: 'Quizlet', url: 'https://quizlet.com' },
 			{ name: 'Blooket', url: 'https://www.blooket.com' },
-			{ name: 'Gimkit', url: 'https://www.gimkit.com', icon: 'https://github.com/gimkit.png' },
+			{
+				name: 'Gimkit',
+				url: 'https://www.gimkit.com',
+				icon: 'https://github.com/gimkit.png',
+			},
 			{ name: 'Desmos', url: 'https://www.desmos.com/calculator' },
 			{ name: 'GeoGebra', url: 'https://www.geogebra.org' },
 			{ name: 'Wolfram Alpha', url: 'https://www.wolframalpha.com' },
@@ -313,26 +427,54 @@ export const appLibrary = Object.freeze<{ id: string; apps: AppPreset[] }[]>([
 			{ name: 'Piped', url: 'https://piped.video' },
 			{ name: 'PeerTube', url: 'https://joinpeertube.org' },
 			{ name: 'Mastodon', url: 'https://mastodon.social' },
-			{ name: 'Element', url: 'https://app.element.io', icon: favicon('element.io') },
+			{
+				name: 'Element',
+				url: 'https://app.element.io',
+				icon: favicon('element.io'),
+			},
 			{ name: 'OpenStreetMap', url: 'https://www.openstreetmap.org' },
-			{ name: 'Stellarium Web', url: 'https://stellarium-web.org', icon: 'https://github.com/Stellarium.png' },
+			{
+				name: 'Stellarium Web',
+				url: 'https://stellarium-web.org',
+				icon: 'https://github.com/Stellarium.png',
+			},
 			{ name: 'Lichess', url: 'https://lichess.org' },
 			{ name: 'Monkeytype', url: 'https://monkeytype.com' },
 			{ name: 'Excalidraw', url: 'https://excalidraw.com' },
 			{ name: 'tldraw', url: 'https://www.tldraw.com' },
-			{ name: 'draw.io', url: 'https://app.diagrams.net', icon: favicon('diagrams.net') },
+			{
+				name: 'draw.io',
+				url: 'https://app.diagrams.net',
+				icon: favicon('diagrams.net'),
+			},
 			{ name: 'Squoosh', url: 'https://squoosh.app' },
 			{ name: 'Wavacity', url: 'https://wavacity.com' },
-			{ name: 'CyberChef', url: 'https://gchq.github.io/CyberChef/', icon: 'https://raw.githubusercontent.com/gchq/CyberChef/master/src/web/static/images/cyberchef-128x128.png' },
+			{
+				name: 'CyberChef',
+				url: 'https://gchq.github.io/CyberChef/',
+				icon: 'https://raw.githubusercontent.com/gchq/CyberChef/master/src/web/static/images/cyberchef-128x128.png',
+			},
 			{ name: 'CryptPad', url: 'https://cryptpad.fr' },
 			{ name: 'LibreTranslate', url: 'https://libretranslate.com' },
 			{ name: 'Open Library', url: 'https://openlibrary.org' },
-			{ name: 'Project Gutenberg', url: 'https://www.gutenberg.org', icon: 'https://www.gutenberg.org/apple-touch-icon.png' },
+			{
+				name: 'Project Gutenberg',
+				url: 'https://www.gutenberg.org',
+				icon: 'https://www.gutenberg.org/apple-touch-icon.png',
+			},
 			{ name: 'Compiler Explorer', url: 'https://godbolt.org' },
 			{ name: 'Hoppscotch', url: 'https://hoppscotch.io' },
-			{ name: 'Codeberg', url: 'https://codeberg.org', icon: 'https://codeberg.org/assets/img/logo.png' },
+			{
+				name: 'Codeberg',
+				url: 'https://codeberg.org',
+				icon: 'https://codeberg.org/assets/img/logo.png',
+			},
 			{ name: 'GitLab', url: 'https://gitlab.com' },
-			{ name: 'Godot Editor', url: 'https://editor.godotengine.org/releases/latest/', icon: favicon('godotengine.org') },
+			{
+				name: 'Godot Editor',
+				url: 'https://editor.godotengine.org/releases/latest/',
+				icon: favicon('godotengine.org'),
+			},
 		],
 	},
 ]);
@@ -346,7 +488,7 @@ export const partners = Object.freeze([
 		newtab: true,
 	},
 	{ name: 'Truffled', url: 'https://truffled.lol', newtab: false },
-		{
+	{
 		name: 'Titanium Network',
 		url: 'https://titaniumnetwork.org',
 		newtab: false,
@@ -415,7 +557,8 @@ export const credits = Object.freeze<CreditSection[]>([
 		people: [
 			{
 				name: 'b4kt',
-				contributions: 'The Freedom Project (Former Hard Fork), Scramjet-Utils Plugin (Search Guard), Hidden History',
+				contributions:
+					'The Freedom Project (Former Hard Fork), Scramjet-Utils Plugin (Search Guard), Hidden History',
 				url: 'https://discord.gg/jMm65ktMCz',
 				contact: '@b4kt',
 			},

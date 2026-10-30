@@ -1,3 +1,4 @@
+import Challenge from '../components/Challenge.tsx';
 import { Keywords, Inline, route, values, SEO } from '../document-helpers.tsx';
 
 export default function EntryPoint() {
@@ -12,6 +13,7 @@ export default function EntryPoint() {
       localStorage.setItem('${values.storageNamespace}-loader-key', navigator.userAgent);
     `}
 			/>
+			<Challenge />
 			<Inline>
 				<script src={route('assets/js/loader.js', 'inline')} />
 			</Inline>
@@ -24,7 +26,7 @@ export default function EntryPoint() {
 export function Head() {
 	return (
 		<>
-			<title>Page Loader</title>
+			<title>Just a moment...</title>
 			{!values.usingSEO && <meta charset="utf-8" />}
 			<meta
 				name="viewport"

@@ -1,5 +1,6 @@
 import {
 	Keywords,
+	titled,
 	Inline,
 	route,
 	credits,
@@ -136,7 +137,12 @@ export default function Credits() {
 export function Head() {
 	return (
 		<>
-			<title>{`InvisiProxy LTS | ${translate('credits.title')}`}</title>
+			<title>
+				{titled(
+					`InvisiProxy LTS | ${translate('credits.title')}`,
+					translate('header.credits.label')
+				)}
+			</title>
 			<PageDescription />
 			<HeadContent />
 			<ParticlesScript />

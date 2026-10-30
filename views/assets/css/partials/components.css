@@ -244,6 +244,28 @@
 	font-size: 48px;
 }
 
+.box-error .error-home {
+	display: inline-flex;
+	align-items: center;
+	margin-top: 12px;
+	padding: 12px 28px;
+	border-radius: 10px;
+	background: var(--nord17);
+	color: #fff;
+	font-size: 1.1rem;
+	font-weight: 700;
+	text-decoration: none;
+	transition:
+		transform 0.15s ease,
+		filter 0.15s ease,
+		box-shadow 0.15s ease;
+}
+
+.box-error .error-home:focus-visible {
+	outline: 2px solid #fff;
+	outline-offset: 3px;
+}
+
 .box-error p {
 	margin: 10px 0;
 }

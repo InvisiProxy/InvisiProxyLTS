@@ -3,6 +3,8 @@ import { join } from 'node:path';
 import { config, serverUrl } from '../config.ts';
 import { isDevelopment, siteDir, stagingDir } from '../constants.ts';
 import data from '../data.json' with { type: 'json' };
+import { fontCipher } from '../obfuscation/fonts.ts';
+import { keywordPool } from '../obfuscation/keywords.ts';
 import { getPathAliases } from '../obfuscation/paths.ts';
 import { type HoneypotForm, type SiteValues, setSiteValues } from '../site.ts';
 import { builtLocales, loadLocales } from './locales.ts';
@@ -86,9 +88,8 @@ function buildHoneypot(): HoneypotForm {
 
 function codecKey(): string {
 	if (config.usingSEO) return '';
-	return Array.from(
-		crypto.getRandomValues(new Uint8Array(24)),
-		(byte) => String.fromCharCode(33 + (byte % 94))
+	return Array.from(crypto.getRandomValues(new Uint8Array(24)), (byte) =>
+		String.fromCharCode(33 + (byte % 94))
 	).join('');
 }
 
@@ -118,11 +119,18 @@ export const buildValues: SiteValues = {
 	labels,
 	defaultSearch: labels.DuckDuckGo,
 	splash: [...data.splash],
-	keywordText: [...data.content],
-	keywordFacts: [...data.keywords],
+	get keywordText() {
+		return keywordPool().text;
+	},
+	get keywordFacts() {
+		return keywordPool().facts;
+	},
 	factAttribute: `data-${randomToken(3, 8)}`,
 	characters: [...data.masks.characters],
 	maskedTerms: [...english.maskedTerms],
+	get fontCipher() {
+		return fontCipher();
+	},
 	errors: {},
 	locale: locales[0].code,
 	locales: locales.map(({ code, name }) => ({ code, name })),

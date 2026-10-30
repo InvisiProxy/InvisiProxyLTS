@@ -6,6 +6,7 @@ import selectorParser from 'postcss-selector-parser';
 import ts from 'typescript';
 import { config } from '../config.ts';
 import { projectUrl } from '../constants.ts';
+import { cipherFontFamilies } from './fonts.ts';
 import {
 	generatedNames,
 	obfuscationState,
@@ -147,6 +148,7 @@ export function rewriteStylesheet(
 	root.walkRules((rule) => {
 		rule.selector = rewriteSelector(rule.selector, names, ids);
 	});
+	cipherFontFamilies(root);
 	return root.toString();
 }
 

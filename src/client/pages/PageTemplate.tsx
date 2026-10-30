@@ -1,4 +1,4 @@
-import { Keywords } from '../document-helpers.tsx';
+import { Keywords, titled, translate } from '../document-helpers.tsx';
 import {
 	ParticlesScript,
 	PageScripts,
@@ -32,7 +32,9 @@ export default function PageTemplate() {
 export function Head() {
 	return (
 		<>
-			<title>InvisiProxy LTS</title>
+			<title>
+				{titled('InvisiProxy LTS', translate('header.overview.label'))}
+			</title>
 			<PageDescription />
 			<HeadContent />
 			<ParticlesScript />

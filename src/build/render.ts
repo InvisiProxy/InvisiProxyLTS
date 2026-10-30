@@ -12,7 +12,7 @@ import {
 import data from '../data.json' with { type: 'json' };
 import { elementIds } from '../obfuscation/classes.ts';
 import { obfuscateDocument } from '../obfuscation/documents.ts';
-import { maskText } from '../obfuscation/masks.ts';
+import { cipherMarkup, maskText } from '../obfuscation/masks.ts';
 import type { SiteValues } from '../site.ts';
 import { getPathAliases } from '../obfuscation/paths.ts';
 import {
@@ -161,7 +161,7 @@ export async function renderSite({
 	files[routesFile] = JSON.stringify(await siteRoutes(load));
 	files[
 		`assets/json/${getPathAliases()['files/splash.json'] || 'splash.json'}`
-	] = JSON.stringify(data.splash.map(maskText));
+	] = JSON.stringify(data.splash.map((text) => cipherMarkup(maskText(text))));
 	const locales = builtLocales(loadLocales());
 	const root = locales[0].code;
 	const plain = await getPlainDocuments(fresh, load);
