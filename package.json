@@ -12,7 +12,7 @@
 		"fetch-adblock-ultimate": "curl -f -o views/assets/txt/blacklist.txt https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/ultimate.txt",
 		"fetch-keywords": "node src/build/fetch-keywords.ts",
 		"build": "pnpm run typecheck && vite build --configLoader native",
-		"rebuild": "vite build --configLoader native && pm2 restart invisiproxy",
+		"rebuild": "vite build --configLoader native && pm2 restart ecosystem.config.cjs",
 		"refresh": "pnpm run fetch-adblock && pnpm run fetch-keywords && pnpm run rebuild",
 		"clear": "pnpm run clean",
 		"clean": "rimraf dist views/dist views/dist-new node_modules/.vite",
