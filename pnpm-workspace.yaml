@@ -1,6 +1,7 @@
 minimumReleaseAge: 1440
 
 minimumReleaseAgeExclude:
+  - dlpcc
   - merp-obfuscator
   - '@mercuryworkshop/epoxy-tls'
   - '@mercuryworkshop/epoxy-transport'

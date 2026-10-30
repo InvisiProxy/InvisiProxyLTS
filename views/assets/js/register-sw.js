@@ -159,6 +159,23 @@ import { proxyCodec } from '../../../src/browser/proxy-codec.ts';
       }
     })();
 
+  // Routes proxied WebRTC through the DLPCC relay (builds with dlpcc on).
+  const buildDlpccPlugin = () =>
+    new (class extends $scramjetController.ManagedPlugin {
+      constructor() {
+        super('dlpcc', []);
+      }
+      install(frame) {
+        super.install(frame);
+        this.tap(frame.hooks.init.post, ({ window: win }) => {
+          const dlpcc = window.__dlpcc;
+          if (!dlpcc) return;
+          dlpcc.fixWebSocket(win);
+          if (readStorage('BlockWebRTC') !== true) dlpcc.patch(win);
+        });
+      }
+    })();
+
   const buildFingerprintPlugin = () => {
     const session =
       readStorage('RandomizeFingerprint') === true
@@ -282,6 +299,7 @@ import { proxyCodec } from '../../../src/browser/proxy-codec.ts';
       buildFingerprintPlugin(),
       buildSiteFixesPlugin(),
     ];
+    if (values.dlpcc) plugins.unshift(buildDlpccPlugin());
     if (typeof $scramjetUtils === 'undefined') return plugins;
     plugins.push(new $scramjetUtils.HttpCachePlugin());
 

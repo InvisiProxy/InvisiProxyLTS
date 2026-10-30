@@ -55,6 +55,7 @@ export function getPathAliases(): Record<string, string> {
 		'wisp',
 		'network',
 		'api',
+		'dlpcc',
 	])
 		keys.add(`prefixes/${prefix}`);
 	for (const endpoint of apiEndpoints) keys.add(`api/${endpoint}`);

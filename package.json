@@ -54,6 +54,7 @@
 		"@tsparticles/plugin-interactivity": "4.4.0",
 		"@tsparticles/solid": "4.4.0",
 		"aos": "3.0.0-beta.6",
+		"dlpcc": "0.2.0",
 		"merp-obfuscator": "^0.1.1",
 		"parse5": "^8.0.1",
 		"send": "^1.2.1",

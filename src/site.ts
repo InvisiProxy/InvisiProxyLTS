@@ -33,6 +33,7 @@ export interface SiteValues {
 	locale: string;
 	locales: { code: string; name: string }[];
 	patreon: boolean;
+	dlpcc: boolean;
 	pageNames?: string[];
 	messages?: Messages;
 	fallbackMessages?: Messages;

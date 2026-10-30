@@ -7,6 +7,8 @@ export const config: Readonly<typeof settings> = Object.freeze(
 );
 
 export const serverPort = Number(process.env.PORT ?? config.port);
+
+export const dlpccEnabled = config.dlpcc === true;
 if (!Number.isInteger(serverPort) || serverPort < 1 || serverPort > 65535)
 	throw new Error('PORT must be an integer between 1 and 65535.');
 

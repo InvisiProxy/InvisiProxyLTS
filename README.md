@@ -3,6 +3,7 @@
 <img align="left" width="40px" src="https://raw.githubusercontent.com/InvisiProxy/InvisiProxyLTS/master/views/assets/img/logo_github.png"></img>
 
 # InvisiProxy LTS (v8.x.x)
+
 #### Formerly Holy Unblocker LTS
 
 ![GitHub Actions Status](https://github.com/InvisiProxy/InvisiProxyLTS/workflows/CI-Production/badge.svg)
@@ -15,7 +16,7 @@
 
 ## You can support InvisiProxy by starring the repository!
 
-This project serves mostly as a proof of concept for the ideal clientless solution to bypassing censorship. A good use case of this project would be if you ever needed a method to use Tor, swap regions when browsing (or use an external proxy), browse websites without making accounts (reduces fingerprinting), bypass adblocking, and/or leave minimal traces of device activity. Simply host this project on any domain and have an alternative solution to a VPN without needing to download anything on said device. Being a secure web proxy service, it supports numerous sites while being updated frequently and concentrating on being easy to self-host. InvisiProxy LTS works with a large number of sites, including YouTube, Gemini, ChatGPT, Discord, GeForce NOW and more! This project also features good amount of exclusive features compared to other web proxies in terms of bypassing web filters (DOM Masquerading and Source Randomization) and global censorship from countries. Current countries supported are China (GFW) and Russia.
+This project serves mostly as a proof of concept for the ideal clientless solution to bypassing censorship. A good use case of this project would be if you ever needed a method to use Tor, swap regions when browsing (or use an external proxy), browse websites without making accounts (reduces fingerprinting), bypass adblocking, and/or leave minimal traces of device activity. Simply host this project on any domain and have an alternative solution to a VPN without needing to download anything on said device. Being a secure web proxy service, it supports numerous sites while being updated frequently and concentrating on being easy to self-host. InvisiProxy LTS works with a large number of sites, including YouTube, Gemini, ChatGPT, Discord, GeForce NOW and more! This project also features good amount of exclusive features compared to other web proxies in terms of bypassing web filters (DOM Masquerading, Font Obfuscation, Global Mangling and Source Randomization) and global censorship from countries. Current countries supported are China (GFW) and Russia.
 
 #### Over 30M+ users since 2020. Thank you so much for the support I could have never imagined how massive the web proxy community has become.
 
@@ -26,7 +27,7 @@ This project serves mostly as a proof of concept for the ideal clientless soluti
 - Latest (master; built for FOSS and SEO)
 - Beta (pending changes; changes that may break things)
 - Production (v4, v5, v6; stable version of InvisiProxy LTS. Changes for self hosting in production settings; max filtering evasion and request handling)
-</details>
+  </details>
 
 #### Considering switching branches for self-hosting to a production branch!
 
@@ -43,20 +44,20 @@ View the <a href="#deploy-InvisiProxy">self-deployment options</a> if you wish t
 > [!TIP]
 > InvisiProxy LTS is optimized for self-hosting to provide you with maximum privacy control! Fork this repository and consider starring. You can self-host using either free or paid deployment options, or set it up on a dedicated instance (VPS) for enhanced performance.
 
-| **Supported Sites**        | **Features**                                                                                                                          |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| Youtube                    | Built-in variety of open source web proxies with both a focus on speed and/or security                                                |
-| Reddit                     | Features Source Randomization and DOM Masquerading to circumvent major filters effectively along with randomizations to proxy globals |
-| Discord                    | Tab title + icon customization using the Settings Menu for improved browsing history stealth                                          |
-| Instagram                  | Adblocking support across all websites while surfing and low latency DNS on official servers                                          |
-| Reddit                     | SOCKS5 and Onion routing support with Tor within the Settings Menu. Use Tor/Onion sites in any browser!                               |
-| GeForce NOW                | Exclusive features compared to other web proxies in terms of bypassing web filters and global censorship from countries.              |
-| ChatGPT                    | Local browsing history hidden, tab leak prevention and network traffic is obscured!                                                   |
-| Spotify                    | Bypass regional proxy blocks by swapping regions or enabling Tor                                                                      |
-| And essentially most sites!| Built for intensive production loads and ease of setup                                                                               |
+| **Supported Sites**         | **Features**                                                                                                                                                             |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Youtube                     | Built-in variety of open source web proxies with both a focus on speed and/or security                                                                                   |
+| Reddit                      | Features Source Randomization, Font Obfuscation, Global Mangling and DOM Masquerading to circumvent major filters effectively along with randomizations to proxy globals |
+| Discord                     | Tab title + icon customization using the Settings Menu for improved browsing history stealth                                                                             |
+| Instagram                   | Fingerprint removal and adblocking support across all websites while surfing and low latency DNS on official servers                                                     |
+| Reddit                      | SOCKS5 and Onion routing support with Tor within the Settings Menu. Use Tor/Onion sites in any browser!                                                                  |
+| GeForce NOW                 | Exclusive features compared to other web proxies in terms of bypassing web filters and global censorship from countries.                                                 |
+| ChatGPT                     | Local browsing history hidden, tab leak prevention and network traffic is obscured!                                                                                      |
+| Spotify                     | Bypass regional proxy blocks by swapping regions or enabling Tor                                                                                                         |
+| And essentially most sites! | Built for intensive production loads and ease of setup                                                                                                                   |
 
-<img src="https://raw.githubusercontent.com/InvisiProxy/InvisiProxyLTS/master/views/assets/img/preview/invisi-v8.1.0-preview.png"> </img>
-<img src="https://raw.githubusercontent.com/InvisiProxy/InvisiProxyLTS/master/views/assets/img/preview/invisi-v8.1.0-preview-settings.png"></img>
+<img src="https://raw.githubusercontent.com/InvisiProxy/InvisiProxyLTS/master/views/assets/img/preview/invisi-v8.3.0-preview.png"> </img>
+<img src="https://raw.githubusercontent.com/InvisiProxy/InvisiProxyLTS/master/views/assets/img/preview/invisi-v8.3.0-preview-settings.png"></img>
 
 ## Deploy InvisiProxy
 
@@ -98,6 +99,7 @@ Replit is no longer free and Heroku has a set policy against web proxies. Try Gi
 </details>
 
 ### Partners
+
 - <a href="https://gitlab.com/fp-production/fp">The Freedom Project (Hard Fork)</a>
 - <a href="https://github.com/aukak/truffled">Truffled (Partner)</a>
 - <a href="https://github.com/titaniumnetwork-dev/Obsidian">Obsidian (Partner)</a>
@@ -105,25 +107,26 @@ Replit is no longer free and Heroku has a set policy against web proxies. Try Gi
 ## Table of contents:
 
 - [Setup](#how-to-setup)
-  - [Terminal](#terminal)
-  - [Project Configuration](#configuration)
-    - [Server Configuration](#server-configuration-setup)
-    - [TOR Routing](#toronionsocks5-routing-setup)
-    - [Proxy](#proxy-configuration)
-    - [Client Navigation](#client-navigation-configuration)
-    - [Translations](#translations)
-  - [Structure](#structure)
-    - [Structure Information](#structure-information)
-    - [Static Files](#details-of-views)
-    - [Scripts](#scripts-located-in-viewsassetsjs)
-  - [Future Additions](#future-additions)
-  - [Beginner's Explanation](#vague-explanation-for-beginners-with-external-proxies-and-hosting)
-    - [Hosting Providers](#list-of-some-good-hosting-options)
-    - [Domain Setup](#domain-steps)
-    - [Cloudflare Setup](#cloudflare-steps)
-    - [Workspace Configurations](#workspace-configurations)
-  - [Detailed FAQ](#detailed-faq)
-  - [More Information](#more-information)
+    - [Terminal](#terminal)
+    - [Project Configuration](#configuration)
+        - [Server Configuration](#server-configuration-setup)
+        - [TOR Routing](#toronionsocks5-routing-setup)
+        - [WebRTC Relay](#webrtc-relay-dlpcc)
+        - [Proxy](#proxy-configuration)
+        - [Client Navigation](#client-navigation-configuration)
+        - [Translations](#translations)
+    - [Structure](#structure)
+        - [Structure Information](#structure-information)
+        - [Static Files](#details-of-views)
+        - [Scripts](#scripts-located-in-viewsassetsjs)
+    - [Future Additions](#future-additions)
+    - [Beginner's Explanation](#vague-explanation-for-beginners-with-external-proxies-and-hosting)
+        - [Hosting Providers](#list-of-some-good-hosting-options)
+        - [Domain Setup](#domain-steps)
+        - [Cloudflare Setup](#cloudflare-steps)
+        - [Workspace Configurations](#workspace-configurations)
+    - [Detailed FAQ](#detailed-faq)
+    - [More Information](#more-information)
 
 ## How to Setup
 
@@ -135,7 +138,7 @@ Replit is no longer free and Heroku has a set policy against web proxies. Try Gi
 
 Either use the button above to deploy to the deployment options above or type the commands below on a dedicated server
 
-**THIS PROJECT IS MADE TO SUPPORT NGINX; NOT CADDY.** 
+**THIS PROJECT IS MADE TO SUPPORT NGINX; NOT CADDY.**
 
 Please ensure you are using `Node 26.x` as well. `git` and `curl` are required dependencies:
 
@@ -146,6 +149,7 @@ cd InvisiProxyLTS
 
 # Edit config.js and set production to true if you want to use pm2 (Allows for easier VPS hosting)
 pnpm install
+pnpm fetch-keywords
 pnpm fetch-adblock
 pnpm build
 pnpm start
@@ -171,14 +175,16 @@ This website is hosted locally with [Scramjet](https://github.com/MercuryWorksho
 ### For security reasons when hosting with a reverse proxy PLEASE use NGINX not Caddy. This is due to wispurr using loopbacks. If using Caddy disable this feature or adjust your default Caddy config.
 
 #### Detailed Setup (Ubuntu Example)
+
 You will need `Node.js 20.x`, `curl` and `git` installed; below is an example for Debian/Ubuntu setup.
+
 <details>
 
 For simplicity sake you can join the TN discord at discord.gg/unblock and request for mirror site links (that are restocked and unblocked).
 
 ### Hosting
 
-If you wish to self-host however you will first need a VPS or hosting provider: 
+If you wish to self-host however you will first need a VPS or hosting provider:
 
 - https://docs.titaniumnetwork.org/guides/vps-hosting/
 - https://github.com/InvisiProxy/InvisiProxyLTS#deploy-InvisiProxy
@@ -187,6 +193,7 @@ If you wish to self-host however you will first need a VPS or hosting provider:
 ### Dependencies
 
 You will then need to setup git, musl, nginx (or caddy) and Node.js. Here is an example for Ubuntu LTS:
+
 ```
 sudo apt update
 sudo apt upgrade
@@ -201,20 +208,23 @@ export NVM_DIR="$HOME/.nvm"
 nvm install 26
 nvm use 26
 ```
+
 https://github.com/nvm-sh/nvm
 https://docs.titaniumnetwork.org/guides/nginx/
 
 ### Tor Support (Optional)
+
 https://github.com/InvisiProxy/InvisiProxyLTS#toronionsocks5-routing-setup
 
 ### Configurating InvisiProxy
-Most important options are production along with the obfuscation and DOM masquerading techniques. 
+
+Most important options are production along with the obfuscation and DOM masquerading techniques.
 
 From there just configure as needed: https://github.com/InvisiProxy/InvisiProxyLTS#configuration
 
 ### Cloning and Running InvisiProxy
 
-Then run the respective process; if you have production set to true in the configuration pm2 will be automatically enabled with our own workers/cache system. 
+Then run the respective process; if you have production set to true in the configuration pm2 will be automatically enabled with our own workers/cache system.
 
 ```
 git clone https://github.com/InvisiProxy/InvisiProxyLTS.git
@@ -224,13 +234,13 @@ pnpm run fresh-start
 ```
 
 Then of course if you used NGINX or caddy please restart/reload it
+
 ```
 sudo systemctl restart nginx
 sudo systemctl restart tor
 ```
 
 </details>
-
 
 Resources for self-hosting:
 
@@ -243,11 +253,12 @@ Resources for self-hosting:
 
 #### Server Configuration Setup
 
-The default PORT for the proxy when started is `http://localhost:8080`. You can change the PORT and other production metrics if needed in `./ecosystem.config.js`. 
+The default PORT for the proxy when started is `http://localhost:8080`. You can change the PORT and other production metrics if needed in `./ecosystem.config.js`.
 
 Every other localized changes for source randomization, auto-minify, etc. are located in `./config.json`.
 
 **config.json**
+
 - `minifyScripts`: Automatically minify respective static assets upon starting the server.
 - `randomizeIdentifiers`: Enable experimental proxy global randomization for Ultraviolet. This reduces the chances of UV being detected by any extension based filters.
 - `production`: Utilize a pre-configured production setup for server hosting. Automatically has cache control and source rewrites setup.
@@ -258,6 +269,9 @@ Every other localized changes for source randomization, auto-minify, etc. are lo
 - `geoLanguage`: Enables automatic language selection using Cloudflare's `CF-IPCountry` header. Only enable this behind Cloudflare, since the header can otherwise be set by anyone. Countries are listed per language under `language.countries` in each `./locales/*.yaml` file.
 - `singleLanguage`: When `true`, only the language set in `language` is built and every visitor gets it, with the Language setting hidden. Useful for Docker or other deployments that only need one language, since builds are faster and smaller. Defaults to `false`.
 - `language`: The language to build when `singleLanguage` is on, matching a file in `./locales/` (e.g. `en` for `en.yaml`). Defaults to `en`. For Docker, set this in `config.json` before running `docker build` or `docker compose build`, since languages are chosen at build time.
+- `patreon`: Enables the Patreon proxy region. Defaults to `false`.
+- `dlpcc`: Runs the [DLPCC](#webrtc-relay-dlpcc) WebRTC relay. Defaults to `false`.
+- `dlpccNginx`: Set to `true` when NGINX owns port 443 and splits TURN from page loads with the DLPCC stream config. Leave `false` when Node serves visitors directly. Defaults to `false`.
 
 #### Translations
 
@@ -281,63 +295,59 @@ If you wish to use a custom HTTP/HTTPS/SOCKS5 proxy to route traffic for Scramje
 
 ```ts
 export const wispProxies = {
-  tor: 'socks5h://127.0.0.1:9050',
-  eu: 'socks5h://127.0.0.1:7000',
-  jp: 'socks5h://127.0.0.1:7001',
+	tor: 'socks5h://127.0.0.1:9050',
+	eu: 'socks5h://127.0.0.1:7000',
+	jp: 'socks5h://127.0.0.1:7001',
+};
+```
+
+#### WebRTC Relay (DLPCC)
+
+Proxied pages normally can't use WebRTC through the proxy: Scramjet and Wisp tunnel `fetch`, XHR and WebSockets, but a page's `RTCPeerConnection` sends its media over UDP straight from the browser. [DLPCC](https://github.com/QuiteAFancyEmerald/Donglalu-Proxy-The-Second-Coming) is a TURN relay that shares the site's own port, so game streaming (GeForce NOW), voice and video calls keep working on networks that block UDP.
+
+It only runs when `dlpcc` is `true` in `config.json`. Since it relays all of a visitor's call and stream media through your server, it is best kept to deployments you control, such as private instances.
+
+```json
+{
+	"dlpcc": true
 }
 ```
+
+**Without NGINX in front**, nothing else is needed: the relay shares the server's port and visitors get TURN on the host and port they used.
+
+**With NGINX owning 443** (the recommended production setup), NGINX splits TURN from page loads instead:
+
+1. Set `"dlpccNginx": true` in `config.json`.
+2. Set up the NGINX stream config from the [DLPCC nginx guide](https://github.com/QuiteAFancyEmerald/Donglalu-Proxy-The-Second-Coming#nginx-optional). The relay listens on `127.0.0.1:3478`.
+3. Open UDP `49152-65535` in and out for relayed media.
+
+**Behind Cloudflare or another CDN**, the CDN only forwards web traffic, so TURN needs its own **DNS-only** (grey cloud) name pointing straight at the server, with a normal certificate (Let's Encrypt, not a CDN origin certificate). Set `DLPCC_PUBLIC_HOST=turn.*` and every mirror gets its own TURN name: a visitor on `www.mirror2.net` gets `turn.mirror2.net`, one on `example.com` gets `turn.example.com`. Add a `turn.` record for each mirror. A plain value such as `DLPCC_PUBLIC_HOST=turn.example.com` sends every mirror to that one name instead. Note that a DNS-only record reveals the server's IP.
+
+Every other relay option can be set with a `DLPCC_*` environment variable, such as `DLPCC_RELAY_IP` for the server's public IPv4 when it sits behind NAT, `DLPCC_PUBLIC_PORT=443` when TURN is reached on a different port than the site, or `DLPCC_RATE_LIMIT`. See the [DLPCC options](https://github.com/QuiteAFancyEmerald/Donglalu-Proxy-The-Second-Coming#options) for the full list.
+
+Since the relay is meant for private instances, InvisiProxy uses looser limits than DLPCC's own defaults, so many visitors sharing one school or office IP don't lock each other out:
+
+| Option | InvisiProxy default | DLPCC default |
+|---|---|---|
+| `DLPCC_RATE_LIMIT` (requests per minute per IP) | `600` | `30` |
+| `DLPCC_RATE_LIMIT_BURST` | `100` | `10` |
+| `DLPCC_MAX_ALLOCS_PER_USER` (concurrent relays per visitor) | `32` | `8` |
+| `DLPCC_MAX_ALLOCS` (concurrent relays in total) | `4000` | `1000` |
+
+The relay itself has no bandwidth cap; a single relayed connection measured 170 to 400 Mbps in testing on loopback, so the server's own uplink is the limit. Budget roughly 15 to 50 Mbps per game stream.
+
+Things to keep in mind:
+
+- Anyone who can open the site can get relay credentials, so everyone with the domain shares its bandwidth (a game stream is roughly 15 to 50 Mbps). Keep proxy sites with this feature enabled private.
+- The relay refuses to reach private networks, and credentials are rate limited per visitor. Behind NGINX the visitor's address is read from `X-Real-IP`.
 
 #### Proxy Configuration
 
 The primary location for tweaking any web proxy related settings assigned via the Settings menu is `./views/assets/js/register-sw.js`. Here you can modify the provided transport options set locally via a cookie, swap out SOCKS5 proxies, change Onion routing ports, specify a blacklist, and more.
 
-- `stockSW`: The default service worker configuration file for Ultraviolet. For InvisiProxy however adblocking is automatically enabled so this is not used by default.
-- `blacklistSW`: A modified version of Ultraviolet that allows for blacklisting domains and adblocking.
-- `proxyUrl`: Specifies a SOCKS5/HTTPS/HTTP protocol URL defaulting to the default Tor proxy port. This can be swapped out with any valid port or SOCK5s proxy. This is done via the proxy option for both epoxy and libcurl.
-- `transports`: Specifies any provided ports to be swapped via Bare-Mux and utilize Wisp.
-- `wispUrl`: Modify the pathname or url handling for Wisp
-- `defaultMode`: Specify the default transport used globally (can be swapped by the users still via the Settings menu)
-- `ScramjetController`: This constructor allows you to swap out the prefix used for Scramjet dynamically and specify file locations. Note you may need to edit `./views/scram/scramjet.sw` when changing file names.
-
 #### Client Navigation Configuration
 
 The primary location for any client side navigation scripts is `./views/assets/js/common.js`. This file is primary used for Omnibox (Search Engine) functionality, swapping proxy options and other client settings.
-
-- `getDomain`: This constant is used for specifying any subdomains to remove when appending a URL into the omnibox.
-- `goFrame`: This specifies the stealth frame used for InvisiProxy LTS
-- `sx`: This constant specifies the search engine you want to be proxied whenever a user types something in that isn't a URL
-- `search/uvUrl/sjUrl`: These functions specify and parse the queries used for submitted URLs
-- `urlHandler/asyncUrlHandler`: Used to set functions for the goProx object.
-- `goProx`: This constant allows for the mapping of URL handling for specific proxies or links that need to fall under a web proxy.
-
-```js
-const goProx = Object.freeze({
-  ultraviolet: urlHandler(uvUrl),
-
-  scramjet: urlHandler(sjUrl),
-
-  // `location.protocol + "//" + getDomain()` more like `location.origin`
-
-  examplepath: urlHandler(location.protocol + `//c.${getDomain()}/example/`),
-
-  examplesubdomain: urlHandler(location.protocol + '//c.' + getDomain()),
-
-  example: urlHandler(sjUrl('https://example.com')),
-});
-```
-
-- `prSet`: Attaches event listeners using goProx for any buttons or inputs needed
-
-```js
-// prSet function code here....
-
-prSet('pr-uv', 'ultraviolet');
-prSet('pr-sj', 'scramjet');
-prSet('pr-yt', 'youtube');
-prSet('pr-example', 'example');
-```
-
-- `huLinks/navLists`: Automatically takes paths stated in `./views/assets/json` and appends them depending on the page and usage. This is used for hiding links that would lead to filter blocks and create an easier system for adding apps.
 
 ## Structure
 
@@ -509,6 +519,7 @@ This project currently uses Scramjet and Ultraviolet as web proxies adhering to 
 - <a href="https://github.com/MercuryWorkshop/Epoxy-Transport">EpoxyTransport</a>
 - <a href="https://github.com/MercuryWorkshop/Libcurl-Transport">libcurl-transport</a>
 - <a href="https://github.com/sylvieisnton/merp">Merp (Obfuscation Module)</a>
+- <a href="https://github.com/QuiteAFancyEmerald/Donglalu-Proxy-The-Second-Coming">Donglalu Proxy The Second Coming</a>
 - <a href="https://gitlab.com/fp-production/fp">The Freedom Project (Hard Fork)</a>
 
 ### Other Dependencies:

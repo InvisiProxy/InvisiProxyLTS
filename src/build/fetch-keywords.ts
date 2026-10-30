@@ -77,8 +77,7 @@ function facts(body: string) {
 	}
 	return [...counts.entries()]
 		.filter(
-			([word, count]) =>
-				count >= 4 && !isFlaggedWord(word.toLowerCase())
+			([word, count]) => count >= 4 && !isFlaggedWord(word.toLowerCase())
 		)
 		.map(([word]) => word);
 }

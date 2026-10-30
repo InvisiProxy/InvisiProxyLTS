@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { config, serverUrl } from '../config.ts';
+import { config, dlpccEnabled, serverUrl } from '../config.ts';
 import { isDevelopment, siteDir, stagingDir } from '../constants.ts';
 import data from '../data.json' with { type: 'json' };
 import { fontCipher } from '../obfuscation/fonts.ts';
@@ -135,6 +135,7 @@ export const buildValues: SiteValues = {
 	locale: locales[0].code,
 	locales: locales.map(({ code, name }) => ({ code, name })),
 	patreon: config.patreon === true,
+	dlpcc: dlpccEnabled,
 	readAsset,
 };
 
