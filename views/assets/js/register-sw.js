@@ -35,6 +35,7 @@ import {
   proxiedUrl,
 } from '../../../src/browser/error-page.ts';
 import { proxyCodec } from '../../../src/browser/proxy-codec.ts';
+import { skipHttpCache } from '../../../src/browser/http-cache.ts';
 (() => {
   const swScope = route("/"),
     swAllowedHostnames = ['localhost', '127.0.0.1'],
@@ -262,6 +263,32 @@ import { proxyCodec } from '../../../src/browser/proxy-codec.ts';
       }
     })();
 
+  // Keeps video and other large bodies from being buffered whole by the
+  // HTTP cache plugin, which otherwise exhausts tab memory on streaming sites.
+  const buildCacheGuardPlugin = () =>
+    new (class extends $scramjetController.ManagedPlugin {
+      constructor() {
+        super('http-cache-guard', []);
+      }
+      install(frame) {
+        super.install(frame);
+        this.tap(
+          frame.hooks.fetch.preresponse,
+          ({ request, parsed }, props) => {
+            if (
+              skipHttpCache(
+                parsed.destination ?? '',
+                request.initialHeaders?.toRawHeaders() ?? [],
+                props.response.rawHeaders ?? []
+              )
+            )
+              request.cache = 'no-store';
+          },
+          { before: ['scramjet-http-cache'] }
+        );
+      }
+    })();
+
   const buildErrorPagePlugin = () =>
     new (class extends $scramjetController.ManagedPlugin {
       constructor() {
@@ -301,7 +328,7 @@ import { proxyCodec } from '../../../src/browser/proxy-codec.ts';
     ];
     if (values.dlpcc) plugins.unshift(buildDlpccPlugin());
     if (typeof $scramjetUtils === 'undefined') return plugins;
-    plugins.push(new $scramjetUtils.HttpCachePlugin());
+    plugins.push(buildCacheGuardPlugin(), new $scramjetUtils.HttpCachePlugin());
 
     if (onUrl) plugins.push(new $scramjetUtils.UrlWatcherPlugin(onUrl));
 

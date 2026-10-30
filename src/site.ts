@@ -269,6 +269,13 @@ const favicon = (domain: string) =>
 
 export const appLibrary = Object.freeze<{ id: string; apps: AppPreset[] }[]>([
 	{
+		id: 'featured',
+		apps: [
+			{ name: 'Obsidian', url: 'https://playobsidian.com' },
+			{ name: 'Truffled', url: 'https://truffled.lol' },
+		],
+	},
+	{
 		id: 'social',
 		apps: [
 			{ name: 'Twitter', url: 'https://x.com' },

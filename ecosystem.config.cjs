@@ -30,5 +30,19 @@ module.exports = {
 				NODE_ENV: 'production',
 			},
 		},
+		{
+			name: 'invisiproxy-refresh',
+			cwd: __dirname,
+			script: 'pnpm',
+			args: 'run refresh',
+			interpreter: 'none',
+			autorestart: false,
+			watch: false,
+			time: true,
+			cron_restart: '0 3 * * 0',
+			env: {
+				NODE_ENV: 'production',
+			},
+		},
 	],
 };

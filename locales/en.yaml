@@ -1288,6 +1288,7 @@ apps:
   loading: Loading applications…
   categories:
     all: All
+    featured: Featured
     social: Social
     chat: Chat
     video: Video
