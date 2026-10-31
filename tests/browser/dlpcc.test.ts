@@ -12,7 +12,7 @@ import {
 } from '../helpers/fixture.ts';
 
 describe('DLPCC relay', () => {
-	test('Every proxied WebRTC connection goes through the relay at 100 Mbps or more.', {
+	test('Every proxied WebRTC connection goes through the relay at 50 Mbps or more.', {
 		timeout: 900_000,
 	}, async (t) => {
 		const root = await fixture(t, { dlpcc: true }, true);

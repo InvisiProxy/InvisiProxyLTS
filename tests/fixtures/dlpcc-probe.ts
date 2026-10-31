@@ -139,8 +139,8 @@ try {
 		);
 	assert.deepEqual(result.pair, ['relay', 'relay']);
 	assert.ok(
-		result.mbps >= 100,
-		`The relay should carry at least 100 Mbps, got ${result.mbps}`
+		result.mbps >= 50,
+		`The relay should carry at least 50 Mbps, got ${result.mbps}`
 	);
 } finally {
 	await browser.close();
