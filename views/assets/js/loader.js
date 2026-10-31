@@ -1,4 +1,4 @@
-import { values } from 'build:invisiproxy';
+import { values, homoglyphText } from 'build:invisiproxy';
 (() => {
   const windowEventListeners = [],
     documentEventListeners = [],
@@ -28,17 +28,41 @@ import { values } from 'build:invisiproxy';
     };
   };
   setListeners();
+  const challenge = _document.querySelector('[data-challenge]');
+  const showChallenge = () => {
+    const part = (name) => challenge.querySelector(`[data-${name}]`);
+    part('host').textContent = location.hostname;
+    part('ray').textContent = Array.from(
+      crypto.getRandomValues(new Uint8Array(8)),
+      (byte) => byte.toString(16).padStart(2, '0')
+    ).join('');
+    const box = part('verify').querySelector('input');
+    box.checked = false;
+    box.addEventListener(
+      'change',
+      () => {
+        part('verify').hidden = true;
+        part('verifying').hidden = false;
+        setTimeout(() => {
+          part('verifying').hidden = true;
+          part('notice').hidden = false;
+        }, 1500);
+      },
+      { once: true }
+    );
+    challenge.hidden = false;
+  };
   const displayErrorPage = (overwrite = false, currentDoc = _document) => {
     currentDoc.body.removeAttribute('style');
     if (overwrite)
       currentDoc.body.replaceWith(currentDoc.createElement('body'));
-    currentDoc.body.insertAdjacentHTML(
-      'afterbegin',
-      '<center><h1>403 Forbidden</h1></center><center>You don’t have permission to access this page.</center><hr><center>nginx</center>'
-    );
+    if (challenge) {
+      currentDoc.body.prepend(challenge);
+      showChallenge();
+    }
     let head = currentDoc.createElement('head'),
       title = currentDoc.createElement('title');
-    title.textContent = '500 Internal Server Error';
+    title.textContent = homoglyphText('Just a moment...');
     head.appendChild(title);
     currentDoc.head.replaceWith(head);
     if (currentDoc.currentScript) currentDoc.currentScript.remove();

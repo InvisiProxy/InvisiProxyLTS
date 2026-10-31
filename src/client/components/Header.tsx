@@ -29,19 +29,19 @@ export default function Header() {
 					<li style="margin-left: 0">
 						<a
 							class="line"
-							href={overview}
-							title={translate('header.overview.title')}
+							href={route('/browsing')}
+							title={translate('header.browse.title')}
 						>
-							{translate('header.overview.label')}
+							{translate('header.browse.label')}
 						</a>
 					</li>
 					<li>
 						<a
 							class="line"
-							href={route('/browsing')}
-							title={translate('header.browse.title')}
+							href={overview}
+							title={translate('header.overview.title')}
 						>
-							{translate('header.browse.label')}
+							{translate('header.overview.label')}
 						</a>
 					</li>
 					<li>

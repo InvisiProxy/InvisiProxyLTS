@@ -1,15 +1,12 @@
 import {
 	Keywords,
+	titled,
 	Inline,
 	route,
 	SEO,
 	translate,
 } from '../document-helpers.tsx';
-import {
-	ParticlesScript,
-	PageScripts,
-	PageDescription,
-} from '../components/HeadScripts.tsx';
+import { ParticlesScript, PageScripts } from '../components/HeadScripts.tsx';
 import HeadContent from '../components/HeadContent.tsx';
 import AntiExfil from '../components/AntiExfil.tsx';
 import Header from '../components/Header.tsx';
@@ -49,7 +46,12 @@ export default function FAQPage() {
 export function Head() {
 	return (
 		<>
-			<title>{translate('faq.meta.title')}</title>
+			<title>
+				{titled(
+					translate('faq.meta.title'),
+					translate('header.faq.label')
+				)}
+			</title>
 			<SEO>
 				<meta
 					name="robots"

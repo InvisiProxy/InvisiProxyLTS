@@ -14,6 +14,10 @@ const { classNames, elementIds, rewriteClassReferences, rewriteStylesheet } =
 const { obfuscateDocument } = await load<
 	typeof import('../../src/obfuscation/documents.ts')
 >('src/obfuscation/documents.ts');
+const { scrubScramjetSignatures, scrubScramjetWasm, scramjetTokens } =
+	await load<typeof import('../../src/obfuscation/scramjet-signatures.ts')>(
+		'src/obfuscation/scramjet-signatures.ts'
+	);
 const { obfuscateScript, obfuscateVendorScript, stripObfuscatedMarker } =
 	await load<typeof import('../../src/obfuscation/scripts.ts')>(
 		'src/obfuscation/scripts.ts'
@@ -39,6 +43,12 @@ if (config.usingSEO) {
 	assert.deepEqual(scripts, [source, source]);
 	assert.equal(document, html);
 	assert.equal(css, '.fancybutton { color: red; }');
+	assert.equal(
+		scrubScramjetSignatures('$scramjetController.createFrame'),
+		'$scramjetController.createFrame'
+	);
+	const wasm = new TextEncoder().encode('scramjet');
+	assert.equal(Buffer.from(scrubScramjetWasm(wasm)).toString(), 'scramjet');
 } else {
 	for (const code of scripts) {
 		assert.doesNotMatch(code, /privateValue/);
@@ -58,4 +68,44 @@ if (config.usingSEO) {
 	assert.ok(document.includes(`id="${id}"`));
 	assert.ok(lookup.includes(`"${id}"`));
 	assert.doesNotMatch(document + lookup, /csel/);
+
+	const tokens = scramjetTokens();
+	const sample = [
+		'var $scramjetController;',
+		'window.$scramjet$rewrite = $scramjet$wrap(location).href;',
+		'document.querySelectorAll("script[scramjet-injected]")',
+		'this.cookieJar = new CookieJar(); await controller.setTransport(t);',
+		'controller.serviceWorkerController.createFrame(url);',
+		'new Request("https://sj-cache.invalid/" + encodeURIComponent(url))',
+		'$scramitize(); /*scramtag*/ $scramerr()',
+		'window.$invisiScramjet.ready',
+	].join('\n');
+	const scrubbed = scrubScramjetSignatures(sample);
+	assert.doesNotMatch(
+		scrubbed,
+		/scramjet|Scramjet|scram|sj-cache|invisiScramjet/i
+	);
+	assert.ok(scrubbed.includes(`var $${tokens.core}Controller;`));
+	assert.ok(scrubbed.includes(`$${tokens.wrapper}.ready`));
+	assert.ok(
+		scrubbed.includes('new Request(url)'),
+		'cache keys should use the real target URL'
+	);
+	assert.ok(
+		scrubbed.includes(
+			`this.${tokens.members.cookieJar} = new CookieJar(); await controller.${tokens.members.setTransport}(t);`
+		)
+	);
+	const wasm = new TextEncoder().encode('scramjet scram wasm');
+	const patched = scrubScramjetWasm(wasm);
+	assert.equal(patched.length, wasm.length);
+	assert.ok(
+		patched.every(
+			(byte, index) =>
+				byte ===
+				new TextEncoder().encode(`${tokens.core} ${tokens.scram} wasm`)[
+					index
+				]
+		)
+	);
 }

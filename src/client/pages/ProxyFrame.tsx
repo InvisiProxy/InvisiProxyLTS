@@ -61,18 +61,38 @@ export default function ProxyFrame() {
 				<img
 					class="pr-logo"
 					src={route('/assets/img/hero.webp')}
-					alt="Scramjet"
+					alt=""
 				/>
-				<p class="loader-text">{translate('frame.loading')}</p>
+				<p
+					class="loader-text"
+					data-restarting={translate('frame.restarting')}
+				>
+					{translate('frame.loading')}
+				</p>
 				<div class="loader-w"></div>
 			</div>
 			<div class="omnibar" id="pr-sj">
-				<a
-					class="logo"
-					href={route('/browsing')}
-					aria-label="InvisiProxy Logo"
-				>
-					<span class="sr-only">InvisiProxy browsing</span>
+				<div class="tab-strip">
+					<div
+						id="tab-list"
+						role="tablist"
+						aria-label={translate('frame.tabs')}
+						data-untitled={translate('frame.newTab')}
+						data-close={translate('frame.closeTab')}
+					></div>
+					<button
+						type="button"
+						id="new-tab"
+						title={translate('frame.newTab')}
+						aria-label={translate('frame.newTab')}
+					>
+						<i class="fas fa-plus" aria-hidden="true"></i>
+					</button>
+				</div>
+				<a class="logo" href={route('/browsing')}>
+					<span class="sr-only">
+						{translate('header.browse.label')}
+					</span>
 				</a>
 				<button type="button" id="omnibar-back" title="Back">
 					<i class="fas fa-arrow-left"></i>
@@ -105,32 +125,6 @@ export default function ProxyFrame() {
 					</button>
 					<ul id="autocomplete"></ul>
 				</div>
-				<FrameMenu
-					buttonId="tabs-button"
-					menuId="tabs-menu"
-					title={translate('frame.tabs')}
-					button={
-						<>
-							<i class="fas fa-columns" aria-hidden="true"></i>
-							<span id="tab-count">1</span>
-						</>
-					}
-				>
-					<ul
-						id="tabs-list"
-						class="frame-menu-list"
-						data-untitled={translate('frame.newTab')}
-						data-close={translate('frame.closeTab')}
-					></ul>
-					<button
-						type="button"
-						id="new-tab"
-						class="frame-menu-action"
-					>
-						<i class="fas fa-plus" aria-hidden="true"></i>
-						{translate('frame.newTab')}
-					</button>
-				</FrameMenu>
 				<FrameMenu
 					buttonId="bookmarks-button"
 					menuId="bookmarks-menu"
@@ -172,7 +166,7 @@ export default function ProxyFrame() {
 			<Keywords />
 			<div id="tab-frames">
 				<iframe
-					title="Proxied page"
+					title={translate('frame.newTab')}
 					id="frame"
 					class="proxy-tab active-tab"
 					allow="fullscreen"
@@ -187,7 +181,7 @@ export default function ProxyFrame() {
 export function Head() {
 	return (
 		<>
-			<title>InvisiProxy LTS</title>
+			<title>{translate('frame.title')}</title>
 			<PageDescription />
 			<ProxyPreloads />
 			<HeadContent />

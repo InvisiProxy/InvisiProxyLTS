@@ -9,7 +9,7 @@ import {
 import { basename, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { brotliCompressSync, constants, gzipSync } from 'node:zlib';
-import type { Root } from 'postcss';
+import postcss, { type Root } from 'postcss';
 import type {
 	EnvironmentOptions,
 	Plugin,
@@ -31,8 +31,17 @@ import {
 	obfuscateVendorScript,
 	stripObfuscatedMarker,
 } from '../obfuscation/scripts.ts';
-import { maskText } from '../obfuscation/masks.ts';
+import { saltAsset, saltBlocklist, saltToken } from '../obfuscation/assets.ts';
+import {
+	builtFonts,
+	cipherFontFamilies,
+	cipherWrapperRule,
+	fontFaceRules,
+} from '../obfuscation/fonts.ts';
+import { disguiseText } from '../obfuscation/masks.ts';
+import { getPathAliases } from '../obfuscation/paths.ts';
 import { hideScramjetParams } from '../obfuscation/scramjet-params.ts';
+import { scrubScramjetWasm } from '../obfuscation/scramjet-signatures.ts';
 import { route } from '../site.ts';
 import { beginObfuscationBuild } from '../obfuscation/state.ts';
 import {
@@ -67,16 +76,24 @@ const sourcePath = (path: string) =>
 const outputDir = () => (isDevelopment() ? siteDir : stagingDir);
 
 function transformStylesheet(root: Root) {
+	const file = root.source?.input.file;
+	if (file && ['style.css', 'challenge.css'].includes(basename(file)))
+		root.append(
+			postcss.parse(fontFaceRules() + cipherWrapperRule(), { from: file })
+		);
 	root.walkDecls((declaration) => {
 		declaration.value = declaration.value.replace(
 			/url\((["']?)(\/assets\/[^)"']+)\1\)/g,
 			(_match, quote, path) => `url(${quote}${route(path)}${quote})`
 		);
 	});
-	if (!config.usingSEO)
+	if (!config.usingSEO) {
 		root.walkRules((rule) => {
 			rule.selector = rewriteSelector(rule.selector);
 		});
+		root.append(postcss.parse(`:root{--${saltToken()}:0}`, { from: file }));
+	}
+	cipherFontFamilies(root);
 }
 
 function rewriteAssetReferences(text: string) {
@@ -87,15 +104,24 @@ function rewriteAssetReferences(text: string) {
 }
 
 function maskManifest(data: Record<string, unknown>) {
-	for (const key of ['name', 'short_name', 'description']) {
+	if (!config.usingSEO)
+		for (const key of [
+			'description',
+			'short_description',
+			'keywords',
+			'related_applications',
+		])
+			delete data[key];
+	for (const key of ['name', 'short_name']) {
 		const value = data[key];
-		if (typeof value === 'string') data[key] = maskText(value);
+		if (typeof value === 'string') data[key] = disguiseText(value);
 	}
 	return data;
 }
 
 function readText(file: SiteFile) {
 	const text = readFileSync(file.source, 'utf8');
+	if (/^assets\/txt\/.*\.txt$/.test(file.target)) return saltBlocklist(text);
 	if (file.target !== 'sitemap.xml' || !config.usingSEO) return text;
 	const codes = builtLocales(loadLocales()).map(({ code }) => code);
 	return localizeSitemap(text, codes);
@@ -125,7 +151,9 @@ function environments(): Record<string, EnvironmentOptions> {
 					outDir: join(outDir, dirname(script.target)),
 					watch,
 					minify: config.minifyScripts,
-					target: clientScripts.includes(script) ? 'es2021' : 'esnext',
+					target: clientScripts.includes(script)
+						? 'es2021'
+						: 'esnext',
 					lib: {
 						entry: script.source,
 						formats: ['iife'],
@@ -133,13 +161,12 @@ function environments(): Record<string, EnvironmentOptions> {
 							script === faqSearch ? 'FAQSearch' : 'InvisiAsset',
 						fileName: () => basename(script.target),
 					},
-					rolldownOptions:
-						clientScripts.includes(script)
-							? {}
-							: {
-									treeshake: false,
-									output: { codeSplitting: false },
-								},
+					rolldownOptions: clientScripts.includes(script)
+						? {}
+						: {
+								treeshake: false,
+								output: { codeSplitting: false },
+							},
 				},
 			} satisfies EnvironmentOptions,
 		])
@@ -180,7 +207,7 @@ function environments(): Record<string, EnvironmentOptions> {
 		},
 		ssr: {
 			consumer: 'server',
-			resolve: { external: ['send', 'wispurr'] },
+			resolve: { external: ['send', 'wispurr', 'dlpcc'] },
 			build: {
 				outDir: serverDir,
 				emptyOutDir: true,
@@ -286,9 +313,15 @@ export function siteBuildPlugin(): Plugin[] {
 		{
 			name: 'invisiproxy-static',
 			applyToEnvironment: (environment) => environment.name === 'client',
-			generateBundle(_options, bundle) {
+			async generateBundle(_options, bundle) {
 				dropChunks(bundle);
 				const development = isDevelopment();
+				for (const [name, source] of await builtFonts())
+					this.emitFile({
+						type: 'asset',
+						fileName: `assets/webfonts/${getPathAliases()[`files/${name}`] || name}`,
+						source,
+					});
 				for (const file of siteFiles()) {
 					if (file.kind === 'script' || file.kind === 'style')
 						continue;
@@ -299,22 +332,31 @@ export function siteBuildPlugin(): Plugin[] {
 						emitted.set(file.source, modified);
 					}
 					const original =
-						file.kind === 'copy' || file.kind === 'vendor-script'
-							? readFileSync(file.source)
-							: file.kind === 'json'
-								? rewriteAssetReferences(
-										JSON.stringify(
-											maskManifest(
-												JSON.parse(
-													readFileSync(
-														file.source,
-														'utf8'
+						file.kind === 'copy'
+							? saltAsset(
+									file.target,
+									basename(file.source) === 'scramjet.wasm'
+										? scrubScramjetWasm(
+												readFileSync(file.source)
+											)
+										: readFileSync(file.source)
+								)
+							: file.kind === 'vendor-script'
+								? readFileSync(file.source)
+								: file.kind === 'json'
+									? rewriteAssetReferences(
+											JSON.stringify(
+												maskManifest(
+													JSON.parse(
+														readFileSync(
+															file.source,
+															'utf8'
+														)
 													)
 												)
 											)
 										)
-									)
-								: rewriteAssetReferences(readText(file));
+									: rewriteAssetReferences(readText(file));
 					const source =
 						!config.usingSEO && file.kind === 'vendor-script'
 							? obfuscateVendorScript(

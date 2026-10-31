@@ -6,6 +6,7 @@ import {
 	Splash,
 	values,
 	translate,
+	titled,
 } from '../document-helpers.tsx';
 import {
 	ParticlesScript,
@@ -121,7 +122,12 @@ export default function Scramjet() {
 export function Head() {
 	return (
 		<>
-			<title>{`InvisiProxy LTS | ${translate('scramjet.pageTitle')}`}</title>
+			<title>
+				{titled(
+					`InvisiProxy LTS | ${translate('scramjet.pageTitle')}`,
+					translate('header.browse.label')
+				)}
+			</title>
 			<PageDescription content={translate('scramjet.description')} />
 			<ProxyPreloads />
 			<HeadContent />

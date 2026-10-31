@@ -7,5 +7,6 @@ export interface PageDefinition {
 	Page: Component;
 	Head: Component;
 	bodyStyle?: JSX.HTMLAttributes<HTMLBodyElement>['style'];
+	bare?: boolean;
 	bodyScripts?: JSX.ScriptHTMLAttributes<HTMLScriptElement>[];
 }

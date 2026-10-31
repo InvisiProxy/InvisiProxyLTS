@@ -33,11 +33,13 @@ export const pageDefinitions = {
 		Page: EntryPoint,
 		Head: EntryPointHead,
 		bodyStyle: 'background-color: #0d1117',
+		bare: true,
 	},
 	'pages/misc/deobf/loader.html': {
 		Page: Loader,
 		Head: LoaderHead,
 		bodyStyle: 'background-color: #0d1117',
+		bare: true,
 	},
 	'pages/proxnav/scramjet-error.html': {
 		route: 'sjerror',

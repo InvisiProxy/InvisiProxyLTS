@@ -15,7 +15,10 @@ const preset = (id: string) =>
 describe('Browser fingerprint', () => {
 	test('Presets and valid custom agents resolve, broken custom agents do not.', () => {
 		assert.equal(storedUserAgent('firefox-linux'), preset('firefox-linux'));
-		assert.equal(storedUserAgent(customUserAgentValue('Agent/1.0')), 'Agent/1.0');
+		assert.equal(
+			storedUserAgent(customUserAgentValue('Agent/1.0')),
+			'Agent/1.0'
+		);
 		assert.equal(storedUserAgent(customUserAgentValue('a\nb')), null);
 		assert.equal(storedUserAgent('unknown'), null);
 		assert.equal(storedUserAgent(undefined), null);
@@ -65,6 +68,9 @@ describe('Browser fingerprint', () => {
 		assert.equal(first.preset.category, 'desktop');
 		assert.deepEqual(again, first);
 		store.set('fp', '{"preset":"missing"}');
-		assert.equal(sessionFingerprint(session, 'fp', () => 0).preset.id, 'chrome-windows');
+		assert.equal(
+			sessionFingerprint(session, 'fp', () => 0).preset.id,
+			'chrome-windows'
+		);
 	});
 });

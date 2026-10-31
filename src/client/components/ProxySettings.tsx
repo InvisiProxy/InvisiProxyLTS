@@ -135,12 +135,24 @@ export default function ProxySettings() {
 								<label for="settings-window">
 									{translate('settings.advanced.window')}
 								</label>
-								<select id="settings-window" class="cloak-type-list">
-									<option value={values.cloakTypes.none} selected>
-										{translate('settings.advanced.windowDefault')}
+								<select
+									id="settings-window"
+									class="cloak-type-list"
+								>
+									<option
+										value={values.cloakTypes.none}
+										selected
+									>
+										{translate(
+											'settings.advanced.windowDefault'
+										)}
 									</option>
-									<option value={values.cloakTypes.blank}>about:blank</option>
-									<option value={values.cloakTypes.blob}>blob</option>
+									<option value={values.cloakTypes.blank}>
+										about:blank
+									</option>
+									<option value={values.cloakTypes.blob}>
+										blob
+									</option>
 								</select>
 							</div>
 							<AddressField

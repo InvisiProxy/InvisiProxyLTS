@@ -1,4 +1,4 @@
-import { randomItem, values } from '../site.ts';
+import { homoglyphs, letters, randomItem, values } from '../site.ts';
 
 const maskPatterns = new WeakMap<string[], RegExp>();
 
@@ -46,6 +46,42 @@ export function maskText(text: string): string {
 	return result
 		.replace(/&#173;|&shy;/g, '\u00ad')
 		.replace(/&#8203;/g, '\u200b');
+}
+
+export function homoglyphText(text: string): string {
+	if (values.usingSEO) return text;
+	return text.replace(/[A-Za-z]/g, (letter) => homoglyphs[letter] ?? letter);
+}
+
+export function disguiseText(text: string): string {
+	if (values.usingSEO) return text;
+	return maskText(text.replace(termPattern(), homoglyphText));
+}
+
+function swapLetters(text: string, from: string, to: string) {
+	return from && to
+		? text.replace(/[A-Za-z]/g, (letter) => to[from.indexOf(letter)])
+		: text;
+}
+
+export const cipherText = (text: string) =>
+	swapLetters(text, letters, values.fontCipher.key);
+
+export const plainText = (text: string) =>
+	swapLetters(text, values.fontCipher.key, letters);
+
+export function escapeText(text: string) {
+	return text
+		.replaceAll('&', '&amp;')
+		.replaceAll('<', '&lt;')
+		.replaceAll('>', '&gt;');
+}
+
+export function cipherMarkup(text: string) {
+	const { tag } = values.fontCipher;
+	return tag && /[A-Za-z]/.test(text)
+		? `<${tag}>${escapeText(cipherText(text))}</${tag}>`
+		: escapeText(text);
 }
 
 export function getSplash() {

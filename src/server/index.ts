@@ -2,6 +2,8 @@ import { createServer } from 'node:http';
 import { Socket } from 'node:net';
 import { config, serverPort } from '../config.ts';
 import { entryPointFile } from '../constants.ts';
+import type { Relay } from 'dlpcc';
+import { startDlpcc, withDlpcc } from './dlpcc.ts';
 import { createSiteHandler } from './handler.ts';
 import {
 	fromOwnSite,
@@ -36,7 +38,8 @@ const wisps = new Map<string, SupervisedWisp>([
 	),
 ]);
 
-const server = createServer(createSiteHandler()).on(
+let relay: Relay | null = null;
+const server = createServer(withDlpcc(() => relay, createSiteHandler())).on(
 	'upgrade',
 	(req, socket, head) => {
 		const region = wispRegion(req.url);
@@ -52,7 +55,10 @@ const stopServer = async () => {
 	if (shuttingDown) return;
 	shuttingDown = true;
 	server.close();
-	await Promise.all([...wisps.values()].map((wisp) => wisp.stop()));
+	await Promise.all([
+		...[...wisps.values()].map((wisp) => wisp.stop()),
+		relay?.stop(),
+	]);
 	server.closeAllConnections();
 	process.exit(0);
 };
@@ -80,4 +86,6 @@ server.once('listening', () => {
 			`disguiseFiles is enabled. The site root now serves the entry point (views/dist/${entryPointFile}), which unlocks the page loader.`
 		);
 });
+relay = await startDlpcc(server);
+if (relay) console.log('DLPCC WebRTC relay is running.');
 server.listen(serverPort, '0.0.0.0');

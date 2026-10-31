@@ -445,6 +445,16 @@
 	transform: rotate(-45deg) translate(-25%, -25%);
 }
 
+.settings-collapse-header .proxy-settings-arrow {
+	width: 9px;
+	height: 9px;
+	opacity: 0.7;
+}
+
+.settings-collapse[open] > .settings-collapse-header .proxy-settings-arrow {
+	transform: rotate(45deg) translate(-25%, -25%);
+}
+
 .pr-settings[open] > .proxy-settings-header .proxy-settings-arrow {
 	transform: rotate(45deg) translate(-25%, -25%);
 }
@@ -464,16 +474,6 @@
 
 .settings-collapse-header::-webkit-details-marker {
 	display: none;
-}
-
-.settings-collapse-header .proxy-settings-arrow {
-	width: 9px;
-	height: 9px;
-	opacity: 0.7;
-}
-
-.settings-collapse[open] > .settings-collapse-header .proxy-settings-arrow {
-	transform: rotate(45deg) translate(-25%, -25%);
 }
 
 .settings-collapse-body {

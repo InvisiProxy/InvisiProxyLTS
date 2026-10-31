@@ -12,5 +12,7 @@
 	"geoLanguage": false,
 	"singleLanguage": false,
 	"language": "en",
-	"patreon": false
+	"patreon": false,
+	"dlpcc": false,
+	"dlpccNginx": false
 }

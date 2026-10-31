@@ -9,7 +9,7 @@ export const wispProxies = {
 	tor: 'socks5h://127.0.0.1:9050',
 	eu: 'socks5h://127.0.0.1:7000',
 	jp: 'socks5h://127.0.0.1:7001',
-	patreon: 'socks5h://127.0.0.1:7002',
+	patreon: process.env.PATREON_PROXY || 'socks5h://127.0.0.1:7002',
 } as const;
 export type WispRegion = keyof typeof wispProxies;
 
@@ -52,7 +52,7 @@ const wispConfig = {
 	tcpBufferSize: 1048576,
 	socketBufferSize: 33554432,
 	pendingQueueSize: 268435456,
-	bufferRemainingLength: 32768,
+	bufferRemainingLength: 2147483647,
 	tcpNoDelay: true,
 	blacklist: {
 		hostnames: [],

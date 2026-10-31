@@ -49,10 +49,14 @@ export default function FingerprintSettings() {
 						placeholder={translate(
 							'settings.fingerprint.customPlaceholder'
 						)}
-						aria-label={translate('settings.fingerprint.customLabel')}
+						aria-label={translate(
+							'settings.fingerprint.customLabel'
+						)}
 						spellcheck="false"
 						autocomplete="off"
-						data-invalid={translate('settings.fingerprint.invalidCustom')}
+						data-invalid={translate(
+							'settings.fingerprint.invalidCustom'
+						)}
 					/>
 					<input
 						type="submit"

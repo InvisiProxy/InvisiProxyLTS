@@ -6,12 +6,16 @@
 	border-radius: 5px;
 	padding: 10px 12px;
 	color: var(--nord4);
-	background-color: var(--mac-title-bg, var(--dark2));
+	background-color: var(--nord0);
 	font-family: "Figtree", "Figtree Fallback", sans-serif;
 	font-size: 20px;
 	height: 60px;
-	background-color: var(--nord0);
 	font-weight: 300;
+}
+
+.pr-form select option {
+	color: var(--nord4);
+	background-color: var(--nord0);
 }
 
 .pr-form input[type="text"]:focus {

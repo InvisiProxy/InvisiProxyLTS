@@ -4,10 +4,7 @@ export type ScramjetClientFrameNames = {
 	meta: { topFrameName?: string | null };
 };
 
-export function leakFrame(
-	win: Window,
-	client: ScramjetClientFrameNames
-): void {
+export function leakFrame(win: Window, client: ScramjetClientFrameNames): void {
 	const guarded = win as Window & { [installed]?: boolean };
 	if (guarded[installed]) return;
 	guarded[installed] = true;

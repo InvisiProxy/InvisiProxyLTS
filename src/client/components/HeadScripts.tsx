@@ -1,4 +1,4 @@
-import { Inline, route, SEO, translate } from '../document-helpers.tsx';
+import { Inline, route, SEO, translate, values } from '../document-helpers.tsx';
 
 export function PageDescription(props: { content?: string }) {
 	return (
@@ -30,11 +30,7 @@ export function AosScripts() {
 					href={route('assets/css/aos.css', 'inline')}
 				/>
 			</Inline>
-			<script
-				src={route('assets/js/aos.js')}
-				defer={true}
-				innerHTML=""
-			/>
+			<script src={route('assets/js/aos.js')} defer={true} innerHTML="" />
 		</>
 	);
 }
@@ -52,6 +48,14 @@ export function TooltipScripts() {
 export function ScramjetScripts(props: { utilities?: boolean }) {
 	return (
 		<>
+			{/* The DLPCC relay's patch, so every proxied page's WebRTC goes through it. */}
+			{values.dlpcc && (
+				<script
+					src={route('/dlpcc/client.js')}
+					defer={true}
+					innerHTML=""
+				/>
+			)}
 			<script
 				src={route('/scram/scramjet.js')}
 				defer={true}

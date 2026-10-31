@@ -92,7 +92,7 @@ function redirect(res: ServerResponse, location: string) {
 }
 
 function clearSiteData(res: ServerResponse) {
-	res.setHeader('Clear-Site-Data', '"cache", "storage"');
+	res.setHeader('Clear-Site-Data', '"cache", "cookies", "storage"');
 	res.setHeader('Cache-Control', 'no-store');
 	reply(res, 200);
 }
@@ -142,7 +142,10 @@ function applyResponseHooks(
 ) {
 	for (const [name, value] of securityHeaders) res.setHeader(name, value);
 	const cookies = (req.headers.cookie || '').split('; ');
-	if (cookies.includes('ExperimentalSiteFixes=true'))
+	if (
+		cookies.includes('ExperimentalSiteFixes=true') ||
+		cookies.includes('AutoSiteFixes=true')
+	)
 		res.setHeader('Cross-Origin-Embedder-Policy', 'credentialless');
 	const historyHide = cookies
 		.find((cookie) => cookie.startsWith('HistoryHide='))
@@ -202,6 +205,14 @@ export function createSiteHandler({
 			return [base + name, name];
 		})
 	);
+
+	const noStorePrefixes = [
+		'scram',
+		'libcurl',
+		'epoxy',
+		'wisp',
+		'network',
+	].map((prefix) => getAltPrefix(prefix, base));
 
 	const staticDirs = ['assets', 'scram', 'libcurl', 'epoxy'].map(
 		(prefix) => ({
@@ -366,6 +377,11 @@ export function createSiteHandler({
 
 		if (path !== baseRoute && !path.startsWith(base))
 			return reply(res, 404, 'text/plain', 'Not Found');
+		if (
+			serviceWorkers.has(path) ||
+			noStorePrefixes.some((prefix) => `${path}/`.startsWith(prefix))
+		)
+			res.setHeader('Cache-Control', 'no-store');
 
 		const disguise = checkDisguise(url);
 		if (disguise === 'loader')

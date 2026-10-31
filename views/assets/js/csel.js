@@ -1,4 +1,4 @@
-import { values, route, maskText } from 'build:invisiproxy';
+import { values, route, maskText, disguiseText, homoglyphText, plainText } from 'build:invisiproxy';
 import { BareCompatibleClient } from '@mercuryworkshop/proxy-transports';
 import {
   isMobileBrowser,
@@ -42,10 +42,51 @@ const maskCharacters = new RegExp(
   'gu'
 );
 
+const cipheredNodes = (selection) => {
+  const { tag } = values.fontCipher;
+  if (!tag || !selection?.rangeCount) return [];
+  const active = document.activeElement;
+  if (active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement)
+    return [];
+  const ranges = Array.from({ length: selection.rangeCount }, (_, i) =>
+    selection.getRangeAt(i)
+  );
+  return [...document.querySelectorAll(tag)]
+    .filter((element) => ranges.some((range) => range.intersectsNode(element)))
+    .map((element) => element.firstChild)
+    .filter((node) => node instanceof Text);
+};
+
+const selectedText = (selection) => {
+  const nodes = cipheredNodes(selection);
+  if (!nodes.length) return selection?.toString() || '';
+  const bounds = Array.from({ length: selection.rangeCount }, (_, i) => {
+      const range = selection.getRangeAt(i);
+      return [range.startContainer, range.startOffset, range.endContainer, range.endOffset];
+    }),
+    reselect = () => {
+      selection.removeAllRanges();
+      for (const [startNode, startOffset, endNode, endOffset] of bounds) {
+        const range = document.createRange();
+        range.setStart(startNode, startOffset);
+        range.setEnd(endNode, endOffset);
+        selection.addRange(range);
+      }
+    },
+    original = nodes.map((node) => node.data);
+  nodes.forEach((node) => (node.data = plainText(node.data)));
+  reselect();
+  const text = selection.toString();
+  nodes.forEach((node, i) => (node.data = original[i]));
+  reselect();
+  return text;
+};
+
 if (!values.usingSEO)
   document.addEventListener('copy', (e) => {
-    const selected = document.getSelection()?.toString() || '',
-      plain = selected.replace(maskCharacters, '');
+    const selection = document.getSelection(),
+      selected = selection?.toString() || '',
+      plain = selectedText(selection).replace(maskCharacters, '');
     if (!e.clipboardData || plain === selected) return;
     e.clipboardData.setData('text/plain', plain);
     e.preventDefault();
@@ -53,6 +94,7 @@ if (!values.usingSEO)
 
 // Cookies will not be used unless necessary. The localStorage API will be used instead.
 const storageId = `${values.storageNamespace}-storage`,
+  defaultPageTitle = document.title,
   storageObject = () => JSON.parse(localStorage.getItem(storageId)) || {},
   setStorage = (name, value) => {
     let mainStorage = storageObject();
@@ -96,7 +138,7 @@ const storageId = `${values.storageNamespace}-storage`,
     let tag =
       document.getElementsByTagName('title')[0] ||
       document.createElement('title');
-    tag.textContent = value;
+    tag.textContent = homoglyphText(value);
     document.head.appendChild(tag);
   },
   setIconHref = (href) => {
@@ -299,7 +341,7 @@ if (document.getElementById('csel')) {
       // Allow users to reset the title to default if nothing is entered.
       focusElement.focus();
       removeStorage('Title');
-      pageTitle(maskText("InvisiProxy LTS"));
+      pageTitle(defaultPageTitle);
     }
   });
 
@@ -416,9 +458,6 @@ if (document.getElementById('csel')) {
       Array.from(regionList).forEach((e) => {
         e.removeAttribute('disabled');
       });
-
-      // Tor will likely never be enabled by default, so removing the cookie
-      // here may be better than setting it to false.
       removeStorage('UseSocks5');
     }
     if (e.isTrusted) location.reload();
@@ -555,7 +594,7 @@ if (document.getElementById('csel')) {
   document.querySelectorAll('.fingerprint-status').forEach((status) => {
     const name =
       agentCategory === 'custom'
-        ? fingerprintViews.at(-1)?.textContent
+        ? plainText(fingerprintViews.at(-1)?.textContent || '')
         : presetLabel(storedAgent) ?? status.dataset.default;
     status.textContent = maskText(status.dataset.template.replace('{name}', name));
   });
@@ -575,10 +614,30 @@ if (document.getElementById('csel')) {
 
   attachEventListener('clear-site-data', 'click', async (e) => {
     if (!confirm(e.currentTarget.dataset.confirm)) return;
-    try {
-      await fetch(route('/api/clear'), { method: 'POST' });
-    } catch {}
-    location.href = route('/');
+    const attempt = (task) => Promise.resolve().then(task).catch(() => {}),
+      timeout = new Promise((resolve) => setTimeout(resolve, 3000));
+    await Promise.race([
+      Promise.all([
+        attempt(() => fetch(route('/api/clear'), { method: 'POST' })),
+        attempt(async () => {
+          for (const registration of await navigator.serviceWorker.getRegistrations())
+            await registration.unregister();
+        }),
+        attempt(async () => {
+          for (const name of await caches.keys()) await caches.delete(name);
+        }),
+        attempt(async () => {
+          for (const { name } of await indexedDB.databases())
+            if (name) indexedDB.deleteDatabase(name);
+        }),
+      ]),
+      timeout,
+    ]);
+    attempt(() => localStorage.clear());
+    attempt(() => sessionStorage.clear());
+    for (const cookie of document.cookie.split('; '))
+      if (cookie) removeCookie(cookie.split('=')[0]);
+    location.replace(route('/'));
   });
 
   attachClassEventListener('cloak-type-list', 'change', (e) => {
@@ -718,11 +777,11 @@ for (const transportSelector of document.getElementsByClassName('transport-list'
 }
 for (const regionSelector of document.getElementsByClassName('region-list')) {
   regionSelector.disabled = transportName === 'epoxy';
-  regionSelector.title = transportName === 'epoxy' ? 'Region routing requires libcurl.' : '';
+  regionSelector.title = transportName === 'epoxy' ? homoglyphText('Region routing requires libcurl.') : '';
 }
 for (const torToggle of document.getElementsByClassName('useonion')) {
   torToggle.disabled = transportName === 'epoxy';
-  torToggle.title = transportName === 'epoxy' ? 'Tor routing requires libcurl.' : '';
+  torToggle.title = transportName === 'epoxy' ? homoglyphText('Tor routing requires libcurl.') : '';
 }
 
 // Ads are disabled by default. Load ads if ads were enabled previously.
@@ -735,11 +794,15 @@ useStorageArgs('HideAds', (s) => {
   }
 });
 
-// TOR is disabled by default. Enable TOR if it was enabled previously.
+// Tor routing is only enabled by default when ExperimentalSiteFixes is on.
 useStorageArgs('UseSocks5', (s) => {
   const tor = document.getElementsByClassName('useonion'),
     regionList = document.getElementsByClassName('region-list');
-  if (s === 'tor') classUpdateHandler(tor, 'on', classEvent(tor, 'change'))();
+  if (
+    s === 'tor' ||
+    (s === undefined && readStorage('ExperimentalSiteFixes') === true)
+  )
+    classUpdateHandler(tor, 'on', classEvent(tor, 'change'))();
   else if ('string' === typeof s) classUpdateHandler(regionList, s)();
 });
 

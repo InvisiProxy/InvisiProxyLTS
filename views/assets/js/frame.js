@@ -1,5 +1,6 @@
-import { values } from 'build:invisiproxy';
+import { values, route, cipherText, homoglyphText } from 'build:invisiproxy';
 import { proxiedFrameUrl } from '../../../src/browser/frame-url.ts';
+import { autoSiteFixes } from '../../../src/browser/site-fixes.ts';
 import {
   maxTabs,
   parseBookmarks,
@@ -44,14 +45,12 @@ import {
 
   const byId = (id) => document.getElementById(id);
   const container = byId('tab-frames');
-  const frameTitle = byId('frame').title;
   const omnibar = byId('pr-sj');
   const omniInput = byId('search-input');
   const loader = document.getElementsByClassName('loader')[0];
+  const loaderText = loader?.getElementsByClassName('loader-text')[0];
   const toggle = byId('omnibar-toggle');
-  const tabCount = byId('tab-count');
-  const tabsMenu = byId('tabs-menu');
-  const tabsList = byId('tabs-list');
+  const tabList = byId('tab-list');
   const newTabButton = byId('new-tab');
   const bookmarkToggle = byId('bookmark-toggle');
   const bookmarksMenu = byId('bookmarks-menu');
@@ -64,6 +63,7 @@ import {
   let active = null;
   let bundle = null;
   let bookmarks = parseBookmarks(read(localStorage, bookmarksKey));
+  let restarting = false;
 
   const documentOf = (tab) => {
     try {
@@ -80,7 +80,12 @@ import {
     }
   };
   const titleOf = (tab) =>
-    documentOf(tab)?.title?.trim() || hostname(tab.url) || tabsList.dataset.untitled;
+    documentOf(tab)?.title?.trim() || hostname(tab.url) || tabList.dataset.untitled;
+
+  const randomTitle = () =>
+    Array.from(crypto.getRandomValues(new Uint8Array(5 + Math.floor(Math.random() * 6))), (byte) =>
+      String.fromCharCode(97 + (byte % 26))
+    ).join('');
 
   const icon = (className) => {
     const element = document.createElement('i');
@@ -88,13 +93,16 @@ import {
     element.setAttribute('aria-hidden', 'true');
     return element;
   };
-  const faviconOf = (tab) => {
+  const faviconUrl = (tab) => {
     const doc = documentOf(tab);
     const link = doc && nativeQuery.call(doc, 'link[rel~="icon"][href]');
-    if (!link) return icon('fas fa-globe');
+    return link ? new URL(nativeAttribute.call(link, 'href'), location.origin).href : '';
+  };
+  const faviconOf = (url) => {
+    if (!url) return icon('fas fa-globe');
     const image = new Image();
     image.alt = '';
-    image.src = new URL(nativeAttribute.call(link, 'href'), location.origin).href;
+    image.src = url;
     image.addEventListener('error', () => image.replaceWith(icon('fas fa-globe')), {
       once: true,
     });
@@ -109,10 +117,22 @@ import {
     );
 
   const syncLoader = () =>
-    loader?.classList.toggle('loader-active', Boolean(active?.loading));
+    loader?.classList.toggle('loader-active', restarting || Boolean(active?.loading));
+  const syncChip = (tab) => {
+    tab.label.textContent = cipherText(titleOf(tab));
+    tab.iframe.classList.toggle('proxy-tab-blank', !tab.url);
+    const url = tab.loading ? '' : faviconUrl(tab);
+    const key = tab.loading ? 'loading' : url;
+    if (tab.iconKey === key) return;
+    tab.iconKey = key;
+    tab.open.firstElementChild.replaceWith(
+      tab.loading ? icon('fas fa-circle-notch fa-spin') : faviconOf(url)
+    );
+  };
   const setLoading = (tab, loading) => {
     tab.loading = loading;
     if (tab === active) syncLoader();
+    syncChip(tab);
   };
 
   const applySandbox = (iframe) => {
@@ -146,6 +166,7 @@ import {
       const update = () => {
         if (doc.readyState !== 'complete') setLoading(tab, true);
         else if (!retryError(tab, doc)) setLoading(tab, false);
+        syncChip(tab);
       };
       doc.addEventListener('readystatechange', update);
       update();
@@ -159,17 +180,37 @@ import {
     bookmarkToggle.classList.toggle('bookmark-saved', saved);
     bookmarkToggle.setAttribute('aria-pressed', String(saved));
     bookmarkToggle.setAttribute('aria-label', label);
-    bookmarkToggle.title = label;
+    bookmarkToggle.title = homoglyphText(label);
     bookmarkToggle.firstElementChild.className = `${saved ? 'fas' : 'far'} fa-star`;
   };
-  const renderTabBook = () => {
-    tabCount.textContent = String(tabs.length);
-    favBookmarks();
+  const syncStrip = () => {
+    newTabButton.disabled = tabs.length >= maxTabs;
+    for (const tab of tabs) {
+      const current = tab === active;
+      tab.chip.classList.toggle('tab-chip-active', current);
+      tab.open.setAttribute('aria-selected', String(current));
+      tab.open.tabIndex = current ? 0 : -1;
+    }
+    active?.chip.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  };
+
+  const isolateFor = (url) => {
+    if (
+      crossOriginIsolated ||
+      !autoSiteFixes(url) ||
+      document.cookie.split('; ').includes('AutoSiteFixes=true')
+    )
+      return false;
+    document.cookie = 'AutoSiteFixes=true; path=/; SameSite=None; Secure;';
+    save();
+    location.reload();
+    return true;
   };
 
   const navigate = (tab, url) => {
     tab.url = url;
     tab.started = true;
+    if (isolateFor(url)) return;
     setLoading(tab, true);
     tab.frame.go(url);
     save();
@@ -177,10 +218,12 @@ import {
 
   const onUrl = (tab, url) => {
     tab.url = url;
+    if (isolateFor(url)) return;
     if (tab === active) {
       if (document.activeElement !== omniInput) omniInput.value = url;
       favBookmarks();
     }
+    syncChip(tab);
     save();
   };
 
@@ -188,15 +231,42 @@ import {
     if (!iframe) {
       iframe = document.createElement('iframe');
       iframe.className = 'proxy-tab';
-      iframe.title = frameTitle;
       iframe.allow = 'fullscreen';
       container.append(iframe);
     }
+    iframe.title = values.usingSEO ? tabList.dataset.untitled : randomTitle();
     const tab = { iframe, url, started: false, loading: false, errors: 0 };
     tab.frame = bundle.createFrame(iframe, (href) => onUrl(tab, href));
     iframe.addEventListener('load', () => watch(tab));
     applySandbox(iframe);
+    tab.chip = document.createElement('div');
+    tab.chip.className = 'tab-chip';
+    tab.open = document.createElement('button');
+    tab.open.type = 'button';
+    tab.open.className = 'tab-chip-open';
+    tab.open.setAttribute('role', 'tab');
+    const label = cipherOf('tab-chip-title', '');
+    tab.label = label.firstElementChild;
+    tab.open.append(icon('fas fa-globe'), label);
+    tab.open.addEventListener('click', () => activate(tab));
+    const close = document.createElement('button');
+    close.type = 'button';
+    close.className = 'tab-chip-close';
+    close.title = homoglyphText(tabList.dataset.close);
+    close.setAttribute('aria-label', tabList.dataset.close);
+    close.append(icon('fas fa-times'));
+    close.addEventListener('click', () => closeTab(tab));
+    tab.chip.addEventListener('mousedown', (event) => {
+      if (event.button === 1) event.preventDefault();
+    });
+    tab.chip.addEventListener('auxclick', (event) => {
+      if (event.button === 1) closeTab(tab);
+    });
+    tab.chip.append(tab.open, close);
+    tabList.append(tab.chip);
     tabs.push(tab);
+    syncChip(tab);
+    syncStrip();
     return tab;
   };
 
@@ -216,7 +286,8 @@ import {
     }
     if (document.activeElement !== omniInput) omniInput.value = tab.url;
     syncLoader();
-    renderTabBook();
+    syncStrip();
+    favBookmarks();
     save();
   };
 
@@ -226,17 +297,18 @@ import {
     const frames = bundle.controller.frames;
     if (frames.includes(tab.frame)) frames.splice(frames.indexOf(tab.frame), 1);
     tab.iframe.remove();
+    tab.chip.remove();
     if (tab === active) {
       active = null;
       activate(tabs[Math.min(index, tabs.length - 1)] ?? createTab(''));
     } else {
-      renderTabBook();
+      syncStrip();
       save();
     }
   };
 
   const closeMenus = () => {
-    if ([tabsMenu, bookmarksMenu].some((menu) => menu.parentElement.contains(document.activeElement)))
+    if (bookmarksMenu.parentElement.contains(document.activeElement))
       document.activeElement.blur();
   };
 
@@ -246,49 +318,31 @@ import {
     element.textContent = text;
     return element;
   };
+  const cipherOf = (className, text) => {
+    const element = textOf(className, '');
+    const inner = document.createElement(values.fontCipher.tag || 'span');
+    inner.textContent = cipherText(text);
+    element.append(inner);
+    return element;
+  };
 
-  const menuRow = ({ content, title, onOpen, removeLabel, onRemove, current }) => {
+  const menuRow = ({ content, onOpen, removeLabel, onRemove }) => {
     const item = document.createElement('li');
     item.className = 'frame-menu-row';
-    if (current) item.classList.add('frame-menu-current');
     const open = document.createElement('button');
     open.type = 'button';
     open.className = 'frame-menu-open';
-    open.title = title;
     open.append(...content);
     open.addEventListener('click', onOpen);
     const remove = document.createElement('button');
     remove.type = 'button';
     remove.className = 'frame-menu-remove';
-    remove.title = removeLabel;
+    remove.title = homoglyphText(removeLabel);
     remove.setAttribute('aria-label', removeLabel);
     remove.append(icon('fas fa-times'));
     remove.addEventListener('click', onRemove);
     item.append(open, remove);
     return item;
-  };
-
-  const renderTabs = () => {
-    tabsList.replaceChildren(
-      ...tabs.map((tab) =>
-        menuRow({
-          content: [faviconOf(tab), textOf('frame-menu-title', titleOf(tab))],
-          title: tab.url || titleOf(tab),
-          current: tab === active,
-          removeLabel: tabsList.dataset.close,
-          onOpen: () => {
-            activate(tab);
-            closeMenus();
-          },
-          onRemove: () => {
-            tabsMenu.focus();
-            closeTab(tab);
-            renderTabs();
-          },
-        })
-      )
-    );
-    newTabButton.disabled = tabs.length >= maxTabs;
   };
 
   const saveBookmarks = () =>
@@ -300,10 +354,9 @@ import {
         menuRow({
           content: [
             icon('fas fa-bookmark'),
-            textOf('frame-menu-title', bookmark.title),
-            textOf('frame-menu-detail', hostname(bookmark.url)),
+            cipherOf('frame-menu-title', bookmark.title),
+            cipherOf('frame-menu-detail', hostname(bookmark.url)),
           ],
-          title: bookmark.url,
           removeLabel: bookmarksList.dataset.remove,
           onOpen: () => {
             navigate(active, bookmark.url);
@@ -358,19 +411,28 @@ import {
     toggle.classList.toggle('omnibar-s', hidden);
     toggle.firstElementChild.className = `fas fa-chevron-${hidden ? 'down' : 'up'}`;
     (hidden ? document.body : omnibar).appendChild(toggle);
-    toggle.title = hidden ? 'Show Bar' : 'Hide Bar';
+    toggle.title = homoglyphText(hidden ? 'Show Bar' : 'Hide Bar');
   });
 
-  byId('tabs-button').addEventListener('focus', renderTabs);
   byId('bookmarks-button').addEventListener('focus', renderBookmarks);
-  for (const menu of [tabsMenu, bookmarksMenu])
-    menu.addEventListener('click', (event) => {
-      if (
-        !event.target.closest('.settings-content') ||
-        event.target.closest('.close-settings-btn')
-      )
-        closeMenus();
-    });
+  bookmarksMenu.addEventListener('click', (event) => {
+    if (
+      !event.target.closest('.settings-content') ||
+      event.target.closest('.close-settings-btn')
+    )
+      closeMenus();
+  });
+  tabList.addEventListener('keydown', (event) => {
+    const step = { ArrowLeft: -1, ArrowRight: 1 }[event.key];
+    if (!step || !active) return;
+    event.preventDefault();
+    const next = tabs[(tabs.indexOf(active) + step + tabs.length) % tabs.length];
+    activate(next);
+    next.open.focus();
+  });
+  setInterval(() => {
+    for (const tab of tabs) syncChip(tab);
+  }, 2000);
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') closeMenus();
   });
@@ -378,7 +440,6 @@ import {
   newTabButton.addEventListener('click', () => {
     if (!bundle || tabs.length >= maxTabs) return;
     activate(createTab(''));
-    closeMenus();
     omniInput.focus();
   });
 
@@ -403,6 +464,29 @@ import {
   };
   document.addEventListener('fullscreenchange', syncEscapeLock);
   window.addEventListener('focus', syncEscapeLock);
+
+  const buildUrl = route('assets/js/frame.js');
+  const checkBuild = () =>
+    fetch(buildUrl, { method: 'HEAD', cache: 'no-store' }).then(
+      (response) => (response.status >= 500 ? 'down' : response.ok ? 'same' : 'changed'),
+      () => 'down'
+    );
+  const watchServer = async () => {
+    const state = await checkBuild();
+    if (state === 'changed' || (state === 'same' && restarting))
+      return location.reload();
+    if (state === 'down' && !restarting) {
+      restarting = true;
+      if (loaderText?.dataset.restarting)
+        loaderText.textContent = loaderText.dataset.restarting;
+      syncLoader();
+    }
+    setTimeout(watchServer, restarting ? 2000 : 30000);
+  };
+  if (!values.development)
+    checkBuild().then((state) => {
+      if (state === 'same') setTimeout(watchServer, 30000);
+    });
 
   const start = () => {
     bundle = window.$invisiScramjet;

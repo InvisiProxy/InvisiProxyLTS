@@ -122,11 +122,19 @@ export const buildFixture = (root: string) =>
 		'native',
 	]);
 
-export async function startServer(root: string) {
+export async function startServer(
+	root: string,
+	env: Record<string, string> = {}
+) {
 	const port = await freePort();
 	const server = fork(join(root, 'dist/server.js'), [], {
 		cwd: root,
-		env: { ...process.env, PORT: String(port), INVISIPROXY_VITE_DEV: '' },
+		env: {
+			...process.env,
+			...env,
+			PORT: String(port),
+			INVISIPROXY_VITE_DEV: '',
+		},
 		stdio: ['ignore', 'ignore', 'inherit', 'ipc'],
 	});
 	const exited = new Promise((resolve) => server.once('exit', resolve));

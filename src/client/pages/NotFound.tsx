@@ -1,5 +1,6 @@
 import {
 	Keywords,
+	titled,
 	route,
 	translate,
 	Translation,
@@ -43,6 +44,10 @@ export default function NotFound() {
 							}}
 						/>
 					</p>
+					<br />
+					<a href={route('/')} class="error-home">
+						{translate('error.home')}
+					</a>
 				</div>
 			</div>
 			<div id="footer" class="fullwidth">
@@ -57,7 +62,12 @@ export function Head() {
 	return (
 		<>
 			<base href={route('/')} />
-			<title>{`InvisiProxy LTS | ${translate('error.pageTitle')}`}</title>
+			<title>
+				{titled(
+					`InvisiProxy LTS | ${translate('error.pageTitle')}`,
+					translate('error.pageTitle')
+				)}
+			</title>
 			<meta itemprop="http-status" content="404" />
 			<PageDescription />
 			<HeadContent />

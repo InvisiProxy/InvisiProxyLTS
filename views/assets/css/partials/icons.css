@@ -39,16 +39,19 @@
 }
 
 .fas {
+	/* biome-ignore lint/a11y/useGenericFontNames: icon font with no text fallback */
 	font-family: "Font Awesome 5 Free";
 	font-weight: 900;
 }
 
 .far {
+	/* biome-ignore lint/a11y/useGenericFontNames: icon font with no text fallback */
 	font-family: "Font Awesome 5 Free";
 	font-weight: 400;
 }
 
 .fab {
+	/* biome-ignore lint/a11y/useGenericFontNames: icon font with no text fallback */
 	font-family: "Font Awesome 5 Brands";
 	font-weight: 400;
 }

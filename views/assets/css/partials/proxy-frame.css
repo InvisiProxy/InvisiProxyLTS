@@ -1,9 +1,5 @@
-.loader {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100dvh;
+.loader,
+.proxy-tab.proxy-tab-blank {
 	background-color: #0d1117;
 	background-image:
 		radial-gradient(circle, rgba(131, 131, 131, 0.02) 1px, transparent 1px),
@@ -12,6 +8,14 @@
 		0 0,
 		5px 5px;
 	background-size: 10px 10px;
+}
+
+.loader {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100dvh;
 	z-index: 1;
 	align-items: center;
 	justify-content: center;
@@ -75,7 +79,7 @@
 	right: 0;
 	margin: 0 auto;
 	box-sizing: border-box;
-	width: min(720px, calc(100vw - 24px));
+	width: min(1000px, calc(100vw - 24px));
 	background-color: var(--omnibox-bg, var(--nord0));
 	background-image:
 		radial-gradient(circle, rgba(131, 131, 131, 0.02) 1px, transparent 1px),
@@ -108,7 +112,8 @@
 	border: 1px solid var(--nord1);
 	background: var(--nord0);
 	color: var(--nord4);
-	font-family: "Montserrat Alternates", "Montserrat Alternates Fallback", sans-serif;
+	font-family:
+		"Montserrat Alternates", "Montserrat Alternates Fallback", sans-serif;
 	font-size: 1rem;
 }
 
@@ -349,13 +354,134 @@
 	}
 }
 
-#tabs-button > i {
-	font-size: 1.15em;
+.omnibar {
+	flex-wrap: wrap;
+	row-gap: 6px;
 }
 
-#tab-count {
-	font-size: 0.7em;
-	font-weight: 700;
+.omnibar .tab-strip {
+	order: -2;
+	display: flex;
+	flex: 1 0 100%;
+	align-items: center;
+	gap: 4px;
+	min-width: 0;
+}
+
+.omnibar #tab-list {
+	display: flex;
+	flex: 0 1 auto;
+	gap: 4px;
+	min-width: 0;
+	overflow-x: auto;
+	scrollbar-width: none;
+}
+
+.omnibar #tab-list::-webkit-scrollbar {
+	display: none;
+}
+
+.omnibar .tab-chip {
+	display: flex;
+	flex: 0 1 180px;
+	align-items: center;
+	min-width: 96px;
+	border: 1px solid transparent;
+	border-radius: 8px;
+	background: color-mix(in srgb, currentColor 4%, transparent);
+	color: var(--nord4);
+	transition:
+		background 0.2s,
+		border-color 0.2s;
+}
+
+.omnibar .tab-chip:hover {
+	background: color-mix(in srgb, currentColor 9%, transparent);
+}
+
+.omnibar .tab-chip.tab-chip-active {
+	border-color: var(--nord8);
+	background: color-mix(in srgb, var(--nord8) 14%, transparent);
+}
+
+.omnibar .tab-chip-open {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+	padding: 5px 4px 5px 10px;
+	border-radius: 8px;
+	background: none;
+	color: inherit;
+	font: inherit;
+	font-size: 13px;
+	text-align: left;
+}
+
+.omnibar .tab-chip-open:hover {
+	background: none;
+}
+
+.omnibar .tab-chip-open > :is(img, i) {
+	flex: none;
+	width: 14px;
+	height: 14px;
+	font-size: 12px;
+	text-align: center;
+}
+
+.omnibar .tab-chip-title {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.omnibar .tab-chip-close {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 22px;
+	height: 22px;
+	margin-right: 4px;
+	padding: 0;
+	border-radius: 6px;
+	font-size: 11px;
+	opacity: 0;
+}
+
+.omnibar .tab-chip:is(:hover, :focus-within, .tab-chip-active) .tab-chip-close {
+	opacity: 0.8;
+}
+
+.omnibar .tab-chip-close:hover {
+	background: color-mix(in srgb, currentColor 14%, transparent);
+	opacity: 1;
+}
+
+@media (hover: none) {
+	.omnibar .tab-chip-close {
+		opacity: 0.8;
+	}
+}
+
+.omnibar #new-tab {
+	flex: none;
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	font-size: 0.9em;
+}
+
+.omnibar #new-tab:disabled {
+	opacity: 0.4;
+	cursor: default;
+}
+
+.omnibar .tab-strip button:focus-visible {
+	outline: 2px solid var(--nord8);
+	outline-offset: -2px;
 }
 
 .settings-content.frame-menu {
@@ -382,10 +508,6 @@
 	border: 1px solid var(--settings-border, var(--nord3));
 	border-radius: 12px;
 	background: color-mix(in srgb, currentColor 4%, transparent);
-}
-
-.frame-menu .frame-menu-current {
-	border-color: var(--nord8);
 }
 
 .frame-menu .frame-menu-open {
@@ -444,27 +566,6 @@
 .frame-menu .frame-menu-open:hover,
 .frame-menu .frame-menu-remove:hover {
 	background: color-mix(in srgb, currentColor 8%, transparent);
-}
-
-.frame-menu .frame-menu-action {
-	display: flex;
-	align-self: flex-start;
-	align-items: center;
-	gap: 8px;
-	padding: 10px 16px;
-	border: 0;
-	border-radius: 9px;
-	background: var(--nord8);
-	color: var(--nord18);
-	font: inherit;
-	font-size: 15px;
-	font-weight: 700;
-	cursor: pointer;
-}
-
-.frame-menu .frame-menu-action:disabled {
-	opacity: 0.5;
-	cursor: default;
 }
 
 .frame-menu :is(button, [tabindex]):focus-visible {

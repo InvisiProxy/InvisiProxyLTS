@@ -1,4 +1,4 @@
-import { Keywords } from '../document-helpers.tsx';
+import { Keywords, titled, translate } from '../document-helpers.tsx';
 import {
 	ParticlesScript,
 	PageScripts,
@@ -41,7 +41,9 @@ export default function Privacy() {
 export function Head() {
 	return (
 		<>
-			<title>InvisiProxy LTS</title>
+			<title>
+				{titled('InvisiProxy LTS', translate('header.privacy.label'))}
+			</title>
 			<PageDescription />
 			<HeadContent />
 			<ParticlesScript />

@@ -42,11 +42,15 @@ export function proxyCodec(): ProxyCodec {
 	cached = {
 		encode: new Function(
 			'url',
-			key ? encodeSource(literal) : 'return url ? encodeURIComponent(url) : url;'
+			key
+				? encodeSource(literal)
+				: 'return url ? encodeURIComponent(url) : url;'
 		) as Codec,
 		decode: new Function(
 			'url',
-			key ? decodeSource(literal) : 'return url ? decodeURIComponent(url) : url;'
+			key
+				? decodeSource(literal)
+				: 'return url ? decodeURIComponent(url) : url;'
 		) as Codec,
 	};
 	return cached;

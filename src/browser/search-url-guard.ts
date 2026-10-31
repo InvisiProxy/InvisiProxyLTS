@@ -10,7 +10,13 @@ const searchInputSelectors = [
 	"input[name='query']",
 	"textarea[name='q']",
 ];
-const guardedSites = ['duckduckgo.com', 'tiktok.com', 'animetsu.site', 'fmhy.net', 'twitch.tv'];
+const guardedSites = [
+	'duckduckgo.com',
+	'tiktok.com',
+	'animetsu.site',
+	'fmhy.net',
+	'twitch.tv',
+];
 
 export type ScramjetClientUrlGuardTarget = {
 	url: { href: string } | string;
