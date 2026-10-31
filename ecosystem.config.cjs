@@ -14,8 +14,6 @@ module.exports = {
 			time: true,
 			env: {
 				NODE_ENV: 'production',
-				DLPCC_PUBLIC_HOST: 'turn.*',
-				DLPCC_PUBLIC_PORT: '5349',
 			},
 		},
 		{
