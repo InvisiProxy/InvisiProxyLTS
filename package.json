@@ -1,6 +1,6 @@
 {
 	"name": "invisiproxy",
-	"version": "8.3.0",
+	"version": "8.3.1",
 	"repository": "https://github.com/QuiteAFancyEmerald/InvisiProxy",
 	"description": "InvisiProxy LTS is a web proxy service that helps you access websites that may be blocked by your network, government or policy all within your browser with no download or setup.",
 	"scripts": {
