@@ -63,8 +63,8 @@ importers:
         specifier: 3.0.0-beta.6
         version: 3.0.0-beta.6
       dlpcc:
-        specifier: 0.2.0
-        version: 0.2.0(@mercuryworkshop/scramjet-controller@0.0.14(@mercuryworkshop/scramjet@2.0.67-alpha.2))
+        specifier: 0.3.0
+        version: 0.3.0(@mercuryworkshop/scramjet-controller@0.0.14(@mercuryworkshop/scramjet@2.0.67-alpha.2))
       merp-obfuscator:
         specifier: ^0.1.1
         version: 0.1.1(vite@8.3.5(@types/node@24.19.2)(esbuild@0.28.2)(terser@5.51.2)(yaml@2.9.1))
@@ -918,8 +918,8 @@ packages:
     engines: {node: '>= 16.0.0'}
     hasBin: true
 
-  dlpcc@0.2.0:
-    resolution: {integrity: sha512-W9ymwNQVilxc2h2fSDSHb7oN3sdT0JseogQLtX2J1tZ1X/ERITBxiA3DiKCPcVbd/BwekLwuy50xRk+iAKN0sg==}
+  dlpcc@0.3.0:
+    resolution: {integrity: sha512-05zx4L1URy2HW9II4f1Yu7Z/VJWZdo6rFueYnYYY30P6SyewC0wbAiTvoEq2L9LrzKwV52QHfBPmvuihpWkU9A==}
     engines: {node: '>=18'}
     peerDependencies:
       '@mercuryworkshop/scramjet-controller': '*'
@@ -2247,7 +2247,7 @@ snapshots:
     dependencies:
       address: 2.0.3
 
-  dlpcc@0.2.0(@mercuryworkshop/scramjet-controller@0.0.14(@mercuryworkshop/scramjet@2.0.67-alpha.2)):
+  dlpcc@0.3.0(@mercuryworkshop/scramjet-controller@0.0.14(@mercuryworkshop/scramjet@2.0.67-alpha.2)):
     optionalDependencies:
       '@mercuryworkshop/scramjet-controller': 0.0.14(@mercuryworkshop/scramjet@2.0.67-alpha.2)
 

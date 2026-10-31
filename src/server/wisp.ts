@@ -9,7 +9,7 @@ export const wispProxies = {
 	tor: 'socks5h://127.0.0.1:9050',
 	eu: 'socks5h://127.0.0.1:7000',
 	jp: 'socks5h://127.0.0.1:7001',
-	patreon: 'socks5h://127.0.0.1:7002',
+	patreon: process.env.PATREON_PROXY || 'socks5h://127.0.0.1:7002',
 } as const;
 export type WispRegion = keyof typeof wispProxies;
 

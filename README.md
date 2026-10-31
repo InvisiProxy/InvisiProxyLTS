@@ -299,7 +299,14 @@ export const wispProxies = {
 	tor: 'socks5h://127.0.0.1:9050',
 	eu: 'socks5h://127.0.0.1:7000',
 	jp: 'socks5h://127.0.0.1:7001',
+	patreon: process.env.PATREON_PROXY || 'socks5h://127.0.0.1:7002',
 };
+```
+
+The Patreon region's proxy is read from `PATREON_PROXY`, so its address can stay out of the repo. Environment variables can go in a `.env` file in the project root, which the server loads on start (variables already set in the environment win) and git ignores:
+
+```sh
+PATREON_PROXY=socks5h://203.0.113.5:1080
 ```
 
 #### WebRTC Relay (DLPCC)
@@ -325,6 +332,15 @@ It only runs when `dlpcc` is `true` in `config.json`. Since it relays all of a v
 **Behind Cloudflare or another CDN**, the CDN only forwards web traffic, so TURN needs its own **DNS-only** (grey cloud) name pointing straight at the server, with a normal certificate (Let's Encrypt, not a CDN origin certificate). Set `DLPCC_PUBLIC_HOST=turn.*` and every mirror gets its own TURN name: a visitor on `www.mirror2.net` gets `turn.mirror2.net`, one on `example.com` gets `turn.example.com`. Add a `turn.` record for each mirror. A plain value such as `DLPCC_PUBLIC_HOST=turn.example.com` sends every mirror to that one name instead. Note that a DNS-only record reveals the server's IP.
 
 Every other relay option can be set with a `DLPCC_*` environment variable, such as `DLPCC_RELAY_IP` for the server's public IPv4 when it sits behind NAT, `DLPCC_PUBLIC_PORT=443` when TURN is reached on a different port than the site, or `DLPCC_RATE_LIMIT`. See the [DLPCC options](https://github.com/QuiteAFancyEmerald/Donglalu-Proxy-The-Second-Coming#options) for the full list.
+
+**Services that refuse datacenter IPs**, as GeForce NOW can, need the relayed media to leave from a residential IP instead. Set `DLPCC_UPSTREAM_PROXY` to a SOCKS5 proxy that supports UDP and every relayed stream goes out through it. Point `PATREON_PROXY` at the same proxy, so a site's own requests and its media come from one IP. Both can go in `.env`:
+
+```sh
+DLPCC_UPSTREAM_PROXY=socks5://203.0.113.5:1080
+PATREON_PROXY=socks5h://203.0.113.5:1080
+```
+
+Add `user:pass@` before the host if the proxy uses a login. For an IP whitelist, whitelist the server's IP. Most SOCKS5 proxies only carry TCP; when one can't do UDP, the relay logs an `upstream proxy` error saying `UDP ASSOCIATE` was refused.
 
 Since the relay is meant for private instances, InvisiProxy uses looser limits than DLPCC's own defaults, so many visitors sharing one school or office IP don't lock each other out:
 

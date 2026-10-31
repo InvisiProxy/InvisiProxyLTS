@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 export const projectUrl = new URL('../', import.meta.url);
 export const projectDir = fileURLToPath(projectUrl);
 export const configFile = new URL('config.json', projectUrl);
+export const envFile = new URL('.env', projectUrl);
 export const siteUrl = new URL('views/dist/', projectUrl);
 export const siteDir = join(projectDir, 'views/dist');
 export const stagingDir = join(projectDir, 'views/dist-new');
