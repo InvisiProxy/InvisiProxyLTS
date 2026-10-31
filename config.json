@@ -13,6 +13,6 @@
 	"singleLanguage": false,
 	"language": "en",
 	"patreon": false,
-	"dlpcc": true,
+	"dlpcc": false,
 	"dlpccNginx": false
 }
