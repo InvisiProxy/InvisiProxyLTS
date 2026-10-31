@@ -1,6 +1,6 @@
-import { values, route, appPresets, appIcon } from 'build:invisiproxy';
+import { values, route, appPresets, appIcon, cipherText } from 'build:invisiproxy';
 import { BareCompatibleClient } from '@mercuryworkshop/proxy-transports';
-import { proxiedFrameUrl } from '../../../src/browser/frame-url.ts';
+import { frameUrlPrefix, proxiedFrameUrl } from '../../../src/browser/frame-url.ts';
 /* -----------------------------------------------
 /* Authors: QuiteAFancyEmerald, Yoct, b4kt, and OlyB
 /* GNU Affero General Public License v3.0: https://www.gnu.org/licenses/agpl-3.0.en.html
@@ -17,7 +17,6 @@ import { proxiedFrameUrl } from '../../../src/browser/frame-url.ts';
 let sjBundle = null;
 const FRAME_URL_KEY = `${values.storageNamespace}-frame-url`;
 const OPEN_URL_KEY = `${values.storageNamespace}-open-url`;
-const SJ_PREFIX_TAG = 'sj:';
 
 // This is used for stealth mode when visiting external sites.
 const goFrame = (url) => {
@@ -236,6 +235,14 @@ const requestAC = async (baseUrl, query, params = {}) => {
 };
 
 let lastUpdated = Date.parse(new Date().toUTCString());
+// Suggestions are rendered through the font cipher like the rest of the page,
+// so the readable query only lives here and never in the DOM.
+const suggestionText = new WeakMap();
+const cipherNode = (text) => {
+  const node = document.createElement(values.fontCipher.tag || 'span');
+  node.textContent = cipherText(text);
+  return node;
+};
 const updateAC = (listElement, searchResults, time) => {
   if (time < lastUpdated) return;
   else lastUpdated = time;
@@ -244,14 +251,16 @@ const updateAC = (listElement, searchResults, time) => {
   for (let i = 0; i < searchResults.length; i++) {
     let suggestion = document.createElement('li');
     suggestion.tabIndex = 0;
+    const parts = searchResults[i].split(responseDelimiter);
+    suggestionText.set(suggestion, parts.join(''));
     suggestion.append(
-      ...searchResults[i].split(responseDelimiter).map((text, bolded) => {
+      ...parts.map((text, bolded) => {
         if (bolded % 2) {
           let node = document.createElement('b');
-          node.textContent = text;
+          node.append(cipherNode(text));
           return node;
         }
-        return text;
+        return cipherNode(text);
       })
     );
     listElement.appendChild(suggestion);
@@ -288,7 +297,7 @@ const getSearchTemplate = (
     // Treat the input as a search query instead of a website.
     return getSearchTemplate().replace('%s', encodeURIComponent(input));
   },
-  sjUrl = (url) => SJ_PREFIX_TAG + search(url)
+  sjUrl = (url) => frameUrlPrefix + search(url)
 
 const preparePage = () => {
   if (window.$invisiScramjet?.ready) sjBundle = window.$invisiScramjet;
@@ -464,8 +473,10 @@ const preparePage = () => {
 
         // Make the corresponding search query if a given suggestion was clicked.
         prAC.addEventListener('click', (e) => {
-          e.target.focus();
-          prUrl.value = document.activeElement.textContent;
+          const suggestion = e.target.closest('li');
+          if (!suggestionText.has(suggestion)) return;
+          suggestion.focus();
+          prUrl.value = suggestionText.get(suggestion);
           goProxMethod(searchMode)();
         });
       }

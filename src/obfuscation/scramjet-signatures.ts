@@ -18,12 +18,17 @@ const memberNames = [
 	'cookieSyncPromise',
 	'cookieUpdatedAt',
 	'BareResponse',
+	'invisiParticles',
 ];
 
 export interface ScramjetTokens {
 	core: string;
 	scram: string;
 	wrapper: string;
+	// Separate tokens so the globals don't form the telltale
+	// `$x`, `$xController`, `$xUtils` trio.
+	controller: string;
+	utils: string;
 	members: Record<string, string>;
 }
 
@@ -42,14 +47,21 @@ export function scramjetTokens(): ScramjetTokens {
 			core: 'scramjet',
 			scram: 'scram',
 			wrapper: 'invisiScramjet',
+			controller: 'scramjetController',
+			utils: 'scramjetUtils',
 			members: {},
 		};
 	const state = obfuscationState();
-	if (!state.scramjet?.members) {
+	if (
+		!state.scramjet?.controller ||
+		memberNames.some((name) => !state.scramjet?.members[name])
+	) {
 		state.scramjet = {
 			core: identifier(8),
 			scram: identifier(5),
 			wrapper: identifier(8),
+			controller: identifier(8),
+			utils: identifier(8),
 			members: Object.fromEntries(
 				memberNames.map((name) => [name, identifier(6)])
 			),
@@ -65,16 +77,26 @@ const realCacheKeys = (source: string) =>
 		'$1'
 	);
 
+const capitalize = (token: string) => token[0].toUpperCase() + token.slice(1);
+
 export function scrubScramjetSignatures(source: string): string {
 	if (config.usingSEO) return source;
-	const { core, scram, wrapper, members } = scramjetTokens();
+	const { core, scram, wrapper, controller, utils, members } =
+		scramjetTokens();
+	// Exported class/constant names (ScramjetClient, SCRAMJETCLIENT, ...) are
+	// looked up by key across bundles, so every casing maps to the same token.
 	let output = realCacheKeys(source)
 		.replaceAll('scramjet-injected', `${scram}-injected`)
 		.replaceAll('$invisiScramjet', `$${wrapper}`)
+		.replaceAll('$scramjetController', `$${controller}`)
+		.replaceAll('$scramjetUtils', `$${utils}`)
 		.replaceAll('$scramjet', `$${core}`)
 		.replaceAll('scramjet', core)
+		.replaceAll('Scramjet', capitalize(core))
+		.replaceAll('SCRAMJET', core.toUpperCase())
 		.replaceAll('$scram', `$${scram}`)
-		.replaceAll('scram', scram);
+		.replaceAll('scram', scram)
+		.replaceAll(/mercury-?workshop/gi, wrapper);
 	for (const [name, token] of Object.entries(members))
 		output = output.replaceAll(name, token);
 	return output;

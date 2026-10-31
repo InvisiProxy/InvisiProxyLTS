@@ -18,7 +18,7 @@ export default function Header() {
 					title={translate('header.homeTitle')}
 				>
 					{' '}
-					InvisiProxy v8.2.x{' '}
+					InvisiProxy v8.3.x{' '}
 				</a>
 			</div>
 			<div class="navbar-group">

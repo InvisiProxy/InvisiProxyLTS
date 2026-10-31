@@ -11,6 +11,7 @@ import {
   needsSearchUrlGuard,
 } from '../../../src/browser/search-url-guard.ts';
 import { leakFrame } from '../../../src/browser/leak-guard.ts';
+import { frameUrlPrefix } from '../../../src/browser/frame-url.ts';
 import { blockWebrtc } from '../../../src/browser/webrtc.ts';
 import {
   profileFromUserAgent,
@@ -335,8 +336,8 @@ import { skipHttpCache } from '../../../src/browser/http-cache.ts';
     plugins.push(
       new $scramjetUtils.CatchEscapedLinksPlugin((url) => {
         try {
-          localStorage.setItem(`${values.storageNamespace}-frame-url`, 'sj:' + url.href);
-          localStorage.setItem(`${values.storageNamespace}-open-url`, 'sj:' + url.href);
+          localStorage.setItem(`${values.storageNamespace}-frame-url`, frameUrlPrefix + url.href);
+          localStorage.setItem(`${values.storageNamespace}-open-url`, frameUrlPrefix + url.href);
         } catch (e) {}
         return new URL(location.pathname + location.search, location.origin);
       })

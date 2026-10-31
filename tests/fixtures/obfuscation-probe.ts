@@ -79,13 +79,19 @@ if (config.usingSEO) {
 		'new Request("https://sj-cache.invalid/" + encodeURIComponent(url))',
 		'$scramitize(); /*scramtag*/ $scramerr()',
 		'window.$invisiScramjet.ready',
+		'const { ScramjetClient } = $scramjet; c[SCRAMJETCLIENT]; loadScramjetWasm();',
+		'throw Error("@mercuryworkshop/scramjet is not loaded")',
 	].join('\n');
 	const scrubbed = scrubScramjetSignatures(sample);
 	assert.doesNotMatch(
 		scrubbed,
-		/scramjet|Scramjet|scram|sj-cache|invisiScramjet/i
+		/scramjet|scram|sj-cache|invisiScramjet|mercury/i
 	);
-	assert.ok(scrubbed.includes(`var $${tokens.core}Controller;`));
+	const Core = tokens.core[0].toUpperCase() + tokens.core.slice(1);
+	assert.ok(scrubbed.includes(`const { ${Core}Client } = $${tokens.core};`));
+	assert.ok(scrubbed.includes(`c[${tokens.core.toUpperCase()}CLIENT]`));
+	assert.ok(scrubbed.includes(`var $${tokens.controller};`));
+	assert.doesNotMatch(scrubbed, /Controller;/);
 	assert.ok(scrubbed.includes(`$${tokens.wrapper}.ready`));
 	assert.ok(
 		scrubbed.includes('new Request(url)'),
