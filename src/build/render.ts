@@ -9,7 +9,6 @@ import {
 	projectDir,
 	routesFile,
 } from '../constants.ts';
-import data from '../data.json' with { type: 'json' };
 import { elementIds } from '../obfuscation/classes.ts';
 import { obfuscateDocument } from '../obfuscation/documents.ts';
 import { cipherMarkup, maskText } from '../obfuscation/masks.ts';
@@ -161,7 +160,9 @@ export async function renderSite({
 	files[routesFile] = JSON.stringify(await siteRoutes(load));
 	files[
 		`assets/json/${getPathAliases()['files/splash.json'] || 'splash.json'}`
-	] = JSON.stringify(data.splash.map((text) => cipherMarkup(maskText(text))));
+	] = JSON.stringify(
+		buildValues.splash.map((text) => cipherMarkup(maskText(text)))
+	);
 	const locales = builtLocales(loadLocales());
 	const root = locales[0].code;
 	const plain = await getPlainDocuments(fresh, load);

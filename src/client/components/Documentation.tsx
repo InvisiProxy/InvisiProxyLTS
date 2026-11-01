@@ -61,6 +61,7 @@ function DeployButton(props: {
 		<Ext href={props.href}>
 			<img
 				src={props.src}
+				referrerpolicy="no-referrer"
 				alt={translate(
 					props.run ? 'docs.deploy.run' : 'docs.deploy.to',
 					{
@@ -291,27 +292,32 @@ export default function Documentation() {
 				<p class="docs-badges">
 					<img
 						src={`${repo}/workflows/CI-Production/badge.svg`}
+						referrerpolicy="no-referrer"
 						alt={translate('docs.badges.ci')}
 					/>
 					<img
 						src={`${repo}/workflows/CI-Win/badge.svg`}
+						referrerpolicy="no-referrer"
 						alt={translate('docs.badges.ci')}
 					/>
 					<Ext href="https://hub.docker.com/r/quiteafancyemerald/InvisiProxy">
 						<img
 							src="https://img.shields.io/docker/v/quiteafancyemerald/invisiproxy.svg"
+							referrerpolicy="no-referrer"
 							alt={translate('docs.badges.dockerVersion')}
 						/>
 					</Ext>
 					<Ext href="https://hub.docker.com/r/quiteafancyemerald/InvisiProxy">
 						<img
 							src="https://img.shields.io/docker/pulls/quiteafancyemerald/invisiproxy.svg"
+							referrerpolicy="no-referrer"
 							alt={translate('docs.badges.dockerPulls')}
 						/>
 					</Ext>
 					<Ext href="https://hub.docker.com/r/quiteafancyemerald/holy-unblocker">
 						<img
 							src="https://img.shields.io/docker/pulls/quiteafancyemerald/holy-unblocker.svg"
+							referrerpolicy="no-referrer"
 							alt={translate('docs.badges.dockerPulls')}
 						/>
 					</Ext>

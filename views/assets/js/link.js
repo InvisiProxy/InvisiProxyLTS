@@ -26,7 +26,7 @@ import { route } from 'build:invisiproxy';
 			result.href = url.href;
 			result.textContent = url.href;
 			result.hidden = false;
-			status.textContent = 'Your mirror link is ready!';
+			status.textContent = "Here's your mirror link for today. Check back tomorrow for a new one.";
 		} catch (error) {
 			status.textContent = error instanceof Error ? error.message : 'Unable to get a link. Please try again later.';
 		} finally {

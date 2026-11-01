@@ -9,6 +9,7 @@ import HeadContent from '../components/HeadContent.tsx';
 import ProxyPreloads from '../components/ProxyPreloads.tsx';
 import AntiExfil from '../components/AntiExfil.tsx';
 import Settings from '../components/Settings.tsx';
+import { LoaderPlacements } from '../components/Placements.tsx';
 
 function FrameMenu(
 	props: ParentProps<{
@@ -70,6 +71,7 @@ export default function ProxyFrame() {
 					{translate('frame.loading')}
 				</p>
 				<div class="loader-w"></div>
+				<LoaderPlacements />
 			</div>
 			<div class="omnibar" id="pr-sj">
 				<div class="tab-strip">

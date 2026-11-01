@@ -416,6 +416,7 @@ footer:
 
 common:
   logoAlt: InvisiProxy logo
+  advertisement: Advertisement
   description: >-
     InvisiProxy is a secure web proxy service with support for many sites.
     Bypass filters and freely enjoy a safer private browsing experience or
@@ -428,8 +429,9 @@ mirrors:
   title: Mirror links
   close: Close mirror links
   description: >-
-    Get another link to keep using InvisiProxy. Links are restocked frequently.
-  getLink: Get a random link
+    Get another link to keep using InvisiProxy. Your link stays the same for
+    the day, and a fresh one is handed out each day as links are restocked.
+  getLink: Get your mirror link
   open: Open mirror link
   openLabel: Open another InvisiProxy mirror
   issues: If you have any issues with links please create a GitHub issue.
@@ -578,7 +580,7 @@ privacy:
   title: Privacy Policy
   subtitle: InvisiProxy, a private web proxy service.
   effective: 'Effective Date: 07-16-2021'
-  updated: 'Updated Date: 05-10-2026'
+  updated: 'Updated Date: 10-31-2026'
   what:
     title: What is InvisiProxy?
     body: >-
@@ -594,8 +596,12 @@ privacy:
   data:
     title: Is any data being collected?
     body: >-
-      Nope! No data is logged or collected by any of our web proxies featured.
-      Logging is disabled to ensure user privacy on the backend. NextDNS
+      InvisiProxy itself does not log or collect your browsing. Logging is
+      disabled to ensure user privacy on the backend. The only exception is
+      the mirror links button, which holds your IP address in memory for a few
+      seconds to stop abuse; it is never written to disk. Advertising partners
+      on ad-supported domains collect their own data, as described under
+      Advertising below. NextDNS
       queries are adjusted to not log client IPs or domains and store in
       Switzerland. NextDNS log retention for respective numerical values is
       minimal and focused on ensuring the service operates smoothly. Cloudflare
@@ -665,13 +671,31 @@ privacy:
     audits: >-
       Regular Audits: Conducting regular security audits to identify and
       address potential vulnerabilities.
+  advertising:
+    title: Advertising
+    body: >-
+      Some InvisiProxy domains show ads to cover hosting costs. Patreon
+      instances are always ad-free. Ads are served by third-party networks:
+      Google AdSense, Adsterra, Adcash and Monetag. Ads only appear on
+      InvisiProxy's own pages and loading screens, never inside the websites
+      you browse through the proxy.<br/><br/>When an ad loads, the network
+      receives your IP address, browser user agent, the domain you are
+      visiting and similar technical details, and may set or read its own
+      cookies or use similar technologies to show ads, limit how often you see
+      them, measure performance and prevent fraud. These networks may run
+      their code on our pages; their handling of your data is governed by
+      their own privacy policies, not ours.<br/><br/>Google and its partners
+      may use cookies to serve ads based on your visits to this and other
+      websites. You can block ads
+      with a content blocker such as uBlock Origin, or use a Patreon instance.
   usage:
     title: Additional Usage
     storage: >-
       InvisiProxy uses "Cookies", IndexedDB, localStorage, and sessionStorage
       to maintain a user session (described more below) and store your
-      preferences on your computer. All of this information is completely
-      private being only local content with ZERO analytical purposes.
+      preferences on your computer. All of this information stays on your
+      device and InvisiProxy uses none of it for analytics. Advertising
+      partners may store their own cookies, as described under Advertising.
     cookies: >-
       A cookie is a string of information that a website stores on a visitor's
       computer, and that the visitor's browser provides to the website each
@@ -682,11 +706,13 @@ privacy:
       with the drawback that certain features of InvisiProxy WILL not function
       properly without the aid of cookies, localStorage or IndexedDB. No
       cookies, IndexedDB, localStorage, or sessionStorage features are stored
-      for analytical purposes only functions (Scramjet (Caching proxied assets,
-      session state, etc.), Autocomplete (Proxied), Setting Menu: Tab Cloak,
-      Icon Presets, Transport Options, Search Engines, Theming, Sandboxing, Tor
-      Routing, Hide Ads, Hidden History, and Region Swapping) rely on it for
-      storing persistent data locally.
+      for analytical purposes by InvisiProxy; only functions (Scramjet
+      (Caching proxied assets, session state, etc.), Tabs, Bookmarks,
+      Autocomplete (Proxied), Setting Menu: Tab Cloak, Icon Presets, Transport
+      Options, Search Engines, Theming, Language, Window Type, Tor Routing,
+      Region Swapping, Hide Ads, Hidden History, Block Window Leaks, Block
+      WebRTC and Fingerprint Randomization) rely on it for storing persistent
+      data locally.
     serviceWorkers: >-
       In addition, InvisiProxy uses Service Workers as a technology for our
       web proxies. This enables the ability to intercept respective network
@@ -694,7 +720,8 @@ privacy:
     consent: >-
       By continuing to navigate our website without changing your cookie
       settings, you hereby acknowledge and agree to InvisiProxy's use of
-      cookies.
+      cookies and to the cookies of the advertising partners described above,
+      where the law does not require your separate consent.
   changes:
     title: Ending Note
     body: >-

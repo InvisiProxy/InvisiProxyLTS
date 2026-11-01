@@ -1,0 +1,952 @@
+# Japanese (日本語) translation of en.yaml.
+# Based on the community Holy Unblocker JP translations, updated for InvisiProxy LTS.
+# Keep {placeholders} and <tags> as they are. See en.yaml for instructions.
+
+language:
+  name: 日本語
+
+  # Country codes (ISO 3166-1, as sent by Cloudflare's CF-IPCountry header)
+  countries:
+    - JP
+
+  # Words masked to avoid filters. Proper nouns stay as-is; common words are
+  # listed in the form they appear in this translation.
+  maskedTerms:
+    - InvisiProxy
+    - InvisiProxy LTS
+    - Holy Unblocker
+    - Holy Unblocker LTS
+    - Webretro
+    - Ruffle
+    - タブ隠蔽
+    - 検索
+    - 自由
+    - 無料
+    - ネットサーフィン
+    - VPN
+    - サーバー
+    - ネットワーク
+    - 接続
+    - プライバシー
+    - プライベート
+    - ゲーム
+    - Croxy
+    - CroxyProxy
+    - Proxium
+    - SOCKS
+    - SOCKS5
+    - プロキシチェーン
+    - 検閲
+    - ファイアウォール
+    - 匿名
+    - 匿名性
+    - ブロック
+    - フィルター
+    - 制限
+    - 回避
+    - ステルス
+    - 隠蔽
+    - シークレット
+    - 偽装
+    - Chromebook
+    - 学校
+    - Libcurl
+    - Epoxy
+    - Bare-Mux
+    - Mercury Workshop
+    - WebRTC
+    - ミラー
+    - プロキシ
+    - ブロック解除
+    - バイパス
+    - Titanium Network
+    - Wisp
+    - Tor
+    - Onion
+    - オニオン
+    - Ultraviolet
+    - Scramjet
+    - Rammerhead
+
+home:
+  title: InvisiProxy LTS | 無料Webプロキシ - フィルターを回避してブロックされたサイトにアクセス
+  description: >-
+    InvisiProxy LTSは、Webフィルターやブロッカーを回避するために設計された最先端のWebプロキシサービスです。クライアント側でもネットワーク側でも、検閲の方法を問わず、Chromebookなどのデバイスでブロックされたサイトへのシームレスなアクセスと、安全でプライベートなブラウジングを実現します。コンテンツブロッカー、Chrome拡張機能、ファイアウォールなどを高度なプロキシソリューションで乗り越えましょう。
+  ogDescription: >-
+    InvisiProxy LTSは、ネットワークやブラウザの制限を回避し、ブロックされたWebサイトに安全にアクセスできる一流のWebプロキシサービスです。強固なセキュリティと高度な機能で、シームレスなブラウジング体験をお楽しみください。
+  twitterDescription: >-
+    InvisiProxy LTSは、検閲やフィルターを回避してブロックされたWebサイトへ安全にアクセスできる最高峰のWebプロキシサービスです。プライベートなブラウジングや、Chromebookなどのデバイスでのネットワーク制限の回避に最適です。
+
+  headline: 検閲の悪夢を終わらせよう。
+  tagline: 失われたプライバシーが、すぐ手の届くところに。
+  browseNow: 今すぐブラウジング
+  bypassNow: 今すぐ回避
+  donate: 寄付する
+  logoAlt: InvisiProxy ロゴ ヒーロー
+  terminal:
+    setup: 本番ブランチで初めてセットアップする場合…
+    start: もしくは通常の利用では…
+    dev: 開発用には…
+
+  free:
+    title: InvisiProxyは無料でお使いいただけます。
+    body: >-
+      このプロジェクトはオープンソースなので、リポジトリを簡単にフォークしてセルフホストすれば、最大限のプライバシーコントロールを実現できます。他の多くのWebプロキシサービスとは異なり、InvisiProxyはTLSによるエンドツーエンド暗号化、閲覧履歴の分離、ChromiumブラウザでのTor/Onionルーティング、完全な透明性、そしてプライバシーコントロールを備えています。<strong>他のプロキシサービスとは違い、公式インスタンスではユーザーデータを一切収集しません。デバッグ目的でさえもです。</strong><br/>私たちが利用しているオープンソースの依存関係（Wisp、Libcurl、Epoxy）は安全性とプライバシーを重視して設計されており、悪意のあるセルフホストのインスタンスであっても、あなたのブラウジングの機密性が保たれます。
+
+  fast:
+    title: InvisiProxyは高速かつ高機能です。
+    body: >-
+      InvisiProxyは卓越したWebプロキシ性能を発揮します。reCAPTCHA/Botguard対応、Torネットワーク、SOCKS5プロキシチェーン、カスタマイズ可能なブラックリスト設定、漏洩防止、履歴の非表示設定、そしてScramjet + Wisp（Libcurl Transportと連携）による幅広いサイト互換性など、強力な機能を備えています。CroxyProxyやProxiumなどの他の人気サービスは、アセットの書き換えが中途半端でリクエストが漏洩することが多く、プライバシー上の懸念もあります。このプロジェクトはプロキシチェーンにも対応しており、複数のプロキシを経由して通信することで、セキュリティと匿名性をさらに高めることができます。
+
+  practical:
+    title: InvisiProxyは実用的です。
+    body: >-
+      ソースのランダム化や、Proxy Transports、Wisp、Scramjetといったプロジェクトを活用することで、Web・政府・ネットワークのフィルターを回避するシームレスな体験を提供します。このプロジェクトは中国（GFW - 中国のグレート・ファイアウォール）やロシアなどで使われているフィルターにも、<strong>ソフトウェアをダウンロードすることなく</strong>対応します。これはWebサイトとしてブラウザ内と私たちのバックエンド（セルフホストの場合はあなた自身のバックエンド）だけで完結しており、最も強力な検閲ブロックさえも回避できます。ダウンロードは不要です。InvisiProxyのドメインを入力するだけ。ブロックされている場合は公式InvisiProxyサイトでミラーを入手し、匿名でブラウジングしましょう。
+
+  heroSubtitle: 無料で透明性の高いサービス
+  designedWithPrivacy: プライバシーを第一に設計<underline/>。
+
+  overview:
+    title: 概要
+    body: >-
+      実験的なWebプロキシサービスであるInvisiProxy LTSは、検閲の方法がクライアント側かネットワークベースかを問わず、Webフィルターや「ブロッカー」を回避できます。これには、海外の政府によって導入されたコンテンツブロッカー（中国/GFW、ロシアなど）、Chrome拡張機能、ローカルのクライアントファイアウォール、ネットワーク関連のフィルターの回避も含まれます。
+    donate: >-
+      このプロジェクトを無料で維持するため、寄付をご検討ください！支援者には毎月の追加ドメイン、ベータ版へのアクセス、個人用ドメイン、機能リクエストの優先対応を提供しています。<br/>寄付は<patreon>こちらのPatreon</patreon>から行えます。
+    patreonLabel: Patreonで寄付する
+    imageAlt: サーバーアイコン
+
+  intent:
+    title: 目的
+    body: >-
+      このプロジェクトは主に、検閲を回避するための理想的なクライアントレスソリューションの概念実証として機能します。安全なWebプロキシサービスとして多数のサイトをサポートし、頻繁にアップデートを行いながら、デザイン、仕組み、機能の細部にこだわっています。
+    palette: >-
+      本プロジェクトのカラーパレットは、最適なデザイン配色と、読みやすいコード構文およびUIコンポーネントを重視した<nord>Nord Theme</nord>をベースに構築されています。
+    imageAlt: ファイルコードアイコン
+
+  usage:
+    title: 使い方
+    body: >-
+      <browse>ブラウズ</browse>ページに移動し、掲載されているプロキシを1つ選択してください。その後、検索ボックスにアクセスしたいサイトを入力します。各Webプロキシは、回避性能・速度・セキュリティのレベルがそれぞれ異なります。Scramjetのご利用をおすすめします。<br/><br/>ブロック解除するWebサイトの例：<code>https://youtube.com</code>
+    imageAlt: シールドアイコン
+
+  apps:
+    title: アプリ
+    body: >-
+      InvisiProxyには、YouTube、Spotify、GeForce NOW、Discord、ChatGPT、Geminiなど、あらかじめリンクされたアプリケーションのコレクションが用意されています！
+    imageAlt: アプリケーションアイコン
+
+  hosting:
+    title: ホスティングとデプロイ
+    body: >-
+      <strong>InvisiProxy LTS</strong>は、モジュール性、使いやすさ、デプロイの容易さを念頭に設計されたオープンソースソリューションです。主な機能として、広告ブロック、柔軟なソースコード生成、高度なプロキシナビゲーションなどがあります。<br/><br/>詳しいセットアップ手順については、公式<github>GitHubリポジトリ</github>または<docs>こちらの内蔵ドキュメント</docs>をご覧ください。
+    docsTitle: ホスティングに関する追加情報
+    imageAlt: ホスティングとデプロイのアイコン
+    imageTitle: InvisiProxy LTSのホスティングとデプロイ
+
+  contributing:
+    title: 貢献
+    body: >-
+      <strong>InvisiProxy LTS</strong>は、素晴らしい貢献者の皆さんの献身的な努力によって成り立っています。オープンソースプロジェクトである<strong>InvisiProxy LTS</strong>は、インターネット検閲を回避し、ユーザーが情報へアクセスしやすくするために、コミュニティの情熱に支えられています。
+    start: 貢献を始めるには、<github>GitHubリポジトリ</github>にアクセスしてください。
+    imageAlt: GitHub貢献アイコン
+    imageTitle: GitHubでInvisiProxy LTSに貢献する
+
+  githubTitle: InvisiProxy LTS GitHubリポジトリ
+
+  bypass:
+    title: 検閲やフィルターを回避
+    body: >-
+      InvisiProxy LTSはオープンソースの<strong>Webプロキシプロジェクト</strong>です。高度な<strong>Webプロキシによるブロック解除</strong>機能で、オンラインコンテンツへの制限のないアクセスとブラウジングをお楽しみください。また、どこにでもセルフホストでき、中国（中国のグレート・ファイアウォール - GFW）やロシアのような国家規模・地域規模のブロックも回避できます。
+
+  freeProxy:
+    title: 100%無料のWebプロキシ
+    body: >-
+      Webサイトの<strong>ブロックを解除</strong>し、制限されたコンテンツにアクセスできる<strong>無料のWebプロキシサービス</strong>をご活用ください。教育機関や職場のフィルターの回避に最適で、あらゆるブロックを解除するために作られています。
+
+  tor:
+    title: ChromiumブラウザとFirefoxでTorルーティングを利用
+    body: >-
+      InvisiProxy LTSを使えば、ChromiumベースやFirefoxベースのブラウザから直接<strong>Torネットワークにアクセス</strong>できます。つまり、このWebサイト内で<strong>.onion</strong>サイトに直接アクセスできるということです。これにより、地域の制限を回避しながら匿名でWebを閲覧できます（ある程度までですが。本物のTorの方がフィンガープリント対策は優れています）。このプロジェクトは、プロキシチェーン用のカスタムSOCKS5プロキシの設定にも対応しています。
+
+  unrestricted: 無料で制限のないブラウジング
+  closing: 自由にインターネットを使うときが来ました。
+  tryFree: InvisiProxyを無料で試す
+
+settings:
+  title: 設定
+  close: 設定を閉じる
+
+  language:
+    title: 言語
+    description: サイトの言語を選択します。「自動」はブラウザの設定に従います。
+    automatic: 自動
+
+  tab:
+    title: ブラウザタブの偽装
+    description: ブラウザのタブに表示されるタイトルとアイコンをカスタマイズします。
+    iconPreset: アイコンのプリセット
+    selectPreset: アイコンのプリセットを選択
+    tabTitle: タブのタイトル
+    tabTitlePlaceholder: タブのタイトルを入力…
+    iconUrl: アイコンのURL
+    apply: 適用
+    findIcon: アイコンURLを探す →
+
+  fingerprint:
+    title: フィンガープリントの偽装
+    description: >-
+      プロキシ経由のサイトにどのブラウザとして見せるかを選択します。リクエストと一緒に送信されるユーザーエージェントと、ページのスクリプトに報告されるユーザーエージェントが変更されます。
+    current: '現在: {name}'
+    default: ブラウザのデフォルト
+    reset: ブラウザのデフォルトを使用
+    views:
+      desktop: デスクトップ
+      mobile: モバイル
+      console: ゲーム機
+      bot: 検索エンジン
+      custom: カスタム
+    botWarning: >-
+      多くのサイトは検索エンジンのクローラーを検証しており、この表示ではブロックされたりページが変わったりすることがあります。
+    customLabel: カスタムユーザーエージェント
+    customPlaceholder: Mozilla/5.0 (…)
+    invalidCustom: 512文字以内の1行のユーザーエージェントを入力してください。
+
+  browsing:
+    title: ブラウジング
+    transport: トランスポート
+    searchEngine: 検索エンジン
+    theme: テーマ
+    themes:
+      dark: ダーク
+      light: ライト
+      nord: Nord風
+    autocomplete: 自動補完
+    autocompleteDescription: プロキシ経由の検索候補を表示します。
+
+  privacy:
+    title: プライバシー
+    hideAds: 広告を隠す
+    hideAdsDescription: ブラウジング中の広告をブロックします。
+    hideHistory: 履歴を隠す
+    hideHistoryDescription: ローカルブラウザ内の閲覧履歴を残しません。ネットワーク側からは偽装されたアクティビティが見える場合があります。
+    preventLeaks: ウィンドウ漏洩をブロック
+    preventLeaksDescription: ポップアップと新しいタブを制限します。一部のサイトが動作しなくなります。
+    blockWebrtc: WebRTCをブロック
+    blockWebrtcDescription: サイトからIPアドレスをさらに隠します。ビデオ通話やゲームストリーミングが動作しなくなります。
+    clearData: サイトデータを消去
+    clearDataDescription: すべてのサイトからログアウトし、設定をリセットします。
+    clearDataButton: 消去
+    clearDataConfirm: >-
+      すべてのサイトデータを消去しますか？ここで訪問したすべてのサイトからログアウトし、設定がリセットされます。
+
+  advanced:
+    title: 高度な設定
+    tor: Torブラウジング
+    torDescription: libcurlを使ってTor経由で通信します。
+    region: プロキシのリージョン
+    regions:
+      default: デフォルト
+      sweden: スウェーデン
+      japan: 日本
+    window: ウィンドウの種類
+    windowDefault: デフォルト
+
+header:
+  logoLabel: InvisiProxy ロゴ
+  homeTitle: InvisiProxy ホームページ
+  primaryNav: メインナビゲーション
+  moreOptions: その他のナビゲーションオプション
+  moreOptionsMenu: その他のオプションのサブメニュー
+  settingsMenu: 設定メニュー
+  toggleMenu: ナビゲーションメニューの切り替え
+  donate: Patreonで支援する
+  overview:
+    label: 概要
+    title: 概要 - このサイトでできること
+  browse:
+    label: ブラウズ
+    title: ブラウズ - Webの制限を回避
+  apps:
+    label: アプリ
+    mobileLabel: アプリケーション
+    title: アプリケーション - 便利なアプリケーションを閲覧
+  partners:
+    label: ユーティリティ
+    title: ユーティリティ - パートナープロジェクトを見る
+  docs:
+    label: ドキュメント
+    title: ドキュメント - 詳しい情報とガイド
+  faq:
+    label: FAQ
+    title: FAQ - よくある質問と回答
+  credits:
+    label: クレジット
+    title: クレジット - 謝辞と貢献
+  privacy:
+    label: プライバシー
+    mobileLabel: 利用規約
+    title: プライバシーポリシー - ユーザーのプライバシーに関する情報
+
+footer:
+  homeTitle: InvisiProxy ホームページ
+  tagline: グローバルなWebプロキシ・イノベーションを、正しく。
+  dependencies: 依存関係
+  transports: トランスポート
+  services: サービス
+  about: 概要
+  solidjs: SolidJS - ユーザーインターフェースを構築するための、シンプルで高性能なリアクティビティ。
+  vite: Vite - 次世代のフロントエンドツール。
+  wispurr: Golangで実装された、高性能で機能重視のWisp v1/v2サーバー。
+  nord: Nord Theme - 北極のような、青みがかったカラーパレット。
+  scramjet: Scramjet - インターネット検閲を回避するために設計された多機能なWebプロキシ。
+  wisp: Wisp - 1つのWebSocket上で複数のTCP/UDPソケットをプロキシするための、低オーバーヘッドで実装しやすいプロトコル。
+  wispLabel: Wispプロトコル
+  proxyTransports: Proxy Transports - Scramjetが使用するトランスポートインターフェース。
+  merp: Merp - 高度な難読化モジュール
+  merpLabel: Merp 難読化
+  githubTitle: InvisiProxy GitHubリポジトリ
+  patreonTitle: PatreonでInvisiProxyをフォロー
+  privacy: プライバシーポリシー
+  credits: クレジット
+  creditsTitle: クレジットと謝辞
+  backToTop: トップに戻る
+  followGithub: GitHubでInvisiProxyをフォロー
+  followKofi: Ko-fiで開発者をフォロー
+
+common:
+  logoAlt: InvisiProxy ロゴ
+  advertisement: 広告
+  description: >-
+    InvisiProxyは、多くのサイトに対応した安全なWebプロキシサービスです。フィルターを回避して、より安全でプライベートなブラウジングを自由に楽しんだり、Chromebookなどのデバイスや学校・職場などで、何もダウンロードせずにWebサイトのブロックを解除したりできます。
+
+mirrors:
+  toggle: ミラー
+  toggleTitle: InvisiProxyの別のリンクを入手
+  title: ミラーリンク
+  close: ミラーリンクを閉じる
+  description: >-
+    InvisiProxyを使い続けるための別のリンクを入手できます。リンクは1日の間は同じで、リンクの補充に合わせて毎日新しいものが配布されます。
+  getLink: ミラーリンクを入手
+  open: ミラーリンクを開く
+  openLabel: InvisiProxyの別のミラーを開く
+  issues: リンクに問題がある場合は、GitHubでissueを作成してください。
+
+proxySettings:
+  donate: >-
+    プレミアムドメイン、ベータ機能、住宅用ISP回線、より高速な通信を提供しています。<patreon>Patreon</patreon>で寄付できます。<br/>サービスをうまく利用できない場合は、Torまたはリージョンルーティングを有効にしてください。プロキシに問題がある場合は<faq>FAQ</faq>ページをご覧ください。
+  title: プロキシの設定
+  connection: 接続
+  searchNavFix: サイト修正を有効にする
+  searchNavFixDescription: >-
+    The Freedom Projectが作成したプラグインを使用して、ブラウジング中の「undefined」などのエラーを修正します。任意。
+  experimentalSiteFixes: 実験的なサイト修正
+  experimentalSiteFixesDescription: >-
+    手動によるサイト対応修正の詰め合わせです。サイトが動作しなくなったり、実際のIPが漏洩したりする可能性があります。自己責任でご利用ください。
+  hideHistoryDescription: ローカルの閲覧履歴を隠します。ネットワーク側から履歴を盗み見られる可能性はありますが、プロキシ経由になります。
+  randomizeFingerprint: ブラウザフィンガープリントをランダム化
+  randomizeFingerprintDescription: >-
+    タブのセッションごとにランダムなデスクトップブラウザを使用し、Canvas、WebGL、CPU、メモリの読み取り値にノイズを加えます。選択したユーザーエージェントが優先されます。一部のサイトが動作しなくなる場合があります。
+  customWisp: カスタムWispサーバー
+  customWispDescription: >-
+    プライバシーをより細かく管理するため、プロキシの通信を自分のWispサーバー経由にします。すべての通信をセルフホスト経由にしたい場合の軽量な方法です。フロントエンドはここのものを使い、通信は自分のサーバーに送られます。オフにするには空欄のままにしてください。
+  invalidWisp: ws:// または wss:// のアドレスを入力してください。
+  moreSettings: その他の設定を表示
+  anotherLink: 別のリンクが必要ですか？<mirrors>ミラーリンクボタン</mirrors>をクリックしてください。
+
+faq:
+  meta:
+    title: InvisiProxy FAQ | ネットワークエラー、CAPTCHA、YouTubeの修正方法
+    description: >-
+      ネットワークエラー、真っ白なページ、CAPTCHAのループ、YouTubeが読み込まれない？InvisiProxyでよくある問題の解決方法と、サイトへのログインが安全かどうかについて。
+    social: >-
+      ネットワークエラー、真っ白なページ、CAPTCHAのループ、YouTube再生の簡単な解決方法に加え、Discordへの対応や安全なログインについての回答。
+  title: よくある質問
+  search: 検索
+  searchLabel: よくある質問を検索
+  icons:
+    question: タブ隠蔽メニュー用のアイコンURLはどうやって入手しますか？
+    bookmarklet: >-
+      アイコンを取得したいWebサイトにアクセスし、このブックマークレットを使用してください（ブックマークバーにドラッグします）：
+    button: アイコンURLを取得
+    copy: >-
+      ブックマークレットが表示したURLをコピーしてください。InvisiProxyに戻り、設定のアイコンURLにそのURLを入力してください。お楽しみください！
+  networkError:
+    question: >-
+      プロキシを使うたびに「ネットワークエラー」またはサイトエラーが表示されます。
+    answer: >-
+      これは最新のWebプロキシにおける既知の問題です。利用者が多いため、通常はタブの操作が10分ほどないと接続が切断されます。「ページを更新」ボタンを押してページを再読み込みすれば解決します。
+    note: >-
+      これは通常、プロキシを初めて使うときに発生します。将来的に修正予定です。
+  bot:
+    question: >-
+      ボットだと判定されて、サイトへのログインやコンテンツの閲覧ができません。
+    answer: >-
+      アクセスが集中する時間帯は、すべての通信がわずか2つのIPを経由するため、これはよくあることです。解決策は、リージョン選択でリージョンを切り替えるか、Torルーティングを有効にすることです。また、Patreonに参加すれば、住宅用ISPを使ったインスタンスを利用でき、この問題を回避できます。
+  unreachable:
+    question: >-
+      「'cdn.example.com' cannot be reached.」のようなエラーが表示されます。
+    answer: >-
+      ページを再読み込みしてください。一度でうまくいかない場合は、ブラウザの「戻る」ボタンを使うか、Scramjetのページに戻ってもう一度お試しください。
+  blank:
+    question: サイトが部分的にしか読み込まれない、または真っ白になるのはなぜですか？
+    answer: >-
+      すべてのWebサイトがサポートされているわけではありません。Webは広大で、コンテンツの読み込み方法や技術がさまざまであるため、これは避けられません。特定のサイトで問題がある場合は、DiscordサーバーまたはGitHubでご報告ください。それ以外の場合は、プロキシのオプションを切り替えて、サイトに対応しているものがあるか試してみてください。
+  idb:
+    question: >-
+      IDBデータベースに関するエラーが表示されます（Scramjet V1の問題）
+    answer: >-
+      これは通常、プロジェクトのアップデート時に発生します。ブラウザの左上にある (i) アイコン（または鍵マーク）をクリックし、「サイトデータを削除」または「Cookieとサイトデータ > デバイス上のサイトデータを管理 > ゴミ箱アイコン」を選択してください。これでIndexedDBデータベースが消去され、再びプロキシを使用できるようになります。
+  discord:
+    question: Discordは使えますか？
+    answer: はい、Discordはサポートされています。
+    note: >-
+      ただし、無料のプロキシにはいくつか制限があります。セルフホストしている場合や小規模なドメインを使っている場合を除き、メインアカウントは使わないようにしてください。
+  youtube:
+    question: YouTubeの動画が再生されないのはなぜですか？
+    answer: >-
+      上記の手順を試しても問題が続く場合は、インスタンスが一時的にダウンしている可能性があります。特に、多くの人が同じ問題を抱えている場合はその可能性が高いです。セルフホストではこの問題は発生しません。
+    tor: >-
+      「Tor」オプションを選択してみてください。問題が解決する可能性がありますが、読み込み速度が大幅に低下します。
+  login:
+    question: サイトにログインしても安全ですか？
+    answer: >-
+      はい、サイトへのログインは安全です。ただし、1つのドメインに大量の通信が集まるため、信頼できないサイトへのログインや個人アカウントの使用はおすすめしません。IPをローテーションすることでこの問題を軽減していますが、公開プロキシで個人アカウントを使わないのは一般的な心得です。セルフホストであれば気軽に利用できます。また、Patreonに参加すれば住宅用ISPを利用でき、この問題を回避できます。
+  captcha:
+    question: >-
+      アクセスしているサイトが正しく動作しない、またはCAPTCHAエラーが出るのはなぜですか？
+    answer: >-
+      ScramjetではCAPTCHAに対応していますが、試行錯誤が必要です。Scramjetは速すぎることが多く、CAPTCHAはどうしても不安定になるためです。解決策は、通るまでCAPTCHAを解き続けることです。あまり速く操作しすぎないようにしてください。
+  youtubeBlank:
+    question: >-
+      プロキシサイトでYouTubeを使うと、ページが完全に読み込まれなかったり、動画が真っ白になったりするのはなぜですか？
+    answer: '解決方法は2つあります：'
+    reload: >-
+      上記のエラーが発生したときにページを通常どおり再読み込みすると、動画が読み込まれるはずです。
+    reloadFrame: >-
+      または、何らかのステルスモードを使用している場合は、ページを右クリックして<code>フレームを再読み込み</code>を実行してください。
+
+privacy:
+  title: プライバシーポリシー
+  subtitle: InvisiProxy、プライベートなWebプロキシサービス。
+  effective: '発効日: 2021年7月16日'
+  updated: '更新日: 2026年10月31日'
+  what:
+    title: InvisiProxyとは？
+    body: >-
+      InvisiProxy LTSは、ネットワーク、政府、ポリシーによってブロックされている可能性のあるWebサイトに、ダウンロードや設定なしでブラウザ内からアクセスできるWebプロキシサービスです。これを安全に、追加のプライバシー機能とともに実現します。どのブラウザでもTor/Onionサイトを閲覧し、ブラウジングのアクティビティを隠し、フィルターを回避できます。これには、政府によるコンテンツブロッカー、Chrome拡張機能、ローカルのクライアントファイアウォール、ネットワーク関連のフィルターを回避できる可能性も含まれます。<br/>このプロジェクトは主に、検閲を回避するための理想的なクライアントレスソリューションの概念実証として機能します。
+  data:
+    title: データは収集されていますか？
+    body: >-
+      InvisiProxy自体は、あなたのブラウジングを記録・収集しません。ユーザーのプライバシーを確保するため、バックエンドではログ記録が無効になっています。唯一の例外はミラーリンクボタンで、不正利用を防ぐためにIPアドレスを数秒間メモリ上に保持しますが、ディスクに書き込まれることはありません。広告付きドメインの広告パートナーは、下記の「広告」で説明するとおり、独自にデータを収集します。NextDNSのクエリは、クライアントのIPやドメインを記録しないよう調整され、スイスに保存されます。NextDNSの数値データのログ保持は最小限で、サービスの円滑な運用を目的としています。このプロジェクトでは、その規模から、パフォーマンスの向上とDNS管理の容易化のためにCloudflareを利用しています。Cloudflareの数値データは、サーバーのアップグレードが必要な時期を判断するための訪問数やページビューの把握に最小限利用されます。NGINXはログを一切保存しない設定です。InvisiProxy LTSは、インターネット検閲を終わらせるという理念とともに、ユーザーのプライバシーを大切にしています。さらに、Wispプロトコル（TCP接続のプロキシ用）をlibcurl-transportと組み合わせ、WebAssembly内でSSL/TLSを実行することでエンドツーエンド暗号化を実現しています。このサービスは可能な限り透明になるよう作られています。いつでもセルフホストして、すべてを自分で管理できることを忘れないでください。<br/><br/>プライバシーに関する意見やリクエストがある場合は、Discordでご連絡ください。
+  security:
+    title: セキュリティ
+    body: >-
+      InvisiProxy LTSは、ユーザーに安全で信頼性の高いWebプロキシサービスを提供するために、ゼロから構築されています。InvisiProxy LTSを支える中核技術の1つが、Mercury Workshopが開発した新しいWispプロトコルです。<br/><br/>このプロトコルは、従来のモデルに比べてサービスの速度とセキュリティを向上させる、いくつもの革新的な機能と改良をもたらします。
+    intro: >-
+      Wispプロトコルは、高いセキュリティ基準を維持しながら、現代のWebトラフィックの需要に対応するよう設計されています。Wispを実装することで、このプロジェクトは次のメリットを得ています：
+    performance: >-
+      パフォーマンス：WispプロトコルはTCPのデータ転送速度を最適化し、ブラウジング中の遅延を最小限に抑えます。
+    compatibility: >-
+      互換性：Wispは幅広いWeb技術と互換性があるように作られており、さまざまなWebサイトやオンラインサービスへのシームレスなアクセスを実現します。これは、プロトコルに準拠したさまざまなオープンソースのトランスポート（Libcurl Transport）のサポートによって実現されています。
+    censorship: >-
+      検閲への耐性：このプロトコルは、制限の厳しいネットワークで使われる高度な検閲技術を回避するよう設計されており、ブロックされたコンテンツに簡単にアクセスできます。
+    fingerprinting: >-
+      フィンガープリント耐性：このプロジェクトは、公式インスタンスのリバースプロキシ構成に強力なフィンガープリント耐性の仕組みを備えています。つまり、ユーザーの追跡や特定に使われうる固有の識別子を最小限に抑えるよう設計されており、プライバシーが強化されています。業界のベストプラクティスに従い、手法を継続的に更新することで、ユーザーは特定可能な痕跡を残さずに匿名でブラウジングできます。
+    transparency: >-
+      透明性：透明性はInvisiProxy LTSの重要な原則です。このプロジェクトはオープンソースモデルで運営されており、コミュニティがコードベースをレビューし、貢献することができます。このオープンさは信頼を育むだけでなく、コミュニティからのフィードバックと協力による継続的な改善も可能にします。透明な運営を徹底することで、InvisiProxy LTSはユーザーが自分のデータの扱われ方と、プライバシーを守るための対策を把握できるようにしています。
+    randomisation: >-
+      ソース/グローバルのランダム化：セキュリティとプライバシーをさらに強化するため、InvisiProxy LTSはソースおよびグローバルのランダム化を採用しています。これにより、ドメインがより長くブロックされずに済み、ブラウジング中の匿名性も向上します。一般的なWebプロキシはアセットを書き換えるたびに痕跡を残しますが、この方法ではプロキシを検出してブロックすることがはるかに難しくなります。
+    encryption: >-
+      暗号化：InvisiProxy LTSは、特にURL書き換え型プロキシにおいて、エンドツーエンド暗号化と安全なデータ転送に重点を置いた高度なプロキシ技術を使用しています。注：これはまだ大規模な開発途中であり、貢献を歓迎しています。
+    audits: >-
+      定期的な監査：潜在的な脆弱性を特定して対処するため、定期的にセキュリティ監査を実施しています。
+  advertising:
+    title: 広告
+    body: >-
+      一部のInvisiProxyドメインでは、ホスティング費用をまかなうために広告を表示しています。Patreonのインスタンスは常に広告なしです。広告はサードパーティのネットワーク（Google AdSense、Adsterra、Adcash、Monetag）によって配信されます。広告はInvisiProxy自身のページと読み込み画面にのみ表示され、プロキシ経由で閲覧するWebサイトの中に表示されることはありません。<br/><br/>広告が読み込まれると、そのネットワークはあなたのIPアドレス、ブラウザのユーザーエージェント、訪問中のドメインなどの技術情報を受け取り、広告の表示、表示頻度の制限、効果測定、不正防止のために独自のCookieを設定・読み取ったり、類似の技術を使用したりすることがあります。これらのネットワークは私たちのページ上でコードを実行する場合があり、そのデータの取り扱いは私たちではなく各社のプライバシーポリシーに従います。<br/><br/>Googleとそのパートナーは、このサイトや他のWebサイトへの訪問に基づいて広告を配信するためにCookieを使用することがあります。パーソナライズされたGoogle広告は adssettings.google.com でオフにでき、その他多くのネットワークは optout.aboutads.info または youronlinechoices.eu でオプトアウトできます。コンテンツブロッカーで広告をブロックしたり、Patreonのインスタンスを利用したりすることもできます。
+  usage:
+    title: その他の利用について
+    storage: >-
+      InvisiProxyは、ユーザーセッションの維持（詳細は後述）と設定の保存のために、「Cookie」、IndexedDB、localStorage、sessionStorageをお使いのコンピューター上で使用します。これらの情報はすべてお使いのデバイス上に保存され、InvisiProxyが分析に使用することは一切ありません。広告パートナーは、「広告」で説明するとおり、独自のCookieを保存することがあります。
+    cookies: >-
+      Cookieとは、Webサイトが訪問者のコンピューターに保存する情報の文字列で、訪問者が再訪するたびにブラウザからWebサイトへ送信されます。InvisiProxyは、設定メニューの使いやすさの確保と、ユーザー設定の保存のためにCookieを使用します。コンピューターにCookieを保存したくない場合は、InvisiProxyのWebサイトを利用する前に、ブラウザでCookieを拒否するよう設定してください。ただし、Cookie、localStorage、IndexedDBがないとInvisiProxyの一部の機能は正常に動作しません。InvisiProxyが分析目的でCookie、IndexedDB、localStorage、sessionStorageに何かを保存することはありません。永続的なデータをローカルに保存するために利用しているのは次の機能のみです：Scramjet（プロキシしたアセットのキャッシュ、セッション状態など）、タブ、ブックマーク、自動補完（プロキシ経由）、設定メニュー：タブ隠蔽、アイコンのプリセット、トランスポートのオプション、検索エンジン、テーマ、言語、ウィンドウの種類、Torルーティング、リージョンの切り替え、広告を隠す、履歴を隠す、ウィンドウ漏洩のブロック、WebRTCのブロック、フィンガープリントのランダム化。
+    serviceWorkers: >-
+      さらに、InvisiProxyはWebプロキシの技術としてService Workerを使用しています。これによりネットワーク通信などを傍受できるようになり、プロジェクトの中核となる機能です。
+    consent: >-
+      Cookieの設定を変更せずに当サイトの閲覧を続けることで、法律で個別の同意が必要とされない範囲において、InvisiProxyによるCookieの使用、および上記の広告パートナーのCookieに同意したものとみなされます。
+  changes:
+    title: 最後に
+    body: >-
+      ほとんどの変更は軽微なものとなる見込みですが、InvisiProxyはInvisiProxy LTSの独自の裁量により、本プライバシーポリシーを随時変更することがあります。InvisiProxy LTSは、プライバシーポリシーの変更がないか、このページを頻繁にご確認いただくことをおすすめします。プライバシーポリシーの変更後も引き続き本サイトを利用した場合、その変更に同意したものとみなされます。不正利用やDDoS攻撃が発生した場合、InvisiProxy LTSは攻撃を緩和しサービスの稼働を維持するため、一時的にデータを記録せざるを得ないことがあります。その場合、記録されたデータは攻撃の緩和後ただちに安全に削除されます。
+  contact:
+    title: 連絡先とクレジット
+    body: >-
+      プライバシーポリシーについてご質問がある場合は、次のメールアドレスまでお問い合わせください：
+
+docs:
+  chemical: >-
+    自分でWebプロキシサービスをゼロから作りたい場合は、<chemical>Chemical</chemical>を使ってみてください。
+  chemicalButton: Chemicalでプロキシサイトを構築
+  formerly: 旧Holy Unblocker LTS
+  badges:
+    ci: GitHub Actionsのステータス
+    dockerVersion: Dockerイメージのバージョン
+    dockerPulls: Dockerのプル数
+  intro: >-
+    <strong>InvisiProxy LTS</strong>（旧Holy Unblocker LTS）は、検閲の方法がクライアント側かネットワークベースかを問わず、Webフィルターや「ブロッカー」を回避できる実験的なWebプロキシサービスです。これには、政府によるコンテンツブロッカー、Chrome拡張機能、ローカルのクライアントファイアウォール、ネットワーク関連のフィルターの回避も含まれます。さらに、Webサイトだけで、どのブラウザ（Chromiumでも！）からでもTor/Onionサイトを閲覧できます！
+  star: リポジトリにスターを付けて、InvisiProxyを応援してください！
+  about: >-
+    このプロジェクトは主に、検閲を回避するための理想的なクライアントレスソリューションの概念実証として機能します。たとえば、Torを使いたいとき、ブラウジング中にリージョンを切り替えたいとき（または外部プロキシを使いたいとき）、アカウントを作らずにWebサイトを閲覧したいとき（フィンガープリントを減らせます）、広告ブロック対策を回避したいとき、デバイスの利用痕跡を最小限にしたいときなどに役立ちます。任意のドメインでこのプロジェクトをホストするだけで、デバイスに何もダウンロードせずにVPNの代わりとなる手段が手に入ります。安全なWebプロキシサービスとして多数のサイトをサポートし、頻繁にアップデートされ、セルフホストのしやすさを重視しています。InvisiProxy LTSは、YouTube、Gemini、ChatGPT、Discord、GeForce NOWなど、非常に多くのサイトで動作します！また、Webフィルターや国による検閲の回避（DOMマスカレードとソースのランダム化）において、他のWebプロキシにはない独自機能を数多く備えています。現在対応している国は中国（GFW）とロシアです。
+  users: >-
+    2020年以降、3,000万人以上のユーザーにご利用いただいています。ご支援本当にありがとうございます。Webプロキシのコミュニティがここまで大きくなるとは想像もしていませんでした。
+  branches:
+    current: '現在のブランチ: Latest'
+    title: ブランチの種類
+    latest: Latest（master。FOSSとSEO向けにビルド）
+    beta: Beta（保留中の変更。動作が壊れる可能性のある変更）
+    production: >-
+      Production（v4、v5、v6。InvisiProxy LTSの安定版。本番環境でのセルフホスト向けの変更。フィルター回避とリクエスト処理を最大化）
+    switch: セルフホストする場合は、本番用ブランチへの切り替えをご検討ください！
+  selfHost: >-
+    このプロジェクトをセルフホストしたい場合は、<deploy>セルフデプロイのオプション</deploy>をご覧ください。無料のオプションでデプロイできない場合は、Koyebや安価な有料VPSホスティングを検討してください。セルフホストしたくない場合は、InvisiProxyのミラーリンクメニューをクリックしてください。
+  discord: "公式サイトのリンクをもっと入手するには、TitaniumNetworkのDiscordに参加してください："
+  caution:
+    title: 注意
+    body: >-
+      InvisiProxy LTSをセルフホストする場合は、フィルター回避機能が自動で有効になるPRODUCTIONブランチに切り替えてください。masterブランチにはセルフホストの準備ができていない開発中の変更が含まれます。ただし、このプロジェクトに貢献したい場合は、masterブランチにPRを送ってください。
+  tip:
+    title: ヒント
+    body: >-
+      InvisiProxy LTSは、最大限のプライバシーコントロールのためにセルフホスト向けに最適化されています！このリポジトリをフォークし、スターもぜひお願いします。無料または有料のデプロイオプションを使うか、専用インスタンス（VPS）にセットアップしてパフォーマンスを高めることもできます。
+  sites:
+    site: 対応サイト
+    features: 機能
+    youtube: >-
+      速度やセキュリティを重視した、さまざまなオープンソースWebプロキシを内蔵
+    reddit: >-
+      ソースのランダム化とDOMマスカレード、さらにプロキシのグローバル変数のランダム化により、主要なフィルターを効果的に回避
+    discord: >-
+      設定メニューでタブのタイトルとアイコンをカスタマイズでき、閲覧履歴のステルス性が向上
+    instagram: >-
+      ネットサーフィン中はすべてのWebサイトで広告をブロック。公式サーバーでは低遅延のDNSを使用
+    tor: >-
+      設定メニューからTorを使ったSOCKS5とOnionルーティングに対応。どのブラウザでもTor/Onionサイトを利用可能！
+    geforce: >-
+      Webフィルターや国による検閲の回避において、他のWebプロキシにはない独自機能を搭載。
+    chatgpt: >-
+      ローカルの閲覧履歴を隠し、タブの漏洩を防止し、ネットワーク通信も見えにくく！
+    spotify: リージョンの切り替えやTorの有効化で、地域によるプロキシブロックを回避
+    more: その他、ほとんどのサイト！
+    moreFeature: 高負荷な本番運用と簡単なセットアップを想定して構築
+  deploy:
+    title: InvisiProxyをデプロイ
+    free: 無料のデプロイ
+    alternatives: その他の無料サービス
+    paid: 本番向けの有料/無料オプション（支払い情報が必要）
+    to: '{name}にデプロイ'
+    run: '{name}で実行'
+    replitTitle: Replit/Herokuでのデプロイはどうなったのですか？
+    replit: >-
+      Replitは無料ではなくなり、HerokuはWebプロキシを禁止する方針を定めています。クラウド上での開発にはGitHub CodespacesやGitpodを、無料ホスティングにはKoyebをお試しください。
+  codespaces:
+    title: セットアップ手順
+    fork: このリポジトリを自分のGitHubアカウントにフォーク（とスター！）します
+    open: >-
+      公式の<codespaces>Codespaces</codespaces>サイトにアクセスします（GitHubアカウントを事前に作成しておいてください）
+    select: >-
+      <strong>New Codespaces</strong>を選択し、自分のアカウントの<em>[USERNAME]/InvisiProxy</em>を探します
+    branch: >-
+      ブランチが<code>master</code>に、dev containerの構成が<strong>InvisiProxy LTS</strong>に設定されていることを確認します
+    create: <strong>Create Codespace</strong>を選択し、コンテナのセットアップを待ちます
+    install: >-
+      ターミナルで<code>pnpm run fresh-install</code>と<code>pnpm start</code>を入力します
+    ports: >-
+      アプリケーションのポップアップで「Make public」をクリックし、ポートタブからデプロイしたWebサイトにアクセスします。
+  partners:
+    title: パートナー
+    hardFork: '{name}（ハードフォーク）'
+    partner: '{name}（パートナー）'
+  toc:
+    title: '目次：'
+    setup: セットアップ
+    terminal: ターミナル
+    configuration: プロジェクトの構成
+    server: サーバーの構成
+    tor: TORルーティング
+    proxy: プロキシ
+    navigation: クライアントナビゲーション
+    translations: 翻訳
+    structure: 構造
+    structureInfo: 構造の詳細
+    views: 静的ファイル
+    scripts: スクリプト
+    future: 今後の追加予定
+    beginners: 初心者向けの説明
+    hosting: ホスティングプロバイダー
+    domain: ドメインの設定
+    cloudflare: Cloudflareの設定
+    workspace: ワークスペースの構成
+    faq: 詳しいFAQ
+    more: その他の情報
+  setup:
+    title: セットアップ方法
+    branchWarning: >-
+      IDEで本番リリース用のブランチに切り替えることを強くおすすめします。masterブランチには不安定な変更や開発中の変更が含まれることがよくあります。
+    branchExample: '例：masterではなくv6.x_production'
+    terminal: ターミナル
+    terminalIntro: >-
+      上のボタンを使って上記のデプロイ先にデプロイするか、専用サーバーで以下のコマンドを入力してください
+    nginxOnly: このプロジェクトはNGINXに対応するよう作られています。CADDYではありません。
+    requirements: >-
+      <code>Node 26.x</code>を使用していることも確認してください。<code>git</code>と<code>curl</code>は必須の依存関係です：
+    builtIn: >-
+      このWebサイトは、<scramjet>Scramjet</scramjet>、<wisp>Wisp</wisp>、<merp>Merp 難読化</merp>、<epoxy>EpoxyTransport</epoxy>、<libcurl>LibcurlTransport</libcurl>を内蔵してローカルでホストされています。
+    caddyWarning: >-
+      セキュリティ上の理由から、リバースプロキシでホストする場合はCaddyではなくNGINXを使用してください。wispurrがループバックを使用するためです。Caddyを使う場合は、この機能を無効にするか、Caddyのデフォルト設定を調整してください。
+    resources: 'セルフホスト用のリソース：'
+  commands:
+    pm2Config: >-
+      pm2を使用したい場合は、config.jsを編集してproductionをtrueに設定してください（VPSでのホスティングが簡単になります）
+    pm2: pm2デーモンの利用
+    restart: もしくは2回目以降の利用では…
+    kill: pm2で作成された本番プロセスを終了するには
+    buildErrors: ビルドエラーが発生した場合…
+    serviceErrors: サービスエラーが発生した場合…
+    nodeVersion: 26または最新版
+    start: プロジェクトを起動したい場合
+    test: エンドポイントとエラーのテスト用
+    prSet: prSet関数のコードはこちら….
+  ubuntu:
+    title: 詳しいセットアップ（Ubuntuの例）
+    intro: >-
+      <code>Node.js 26.x</code>、<code>curl</code>、<code>git</code>がインストールされている必要があります。以下はDebian/Ubuntuでのセットアップ例です。
+    summary: ステップごとのガイド
+    mirrors: >-
+      簡単に済ませたい場合は、discord.gg/unblock でTNのDiscordに参加し、ミラーサイトのリンク（補充済みでブロックされていないもの）をリクエストできます。
+    hosting: ホスティング
+    hostingBody: >-
+      セルフホストしたい場合は、まずVPSまたはホスティングプロバイダーが必要です：
+    dependencies: 依存関係
+    dependenciesBody: >-
+      次に、git、musl、nginx（またはcaddy）、Node.jsをセットアップする必要があります。以下はUbuntu LTSでの例です：
+    tor: Torのサポート（任意）
+    configure: InvisiProxyの構成
+    configureBody: >-
+      最も重要なオプションは、productionと、難読化およびDOMマスカレードの手法です。
+    configureMore: 'あとは必要に応じて構成してください：'
+    run: InvisiProxyのクローンと実行
+    runBody: >-
+      その後、該当するプロセスを実行します。構成でproductionをtrueにしている場合、独自のワーカー/キャッシュシステムとともにpm2が自動的に有効になります。
+    restart: NGINXまたはcaddyを使用した場合は、もちろん再起動/再読み込みしてください
+  config:
+    title: 構成
+    server: サーバー構成のセットアップ
+    port: >-
+      起動時のプロキシのデフォルトポートは<code>http://localhost:8080</code>です。必要に応じて、ポートやその他の本番用の指標を<code>./ecosystem.config.js</code>で変更できます。
+    local: >-
+      ソースのランダム化や自動ミニファイなど、その他のローカルな変更はすべて<code>./config.json</code>にあります。
+    options:
+      minifyScripts: >-
+        サーバー起動時に、該当する静的アセットを自動的にミニファイします。
+      randomizeIdentifiers: >-
+        Ultraviolet向けの実験的なプロキシグローバル変数のランダム化を有効にします。拡張機能ベースのフィルターにUVが検出される可能性を下げます。
+      production: >-
+        サーバーホスティング用にあらかじめ構成された本番セットアップを使用します。キャッシュ制御とソースの書き換えが自動で設定されます。
+      disguiseFiles: >-
+        InvisiLTSの実際のコンテンツ取得を難読化するDOMマスカレードを有効にします。リクエストを偽装し、展開してからDOMツリーを再構築することで実現します。
+      usingSEO: >-
+        <code>./src/data.json</code>で指定したデータの断片を入れ替えてソースをランダム化する、ソースのランダム化を有効にします。InvisiProxy LTSを自動的にフラグ付け・ブロックするキーワードを隠したり、ソースによるブロックを防いだりするのに非常に役立ちます。
+      verbose: >-
+        コンパイルとビルドのメッセージを有効にし、コンパイル中の進捗や問題の可能性を確認できるようにします。
+      mirrorLinksFile: >-
+        リンクページの配布機能が使用するサーバー専用ファイルで、デフォルトは<code>private/mirror-links.txt</code>です。相対パスはプロジェクトのルートから解決され、絶対パスにも対応しています。1行に1つのHTTP(S) URLを記述し、公開されないようにファイルは<code>views/</code>の外に置いてください。この設定を変更したらサーバーを再起動してください。
+      geoLanguage: >-
+        Cloudflareの<code>CF-IPCountry</code>ヘッダーを使った言語の自動選択を有効にします。このヘッダーは誰でも設定できてしまうため、Cloudflareの背後でのみ有効にしてください。国は各<code>./locales/*.yaml</code>ファイルの<code>language.countries</code>に言語ごとに記載されています。
+      singleLanguage: >-
+        <code>true</code>にすると、<code>language</code>で設定した言語だけがビルドされ、すべての訪問者にその言語が表示され、言語設定は非表示になります。ビルドが速く小さくなるため、1つの言語だけが必要なDockerなどのデプロイに便利です。デフォルトは<code>false</code>です。
+      language: >-
+        <code>singleLanguage</code>がオンのときにビルドする言語で、<code>./locales/</code>内のファイルに対応します（例：<code>en.yaml</code>なら<code>en</code>）。デフォルトは<code>en</code>です。Dockerの場合、言語はビルド時に選ばれるため、<code>docker build</code>または<code>docker compose build</code>を実行する前に<code>config.json</code>で設定してください。
+  translations:
+    title: 翻訳
+    crowdin: >-
+      InvisiProxy LTSは<crowdin>Crowdin</crowdin>で翻訳されており、コードに触れることなく誰でも協力できます。プロジェクトに参加し、言語を選んで翻訳を始めましょう。完成した翻訳は自動的に<code>./locales/</code>に同期されます。
+    rules: >-
+      翻訳のルール（プレースホルダー、タグ、マスクする用語）については<readme/>をご覧ください。Crowdinにあなたの言語がない場合は、issueを作成するかDiscordでお尋ねください。
+  tor:
+    title: Tor/Onion/SOCKS5ルーティングのセットアップ
+    intro: >-
+      Onionルーティングの設定を機能させるには、Torをセットアップする必要があります（GUIは不要ですが、あっても構いません。GUIを使う場合はポート9050を9150に置き換えてください）！
+    guide: 'このガイドに従ってTorをホストするだけです：'
+    cliGuide: '別のガイド（CLI向け）：'
+    body: >-
+      Ubuntuを使用したVPSでInvisiProxy LTSをホストしている場合は、本番環境の管理を簡単にするためにTorをsystemctlに登録することを検討してください。LinuxまたはWindowsでTorが起動すれば、ユーザーが設定メニューで有効にしたときにInvisiProxy LTSで自動的に動作します。
+    customWisp: ユーザーはプロキシの設定で独自のWispサーバーを設定することもできます。
+    customProxy: >-
+      Scramjetの通信をカスタムのHTTP/HTTPS/SOCKS5プロキシ経由にしたい場合、これはサーバー側の<code>./src/server/wisp.ts</code>で処理されます。
+  proxy:
+    title: プロキシの構成
+    body: >-
+      設定メニューで割り当てられるWebプロキシ関連の設定を調整する主な場所は<code>./views/assets/js/register-sw.js</code>です。ここでは、Cookieでローカルに設定されるトランスポートのオプションの変更、SOCKS5プロキシの差し替え、Onionルーティングのポートの変更、ブラックリストの指定などができます。
+    options:
+      stockSW: >-
+        Ultravioletのデフォルトのサービスワーカー構成ファイルです。ただしInvisiProxyでは広告ブロックが自動的に有効になるため、デフォルトでは使用されません。
+      blacklistSW: >-
+        ドメインのブラックリスト化と広告ブロックができるよう改変したUltravioletです。
+      proxyUrl: >-
+        SOCKS5/HTTPS/HTTPプロトコルのURLを指定します。デフォルトはTorのデフォルトプロキシポートです。任意の有効なポートやSOCKS5プロキシに差し替えられます。epoxyとlibcurlの両方でproxyオプションを使って設定します。
+      transports: >-
+        Bare-Muxで切り替えてWispを利用するポートを指定します。
+      wispUrl: Wispのパス名またはURLの処理を変更します
+      defaultMode: >-
+        グローバルに使用されるデフォルトのトランスポートを指定します（ユーザーは引き続き設定メニューで切り替えられます）
+      ScramjetController: >-
+        このコンストラクターでは、Scramjetで使用するプレフィックスを動的に差し替えたり、ファイルの場所を指定したりできます。ファイル名を変更する場合は<code>./views/scram/scramjet.sw</code>の編集が必要になる場合があります。
+  navigation:
+    title: クライアントナビゲーションの構成
+    body: >-
+      クライアント側のナビゲーションスクリプトの主な場所は<code>./views/assets/js/common.js</code>です。このファイルは主に、オムニボックス（検索エンジン）の機能、プロキシのオプションの切り替え、その他のクライアント設定に使用されます。
+    options:
+      getDomain: >-
+        この定数は、オムニボックスにURLを追加するときに削除するサブドメインを指定するために使用されます。
+      goFrame: InvisiProxy LTSで使用するステルスフレームを指定します
+      sx: >-
+        この定数は、ユーザーがURL以外のものを入力したときにプロキシ経由で使用する検索エンジンを指定します
+      search: 送信されたURLに使用するクエリを指定・解析する関数です
+      urlHandler: goProxオブジェクトの関数を設定するために使用されます。
+      goProx: >-
+        この定数では、特定のプロキシや、Webプロキシ経由にする必要のあるリンクのURL処理をマッピングできます。
+      prSet: goProxを使って、必要なボタンや入力欄にイベントリスナーを設定します
+      huLinks: >-
+        <code>./views/assets/json</code>に記載されたパスを自動的に取得し、ページや用途に応じて追加します。フィルターでブロックされるリンクを隠し、アプリを追加しやすくするために使われます。
+  structure:
+    title: 構造
+    summary: Webページ
+    info: 構造の詳細
+    root:
+      views: >-
+        InvisiProxyのサイト本体が置かれ、静的アセットが配信される場所です。
+      src: 難読化とキーワード除去機能を今後実装するための場所です。
+    views: <code>/views/</code>の詳細
+    folders:
+      dist: はミニファイされたファイルに使用されます。ビルド時に作成されます。
+      pages: はサイトのHTMLに使用されます。
+      assets: はさまざまなCSS、JS、画像、JSONファイルの保存に使用されます。
+      scram: >-
+        にはローカルのScramjet実装が含まれます。一部のファイルはnodeモジュールで上書きされます。
+      uv: にはUVの実装が含まれます。
+    scripts: <code>/views/assets/js/</code>にあるスクリプト
+    files:
+      card: はウェルカム画面に表示されるボックスカードにおしゃれな視覚効果を加えます。
+      common: >-
+        はすべてのページで使用され、自動補完など、ほとんどのサイト機能を動作させます。
+      csel: >-
+        は設定メニュー、オムニボックスの機能、その他の追加機能を管理します。
+      loader: はDOMマスカレード用のアセットとして使用されます。
+      registerSw: >-
+        はUltravioletが動作するためのサービスワーカーを作成・管理し、bare transportも使用します。
+  future:
+    title: 今後の追加予定
+    body: <todo>こちら</todo>はInvisiProxy LTSの（すべてではない）ToDoリストです。
+  beginners:
+    title: 外部プロキシとホスティングに関する初心者向けのざっくり説明
+    intro: まず、プロキシをローカルまたは外部でホストする必要があります。
+    hosting: 'おすすめのホスティングの例：'
+    current: 現在のホスティングプロバイダー
+    paid: 有料
+    freePaidDedicated: 無料、有料、専用
+    freeAndPaid: 無料と有料
+    preference: >-
+      ホスティングプロバイダーの中では、DedipathとAzureが一押しです。セルフホストも可能です。
+    cloudflare: >-
+      まともなVPSを選んだら、サイトとプロキシ用サブドメインの両方のDNSレコードにCloudflareを使用します。
+    dns: >-
+      これはDNSレコードの例です。セルフホストでは<code>Aレコード</code>が望ましいです。
+    dnsAlt: DNSレコード
+    root: >-
+      <code>@</code>と<code>www.example.com</code>はInvisiProxy LTSに使用しています。
+    subdomain: >-
+      <code>a.example.com</code>は、サイト管理者の必要に応じて、LibredditやInvidiousなどの他のインスタンスに使用しています。
+    local: >-
+      前述のとおり、InvisiProxyは最初からScramjetとUltravioletを使ってローカルでホストされます。外部のインスタンスは必要ありません。
+  domain:
+    title: ドメインの手順
+    porkbun: >-
+      プレミアムドメイン（TLD）を取得したい場合は、驚きの価格でドメインを提供している<porkbun>Porkbun</porkbun>を使いましょう。<code>.org</code>ドメインなら、初年度は通常わずか5ドル程度です。
+  cloudflare:
+    title: Cloudflareの手順
+    account: >-
+      Cloudflareを使用し（アカウントを作成）、サイトを追加してから、さまざまなDNSのターゲットをCloudflareに追加します。サイトを追加する際に提示されるCloudflareのネームサーバーを必ず設定してください。
+    records: >-
+      CNAMEにしてください（Aレコードでも動作します）。次の構成に従うようにしてください：
+    columns: タイプ | 名前 | ターゲット
+    ip: ここにVPSのIP
+    ssl: >-
+      HTTPSを強制し、SSLをFlexibleに設定してください（LetsEncryptを使わない場合）。それ以外の場合はSSLをFullに設定できます。
+  workspace:
+    title: ワークスペースの構成
+    vsc: >-
+      自分のデバイスがあるなら、<vsc>Visual Studio Code</vsc>がおすすめです。手に入る中で最良の選択肢と言えますが、もちろん個人の意見です。また、マシンに<node>Node.JS</node>がインストールされていることを確認してください。
+    fork: >-
+      この部分はあまり詳しく説明しませんが、まずこのリポジトリをフォークします。次に、使用しているOSに応じて何らかのターミナルでローカルにクローンします。セットアップしたいフォルダに移動していることを確認してください。
+    gitignore: >-
+      次に、リポジトリをクローンしたフォルダをVSCに追加します。そして<code>pnpm install</code>を実行します。GitHubで公開する場合は、ルートディレクトリに次の除外設定を含む<code>.gitignore</code>を追加することをおすすめします：
+    deploy: >-
+      これでワークスペース環境のセットアップは完了です。作成したワークスペースをデプロイする方法は、ホスティングプロバイダーによって異なるので調べてください。
+    gitpod: >-
+      学校のパソコンやChromebookで使えるオンラインIDEが欲しい場合はGitPodを使いましょう。基本的にはブラウザで使えるVisual Studio Codeです。
+    gitpodAccount: 'アカウントを作成：'
+    gitpodFork: 'このリポジトリをフォークし、ワークスペースをセットアップするために次のURLを入力します：'
+    gitpodSteps: >-
+      リポジトリで<code>pnpm install</code>を実行し、ルートディレクトリに<code>node_modules</code>を除外する<code>.gitignore</code>を追加するという、上記と同じ手順を行ってください。
+  faq:
+    title: 詳しいFAQ
+    summary: クイックFAQ
+    games: このリポジトリのゲームはどこにありますか？（404エラーなど）
+    gamesBody: <games>こちら</games>をお読みください。
+    captcha: >-
+      アクセスしているサイトが正しく動作しない、またはCAPTCHAエラーが出るのはなぜですか？
+    captchaBody: >-
+      残念ながら、現在のプロキシではどれもCAPTCHAへの対応が不安定です。主にScramjetが対応しています。そのため、どのプロキシでも動作しないサイトがあるかもしれません。
+    badGateway: 502エラーが出ます。どうすればいいですか？
+    badGatewayBody: >-
+      その場合は、サイトを切り替えるか、しばらく待ってください。キャッシュを消去すると解決することもあります。
+    questions: >-
+      まだ質問がある場合は、こちらにリンクしているDiscordで気軽に聞いてください。
+    domains: >-
+      公式ドメインに番号が付くようになったのはなぜですか？このプロジェクトのメンテナンスは再開されたのですか？
+    domainsBody: >-
+      はい、このプロジェクトはLTSサポートのために再び活動しています！ただし、確実に動作させるため、アプローチはよりシンプルになりました。必要に応じたドメインの補充と、しっかりメンテナンスされたソースです。これまで以上に、このプロジェクトはWebプロキシサービスの分野で革新に挑む勇敢な人たちのための概念実証です。
+  closing:
+    summary: 以前の終了メッセージ（原文 - 2022年）
+    announcement: >-
+      あまり良いお知らせではなくてごめんなさい。たくさん考え、ひどく迷った末に、Holy Unblockerを終了し、TNを去ることにしました。何か月もずっと悩み続けてきたことで、そのせいで更新が途絶えたり、昨年は大きな空白ができたりしました。情熱を持って楽しみ、時間を費やし、ここで素晴らしい友人や最高の開発者たちと出会えたプロジェクトを、ただ投げ出したくはなかったんです。その人たちが誰なのか永遠に語り続けられますが、ここでやめておきます。本人たちはわかっているはずです :D
+    reasons: >-
+      考えが変わった一番の理由は、今ここで区切りをつけることにしたからです。1) モチベーションがなくなった 2) コミュニティは時に最高とは言えず、優しくないこともある（これは言っておかないと） 3) HU/TNのプロジェクトとしての将来があまり明るく見えない。
+    secrets: >-
+      この決断には他にも理由があるので、これで情報が足りないと感じる人がいても、いくつかは秘密にしておきます。親しい友人なら、私がこの何か月もこの選択にとてもストレスを感じていたことを知っているはずです。それに、もうすぐ卒業するということも、この決断の大きな後押しになりました。
+    future: >-
+      将来また続けたり戻ってきたりするかもしれませんし、GitHubだけに残すかもしれません。これを書いているのは、今でもこの変更について迷っているからです。でも今のところは、Incognitoのような他のプロキシサイトをチェックしてみてください（Duceは頻繁に大量のアップデートをしていて、Ultravioletの作者/開発者でもあるので、応援してあげてください） :yayy_hopi:
+    patreon: >-
+      彼のPatreonもぜひチェックしてください！現在のHUのパトロンは来月以降請求されず、HUのPatreonはアーカイブされるので、DuceがIncognito用のドメインをもっと買えるよう、彼のPatreonへどうぞ。
+    signoff: 愛を込めて <3
+  more:
+    title: その他の情報
+    maintained: >-
+      このプロジェクトはInvisiProxy LTSチームによってメンテナンスされており、TitaniumNetwork公式のフラッグシップWebプロキシサイトです。
+    website: 詳細とクレジットは公式Webサイトをご覧ください。
+    sources: 'Webプロキシのソース：'
+    sourcesBody: >-
+      このプロジェクトは現在、Wispプロトコルに準拠したWebプロキシとしてScramjetとUltravioletを使用しています。Bare-Muxは、Wispで使用するトランスポートシステムの切り替えに使われています。含まれているトランスポートシステムはEpoxyTransportとlibcurl-transportです。
+    wispProtocol: Wispプロトコル
+    merp: Merp（難読化モジュール）
+    dnsBlocklists: hagezi DNSブロックリスト
+    dependencies: 'その他の依存関係：'
+    mentions: '特筆すべき言及：'
+    hostingProvider: ホスティングプロバイダー
+  meta:
+    title: InvisiProxy ドキュメント | セルフホスト、構成、Torのセットアップ
+    description: >-
+      InvisiProxyをセルフホスト：pnpmでインストールし、config.jsonで設定し、TorやSOCKS5プロキシ経由で通信させ、各依存関係の役割を確認しましょう。
+    social: >-
+      自分だけのInvisiProxyインスタンスを動かしましょう。インストール、config.json、TorとSOCKS5のルーティング、プロジェクトを支えるライブラリについて解説します。
+
+apps:
+  intro: >-
+    下のWebサイトを選択すると、プロキシ経由で開きます。これは公開プロキシサービスなので、メインアカウントでのログインは避けてください。一部のサイトではサブアカウントと2FAを有効にすることで制限が緩和されるため、サブアカウントを作成して2FAを有効にすることをおすすめします。数百万件のリクエストが少数のIPを経由しているため、アクセスをブロックするサイトもあります。
+  patreon: >-
+    信頼性の高い住宅用ISP経由の通信と、より高速な通信を利用したい場合は、<patreon>Patreon</patreon>への参加をご検討ください。問題がある場合は、Torルーティングを有効にするか、リージョン設定を編集することもできます。GeForce NOWを利用するには、プロキシの設定で広告を無効にしてください。
+  faq: プロキシに問題がある場合は<faq>FAQ</faq>ページをご覧ください。
+  loading: アプリケーションを読み込み中…
+  categories:
+    all: すべて
+    featured: おすすめ
+    social: ソーシャル
+    chat: チャット
+    video: 動画
+    music: 音楽
+    games: ゲーム
+    ai: AI
+    education: 教育
+    opensource: オープンソース
+
+partners:
+  title: パートナーサービス
+  intro: >-
+    パートナープロジェクトをご覧ください。これらのプロジェクトはプロキシ経由で動作するため、ここでブロックされずに利用できます。
+  features: >-
+    パートナーは、ブロックされていないゲーム、Web移植版、エミュレーションなどの機能を提供しています。すべてのパートナーはオープンソースで無料で使用できます。ぜひ各コミュニティに参加し、可能であれば支援してください。どのパートナーもInvisiProxyと似た仕組みなので、リンクをもっと入手するにはそれぞれのDiscordに参加してください。
+
+credits:
+  title: クレジット
+  intro: >-
+    InvisiProxy LTSは、拡張機能ベースでもネットワークベースでも、Webフィルターを回避できる公式のWebプロキシサービスです。<br/>このプロジェクトにより、政府、学校、職場によってブロックされているコンテンツにアクセスできます。
+  name: 名前
+  contributions: 貢献
+  contact: メモと連絡先
+  iconAlt: アイコン
+  sections:
+    developers: 主な開発者
+    contributors: 貢献者
+    translators: 翻訳者
+    shoutouts: スペシャルサンクス
+
+icons:
+  title: アイコン情報
+  subtitle: サイトのアイコンURLを確認する方法
+  copy: >-
+    ブックマークレットが表示したURLをコピーしてください。InvisiProxyに戻り、設定のアイコンURLにそのURLを入力してください。お楽しみください！
+
+error:
+  pageTitle: エラー
+  title: サイトエラー（ホームページに戻る）
+  reload: ページを再読み込みするか、Ctrl+Rを押してください。多くの問題がこれで解決します。
+  unavailable: >-
+    プロキシ接続が利用できず、サーバーがソースコードを更新しました。
+  maintenance: これはソースをランダム化するために不定期に発生します。ご迷惑をおかけして申し訳ありません！これによってミラーが生き残ります。
+  wait: その場合は、解決するまで少しお待ちください！
+  faq: 無効なURLですか？ヘルプは<faq>FAQページ</faq>をご覧ください！
+  home: ホームページに戻る
+
+scramjet:
+  pageTitle: Scramjet プロキシ
+  description: >-
+    Mercury Workshopによる、非常に革新的な新しいプロキシです。サービスワーカーや高度な書き換え技術などを使用し、CAPTCHAにも対応しています。Scramjetは、YouTube、now.gg、Spotify、CoolMathGames、さまざまな.ioサイトでの速度を重視しています！
+  searchPlaceholder: URLを入力するか、検索キーワードを入力してください！
+  search: 検索
+
+frame:
+  searchPlaceholder: URLを入力または検索…
+  loading: Webプロキシを読み込み中…
+  restarting: サーバーを再起動しています。お待ちください。これはソースのランダム化に役立ちます…
+  title: ブラウジング
+  tabs: プロキシのタブ
+  newTab: 新しいタブ
+  closeTab: タブを閉じる
+  closeMenu: 閉じる
+  bookmarks: ブックマーク
+  addBookmark: このページをブックマーク
+  removeBookmark: ブックマークを削除
+  noBookmarks: ブックマークはまだありません。アドレスバーの星をクリックすると、表示中のページを保存できます。
+
+scramjetError:
+  title: Scramjet ネットワークエラー
+  failed: '読み込みに失敗しました：'
+  reload: ページを再読み込みすると問題が解決する場合があります。
+  refresh: ページを更新
+  copy: コピー
+  try: '試してみてください：'
+  tips:
+    reload: ページを再読み込みする（Scramjetの既知の問題です）
+    idb: >-
+      IDBデータベースのエラーの場合は、アドレスバーの鍵アイコンをクリックし、「サイトの設定」または「サイトデータ」を選択して「サイトデータを削除」をクリックし、サイトデータを消去してください
+    cache: >-
+      Ctrl+Shift+Rでブラウザまたはサイトのキャッシュを消去する。Invisiの設定 > プライバシー > サイトデータを消去 からも行えます
+    address: 正しいアドレスを入力したか確認する
+    maintenance: >-
+      Webサイトのメンテナンスやアップデートの場合は、問題が解決するまでお待ちください。
+    censored: サーバーがネットワークによって検閲されていないか確認する（WebRTCなど）
+    faq: サイトごとの互換性の問題については、FAQページをご覧ください。
+    github: <github>ScramjetのGitHub</github>でエラーのトラブルシューティングを行う。
+    engine: 設定パネルで別のプロキシトランスポートやリージョンを試す。
+  network: ネットワークサービスを更新
+  love: 愛を込めて制作

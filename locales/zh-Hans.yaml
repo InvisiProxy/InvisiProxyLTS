@@ -1,0 +1,955 @@
+# Simplified Chinese (简体中文) translation of en.yaml.
+# Keep {placeholders} and <tags> as they are. See en.yaml for instructions.
+
+language:
+  name: 简体中文
+
+  # Country codes (ISO 3166-1, as sent by Cloudflare's CF-IPCountry header)
+  countries:
+    - CN
+    - SG
+    - MY
+
+  # Words masked to avoid filters. Proper nouns stay as-is; common words are
+  # listed in the form they appear in this translation.
+  maskedTerms:
+    - InvisiProxy
+    - InvisiProxy LTS
+    - Holy Unblocker
+    - Holy Unblocker LTS
+    - Webretro
+    - Ruffle
+    - 标签页伪装
+    - 搜索
+    - 自由
+    - 免费
+    - 冲浪
+    - VPN
+    - 服务器
+    - 网络
+    - 连接
+    - 隐私
+    - 私密
+    - 游戏
+    - Croxy
+    - CroxyProxy
+    - Proxium
+    - SOCKS
+    - SOCKS5
+    - 代理链
+    - 审查
+    - 防火墙
+    - 防火长城
+    - 匿名
+    - 匿名性
+    - 封锁
+    - 过滤
+    - 限制
+    - 规避
+    - 隐身
+    - 伪装
+    - 无痕
+    - Chromebook
+    - 学校
+    - Libcurl
+    - Epoxy
+    - Bare-Mux
+    - Mercury Workshop
+    - WebRTC
+    - 镜像
+    - 代理
+    - 解锁
+    - 解除封锁
+    - 绕过
+    - 翻墙
+    - Titanium Network
+    - Wisp
+    - Tor
+    - Onion
+    - 洋葱
+    - Ultraviolet
+    - Scramjet
+    - Rammerhead
+
+home:
+  title: InvisiProxy LTS | 免费网页代理 - 绕过过滤并访问被封锁的网站
+  description: >-
+    InvisiProxy LTS 是一款前沿的网页代理服务，专为绕过网页过滤器和拦截器而设计。无论是客户端还是基于网络的审查，InvisiProxy LTS 都能让你在 Chromebook 等设备上无缝访问被封锁的网站，并进行安全、私密的浏览。借助我们先进的代理方案，轻松突破内容拦截器、Chrome 扩展、防火墙等限制。
+  ogDescription: >-
+    InvisiProxy LTS 是一款顶级网页代理服务，可绕过网络和浏览器限制，安全访问被封锁的网站。享受安全可靠、功能先进的无缝浏览体验。
+  twitterDescription: >-
+    了解 InvisiProxy LTS——一款出色的网页代理服务，可绕过审查和过滤，安全访问被封锁的网站。非常适合私密浏览，以及在 Chromebook 等设备上突破网络限制。
+
+  headline: 终结网络审查。
+  tagline: 隐私，触手可及。
+  browseNow: 立即浏览
+  bypassNow: 立即绕过
+  donate: 捐赠
+  logoAlt: InvisiProxy 主视觉标志
+  terminal:
+    setup: 在生产分支上首次部署时……
+    start: 或日常使用……
+    dev: 用于开发……
+
+  free:
+    title: InvisiProxy 是免费的。
+    body: >-
+      作为开源项目，你可以轻松 fork 本仓库并自行托管，以获得最大的隐私控制权。与众多其他网页代理服务不同，InvisiProxy 拥有基于 TLS 的端到端加密、浏览历史隔离、在 Chromium 浏览器中的 Tor/Onion 路由、完全透明以及隐私控制。<strong>与其他代理服务不同，我们的官方实例不收集任何用户数据，即使是出于调试目的也不会。</strong><br/>我们使用的开源依赖（Wisp、Libcurl 和 Epoxy）以安全和隐私为核心设计，即使面对恶意的自托管实例，也能确保你的浏览内容保持机密。
+
+  fast:
+    title: InvisiProxy 快速且高度先进。
+    body: >-
+      InvisiProxy 提供卓越的网页代理性能。它拥有强大的功能集，包括 reCAPTCHA/Botguard 支持、Tor 网络、SOCKS5 代理链、可自定义的黑名单设置、防泄漏、隐藏历史记录设置，以及通过 Scramjet + Wisp（搭配 Libcurl Transport）实现的广泛网站兼容性。CroxyProxy 或 Proxium 等其他热门服务往往只完成了一半的资源重写工作，会泄漏请求，还存在隐私隐患。本项目还支持代理链等功能，让你的流量经过多个代理转发，进一步提升安全性和匿名性。
+
+  practical:
+    title: InvisiProxy 很实用。
+    body: >-
+      借助我们的源码随机化，以及 Proxy Transports、Wisp 和 Scramjet 等项目，本项目可提供无缝体验，绕过网页、政府和网络层面的过滤。本项目可对抗中国（GFW——防火长城）、俄罗斯等地使用的过滤器，<strong>无需下载任何软件</strong>。这一切完全通过浏览器中的网站和我们的后端（自托管时则是你自己的后端）实现，让用户即使面对最严厉的审查封锁也能绕过。无需下载任何东西，只需输入 InvisiProxy 的域名即可；若被封锁，可前往 InvisiProxy 官方网站获取镜像，然后匿名浏览。
+
+  heroSubtitle: 免费且透明，放心使用
+  designedWithPrivacy: 以隐私为核心设计<underline/>。
+
+  overview:
+    title: 概述
+    body: >-
+      InvisiProxy LTS 是一项实验性的网页代理服务，无论审查方式是客户端还是基于网络，都可以绕过网页过滤器或"拦截器"。这包括绕过各国政府设置的内容封锁（中国/GFW、俄罗斯等）、Chrome 扩展、本地客户端防火墙以及与网络相关的过滤器。
+    donate: >-
+      请考虑为本项目捐赠，帮助我们保持免费！我们为支持者提供每月更多域名、Beta 测试资格、个人专属域名以及功能请求优先处理。<br/>你可以<patreon>在 Patreon 上捐赠</patreon>。
+    patreonLabel: 在 Patreon 上捐赠
+    imageAlt: 服务器图标
+
+  intent:
+    title: 宗旨
+    body: >-
+      本项目主要作为绕过审查的理想无客户端方案的概念验证。作为安全的网页代理服务，它支持大量网站，同时频繁更新，并注重设计、机制和功能上的细节。
+    palette: >-
+      本项目的配色方案基于 <nord>Nord Theme</nord> 构建，因其出色的设计配色，以及对代码语法和 UI 组件可读性的重视。
+    imageAlt: 代码文件图标
+
+  usage:
+    title: 使用方法
+    body: >-
+      前往<browse>浏览</browse>页面，选择其中一个代理！然后在搜索框中输入你想访问的网站。每个网页代理在有效性、速度和安全性方面各有不同。推荐使用 Scramjet。<br/><br/>可解锁的网站示例：<code>https://youtube.com</code>
+    imageAlt: 盾牌图标
+
+  apps:
+    title: 应用
+    body: >-
+      InvisiProxy 提供一系列预先链接好的应用，包括 YouTube、Spotify、GeForce NOW、Discord、ChatGPT、Gemini 等！
+    imageAlt: 应用图标
+
+  hosting:
+    title: 托管与部署
+    body: >-
+      <strong>InvisiProxy LTS</strong> 是一个开源方案，在设计时就考虑了模块化、易用性和便捷部署。主要功能包括广告拦截、灵活的源码生成以及先进的代理导航。<br/><br/>如需完整的部署说明，请访问我们的官方 <github>GitHub 仓库</github>或<docs>此处提供的内置文档</docs>。
+    docsTitle: 更多托管信息
+    imageAlt: 托管与部署图标
+    imageTitle: InvisiProxy LTS 的托管与部署
+
+  contributing:
+    title: 参与贡献
+    body: >-
+      <strong>InvisiProxy LTS</strong> 的蓬勃发展离不开众多优秀贡献者的倾力付出。作为开源项目，<strong>InvisiProxy LTS</strong> 依靠社区的热情来突破网络审查，帮助用户更好地获取信息。
+    start: 想要开始贡献，请访问我们的 <github>GitHub 仓库。</github>
+    imageAlt: GitHub 贡献图标
+    imageTitle: 在 GitHub 上为 InvisiProxy LTS 做贡献
+
+  githubTitle: InvisiProxy LTS GitHub 仓库
+
+  bypass:
+    title: 绕过审查与过滤
+    body: >-
+      InvisiProxy LTS 是一个开源的<strong>网页代理项目</strong>。借助我们先进的<strong>网页代理解锁</strong>功能，畅享不受限制的在线内容访问与浏览。本项目还让你能够在任何地方自行托管，并绕过像中国（防火长城——GFW）和俄罗斯这样的全国性或地区性封锁。
+
+  freeProxy:
+    title: 100% 免费网页代理
+    body: >-
+      使用我们的<strong>免费网页代理服务</strong>，帮助你<strong>解锁网站</strong>并访问受限内容。非常适合绕过学校和/或工作场所的过滤，本项目就是为了解锁一切而生。
+
+  tor:
+    title: 在 Chromium 浏览器和 Firefox 中使用 Tor 路由
+    body: >-
+      使用 InvisiProxy LTS，你可以直接在基于 Chromium 或 Firefox 的浏览器中<strong>访问 Tor 网络</strong>。这意味着你可以直接在本网站内访问 <strong>.onion</strong> 网站。这让你能够匿名浏览网页（至少在一定程度上；真正的 Tor 有更好的指纹防护），并绕过任何地区限制。本项目还支持设置自定义 SOCKS5 代理以组成代理链。
+
+  unrestricted: 免费、不受限制的浏览
+  closing: 是时候自由地浏览互联网了。
+  tryFree: 免费试用 InvisiProxy
+
+settings:
+  title: 设置
+  close: 关闭设置
+
+  language:
+    title: 语言
+    description: 选择网站的语言。"自动"将跟随你的浏览器设置。
+    automatic: 自动
+
+  tab:
+    title: 伪装浏览器标签页
+    description: 自定义浏览器标签页中显示的标题和图标。
+    iconPreset: 图标预设
+    selectPreset: 选择图标预设
+    tabTitle: 标签页标题
+    tabTitlePlaceholder: 输入标签页标题……
+    iconUrl: 图标 URL
+    apply: 应用
+    findIcon: 查找图标 URL →
+
+  fingerprint:
+    title: 伪装浏览器指纹
+    description: >-
+      选择被代理的网站所看到的浏览器。这会更改随请求发送的用户代理，以及报告给页面脚本的用户代理。
+    current: '当前：{name}'
+    default: 浏览器默认
+    reset: 使用浏览器默认
+    views:
+      desktop: 桌面
+      mobile: 移动设备
+      console: 游戏主机
+      bot: 搜索引擎
+      custom: 自定义
+    botWarning: >-
+      许多网站会验证搜索引擎爬虫，在此视图下可能会被拦截或页面内容会发生变化。
+    customLabel: 自定义用户代理
+    customPlaceholder: Mozilla/5.0 (…)
+    invalidCustom: 请输入不超过 512 个字符的单行用户代理。
+
+  browsing:
+    title: 浏览
+    transport: 传输方式
+    searchEngine: 搜索引擎
+    theme: 主题
+    themes:
+      dark: 深色
+      light: 浅色
+      nord: Nord 风格
+    autocomplete: 自动补全
+    autocompleteDescription: 显示经代理的搜索建议。
+
+  privacy:
+    title: 隐私
+    hideAds: 隐藏广告
+    hideAdsDescription: 浏览时拦截广告。
+    hideHistory: 隐藏历史记录
+    hideHistoryDescription: 不在本地浏览器中留下浏览历史。网络管理方仍可能看到经过伪装的活动。
+    preventLeaks: 阻止窗口泄漏
+    preventLeaksDescription: 限制弹窗和新标签页。会导致部分网站无法正常使用。
+    blockWebrtc: 阻止 WebRTC
+    blockWebrtcDescription: 进一步向网站隐藏你的 IP。会导致视频通话和游戏串流无法使用。
+    clearData: 清除网站数据
+    clearDataDescription: 退出所有网站的登录并重置你的设置。
+    clearDataButton: 清除
+    clearDataConfirm: >-
+      要清除所有网站数据吗？这将退出你在此访问过的所有网站的登录，并重置你的设置。
+
+  advanced:
+    title: 高级
+    tor: Tor 浏览
+    torDescription: 通过 libcurl 经由 Tor 路由。
+    region: 代理地区
+    regions:
+      default: 默认
+      sweden: 瑞典
+      japan: 日本
+    window: 窗口类型
+    windowDefault: 默认
+
+header:
+  logoLabel: InvisiProxy 标志
+  homeTitle: InvisiProxy 首页
+  primaryNav: 主导航
+  moreOptions: 更多导航选项
+  moreOptionsMenu: 更多选项子菜单
+  settingsMenu: 设置菜单
+  toggleMenu: 切换导航菜单
+  donate: 在 Patreon 上支持我们
+  overview:
+    label: 概述
+    title: 概述 - 了解本站提供的功能
+  browse:
+    label: 浏览
+    title: 浏览 - 绕过网络上的限制
+  apps:
+    label: 应用
+    mobileLabel: 应用程序
+    title: 应用程序 - 浏览精选实用应用
+  partners:
+    label: 工具
+    title: 工具 - 探索我们的合作项目
+  docs:
+    label: 文档
+    title: 文档 - 详细信息与指南
+  faq:
+    label: 常见问题
+    title: 常见问题 - 常见问题与解答
+  credits:
+    label: 致谢
+    title: 致谢 - 鸣谢与贡献
+  privacy:
+    label: 隐私
+    mobileLabel: 服务条款
+    title: 隐私政策 - 关于用户隐私的信息
+
+footer:
+  homeTitle: InvisiProxy 首页
+  tagline: 全球网页代理创新，做到极致。
+  dependencies: 依赖
+  transports: 传输方式
+  services: 服务
+  about: 关于
+  solidjs: SolidJS - 用于构建用户界面的简单高效的响应式框架。
+  vite: Vite - 下一代前端工具链。
+  wispurr: 使用 Golang 实现的高性能、功能丰富的 Wisp v1/v2 服务器。
+  nord: Nord Theme - 一套北极风格的蓝色调配色方案。
+  scramjet: Scramjet - 一款为绕过网络审查而设计的多功能网页代理。
+  wisp: Wisp - 一种低开销、易于实现的协议，可通过单个 WebSocket 代理多个 TCP/UDP 套接字。
+  wispLabel: Wisp 协议
+  proxyTransports: Proxy Transports - Scramjet 使用的传输接口。
+  merp: Merp - 高级混淆模块
+  merpLabel: Merp 混淆
+  githubTitle: InvisiProxy GitHub 仓库
+  patreonTitle: 在 Patreon 上关注 InvisiProxy
+  privacy: 隐私政策
+  credits: 致谢
+  creditsTitle: 致谢与鸣谢
+  backToTop: 返回顶部
+  followGithub: 在 GitHub 上关注 InvisiProxy
+  followKofi: 在 Ko-fi 上关注开发者
+
+common:
+  logoAlt: InvisiProxy 标志
+  advertisement: 广告
+  description: >-
+    InvisiProxy 是一款支持众多网站的安全网页代理服务。绕过过滤，自由享受更安全、更私密的浏览体验，或在 Chromebook 等设备上、在学校或工作场所解锁网站，无需下载任何东西。
+
+mirrors:
+  toggle: 镜像
+  toggleTitle: 获取另一个 InvisiProxy 链接
+  title: 镜像链接
+  close: 关闭镜像链接
+  description: >-
+    获取另一个链接以继续使用 InvisiProxy。你的链接在当天保持不变，随着链接补充，每天都会发放新的链接。
+  getLink: 获取你的镜像链接
+  open: 打开镜像链接
+  openLabel: 打开另一个 InvisiProxy 镜像
+  issues: 如果链接有任何问题，请在 GitHub 上提交 issue。
+
+proxySettings:
+  donate: >-
+    我们提供高级域名、Beta 功能、家庭宽带 ISP 线路以及更快的速度。你可以在 <patreon>Patreon</patreon> 上捐赠。<br/>如果你在使用服务时遇到困难，请启用 Tor 或地区路由。如果代理有任何问题，请查看<faq>常见问题</faq>页面。
+  title: 代理偏好设置
+  connection: 连接
+  searchNavFix: 启用网站修复
+  searchNavFixDescription: >-
+    使用 The Freedom Project 制作的插件来修复浏览时出现的 "undefined" 等错误。可选。
+  experimentalSiteFixes: 实验性网站修复
+  experimentalSiteFixesDescription: >-
+    手动网站兼容性修复的合集。可能导致网站异常并泄漏真实 IP，使用风险自负。
+  hideHistoryDescription: 隐藏本地浏览历史。网络管理方仍可能嗅探到历史记录，但内容已经过代理。
+  randomizeFingerprint: 随机化浏览器指纹
+  randomizeFingerprintDescription: >-
+    每个标签页会话使用一个随机的桌面浏览器，并为 Canvas、WebGL、CPU 和内存读数加入噪声。已选择的用户代理仍然优先。可能导致部分网站异常。
+  customWisp: 自定义 Wisp 服务器
+  customWispDescription: >-
+    让代理流量经过你自己的 Wisp 服务器，以更好地掌控隐私。如果你希望所有流量都经由自托管服务器，这是一种轻量的方式：使用这里的前端，而让相应流量发往你自己的服务器。留空即关闭。
+  invalidWisp: 请输入 ws:// 或 wss:// 地址。
+  moreSettings: 查看更多设置
+  anotherLink: 需要另一个链接？点击<mirrors>镜像链接按钮</mirrors>。
+
+faq:
+  meta:
+    title: InvisiProxy 常见问题 | 网络错误、验证码和 YouTube 修复
+    description: >-
+      遇到网络错误、空白页面、验证码循环或 YouTube 无法加载？这里有 InvisiProxy 最常见问题的解决方法，以及登录网站是否安全的说明。
+    social: >-
+      网络错误、空白页面、验证码循环和 YouTube 播放问题的快速修复，以及关于 Discord 支持和安全登录的解答。
+  title: 常见问题
+  search: 搜索
+  searchLabel: 搜索常见问题
+  icons:
+    question: 如何获取标签页伪装菜单所需的图标 URL？
+    bookmarklet: >-
+      前往你想获取图标的网站，然后使用这个书签小工具（将其拖到书签栏）：
+    button: 查找图标 URL
+    copy: >-
+      复制书签小工具给出的 URL。然后返回 InvisiProxy，在设置中的图标 URL 处输入该 URL。尽情享用吧！
+  networkError:
+    question: >-
+      每次使用代理时都出现"Network Error"或网站错误？
+    answer: >-
+      这是我们现代网页代理的已知问题。由于用户数量众多，标签页通常在约十分钟无活动后会断开连接。只需点击"刷新页面"按钮并重新加载页面即可解决。
+    note: >-
+      这通常发生在你第一次使用代理时。我们会在未来修复此问题。
+  bot:
+    question: >-
+      网站认为我是机器人，导致我无法登录网站或查看内容。
+    answer: >-
+      在高峰时段这很常见，因为所有流量都只经过两个 IP。解决方法是通过"地区选择"切换地区，或启用 Tor 路由。你也可以加入我们的 Patreon，使用配备家庭宽带 ISP 的实例来避免此问题。
+  unreachable:
+    question: >-
+      我遇到了类似这样的错误："'cdn.example.com' cannot be reached."
+    answer: >-
+      重新加载页面。如果第一次没有用，只需使用浏览器的后退按钮，或返回 Scramjet 页面再试一次。
+  blank:
+    question: 为什么我的网站只加载了一部分或完全空白？
+    answer: >-
+      并非所有网站都受支持。这是因为互联网极其广阔，网站使用着各种不同的技术和内容加载方式。如果你在某个特定网站上遇到问题，请在我们的 Discord 服务器或 GitHub 上报告。否则，可以尝试切换我们的代理选项，看看是否有其中一个支持该网站。
+  idb:
+    question: >-
+      我遇到了与 IDB 数据库相关的错误（Scramjet V1 问题）
+    answer: >-
+      这通常发生在我们更新项目时。只需点击浏览器左上角的 (i) 图标（或锁形图标），然后选择"清除网站数据"或"Cookie 和网站数据 > 管理设备上的网站数据 > 垃圾桶图标"。这会清除 IndexedDB 数据库，让你可以重新使用代理。
+  discord:
+    question: 支持 Discord 吗？
+    answer: 是的，支持 Discord。
+    note: >-
+      不过，免费代理存在一些限制。除非你是自托管或使用小型域名，否则请不要使用你的主账号。
+  youtube:
+    question: 为什么 YouTube 视频无法播放？
+    answer: >-
+      如果执行上述步骤后问题仍然存在，可能是实例暂时宕机了，尤其是当很多人都遇到同样的问题时。自托管不会出现此问题。
+    tor: >-
+      尝试选择"Tor"选项，这可能会解决问题，但会大幅降低加载速度。
+  login:
+    question: 登录网站安全吗？
+    answer: >-
+      是的，登录网站是安全的。不过，由于大量流量被路由到同一个域名，我们建议你不要登录不信任的网站，也不要使用个人账号。我们通过轮换 IP 来缓解这个问题，但在公共代理上不使用个人账号是一种常识。如果是自托管，则可以放心使用。你也可以加入 Patreon，使用家庭宽带 ISP 来避免此问题。
+  captcha:
+    question: >-
+      为什么我所在的网站无法正常工作或出现验证码错误？
+    answer: >-
+      Scramjet 支持验证码，但需要多次尝试。原因是 Scramjet 往往速度太快，而验证码本身就很不稳定。解决方法就是不断尝试，直到验证通过为止。尽量不要操作得太快。
+  youtubeBlank:
+    question: >-
+      在任何代理网站上使用 YouTube 时，为什么页面无法完全加载，或者视频一片白？
+    answer: '有两种方法可以解决：'
+    reload: >-
+      出现上述错误时，正常重新加载页面应该就能加载视频。
+    reloadFrame: >-
+      或者，如果你在使用某种隐身模式，右键单击页面并选择<code>重新加载框架</code>。
+
+privacy:
+  title: 隐私政策
+  subtitle: InvisiProxy，一款私密的网页代理服务。
+  effective: '生效日期：2021-07-16'
+  updated: '更新日期：2026-10-31'
+  what:
+    title: 什么是 InvisiProxy？
+    body: >-
+      InvisiProxy LTS 是一款网页代理服务，帮助你在浏览器内访问可能被网络、政府或政策封锁的网站，无需下载或设置。它以安全的方式实现这一点，并附带额外的隐私功能。在任何浏览器中浏览 Tor/Onion 网站、隐藏浏览活动并绕过过滤。这包括可能绕过政府的内容封锁、Chrome 扩展、本地客户端防火墙以及与网络相关的过滤器。<br/>本项目主要作为绕过审查的理想无客户端方案的概念验证。
+  data:
+    title: 是否收集任何数据？
+    body: >-
+      InvisiProxy 本身不会记录或收集你的浏览内容。为保护用户隐私，后端已禁用日志记录。唯一的例外是镜像链接按钮，它会在内存中保存你的 IP 地址几秒钟以防止滥用；该信息绝不会写入磁盘。含广告域名上的广告合作伙伴会收集他们自己的数据，详见下方"广告"部分。NextDNS 查询经过调整，不记录客户端 IP 或域名，并存储在瑞士。NextDNS 对相关数值的日志保留极少，仅用于确保服务顺利运行。鉴于本项目的规模，我们使用 Cloudflare 来提升性能并简化 DNS 管理。Cloudflare 的数值数据仅被最低限度地用于统计访问量和页面浏览量，以判断何时需要升级服务器。NGINX 被设置为不保存任何日志。InvisiProxy LTS 坚守终结网络审查的理念，同时重视用户隐私。除此之外，我们使用 Wisp 协议（用于代理 TCP 连接）配合 libcurl-transport，在 WebAssembly 中运行 SSL/TLS，实现端到端加密。本服务力求尽可能透明，请记住，你随时可以自行托管，确保一切都在你的掌控之中。<br/><br/>如果你希望提出隐私声明或请求，请通过 Discord 联系我们。
+  security:
+    title: 安全
+    body: >-
+      InvisiProxy LTS 从底层开始构建，旨在为用户提供安全可靠的网页代理服务。InvisiProxy LTS 背后的核心技术之一，是由 Mercury Workshop 开发的全新 Wisp 协议。<br/><br/>与以往的模型相比，该协议带来了多项创新功能和改进，提升了服务的速度和安全性。
+    intro: >-
+      Wisp 协议旨在满足现代网络流量需求，同时保持高安全标准。通过实现 Wisp，本项目获得了以下优势：
+    performance: >-
+      性能：Wisp 协议优化了 TCP 数据传输速度，确保用户在浏览时延迟最低。
+    compatibility: >-
+      兼容性：Wisp 与各种网页技术兼容，确保无缝访问各类网站和在线服务。这是通过支持遵循该协议的各种开源传输方式（Libcurl Transport）实现的。
+    censorship: >-
+      抗审查能力：该协议旨在绕过限制性网络所采用的复杂审查技术，让用户轻松访问被封锁的内容。
+    fingerprinting: >-
+      抗指纹识别：本项目在官方实例的反向代理配置中具备强大的抗指纹识别机制。这意味着代理被设计为尽量减少可用于追踪或识别用户的唯一标识符，从而增强隐私。通过遵循行业最佳实践并持续更新方法，用户可以匿名浏览，不留下可识别的痕迹。
+    transparency: >-
+      透明度：透明是 InvisiProxy LTS 的核心原则。本项目采用开源模式运营，社区可以审查代码库并做出贡献。这种开放性不仅建立了信任，还能通过社区反馈和协作实现持续改进。通过坚持透明的做法，InvisiProxy LTS 确保用户了解他们的数据如何被处理，以及有哪些保护隐私的措施。
+    randomisation: >-
+      源码/全局随机化：为了进一步增强安全性和隐私，InvisiProxy LTS 采用了源码和全局随机化。这让项目能在域名上更长时间不被封锁，同时提升浏览时的匿名性。普通网页代理在重写资源时会留下痕迹，而采用这种方法后，代理更难被检测和封锁。
+    encryption: >-
+      加密：InvisiProxy LTS 采用先进的代理技术，专注于端到端加密和安全的数据传输，特别是在 URL 重写代理方面。注意：这仍是一项进行中的大型工作，欢迎贡献。
+    audits: >-
+      定期审计：定期进行安全审计，以发现并修复潜在漏洞。
+  advertising:
+    title: 广告
+    body: >-
+      部分 InvisiProxy 域名会展示广告以支付托管费用。Patreon 实例始终无广告。广告由第三方广告网络投放：Google AdSense、Adsterra、Adcash 和 Monetag。广告只会出现在 InvisiProxy 自己的页面和加载界面上，绝不会出现在你通过代理浏览的网站内部。<br/><br/>广告加载时，广告网络会获得你的 IP 地址、浏览器用户代理、你正在访问的域名以及类似的技术信息，并可能设置或读取其自身的 Cookie 或使用类似技术来展示广告、限制展示频率、衡量效果和防止欺诈。这些广告网络可能会在我们的页面上运行它们的代码；它们对你数据的处理受其各自的隐私政策约束，而非我们的。<br/><br/>Google 及其合作伙伴可能会使用 Cookie，根据你对本网站及其他网站的访问来投放广告。你可以在 adssettings.google.com 关闭个性化 Google 广告，并在 optout.aboutads.info 或 youronlinechoices.eu 选择退出许多其他广告网络。你也可以使用内容拦截器屏蔽广告，或使用 Patreon 实例。
+  usage:
+    title: 其他使用说明
+    storage: >-
+      InvisiProxy 使用"Cookie"、IndexedDB、localStorage 和 sessionStorage 来维持用户会话（详见下文），并在你的电脑上保存你的偏好设置。所有这些信息都保存在你的设备上，InvisiProxy 不会将其用于任何分析。广告合作伙伴可能会保存他们自己的 Cookie，详见"广告"部分。
+    cookies: >-
+      Cookie 是网站存储在访问者电脑上的一串信息，访问者每次返回时，浏览器都会将其提供给网站。InvisiProxy 使用 Cookie 来确保设置菜单的可用性，以及保存用户偏好。不希望在电脑上存储 Cookie 的用户，应在使用 InvisiProxy 网站前将浏览器设置为拒绝 Cookie，但这样做的缺点是，没有 Cookie、localStorage 或 IndexedDB 的帮助，InvisiProxy 的某些功能将无法正常运行。InvisiProxy 不会出于分析目的使用任何 Cookie、IndexedDB、localStorage 或 sessionStorage 功能；只有以下功能依赖它们在本地存储持久数据：Scramjet（缓存被代理的资源、会话状态等）、标签页、书签、自动补全（经代理）、设置菜单：标签页伪装、图标预设、传输方式选项、搜索引擎、主题、语言、窗口类型、Tor 路由、地区切换、隐藏广告、隐藏历史记录、阻止窗口泄漏、阻止 WebRTC 以及指纹随机化。
+    serviceWorkers: >-
+      此外，InvisiProxy 使用 Service Worker 作为我们网页代理的技术。它可以拦截相应的网络流量等，是本项目的核心功能。
+    consent: >-
+      在不更改 Cookie 设置的情况下继续浏览我们的网站，即表示你在法律不要求单独同意的范围内，确认并同意 InvisiProxy 使用 Cookie，以及上述广告合作伙伴使用的 Cookie。
+  changes:
+    title: 结语
+    body: >-
+      虽然大多数变更可能都很小，但 InvisiProxy 可能会不时更改其隐私政策，具体由 InvisiProxy LTS 自行决定。InvisiProxy LTS 鼓励访问者经常查看本页面，了解隐私政策的任何变化。在隐私政策变更后继续使用本网站，即表示你接受该变更。如遇滥用或 DDoS 攻击，InvisiProxy LTS 可能不得不临时记录数据，以缓解攻击并确保服务正常运行。在这种情况下，所有记录的数据将在攻击缓解后立即被安全删除。
+  contact:
+    title: 联系方式与致谢
+    body: >-
+      如果你对我们的隐私政策有任何疑问，请通过以下电子邮件联系我们：
+
+docs:
+  chemical: >-
+    如果你想从零开始创建自己的网页代理服务，可以试试 <chemical>Chemical</chemical>。
+  chemicalButton: 使用 Chemical 构建你的代理网站
+  formerly: 前身为 Holy Unblocker LTS
+  badges:
+    ci: GitHub Actions 状态
+    dockerVersion: Docker 镜像版本
+    dockerPulls: Docker 拉取次数
+  intro: >-
+    <strong>InvisiProxy LTS</strong>（前身为 Holy Unblocker LTS）是一项实验性的网页代理服务，无论审查方式是客户端还是基于网络，都可以绕过网页过滤器或"拦截器"。这包括绕过政府的内容封锁、Chrome 扩展、本地客户端防火墙以及与网络相关的过滤器。本项目甚至可以让你通过一个网站，在任何浏览器（包括 Chromium）中浏览 Tor/Onion 网站！
+  star: 给仓库点个 Star 来支持 InvisiProxy 吧！
+  about: >-
+    本项目主要作为绕过审查的理想无客户端方案的概念验证。一个很好的使用场景是：当你需要使用 Tor、在浏览时切换地区（或使用外部代理）、无需注册账号即可浏览网站（减少指纹识别）、绕过反广告拦截，以及/或尽量少留下设备活动痕迹时。只需在任意域名上托管本项目，就能拥有一个无需在设备上下载任何东西的 VPN 替代方案。作为安全的网页代理服务，它支持大量网站，更新频繁，并专注于易于自托管。InvisiProxy LTS 可用于大量网站，包括 YouTube、Gemini、ChatGPT、Discord、GeForce NOW 等！与其他网页代理相比，本项目在绕过网页过滤（DOM 伪装和源码随机化）以及各国的全局审查方面，还拥有不少独有功能。目前支持的国家有中国（GFW）和俄罗斯。
+  users: >-
+    自 2020 年以来已有超过 3000 万用户。非常感谢大家的支持，我从未想过网页代理社区会变得如此庞大。
+  branches:
+    current: '当前分支：Latest'
+    title: 分支类型
+    latest: Latest（master；面向 FOSS 和 SEO 构建）
+    beta: Beta（待合并的更改；可能导致问题的更改）
+    production: >-
+      Production（v4、v5、v6；InvisiProxy LTS 的稳定版本。针对生产环境自托管的更改；最大化过滤规避和请求处理能力）
+    switch: 自托管时请考虑切换到 Production 分支！
+  selfHost: >-
+    如果你想自行托管本项目，请查看<deploy>自部署选项</deploy>。无法使用任何免费选项部署？可以看看 Koyeb，或者考虑便宜的付费 VPS 托管方案。如果你不想自托管，请点击 InvisiProxy 上的镜像链接菜单。
+  discord: "请务必加入 TitaniumNetwork 的 Discord 获取更多官方网站链接："
+  caution:
+    title: 注意
+    body: >-
+      如果你要自托管 InvisiProxy LTS，请切换到 PRODUCTION 分支，该分支会自动启用过滤规避功能。master 分支包含尚未准备好用于自托管的开发中更改。不过，如果你想为本项目做贡献，请向 master 分支提交 PR。
+  tip:
+    title: 提示
+    body: >-
+      InvisiProxy LTS 针对自托管进行了优化，为你提供最大的隐私控制权！fork 本仓库，也欢迎点个 Star。你可以使用免费或付费的部署选项进行自托管，或者将其部署在专用实例（VPS）上以获得更好的性能。
+  sites:
+    site: 支持的网站
+    features: 功能
+    youtube: >-
+      内置多种开源网页代理，兼顾速度和/或安全性
+    reddit: >-
+      采用源码随机化和 DOM 伪装，并对代理全局变量进行随机化，有效规避主流过滤器
+    discord: >-
+      可通过设置菜单自定义标签页标题和图标，提升浏览历史的隐蔽性
+    instagram: >-
+      冲浪时在所有网站上拦截广告，官方服务器提供低延迟 DNS
+    tor: >-
+      在设置菜单中通过 Tor 支持 SOCKS5 和洋葱路由。在任何浏览器中使用 Tor/Onion 网站！
+    geforce: >-
+      与其他网页代理相比，在绕过网页过滤和各国全局审查方面拥有独有功能。
+    chatgpt: >-
+      隐藏本地浏览历史、防止标签页泄漏，网络流量也被隐匿！
+    spotify: 通过切换地区或启用 Tor 绕过地区性代理封锁
+    more: 以及几乎所有网站！
+    moreFeature: 专为高强度生产负载和简便部署而打造
+  deploy:
+    title: 部署 InvisiProxy
+    free: 免费部署
+    alternatives: 其他免费平台
+    paid: 生产环境付费/免费选项（需要支付信息）
+    to: 部署到 {name}
+    run: 在 {name} 上运行
+    replitTitle: Replit/Heroku 部署怎么了？
+    replit: >-
+      Replit 已不再免费，而 Heroku 明确禁止网页代理。云端开发可以改用 GitHub Codespaces 或 Gitpod，免费托管可以使用 Koyeb。
+  codespaces:
+    title: 部署说明
+    fork: 将本仓库 fork（并点 Star！）到你的 GitHub 账号
+    open: >-
+      前往官方 <codespaces>Codespaces</codespaces> 网站（请确保你已注册 GitHub 账号）
+    select: >-
+      选择 <strong>New Codespaces</strong>，并在你的账号中找到 <em>[USERNAME]/InvisiProxy</em>
+    branch: >-
+      确保分支设置为 <code>master</code>，并将 dev container 配置设置为 <strong>InvisiProxy LTS</strong>
+    create: 选择 <strong>Create Codespace</strong>，等待容器完成设置
+    install: >-
+      在终端中输入 <code>pnpm run fresh-install</code> 和 <code>pnpm start</code>
+    ports: >-
+      在应用弹窗中点击"Make public"，然后通过端口标签页访问已部署的网站。
+  partners:
+    title: 合作伙伴
+    hardFork: '{name}（硬分叉）'
+    partner: '{name}（合作伙伴）'
+  toc:
+    title: '目录：'
+    setup: 部署
+    terminal: 终端
+    configuration: 项目配置
+    server: 服务器配置
+    tor: TOR 路由
+    proxy: 代理
+    navigation: 客户端导航
+    translations: 翻译
+    structure: 结构
+    structureInfo: 结构说明
+    views: 静态文件
+    scripts: 脚本
+    future: 未来计划
+    beginners: 新手说明
+    hosting: 托管服务商
+    domain: 域名设置
+    cloudflare: Cloudflare 设置
+    workspace: 工作区配置
+    faq: 详细常见问题
+    more: 更多信息
+  setup:
+    title: 如何部署
+    branchWarning: >-
+      强烈建议你通过 IDE 切换到已发布的生产分支。master 分支通常包含不稳定或开发中的更改。
+    branchExample: '示例：使用 v6.x_production 而不是 master'
+    terminal: 终端
+    terminalIntro: >-
+      可以使用上方的按钮部署到上述平台，也可以在专用服务器上输入以下命令
+    nginxOnly: 本项目专为支持 NGINX 而设计，而非 CADDY。
+    requirements: >-
+      请同时确保你使用的是 <code>Node 26.x</code>。<code>git</code> 和 <code>curl</code> 是必需的依赖：
+    builtIn: >-
+      本网站在本地托管，内置了 <scramjet>Scramjet</scramjet>、<wisp>Wisp</wisp>、<merp>Merp 混淆</merp>、<epoxy>EpoxyTransport</epoxy> 和 <libcurl>LibcurlTransport</libcurl>。
+    caddyWarning: >-
+      出于安全考虑，使用反向代理托管时请务必使用 NGINX，而不是 Caddy。这是因为 wispurr 使用了回环地址。如果使用 Caddy，请禁用此功能或调整 Caddy 的默认配置。
+    resources: '自托管资源：'
+  commands:
+    pm2Config: >-
+      如果你想使用 pm2，请编辑 config.js 并将 production 设置为 true（便于在 VPS 上托管）
+    pm2: 使用 pm2 守护进程
+    restart: 或在之后的使用中……
+    kill: 用于结束通过 pm2 创建的生产进程
+    buildErrors: 如果遇到任何构建错误……
+    serviceErrors: 如果遇到任何服务错误……
+    nodeVersion: 26 或最新版本
+    start: 如果你想启动项目
+    test: 用于测试端点和错误
+    prSet: prSet 函数代码在此……
+  ubuntu:
+    title: 详细部署（以 Ubuntu 为例）
+    intro: >-
+      你需要安装 <code>Node.js 26.x</code>、<code>curl</code> 和 <code>git</code>；以下是 Debian/Ubuntu 的部署示例。
+    summary: 分步指南
+    mirrors: >-
+      简单起见，你可以通过 discord.gg/unblock 加入 TN 的 Discord，申请镜像网站链接（这些链接会定期补充且未被封锁）。
+    hosting: 托管
+    hostingBody: >-
+      不过，如果你想自托管，首先需要一台 VPS 或一个托管服务商：
+    dependencies: 依赖
+    dependenciesBody: >-
+      然后你需要安装 git、musl、nginx（或 caddy）和 Node.js。以下是 Ubuntu LTS 的示例：
+    tor: Tor 支持（可选）
+    configure: 配置 InvisiProxy
+    configureBody: >-
+      最重要的选项是 production，以及混淆和 DOM 伪装技术。
+    configureMore: '之后按需配置即可：'
+    run: 克隆并运行 InvisiProxy
+    runBody: >-
+      然后运行相应的进程；如果你在配置中将 production 设为 true，pm2 将与我们自己的 worker/缓存系统一起自动启用。
+    restart: 当然，如果你使用了 NGINX 或 caddy，请重启/重新加载它
+  config:
+    title: 配置
+    server: 服务器配置设置
+    port: >-
+      代理启动时的默认端口为 <code>http://localhost:8080</code>。如有需要，你可以在 <code>./ecosystem.config.js</code> 中更改端口和其他生产环境参数。
+    local: >-
+      其他所有本地化更改，如源码随机化、自动压缩等，都位于 <code>./config.json</code> 中。
+    options:
+      minifyScripts: >-
+        在启动服务器时自动压缩相应的静态资源。
+      randomizeIdentifiers: >-
+        为 Ultraviolet 启用实验性的代理全局变量随机化。这可以降低 UV 被基于扩展的过滤器检测到的几率。
+      production: >-
+        使用预先配置好的生产环境方案进行服务器托管。自动设置缓存控制和源码重写。
+      disguiseFiles: >-
+        启用 DOM 伪装，混淆 InvisiLTS 真实的内容获取过程。具体做法是伪装请求、解压，然后重建 DOM 树。
+      usingSEO: >-
+        启用源码随机化，通过替换 <code>./src/data.json</code> 中指定的数据块来随机化源码。对于掩盖会自动标记或封锁 InvisiProxy LTS 的关键词以及防止源码封锁非常有用。
+      verbose: >-
+        启用编译和构建消息，以便在编译时查看进度和可能出现的问题。
+      mirrorLinksFile: >-
+        链接页面分发器使用的仅限服务器端的文件，默认为 <code>private/mirror-links.txt</code>。相对路径以项目根目录为基准解析，也支持绝对路径。每行一个 HTTP(S) URL，并将该文件放在 <code>views/</code> 之外，以免被公开访问。更改此设置后请重启服务器。
+      geoLanguage: >-
+        使用 Cloudflare 的 <code>CF-IPCountry</code> 请求头启用自动语言选择。仅在 Cloudflare 之后启用此功能，否则任何人都可以伪造该请求头。各语言对应的国家列在每个 <code>./locales/*.yaml</code> 文件的 <code>language.countries</code> 下。
+      singleLanguage: >-
+        设为 <code>true</code> 时，只构建 <code>language</code> 中设置的语言，所有访问者都会看到该语言，并隐藏语言设置。适用于 Docker 或其他只需要一种语言的部署，因为构建更快、体积更小。默认为 <code>false</code>。
+      language: >-
+        当 <code>singleLanguage</code> 开启时要构建的语言，对应 <code>./locales/</code> 中的一个文件（例如 <code>en</code> 对应 <code>en.yaml</code>）。默认为 <code>en</code>。对于 Docker，由于语言是在构建时选定的，请在运行 <code>docker build</code> 或 <code>docker compose build</code> 之前在 <code>config.json</code> 中设置。
+  translations:
+    title: 翻译
+    crowdin: >-
+      InvisiProxy LTS 在 <crowdin>Crowdin</crowdin> 上进行翻译，任何人都可以参与，无需接触代码。加入项目，选择一种语言即可开始翻译。完成的翻译会自动同步到 <code>./locales/</code>。
+    rules: >-
+      翻译规则（占位符、标签和屏蔽词）请参阅 <readme/>。如果 Crowdin 上没有你的语言，请提交 issue 或在 Discord 中询问。
+  tor:
+    title: Tor/Onion/SOCKS5 路由设置
+    intro: >-
+      你需要安装 Tor 才能让洋葱路由设置生效（无需图形界面，有图形界面也可以。使用图形界面时请将端口 9050 替换为 9150）！
+    guide: '按照这份指南托管 Tor 即可：'
+    cliGuide: '备选指南（命令行）：'
+    body: >-
+      如果你在使用 Ubuntu 的 VPS 上托管 InvisiProxy LTS，可以考虑将 Tor 挂载到 systemctl，便于生产环境管理。一旦 Tor 在 Linux 或 Windows 上运行起来，当用户在设置菜单中启用后，它就会自动与 InvisiProxy LTS 配合使用。
+    customWisp: 用户也可以在代理偏好设置中设置自己的 Wisp 服务器。
+    customProxy: >-
+      如果你想使用自定义的 HTTP/HTTPS/SOCKS5 代理来转发 Scramjet 的流量，这是在服务器端的 <code>./src/server/wisp.ts</code> 中处理的。
+  proxy:
+    title: 代理配置
+    body: >-
+      调整通过设置菜单分配的网页代理相关设置的主要位置是 <code>./views/assets/js/register-sw.js</code>。在这里，你可以修改通过 Cookie 在本地设置的传输方式选项、替换 SOCKS5 代理、更改洋葱路由端口、指定黑名单等。
+    options:
+      stockSW: >-
+        Ultraviolet 的默认 Service Worker 配置文件。不过 InvisiProxy 会自动启用广告拦截，因此默认不使用此文件。
+      blacklistSW: >-
+        Ultraviolet 的修改版本，支持域名黑名单和广告拦截。
+      proxyUrl: >-
+        指定一个 SOCKS5/HTTPS/HTTP 协议的 URL，默认为 Tor 的默认代理端口。可以替换为任何有效的端口或 SOCKS5 代理。这是通过 epoxy 和 libcurl 的 proxy 选项实现的。
+      transports: >-
+        指定通过 Bare-Mux 切换并使用 Wisp 的端口。
+      wispUrl: 修改 Wisp 的路径名或 URL 处理方式
+      defaultMode: >-
+        指定全局使用的默认传输方式（用户仍可通过设置菜单切换）
+      ScramjetController: >-
+        通过这个构造函数，你可以动态替换 Scramjet 使用的前缀并指定文件位置。注意，更改文件名时可能需要编辑 <code>./views/scram/scramjet.sw</code>。
+  navigation:
+    title: 客户端导航配置
+    body: >-
+      客户端导航脚本的主要位置是 <code>./views/assets/js/common.js</code>。该文件主要用于地址栏（搜索引擎）功能、切换代理选项以及其他客户端设置。
+    options:
+      getDomain: >-
+        该常量用于指定在将 URL 添加到地址栏时需要移除的子域名。
+      goFrame: 指定 InvisiProxy LTS 使用的隐身框架
+      sx: >-
+        该常量指定当用户输入的内容不是 URL 时要经代理使用的搜索引擎
+      search: 这些函数用于指定和解析所提交 URL 的查询
+      urlHandler: 用于为 goProx 对象设置函数。
+      goProx: >-
+        该常量用于映射特定代理或需要经过网页代理的链接的 URL 处理方式。
+      prSet: 使用 goProx 为所需的按钮或输入框绑定事件监听器
+      huLinks: >-
+        自动读取 <code>./views/assets/json</code> 中声明的路径，并根据页面和用途进行添加。用于隐藏会触发过滤封锁的链接，并让添加应用变得更简单。
+  structure:
+    title: 结构
+    summary: 网页
+    info: 结构说明
+    root:
+      views: >-
+        InvisiProxy 的网站主体放在这里，静态资源由此提供。
+      src: 用于将来实现混淆和关键词移除功能。
+    views: <code>/views/</code> 的详细说明
+    folders:
+      dist: 用于存放压缩后的文件。构建时生成。
+      pages: 用于存放网站的 HTML。
+      assets: 用于存放各种 CSS、JS、图片和 JSON 文件。
+      scram: >-
+        包含本地的 Scramjet 实现。部分文件会被 node 模块覆盖。
+      uv: 包含 UV 的实现。
+    scripts: 位于 <code>/views/assets/js/</code> 的脚本
+    files:
+      card: 为欢迎页面上显示的卡片添加炫酷的视觉效果。
+      common: >-
+        在所有页面上使用，让自动补全等大多数网站功能得以运行。
+      csel: >-
+        管理设置菜单、地址栏功能以及其他附加功能。
+      loader: 用作 DOM 伪装的资源。
+      registerSw: >-
+        创建并管理让 Ultraviolet 运行的 Service Worker，同时使用 bare transport。
+  future:
+    title: 未来计划
+    body: <todo>这里</todo>是 InvisiProxy LTS 的待办事项清单（并不详尽）。
+  beginners:
+    title: 面向新手的外部代理与托管简要说明
+    intro: 首先，你需要在本地或外部托管你的代理。
+    hosting: '一些不错的托管选择：'
+    current: 当前托管服务商
+    paid: 付费
+    freePaidDedicated: 免费、付费、独立服务器
+    freeAndPaid: 免费和付费
+    preference: >-
+      在这些托管服务商中，Dedipath 和 Azure 是首选。你也可以自行托管。
+    cloudflare: >-
+      选好一台不错的 VPS 后，使用 Cloudflare 为网站和代理子域名配置 DNS 记录。
+    dns: >-
+      这是一个 DNS 记录示例。自托管时最好使用 <code>A 记录</code>。
+    dnsAlt: DNS 记录
+    root: >-
+      <code>@</code> 和 <code>www.example.com</code> 用于 InvisiProxy LTS。
+    subdomain: >-
+      <code>a.example.com</code> 根据网站维护者的需要，用于 Libreddit 或 Invidious 等其他实例。
+    local: >-
+      如前所述，InvisiProxy 开箱即用地在本地托管 Scramjet 和 Ultraviolet，无需外部实例。
+  domain:
+    title: 域名步骤
+    porkbun: >-
+      如果你想获取高级域名（TLD），推荐使用 <porkbun>Porkbun</porkbun>，它的域名价格非常实惠。一个 <code>.org</code> 域名首年通常只要 5 美元左右。
+  cloudflare:
+    title: Cloudflare 步骤
+    account: >-
+      使用 Cloudflare（注册一个账号），添加你的网站，然后将各个 DNS 目标添加到 Cloudflare。请务必添加 Cloudflare 的域名服务器（Nameservers），这会在你添加网站时提供给你。
+    records: >-
+      请确保它们是 CNAME 记录（A 记录也可以），并尽量遵循以下结构：
+    columns: 类型 | 名称 | 目标
+    ip: 在此填写 VPS IP
+    ssl: >-
+      请确保强制使用 HTTPS，并将 SSL 设置为 Flexible（如果你不使用 LetsEncrypt）。否则可以将 SSL 设置为 Full。
+  workspace:
+    title: 工作区配置
+    vsc: >-
+      如果你有自己的设备，推荐使用 <vsc>Visual Studio Code</vsc>。这几乎是你能找到的最佳选择，当然这只是个人观点。另外，请确保你的电脑上安装了 <node>Node.JS</node>。
+    fork: >-
+      这部分不会讲得太深入，首先 fork 本仓库。然后根据你使用的操作系统，通过某种终端将其克隆到本地。请确保你已进入要进行设置的文件夹。
+    gitignore: >-
+      现在只需在 VSC 中添加你克隆仓库的文件夹。然后运行 <code>pnpm install</code>。如果你要在 GitHub 上公开发布，建议在根目录中添加一个 <code>.gitignore</code>，包含以下排除项：
+    deploy: >-
+      现在你的工作区环境已经设置好了。要部署你刚创建的工作区，需要根据你的托管服务商查阅相应方法。
+    gitpod: >-
+      如果需要一个能在学校电脑和/或 Chromebook 上使用的在线 IDE，可以使用 GitPod。它基本上就是支持在浏览器中使用的 Visual Studio Code。
+    gitpodAccount: '注册账号：'
+    gitpodFork: 'fork 本仓库，并输入以下 URL 来设置你的工作区：'
+    gitpodSteps: >-
+      按照上面相同的步骤，在你的仓库中运行 <code>pnpm install</code>，并在根目录中添加一个排除 <code>node_modules</code> 的 <code>.gitignore</code>。
+  faq:
+    title: 详细常见问题
+    summary: 快速常见问题
+    games: 在哪里可以找到这个仓库的游戏？（404 错误等）
+    gamesBody: 请阅读<games>这里</games>。
+    captcha: >-
+      为什么我所在的网站无法正常工作或出现验证码错误？
+    captchaBody: >-
+      遗憾的是，目前所有代理对验证码的支持都不太稳定，主要由 Scramjet 支持。因此，有些网站可能在任何代理上都无法使用。
+    badGateway: 我遇到了 502 错误，该怎么办？
+    badGatewayBody: >-
+      出现这种情况时，你可以切换网站来解决错误，或者稍等片刻。有时清除缓存也会有帮助。
+    questions: >-
+      如果你还有任何问题，欢迎在此处链接的 Discord 中提问。
+    domains: >-
+      为什么官方域名现在带有编号？这个项目又开始维护了吗？
+    domainsBody: >-
+      是的，本项目为了 LTS 支持再次活跃起来了！不过，为了确保功能正常，现在的方法简单多了：按需补充域名，并对源码进行高度维护。本项目比以往任何时候都更像是一个概念验证，献给那些敢于在网页代理服务领域创新的勇者。
+  closing:
+    summary: 以前的停运公告（原文 - 2022 年）
+    announcement: >-
+      抱歉，这不是什么好消息。经过反复思考和极度犹豫，我决定关闭 Holy Unblocker 并离开 TN。这件事让我纠结了好几个月，所以才会一直没有更新，去年也出现了很长的空档期。我只是不想放弃一个我热爱、投入了大量时间，并在这里结识了很棒的朋友和厉害的开发者的项目。我可以一直说下去这些人是谁，但就到此为止吧。他们自己知道是谁 :D
+    reasons: >-
+      想法转变的主要原因是，我终于决定现在就画上句号，因为：1）缺乏动力 2）社区有时并不是最好的，有时也不怎么友善（这点必须说出来） 3）HU/TN 作为项目的前景看起来并不乐观。
+    secrets: >-
+      这个决定还有其他原因，所以有些事情我会保密，除非有人觉得这些信息还不够。好朋友们都知道，这几个月来我一直为这个决定倍感压力。另外，我快毕业了，这也是促使我做出这个决定的一大原因。
+    future: >-
+      将来我可能会继续/回归，或者只把它保留在 GitHub 上。我写下这些，是因为即使到现在我仍然在怀疑这个决定。但目前我建议去看看其他代理网站，比如 Incognito（Duce 更新非常频繁，他也是 Ultraviolet 的作者/开发者，所以多支持他吧） :yayy_hopi:
+    patreon: >-
+      也去看看他的 Patreon 吧！现有的 HU 赞助者下个月将不会被扣费，HU 的 Patreon 将会归档，所以请转到 Duce 的 Patreon，让他能为 Incognito 购买更多域名。
+    signoff: 满怀爱意 <3
+  more:
+    title: 更多信息
+    maintained: >-
+      本项目由 InvisiProxy LTS 团队维护，是 TitaniumNetwork 官方旗舰网页代理网站。
+    website: 查看官方网站了解更多详情和致谢。
+    sources: '网页代理来源：'
+    sourcesBody: >-
+      本项目目前使用遵循 Wisp 协议的 Scramjet 和 Ultraviolet 作为网页代理。Bare-Mux 用于切换配合 Wisp 使用的传输系统。内置的传输系统有 EpoxyTransport 和 libcurl-transport。
+    wispProtocol: Wisp 协议
+    merp: Merp（混淆模块）
+    dnsBlocklists: hagezi DNS 屏蔽列表
+    dependencies: '其他依赖：'
+    mentions: '特别提及：'
+    hostingProvider: 托管服务商
+  meta:
+    title: InvisiProxy 文档 | 自托管、配置与 Tor 设置
+    description: >-
+      自托管 InvisiProxy：使用 pnpm 安装，在 config.json 中配置，通过 Tor 或 SOCKS5 代理转发流量，并了解每个依赖的作用。
+    social: >-
+      运行你自己的 InvisiProxy 实例。涵盖安装、config.json、Tor 和 SOCKS5 路由，以及本项目所基于的库。
+
+apps:
+  intro: >-
+    选择下方的网站，即可通过代理打开。由于这是公共代理服务，请避免使用主账号登录。建议创建备用账号并启用双重验证（2FA），因为部分网站在满足这些条件后会放宽限制。数百万次请求都经过少数几个 IP，因此某些网站可能会阻止访问。
+  patreon: >-
+    如果你希望通过可靠的家庭宽带 ISP 转发流量并获得更快的速度，可以考虑加入我们的 <patreon>Patreon</patreon>。如果遇到任何问题，也可以启用 Tor 路由或编辑地区设置。如需使用 GeForce NOW，请在代理设置中关闭广告。
+  faq: 如果代理有任何问题，请查看<faq>常见问题</faq>页面。
+  loading: 正在加载应用……
+  categories:
+    all: 全部
+    featured: 精选
+    social: 社交
+    chat: 聊天
+    video: 视频
+    music: 音乐
+    games: 游戏
+    ai: AI
+    education: 教育
+    opensource: 开源
+
+partners:
+  title: 合作服务
+  intro: >-
+    探索我们的合作项目。这些项目通过代理运行，因此你可以在这里不受封锁地使用它们。
+  features: >-
+    我们的合作伙伴提供未封锁的游戏、网页移植版和模拟器等功能。所有合作伙伴都是开源且免费使用的。如果可以的话，请考虑加入他们的社区并支持他们。它们都采用与 InvisiProxy 类似的模式，所以请务必加入各自的 Discord 获取更多链接。
+
+credits:
+  title: 致谢
+  intro: >-
+    InvisiProxy LTS 是一款官方网页代理服务，无论是基于扩展还是基于网络的网页过滤器都能绕过。<br/>本项目让你能够访问原本被政府、学校或工作场所封锁的内容。
+  name: 名称
+  contributions: 贡献
+  contact: 备注与联系方式
+  iconAlt: 图标
+  sections:
+    developers: 主要开发者
+    contributors: 贡献者
+    translators: 译者
+    shoutouts: 特别鸣谢
+
+icons:
+  title: 图标信息
+  subtitle: 如何查找网站的图标 URL
+  copy: >-
+    复制书签小工具给出的 URL。然后返回 InvisiProxy，在设置中的图标 URL 处输入该 URL。尽情享用吧！
+
+error:
+  pageTitle: 错误
+  title: 网站错误（返回首页）
+  reload: 重新加载页面或按 Ctrl+R。这能解决很多问题。
+  unavailable: >-
+    代理连接不可用，服务器已刷新源代码。
+  maintenance: 这会不定期发生，以随机化源码。给你带来不便，非常抱歉！这能让镜像保持存活。
+  wait: 遇到这种情况，请稍等片刻，直到问题解决！
+  faq: 无效的 URL？请查看<faq>常见问题页面</faq>获取帮助！
+  home: 返回首页
+
+scramjet:
+  pageTitle: Scramjet 代理
+  description: >-
+    Mercury Workshop 推出的全新创新代理，采用 Service Worker 和先进的重写技术等，并支持验证码。Scramjet 专注于在 YouTube、now.gg、Spotify、CoolMathGames 以及各种 .io 网站上的速度！
+  searchPlaceholder: 在此输入 URL 或搜索内容！
+  search: 搜索
+
+frame:
+  searchPlaceholder: 输入 URL 或搜索……
+  loading: 正在加载网页代理……
+  restarting: 服务器正在重启，请稍候。这有助于随机化源码……
+  title: 浏览
+  tabs: 代理标签页
+  newTab: 新标签页
+  closeTab: 关闭标签页
+  closeMenu: 关闭
+  bookmarks: 书签
+  addBookmark: 将此页加入书签
+  removeBookmark: 移除书签
+  noBookmarks: 还没有书签。点击地址栏中的星形图标即可保存当前页面。
+
+scramjetError:
+  title: Scramjet 网络错误
+  failed: '加载失败：'
+  reload: 重新加载页面可能会解决你的问题。
+  refresh: 刷新页面
+  copy: 复制
+  try: '尝试：'
+  tips:
+    reload: 重新加载页面；这是 Scramjet 的已知问题
+    idb: >-
+      如果出现 IDB 数据库错误，请点击地址栏中的锁形图标，选择"网站设置"或"网站数据"，然后点击"清除网站数据"来清除你的网站数据
+    cache: >-
+      通过 Ctrl+Shift+R 清除浏览器或网站缓存。你也可以在 Invisi 的 设置 > 隐私 > 清除网站数据 中操作
+    address: 确认你输入的地址正确无误
+    maintenance: >-
+      如果是网站维护或更新，请等待问题解决。
+    censored: 确认服务器没有被你的网络审查（WebRTC 等）
+    faq: 查看常见问题页面，了解特定网站的兼容性问题。
+    github: 在 <github>Scramjet GitHub</github> 上排查该错误。
+    engine: 在设置面板中尝试其他代理传输方式或地区。
+  network: 刷新网络服务
+  love: 用爱制作

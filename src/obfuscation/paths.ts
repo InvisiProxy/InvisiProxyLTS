@@ -13,7 +13,7 @@ import {
 } from './state.ts';
 
 type Routes = Record<string, string>;
-const apiEndpoints = ['link', 'clear'] as const;
+const apiEndpoints = ['link', 'clear', 'units'] as const;
 type Links = Record<string, string | Record<string, string>>;
 
 export function getPathAliases(): Record<string, string> {

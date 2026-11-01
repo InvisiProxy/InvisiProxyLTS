@@ -13,7 +13,9 @@ src/.shutdown
 views/archive/gfiles/rarch/roms
 .idea
 private/mirror-links.txt
+private/ads.json
 .env
 analysis/
 .server.err.log
 .server.out.log
+ADVERTISING.md

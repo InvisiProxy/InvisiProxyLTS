@@ -1,0 +1,1426 @@
+# Swedish (Svenska) translation of en.yaml.
+# Based on the community Holy Unblocker Swedish translation by @player2username,
+# updated for InvisiProxy LTS.
+# Keep {placeholders} and <tags> as they are. See en.yaml for instructions.
+
+language:
+  name: Svenska
+
+  # Country codes (ISO 3166-1, as sent by Cloudflare's CF-IPCountry header)
+  countries:
+    - SE
+    - AX
+
+  # Words masked to avoid filters. Proper nouns stay as-is; common words are
+  # listed in the form they appear in this translation.
+  maskedTerms:
+    - InvisiProxy
+    - InvisiProxy LTS
+    - Holy Unblocker
+    - Holy Unblocker LTS
+    - Webretro
+    - Ruffle
+    - Tab Cloak
+    - Sök
+    - Sökning
+    - Fritt
+    - Gratis
+    - Surfning
+    - Surfa
+    - VPN
+    - VPN-tjänster
+    - Server
+    - Servrar
+    - Nätverk
+    - Anslutning
+    - Anslutningar
+    - Integritet
+    - Privat
+    - Spel
+    - Croxy
+    - CroxyProxy
+    - Proxium
+    - SOCKS
+    - SOCKS5
+    - Proxykedja
+    - Proxykedjor
+    - Censur
+    - Brandvägg
+    - Brandväggar
+    - Anonym
+    - Anonymitet
+    - Blockera
+    - Filter
+    - Begränsa
+    - Censurera
+    - Undvika
+    - Kringgå
+    - Smygläge
+    - Maskera
+    - Inkognito
+    - Förklädnad
+    - Chromebook
+    - Skola
+    - Libcurl
+    - Epoxy
+    - Bare-Mux
+    - Mercury Workshop
+    - WebRTC
+    - Spegel
+    - Speglar
+    - Proxy
+    - Proxyer
+    - Avblockera
+    - Avblockerad
+    - Oblockerad
+    - Avblockering
+    - Titanium Network
+    - Wisp
+    - Tor
+    - Onion
+    - Ultraviolet
+    - Scramjet
+    - Rammerhead
+
+home:
+  title: InvisiProxy LTS | Gratis webbproxy - Kringgå filter och kom åt blockerade sidor
+  description: >-
+    InvisiProxy LTS är en avancerad webbproxy-tjänst gjord för att kringgå
+    webbfilter och blockeringar. Oavsett om censuren sker på klientsidan eller i
+    nätverket ger InvisiProxy LTS dig sömlös åtkomst till blockerade sidor och
+    säker, privat surfning på enheter som Chromebooks. Ta dig förbi
+    innehållsblockerare, Chrome-tillägg, brandväggar och mer med vår avancerade
+    proxylösning.
+  ogDescription: >-
+    InvisiProxy LTS är en webbproxy-tjänst i toppklass som kringgår nätverks-
+    och webbläsarbegränsningar så att du säkert kommer åt blockerade sidor.
+    Njut av en sömlös surfupplevelse med stark säkerhet och avancerade
+    funktioner.
+  twitterDescription: >-
+    Upptäck InvisiProxy LTS, en ledande webbproxy-tjänst som kringgår censur
+    och filter och ger dig säker åtkomst till blockerade sidor. Perfekt för
+    privat surfning och för att ta sig förbi nätverksbegränsningar på enheter
+    som Chromebooks.
+
+  headline: Stå upp mot censuren.
+  tagline: Ta full kontroll över din integritet.
+  browseNow: Surfa nu
+  bypassNow: Kringgå nu
+  donate: Donera
+  logoAlt: InvisiProxy-logotyp
+  terminal:
+    setup: För första installationen på en produktions-branch...
+    start: Eller vid vanlig användning...
+    dev: För utveckling...
+
+  free:
+    title: InvisiProxy är gratis.
+    body: >-
+      Eftersom projektet har öppen källkod kan du enkelt forka repositoryt och
+      självhosta för full integritetskontroll. Till skillnad från många andra
+      webbproxy-tjänster utmärker sig InvisiProxy med end-to-end-kryptering via
+      TLS, isolerad webbhistorik, Tor/Onion-routing i Chromium-webbläsare, full
+      transparens och integritetskontroll. <strong>Till skillnad från andra
+      proxytjänster samlar vi inte in någon användardata på våra officiella
+      instanser. Inte ens för felsökning.</strong><br/>Våra beroenden med öppen
+      källkod (Wisp, Libcurl och Epoxy) är byggda med fokus på säkerhet och
+      integritet, så att din surfning förblir privat även på illasinnade
+      självhostade instanser.
+
+  fast:
+    title: InvisiProxy är snabb och mycket avancerad.
+    body: >-
+      InvisiProxy levererar exceptionell prestanda. Vi har många funktioner som
+      stöd för reCAPTCHA/Botguard, Tor-nätverket, SOCKS5-proxykedjor,
+      anpassningsbar svartlista, skydd mot läckor, dold historik och omfattande
+      kompatibilitet med de flesta sidor med hjälp av Scramjet + Wisp
+      (kombinerat med Libcurl-överföring). Andra populära tjänster som
+      CroxyProxy eller Proxium gör oftast bara halva jobbet med att skriva om
+      tillgångar och läcker förfrågningar, vilket är ett integritetsproblem.
+      Projektet stödjer också proxykedjor, så att du kan skicka din trafik
+      genom flera proxyer för extra säkerhet och anonymitet.
+
+  practical:
+    title: InvisiProxy är praktisk.
+    body: >-
+      Tack vare källrandomisering och projekt som Proxy Transports, Wisp och
+      Scramjet ger det här projektet dig en sömlös upplevelse som kringgår
+      webbfilter, statliga filter och nätverksfilter. Projektet fungerar mot
+      filter som används i Kina (GFW - Great Firewall of China), Ryssland och
+      fler länder <strong>utan att du behöver ladda ner någon
+      programvara</strong>. Allt sker direkt i din webbläsare som en hemsida och
+      på vår backend (eller din egen om du självhostar), vilket låter användare
+      kringgå även de mest invasiva censurblockeringarna. Du behöver inte ladda
+      ner något, skriv bara in domänen till InvisiProxy, gå till den officiella
+      InvisiProxy-sidan för att få speglar om den är blockerad, och surfa
+      anonymt.
+
+  heroSubtitle: Gratis och transparent att använda
+  designedWithPrivacy: Designad med integritet i fokus<underline/>.
+
+  overview:
+    title: Översikt
+    body: >-
+      InvisiProxy LTS, en experimentell webbproxy-tjänst, kan kringgå webbfilter
+      och "blockers" oavsett om censurmetoden finns på klientsidan eller i
+      nätverket. Det inkluderar förmågan att kringgå innehållsblockeringar som
+      införts av regeringar utomlands (Kina/GFW, Ryssland m.fl.),
+      Chrome-tillägg, lokala brandväggar på klientsidan och nätverksrelaterade
+      filter.
+    donate: >-
+      Överväg gärna att donera till projektet så att vi kan hålla det gratis!
+      Vi erbjuder fler domäner varje månad, betaåtkomst, personliga domäner och
+      prioriterade funktionsönskemål.<br/>Du kan donera <patreon>här på
+      Patreon</patreon>.
+    patreonLabel: Donera på Patreon
+    imageAlt: Serverikon
+
+  intent:
+    title: Syfte
+    body: >-
+      Det här projektet är främst ett "proof of concept" för den ideala
+      klientlösa metoden att kringgå censur. Som en säker webbproxy-tjänst
+      stödjer den otaliga sidor, uppdateras ofta och är noggrann med detaljerna
+      i design, mekanik och funktioner.
+    palette: >-
+      Projektets färgpalett är byggd med <nord>Nord Theme</nord> för dess
+      optimala färgpalett och fokus på läsbar kodsyntax och
+      gränssnittskomponenter.
+    imageAlt: Ikon för kodfil
+
+  usage:
+    title: Användning
+    body: >-
+      Gå till sidan <browse>Surfa</browse> och välj en av proxyerna vi har!
+      Skriv sedan in sidan du vill komma åt i sökrutan. Varje webbproxy har sin
+      egen nivå av effektivitet, hastighet och säkerhet. Vi rekommenderar
+      Scramjet.<br/><br/>Exempelsida att avblockera:
+      <code>https://youtube.com</code>
+    imageAlt: Sköldikon
+
+  apps:
+    title: Appar
+    body: >-
+      InvisiProxy har en samling förlänkade applikationer, bland annat YouTube,
+      Spotify, GeForce NOW, Discord, ChatGPT, Gemini och mer!
+    imageAlt: Applikationsikon
+
+  hosting:
+    title: Hosting och driftsättning
+    body: >-
+      <strong>InvisiProxy LTS</strong> är en lösning med öppen källkod byggd med
+      modularitet, användarvänlighet och enkel driftsättning i åtanke. Viktiga
+      funktioner är annonsblockering, flexibel generering av källkod och
+      avancerad proxynavigering.<br/><br/>Fullständiga installationsinstruktioner
+      finns på vårt officiella <github>GitHub-repository</github> eller i den
+      <docs>inbyggda dokumentationen här</docs>.
+    docsTitle: Mer information om hosting
+    imageAlt: Ikon för hosting och driftsättning
+    imageTitle: Hosting och driftsättning av InvisiProxy LTS
+
+  contributing:
+    title: Bidra
+    body: >-
+      <strong>InvisiProxy LTS</strong> kan fortsätta växa tack vare våra
+      engagerade bidragsgivare. Som ett projekt med öppen källkod är
+      <strong>InvisiProxy LTS</strong> beroende av communityns passion för att
+      kringgå internetcensur och hjälpa användare att komma åt information.
+    start: För att börja bidra, besök vårt <github>GitHub-repository.</github>
+    imageAlt: GitHub-ikon för bidrag
+    imageTitle: Bidra till InvisiProxy LTS på GitHub
+
+  githubTitle: InvisiProxy LTS GitHub-repository
+
+  bypass:
+    title: Kringgå censur och filter
+    body: >-
+      InvisiProxy LTS är ett <strong>webbproxy-projekt</strong> med öppen
+      källkod. Njut av obegränsad åtkomst till innehåll och surfning online med
+      våra avancerade funktioner för <strong>avblockering via
+      webbproxy</strong>. Projektet låter dig också självhosta var som helst och
+      kringgå nationella och regionala blockeringar som i Kina (Great Firewall
+      of China - GFW) och Ryssland.
+
+  freeProxy:
+    title: 100% gratis webbproxy
+    body: >-
+      Dra nytta av vår <strong>gratis webbproxy-tjänst</strong> som hjälper dig
+      att <strong>avblockera sidor</strong> och komma åt begränsat innehåll.
+      Perfekt för att kringgå filter i skolan och/eller på jobbet – projektet är
+      gjort för att avblockera allt.
+
+  tor:
+    title: Använd Tor-routing i Chromium-webbläsare och Firefox
+    body: >-
+      Med InvisiProxy LTS kan du <strong>komma åt Tor-nätverket</strong> direkt
+      i din Chromium- eller Firefox-baserade webbläsare. Det betyder att du kan
+      besöka <strong>.onion</strong>-sidor direkt på den här hemsidan. Det låter
+      dig surfa anonymt (åtminstone till viss del; riktiga Tor har bättre skydd
+      mot fingeravtryck) och kringgå regionala begränsningar. Projektet stödjer
+      också anpassade SOCKS5-proxyer för proxykedjor.
+
+  unrestricted: Gratis obegränsad surfning
+  closing: Börja surfa fritt nu.
+  tryFree: Testa InvisiProxy gratis
+
+settings:
+  title: Inställningar
+  close: Stäng inställningar
+
+  language:
+    title: Språk
+    description: Välj språk för sidan. Automatiskt följer din webbläsare.
+    automatic: Automatiskt
+
+  tab:
+    title: Maskera webbläsarfliken
+    description: Anpassa titeln och ikonen som visas i webbläsarfliken.
+    iconPreset: Förinställd ikon
+    selectPreset: Välj en förinställd ikon
+    tabTitle: Fliktitel
+    tabTitlePlaceholder: Skriv in en fliktitel…
+    iconUrl: Ikon-URL
+    apply: Tillämpa
+    findIcon: Hitta en ikon-URL →
+
+  fingerprint:
+    title: Maskera fingeravtryck
+    description: >-
+      Välj vilken webbläsare proxyade sidor ser. Det här ändrar user agent som
+      skickas med förfrågningar och den som rapporteras till sidans skript.
+    current: 'Nuvarande: {name}'
+    default: Webbläsarens standard
+    reset: Använd webbläsarens standard
+    views:
+      desktop: Dator
+      mobile: Mobil
+      console: Konsol
+      bot: Sökmotor
+      custom: Anpassad
+    botWarning: >-
+      Många sidor verifierar sökmotorernas sökrobotar och kan blockera eller
+      ändra sidor i det här läget.
+    customLabel: Anpassad user agent
+    customPlaceholder: Mozilla/5.0 (…)
+    invalidCustom: Ange en user agent på en rad med högst 512 tecken.
+
+  browsing:
+    title: Surfning
+    transport: Överföringsmetod
+    searchEngine: Sökmotor
+    theme: Tema
+    themes:
+      dark: Mörkt
+      light: Ljust
+      nord: Nord-aktigt
+    autocomplete: Autokomplettering
+    autocompleteDescription: Visa proxyade sökförslag.
+
+  privacy:
+    title: Integritet
+    hideAds: Dölj annonser
+    hideAdsDescription: Blockera annonser när du surfar.
+    hideHistory: Dölj historik
+    hideHistoryDescription: Ta bort webbhistorik i den lokala webbläsaren. Nätverk kan fortfarande se maskerad aktivitet.
+    preventLeaks: Blockera fönsterläckor
+    preventLeaksDescription: Begränsa popup-fönster och nya flikar. Vissa sidor kommer inte att fungera.
+    blockWebrtc: Blockera WebRTC
+    blockWebrtcDescription: Dölj din IP ännu bättre för sidor. Videosamtal och spelstreaming slutar fungera.
+    clearData: Rensa webbplatsdata
+    clearDataDescription: Logga ut från alla sidor och återställ dina inställningar.
+    clearDataButton: Rensa
+    clearDataConfirm: >-
+      Rensa all webbplatsdata? Du loggas ut från alla sidor du besökt här och
+      dina inställningar återställs.
+
+  advanced:
+    title: Avancerat
+    tor: Tor-surfning
+    torDescription: Routa genom Tor med libcurl.
+    region: Proxyregion
+    regions:
+      default: Standard
+      sweden: Sverige
+      japan: Japan
+    window: Fönstertyp
+    windowDefault: Standard
+
+header:
+  logoLabel: InvisiProxy-logotyp
+  homeTitle: InvisiProxys startsida
+  primaryNav: Huvudnavigering
+  moreOptions: Fler navigeringsalternativ
+  moreOptionsMenu: Undermeny med fler alternativ
+  settingsMenu: Inställningsmeny
+  toggleMenu: Visa/dölj navigeringsmenyn
+  donate: Stöd oss på Patreon
+  overview:
+    label: Översikt
+    title: Översikt - Se vad sidan erbjuder
+  browse:
+    label: Surfa
+    title: Surfa - Kringgå begränsningar på webben
+  apps:
+    label: Appar
+    mobileLabel: Applikationer
+    title: Applikationer - Ett urval av användbara applikationer
+  partners:
+    label: Verktyg
+    title: Verktyg - Utforska våra partnerprojekt
+  docs:
+    label: Dokumentation
+    title: Dokumentation - Detaljerad information och guider
+  faq:
+    label: Vanliga frågor
+    title: Vanliga frågor - Frågor och svar
+  credits:
+    label: Tack till
+    title: Tack till - Erkännanden och bidrag
+  privacy:
+    label: Integritet
+    mobileLabel: Villkor
+    title: Integritetspolicy - Information om användarnas integritet
+
+footer:
+  homeTitle: InvisiProxys startsida
+  tagline: Innovation i globala webbproxyer, på riktigt.
+  dependencies: Beroenden
+  transports: Överföringsmetoder
+  services: Tjänster
+  about: Om
+  solidjs: SolidJS - Enkel och effektiv reaktivitet för att bygga användargränssnitt.
+  vite: Vite - Nästa generations frontendverktyg.
+  wispurr: Högpresterande och funktionsrik Wisp v1/v2-server skriven i Golang.
+  nord: Nord Theme - En arktisk, nordiskt blåaktig färgpalett.
+  scramjet: Scramjet - Scramjet är en mångsidig webbproxy gjord för att kringgå internetcensur.
+  wisp: Wisp - Wisp är ett resurssnålt protokoll som är enkelt att implementera, för att proxya flera TCP/UDP-sockets över en enda websocket.
+  wispLabel: Wispprotokollet
+  proxyTransports: Proxy Transports - Gränssnittet för överföringsmetoder som Scramjet använder.
+  merp: Merp - Avancerad obfuskeringsmodul
+  merpLabel: Merp-obfuskering
+  githubTitle: InvisiProxy GitHub-repository
+  patreonTitle: Följ InvisiProxy på Patreon
+  privacy: Integritetspolicy
+  credits: Tack till
+  creditsTitle: Tack till och erkännanden
+  backToTop: Tillbaka till toppen
+  followGithub: Följ InvisiProxy på GitHub
+  followKofi: Följ utvecklaren på Ko-fi
+
+common:
+  logoAlt: InvisiProxy-logotyp
+  advertisement: Annons
+  description: >-
+    InvisiProxy är en säker webbproxy-tjänst med stöd för många sidor. Kringgå
+    filter och njut fritt av en säkrare, privat surfupplevelse, eller avblockera
+    sidor på enheter som Chromebooks och på platser som skolan eller jobbet
+    utan att ladda ner något.
+
+mirrors:
+  toggle: Speglar
+  toggleTitle: Få en annan InvisiProxy-länk
+  title: Spegellänkar
+  close: Stäng spegellänkar
+  description: >-
+    Få en annan länk så att du kan fortsätta använda InvisiProxy. Din länk är
+    densamma hela dagen, och en ny delas ut varje dag när länkarna fylls på.
+  getLink: Hämta din spegellänk
+  open: Öppna spegellänk
+  openLabel: Öppna en annan InvisiProxy-spegel
+  issues: Om du har problem med länkarna, skapa ett issue på GitHub.
+
+proxySettings:
+  donate: >-
+    Vi erbjuder premiumdomäner, betafunktioner, anslutningar via
+    hushållsleverantörer (residential ISP) och högre hastighet. Du kan donera på
+    <patreon>Patreon</patreon>.<br/>Aktivera Tor eller regional routing om du
+    har svårt att använda tjänster. Se sidan <faq>Vanliga frågor</faq> om du
+    har problem med proxyn.
+  title: Proxyinställningar
+  connection: Anslutning
+  searchNavFix: Aktivera sidfixar
+  searchNavFixDescription: >-
+    Använd ett plugin gjort av The Freedom Project för att fixa fel som
+    "undefined" när du surfar. Valfritt.
+  experimentalSiteFixes: Experimentella sidfixar
+  experimentalSiteFixesDescription: >-
+    En blandning av manuella fixar för sidstöd. Kan förstöra sidor och läcka din
+    riktiga IP; använd på egen risk.
+  hideHistoryDescription: Dölj lokal webbhistorik. Nätverk kan fortfarande sniffa historiken, men den går via proxy.
+  randomizeFingerprint: Slumpa webbläsarens fingeravtryck
+  randomizeFingerprintDescription: >-
+    Använder en slumpad datorwebbläsare för varje flik-session och lägger till
+    brus i canvas-, WebGL-, CPU- och minnesvärden. En vald user agent har
+    fortfarande företräde. Kan göra att vissa sidor slutar fungera.
+  customWisp: Egen Wisp-server
+  customWispDescription: >-
+    Skicka proxytrafiken genom din egen Wisp-server för bättre kontroll över din
+    integritet. Om du vill skicka all trafik via egen hosting är det här ett
+    enkelt sätt: använd gränssnittet här men låt trafiken gå till dina egna
+    servrar. Lämna tomt för att stänga av.
+  invalidWisp: Ange en ws://- eller wss://-adress.
+  moreSettings: Visa fler inställningar
+  anotherLink: Behöver du en annan länk? Klicka på <mirrors>knappen för spegellänkar</mirrors>.
+
+faq:
+  meta:
+    title: InvisiProxy Vanliga frågor | Nätverksfel, CAPTCHAs och YouTube-fixar
+    description: >-
+      Nätverksfel, tomma sidor, CAPTCHA-loopar eller laddar inte YouTube? Lösningar
+      på de vanligaste problemen med InvisiProxy, och om det är säkert att logga
+      in på sidor.
+    social: >-
+      Snabba lösningar på nätverksfel, tomma sidor, CAPTCHA-loopar och
+      YouTube-uppspelning, plus svar om Discord-stöd och säker inloggning.
+  title: Vanliga frågor
+  search: Sök
+  searchLabel: Sök bland vanliga frågor
+  icons:
+    question: Hur får jag ikon-URL:er till menyn för att maskera fliken?
+    bookmarklet: >-
+      Gå till hemsidan du vill ha ikonen från och använd det här bokmärket (dra
+      det till ditt bokmärkesfält):
+    button: Hitta ikon-URL
+    copy: >-
+      Kopiera URL:en som bokmärket ger dig. Gå sedan tillbaka till InvisiProxy
+      och skriv in URL:en som ikon-URL i inställningarna. Klart!
+  networkError:
+    question: >-
+      Jag får "Network Error" eller sidfel varje gång jag använder proxyn?
+    answer: >-
+      Det här är ett känt problem med våra moderna webbproxyer. På grund av hur
+      många användare vi har bryts anslutningen oftast efter tio minuter utan
+      aktivitet i fliken. Klicka bara på knappen Uppdatera sidan och ladda om
+      sidan för att lösa problemet.
+    note: >-
+      Det här brukar hända första gången du använder proxyn. Vi har en framtida
+      fix för det.
+  bot:
+    question: >-
+      Jag har problem med att logga in på sidor eller se innehåll eftersom
+      sidan tror att jag är en bot.
+    answer: >-
+      Under tider med hög trafik är det här väldigt vanligt eftersom all trafik
+      går genom bara två IP-adresser. Lösningen är att byta region via Välj
+      region eller aktivera Tor-routing. Du kan också gå med i vår Patreon för
+      att få tillgång till en instans med hushållsleverantör (residential ISP)
+      och slippa problemet.
+  unreachable:
+    question: >-
+      Jag får ett fel som liknar: "'cdn.example.com' cannot be reached."
+    answer: >-
+      Ladda om sidan. Om det inte funkar första gången, använd webbläsarens
+      tillbaka-knapp eller gå tillbaka till Scramjet-sidan och försök igen.
+  blank:
+    question: Varför laddar min sida bara delvis eller är helt tom?
+    answer: >-
+      Alla sidor stöds inte. Det beror helt enkelt på att webben är enorm och
+      sidor använder många olika tekniker och sätt att ladda innehåll. Om du har
+      problem med en viss sida, rapportera det i vår Discord-server eller på
+      GitHub. Testa annars våra olika proxyalternativ för att se om något av dem
+      stödjer sidan.
+  idb:
+    question: >-
+      Jag får ett fel som har med IDB-databasen att göra (problem i Scramjet V1)
+    answer: >-
+      Det här brukar hända när vi uppdaterar projektet. Klicka bara på
+      (i)-ikonen uppe till vänster i din webbläsare (eller låssymbolen) och välj
+      "Rensa webbplatsdata" eller "Cookies och webbplatsdata > Hantera data på
+      enheten > Papperskorgsikonen". Det här rensar IndexedDB-databasen och
+      låter dig använda proxyn igen.
+  discord:
+    question: Stöds Discord?
+    answer: Ja, Discord stöds.
+    note: >-
+      Dock finns det vissa begränsningar med gratisproxyerna. Använd inte ditt
+      huvudkonto om du inte självhostar eller använder en liten domän.
+  youtube:
+    question: Varför funkar inte YouTube-videor?
+    answer: >-
+      Om du fortfarande har problem efter stegen ovan kan instansen vara nere
+      tillfälligt, särskilt om många andra har samma problem. Det här händer
+      inte om du självhostar.
+    tor: >-
+      Testa att välja alternativet "Tor", det kan lösa problemet men gör
+      laddningen mycket långsammare.
+  login:
+    question: Är det säkert att logga in på sidor?
+    answer: >-
+      Ja, det är säkert att logga in på sidor. Vi rekommenderar dock att du inte
+      loggar in på sidor du inte litar på och inte använder personliga konton,
+      eftersom så mycket trafik går genom en enda domän. Vi försöker minska
+      problemet genom att rotera IP-adresser, men det är helt enkelt praxis att
+      inte använda personliga konton på offentliga proxyer. Om du självhostar
+      kan du däremot göra det utan problem. Du kan också gå med i vår Patreon för
+      att använda en hushållsleverantör och slippa problemet.
+  captcha:
+    question: >-
+      Varför fungerar inte sidan jag är på korrekt, eller får CAPTCHA-fel?
+    answer: >-
+      CAPTCHA-stöd fungerar med Scramjet men kräver några försök. Anledningen
+      är att Scramjet ofta helt enkelt är för snabb, och CAPTCHAs är av naturen
+      opålitliga. Lösningen är att fortsätta lösa CAPTCHAn tills det funkar.
+      Försök att inte gå för snabbt fram.
+  youtubeBlank:
+    question: >-
+      Varför laddar inte sidan helt eller är videon bara vit när jag använder
+      YouTube på någon av proxysidorna?
+    answer: 'Det finns två sätt att lösa det:'
+    reload: >-
+      Att ladda om sidan som vanligt när felet ovan inträffar bör få videon att
+      laddas.
+    reloadFrame: >-
+      Eller högerklicka på sidan och välj <code>Läs in ramen igen</code> om du
+      använder någon form av smygläge.
+
+privacy:
+  title: Integritetspolicy
+  subtitle: InvisiProxy, en privat webbproxy-tjänst.
+  effective: 'Gäller från: 2021-07-16'
+  updated: 'Uppdaterad: 2026-10-31'
+  what:
+    title: Vad är InvisiProxy?
+    body: >-
+      InvisiProxy LTS är en webbproxy-tjänst som hjälper dig att komma åt sidor
+      som kan vara blockerade av ditt nätverk, din regering eller av policyer,
+      direkt i webbläsaren utan nedladdning eller installation. Det sker säkert
+      och med extra integritetsfunktioner. Besök Tor/Onion-sidor i vilken
+      webbläsare som helst, dölj din surfaktivitet och kringgå filter. Det
+      inkluderar möjligheten att kringgå innehållsblockeringar från regeringar,
+      Chrome-tillägg, lokala brandväggar på klientsidan och nätverksrelaterade
+      filter.<br/>Det här projektet är främst ett "proof of concept" för den
+      ideala klientlösa metoden att kringgå censur.
+  data:
+    title: Samlas någon data in?
+    body: >-
+      InvisiProxy själv loggar eller samlar inte in din surfning. Loggning är
+      avstängd på backend för att skydda användarnas integritet. Det enda
+      undantaget är knappen för spegellänkar, som håller din IP-adress i minnet
+      i några sekunder för att stoppa missbruk; den skrivs aldrig till disk.
+      Annonspartner på domäner med annonser samlar in sin egen data, enligt
+      beskrivningen under Annonser nedan. NextDNS-förfrågningar är inställda på
+      att inte logga klienters IP-adresser eller domäner och lagras i Schweiz.
+      NextDNS lagrar loggar för respektive numeriska värden minimalt och enbart
+      för att tjänsten ska fungera smidigt. Cloudflare används i projektet för
+      bättre prestanda och enklare DNS-hantering med tanke på projektets
+      omfattning. Cloudflares numeriska värden används i minsta möjliga mån för
+      att räkna besök och sidvisningar, så att vi vet när servrarna behöver
+      uppgraderas. NGINX är inställt på att inte spara några loggar.
+      InvisiProxy LTS står fast vid sitt mål att stoppa internetcensuren och
+      värdesätter användarnas integritet. Utöver det används Wisp-protokollet
+      (för att proxya TCP-anslutningar) tillsammans med libcurl-transport för
+      end-to-end-kryptering genom att köra SSL/TLS inuti WebAssembly. Tjänsten
+      är gjord för att vara så transparent som möjligt, och kom ihåg att du kan
+      självhosta när som helst för att ha kontroll över allt.<br/><br/>Om du har
+      synpunkter eller förfrågningar kring integritet, kontakta oss gärna via
+      Discord.
+  security:
+    title: Säkerhet
+    body: >-
+      InvisiProxy LTS är byggt från grunden för att ge användarna en säker och
+      pålitlig webbproxy-tjänst. En av de centrala teknikerna bakom InvisiProxy
+      LTS är det nya Wispprotokollet, utvecklat av Mercury
+      Workshop.<br/><br/>Protokollet för med sig flera innovativa funktioner och
+      förbättringar som bidrar till tjänstens hastighet och säkerhet jämfört med
+      tidigare modeller.
+    intro: >-
+      Wispprotokollet är designat för att hantera modern webbtrafik och samtidigt
+      upprätthålla höga säkerhetsstandarder. Genom att implementera Wisp drar
+      projektet nytta av följande fördelar:
+    performance: >-
+      Prestanda: Wispprotokollet optimerar hastigheten för TCP-dataöverföring så
+      att användarna upplever minimal latens när de surfar.
+    compatibility: >-
+      Kompatibilitet: Wisp är byggt för att fungera med en lång rad
+      webbtekniker, vilket ger sömlös åtkomst till olika sidor och
+      onlinetjänster. Det möjliggörs av stöd för olika överföringsmetoder med
+      öppen källkod som följer protokollet (Libcurl Transport).
+    censorship: >-
+      Motståndskraft mot censur: Protokollet är designat för att kringgå
+      sofistikerade censurmetoder som används av restriktiva nätverk, så att
+      användare enkelt kan komma åt blockerat innehåll.
+    fingerprinting: >-
+      Fingeravtrycksresistens: Projektet har starka mekanismer mot fingeravtryck
+      i sin reverse proxy-uppsättning för officiella instanser. Det betyder att
+      proxyn är designad för att minimera de unika identifierare som kan
+      användas för att spåra eller identifiera användare, vilket stärker
+      integriteten. Genom att följa branschens bästa praxis och hela tiden
+      uppdatera metoderna kan användare surfa anonymt utan att lämna
+      identifierbara spår.
+    transparency: >-
+      Transparens: Transparens är en av de viktigaste principerna för
+      InvisiProxy LTS. Projektet drivs med öppen källkod, vilket låter
+      communityn granska och bidra till koden. Den här öppenheten skapar inte
+      bara förtroende, utan gör också att projektet ständigt kan förbättras
+      genom feedback och samarbete från communityn. Genom att vara transparent
+      ser InvisiProxy LTS till att användarna vet hur deras data hanteras och
+      vilka åtgärder som finns för att skydda deras integritet.
+    randomisation: >-
+      Källrandomisering/global randomisering: För att ytterligare förbättra
+      säkerhet och integritet använder InvisiProxy LTS källrandomisering och
+      global randomisering. Det låter projektet förbli oblockerat längre på
+      domäner och förbättrar dessutom anonymiteten när du surfar. Vanliga
+      webbproxyer lämnar spår efter sig när de skriver om tillgångar, men med
+      den här metoden är det mycket svårare att upptäcka proxyn och blockera
+      den.
+    encryption: >-
+      Kryptering: InvisiProxy LTS använder avancerade proxytekniker med fokus på
+      end-to-end-kryptering och säker dataöverföring, särskilt för proxyer som
+      skriver om URL:er. OBS: Det här är fortfarande ett stort "work in
+      progress" och vi tar gärna emot bidrag.
+    audits: >-
+      Regelbundna granskningar: Vi genomför regelbundna säkerhetsgranskningar
+      för att hitta och åtgärda potentiella sårbarheter.
+  advertising:
+    title: Annonser
+    body: >-
+      Vissa InvisiProxy-domäner visar annonser för att täcka hostingkostnader.
+      Patreon-instanser är alltid annonsfria. Annonserna levereras av
+      tredjepartsnätverk: Google AdSense, Adsterra, Adcash och Monetag.
+      Annonser visas bara på InvisiProxys egna sidor och laddningsskärmar,
+      aldrig inuti sidorna du besöker via proxyn.<br/><br/>När en annons laddas
+      tar nätverket emot din IP-adress, webbläsarens user agent, domänen du
+      besöker och liknande tekniska uppgifter, och kan sätta eller läsa sina
+      egna cookies eller använda liknande tekniker för att visa annonser,
+      begränsa hur ofta du ser dem, mäta resultat och förhindra bedrägerier.
+      Nätverken kan köra sin kod på våra sidor; hur de hanterar dina uppgifter
+      styrs av deras egna integritetspolicyer, inte vår.<br/><br/>Google och
+      dess partner kan använda cookies för att visa annonser baserat på dina
+      besök på den här och andra webbplatser. Du kan stänga av anpassade
+      Google-annonser på adssettings.google.com och välja bort många andra
+      nätverk på optout.aboutads.info eller youronlinechoices.eu. Du kan också
+      blockera annonser med en innehållsblockerare, eller använda en
+      Patreon-instans.
+  usage:
+    title: Övrig användning
+    storage: >-
+      InvisiProxy använder "cookies", IndexedDB, localStorage och sessionStorage
+      för att upprätthålla en användarsession (beskrivs närmare nedan) och spara
+      dina inställningar på din dator. All den här informationen stannar på din
+      enhet och InvisiProxy använder ingen av den för analys. Annonspartner kan
+      spara sina egna cookies, enligt beskrivningen under Annonser.
+    cookies: >-
+      En cookie är en textsträng med information som en webbplats lagrar på
+      besökarens dator, och som besökarens webbläsare skickar till webbplatsen
+      varje gång besökaren återkommer. InvisiProxy använder cookies för att
+      säkerställa att inställningsmenyn fungerar och för användarens
+      preferenser. Om du inte vill ha cookies på din dator bör du ställa in din
+      webbläsare att neka cookies innan du använder InvisiProxys webbplatser,
+      med nackdelen att vissa funktioner i InvisiProxy INTE kommer att fungera
+      ordentligt utan cookies, localStorage eller IndexedDB. Inga cookies,
+      IndexedDB, localStorage eller sessionStorage används för analys av
+      InvisiProxy; endast följande funktioner använder dem för att lagra
+      beständig data lokalt: Scramjet (cachning av proxyade tillgångar,
+      sessionstillstånd m.m.), flikar, bokmärken, autokomplettering (proxyad),
+      inställningsmenyn: Tab Cloak, förinställda ikoner, överföringsmetoder,
+      sökmotorer, teman, språk, fönstertyp, Tor-routing, byte av region, dölj
+      annonser, dold historik, blockera fönsterläckor, blockera WebRTC och
+      slumpade fingeravtryck.
+    serviceWorkers: >-
+      Dessutom använder InvisiProxy Service Workers som teknik för våra
+      webbproxyer. Det gör det möjligt att fånga upp respektive nätverkstrafik
+      m.m. och är en central funktion i projektet.
+    consent: >-
+      Genom att fortsätta använda vår webbplats utan att ändra dina
+      cookieinställningar bekräftar och godkänner du InvisiProxys användning av
+      cookies och de ovan beskrivna annonspartnernas cookies, i de fall lagen
+      inte kräver ditt separata samtycke.
+  changes:
+    title: Slutnotering
+    body: >-
+      Även om de flesta ändringar troligen blir små kan InvisiProxy då och då
+      ändra sin integritetspolicy, helt efter InvisiProxy LTS eget gottfinnande.
+      InvisiProxy LTS uppmanar besökare att ofta kolla den här sidan efter
+      ändringar i integritetspolicyn. Om du fortsätter använda sidan efter en
+      ändring i integritetspolicyn innebär det att du godkänner ändringen. Vid
+      missbruk eller DDoS-attacker kan InvisiProxy LTS tvingas att tillfälligt
+      logga data för att motverka attacken och hålla tjänsten igång. I sådana
+      fall raderas all loggad data säkert direkt efter att attacken har
+      avvärjts.
+  contact:
+    title: Kontaktinformation & Tack
+    body: >-
+      Har du frågor om vår integritetspolicy? Kontakta oss via e-post på
+
+docs:
+  chemical: >-
+    Testa <chemical>Chemical</chemical> om du vill bygga din egen
+    webbproxy-tjänst från grunden.
+  chemicalButton: Bygg din proxysida med Chemical
+  formerly: Tidigare Holy Unblocker LTS
+  badges:
+    ci: GitHub Actions-status
+    dockerVersion: Version av Docker-avbild
+    dockerPulls: Docker-hämtningar
+  intro: >-
+    <strong>InvisiProxy LTS</strong> (tidigare Holy Unblocker LTS) är en
+    experimentell webbproxy-tjänst som kan kringgå webbfilter och "blockers"
+    oavsett om censurmetoden finns på klientsidan eller i nätverket. Det
+    inkluderar förmågan att kringgå innehållsblockeringar från regeringar,
+    Chrome-tillägg, lokala brandväggar på klientsidan och nätverksrelaterade
+    filter. Projektet låter dig till och med besöka Tor/Onion-sidor i vilken
+    webbläsare som helst (även Chromium), allt via en hemsida!
+  star: Du kan stödja InvisiProxy genom att stjärnmärka repositoryt!
+  about: >-
+    Det här projektet är främst ett "proof of concept" för den ideala klientlösa
+    metoden att kringgå censur. Ett bra användningsområde är om du behöver
+    använda Tor, byta region när du surfar (eller använda en extern proxy),
+    surfa utan att skapa konton (minskar fingeravtryck), kringgå
+    annonsblockeringsspärrar och/eller lämna minimala spår av aktivitet på
+    enheten. Hosta bara projektet på valfri domän så har du ett alternativ
+    till VPN utan att behöva ladda ner något på enheten. Som en säker
+    webbproxy-tjänst stödjer den otaliga sidor, uppdateras ofta och fokuserar
+    på att vara enkel att självhosta. InvisiProxy LTS fungerar med väldigt
+    många sidor, bland annat YouTube, Gemini, ChatGPT, Discord, GeForce NOW och
+    fler! Projektet har också en hel del exklusiva funktioner jämfört med
+    andra webbproxyer när det gäller att kringgå webbfilter
+    (DOM-maskering och källrandomisering) och statlig censur. Länder som stöds
+    just nu är Kina (GFW) och Ryssland.
+  users: >-
+    Över 30 miljoner användare sedan 2020. Tusen tack för stödet, jag hade
+    aldrig kunnat föreställa mig hur enorm webbproxy-communityn skulle bli.
+  branches:
+    current: 'Nuvarande branch: Latest'
+    title: Typer av branches
+    latest: Latest (master; byggd för FOSS och SEO)
+    beta: Beta (väntande ändringar; ändringar som kan förstöra saker)
+    production: >-
+      Production (v4, v5, v6; stabil version av InvisiProxy LTS. Ändringar för
+      självhosting i produktionsmiljö; maximal filterundvikning och hantering
+      av förfrågningar)
+    switch: Överväg att byta till en produktions-branch om du självhostar!
+  selfHost: >-
+    Se <deploy>alternativen för självhosting</deploy> om du vill självhosta
+    projektet. Kan du inte driftsätta med något av gratisalternativen? Kolla in
+    Koyeb eller titta på billig betald VPS-hosting. Om du inte vill självhosta,
+    klicka på menyn för spegellänkar på InvisiProxy.
+  discord: "Gå med i TitaniumNetworks Discord för fler officiella länkar:"
+  caution:
+    title: Varning
+    body: >-
+      Om du ska självhosta InvisiProxy LTS, byt till PRODUCTION-branchen där
+      funktionerna för att undvika filter är aktiverade automatiskt.
+      Master-branchen innehåller ändringar under arbete som inte är redo för
+      självhosting. Om du däremot vill bidra till projektet, skicka din PR till
+      master-branchen.
+  tip:
+    title: Tips
+    body: >-
+      InvisiProxy LTS är optimerat för självhosting för att ge dig maximal
+      kontroll över din integritet! Forka repositoryt och stjärnmärk det gärna.
+      Du kan självhosta med gratis eller betalda alternativ, eller sätta upp det
+      på en dedikerad instans (VPS) för bättre prestanda.
+  sites:
+    site: Sidor som stöds
+    features: Funktioner
+    youtube: >-
+      Inbyggt urval av webbproxyer med öppen källkod med fokus på hastighet
+      och/eller säkerhet
+    reddit: >-
+      Källrandomisering och DOM-maskering för att effektivt kringgå stora
+      filter, samt randomisering av proxyns globala variabler
+    discord: >-
+      Anpassa fliktitel och ikon i inställningsmenyn för diskretare webbhistorik
+    instagram: >-
+      Annonsblockering på alla sidor när du surfar och DNS med låg latens på
+      officiella servrar
+    tor: >-
+      Stöd för SOCKS5 och Onion-routing med Tor i inställningsmenyn. Använd
+      Tor/Onion-sidor i vilken webbläsare som helst!
+    geforce: >-
+      Exklusiva funktioner jämfört med andra webbproxyer för att kringgå
+      webbfilter och statlig censur.
+    chatgpt: >-
+      Lokal webbhistorik döljs, flikläckor förhindras och nätverkstrafiken
+      döljs!
+    spotify: Kringgå regionala proxyblockeringar genom att byta region eller aktivera Tor
+    more: Och i princip de flesta sidor!
+    moreFeature: Byggd för tunga produktionslaster och enkel installation
+  deploy:
+    title: Driftsätt InvisiProxy
+    free: Gratis driftsättning
+    alternatives: Andra gratisalternativ
+    paid: Betalda/gratis alternativ för produktion (kräver betalningsuppgifter)
+    to: Driftsätt på {name}
+    run: Kör på {name}
+    replitTitle: Vad hände med driftsättning på Replit/Heroku?
+    replit: >-
+      Replit är inte längre gratis och Heroku har en policy mot webbproxyer.
+      Testa GitHub Codespaces eller Gitpod för utveckling i molnet ELLER Koyeb
+      för gratis hosting.
+  codespaces:
+    title: Installationsinstruktioner
+    fork: Forka (och stjärnmärk!) repositoryt till ditt GitHub-konto
+    open: >-
+      Gå till den officiella <codespaces>Codespaces</codespaces>-sidan (se till
+      att du redan har ett GitHub-konto)
+    select: >-
+      Välj <strong>New Codespaces</strong> och leta efter
+      <em>[USERNAME]/InvisiProxy</em> på ditt konto
+    branch: >-
+      Se till att branchen är <code>master</code> och att dev
+      container-konfigurationen är <strong>InvisiProxy LTS</strong>
+    create: Välj <strong>Create Codespace</strong> och låt containern installeras
+    install: >-
+      Skriv <code>pnpm run fresh-install</code> och <code>pnpm start</code> i
+      terminalen
+    ports: >-
+      Klicka på "Make public" i applikationens popup och öppna sedan den
+      driftsatta sidan via fliken Ports.
+  partners:
+    title: Partner
+    hardFork: '{name} (hård fork)'
+    partner: '{name} (partner)'
+  toc:
+    title: 'Innehåll:'
+    setup: Installation
+    terminal: Terminal
+    configuration: Projektkonfiguration
+    server: Serverkonfiguration
+    tor: TOR-routing
+    proxy: Proxy
+    navigation: Klientnavigering
+    translations: Översättningar
+    structure: Struktur
+    structureInfo: Strukturinformation
+    views: Statiska filer
+    scripts: Skript
+    future: Framtida tillägg
+    beginners: Förklaring för nybörjare
+    hosting: Hostingleverantörer
+    domain: Domäninställning
+    cloudflare: Cloudflare-inställning
+    workspace: Konfiguration av arbetsmiljö
+    faq: Detaljerade vanliga frågor
+    more: Mer information
+  setup:
+    title: Så installerar du
+    branchWarning: >-
+      Vi rekommenderar starkt att du byter branch i din IDE till en släppt
+      produktions-branch. Master-branchen innehåller ofta instabila ändringar
+      eller ändringar under arbete.
+    branchExample: 'Exempel: v6.x_production istället för master'
+    terminal: Terminal
+    terminalIntro: >-
+      Använd antingen knappen ovan för att driftsätta på alternativen ovan,
+      eller skriv kommandona nedan på en dedikerad server
+    nginxOnly: DET HÄR PROJEKTET ÄR GJORT FÖR ATT STÖDJA NGINX, INTE CADDY.
+    requirements: >-
+      Se också till att du använder <code>Node 26.x</code>. <code>git</code> och
+      <code>curl</code> är nödvändiga beroenden:
+    builtIn: >-
+      Den här sidan hostas lokalt med <scramjet>Scramjet</scramjet>,
+      <wisp>Wisp</wisp>, <merp>Merp-obfuskering</merp>,
+      <epoxy>EpoxyTransport</epoxy> och <libcurl>LibcurlTransport</libcurl>
+      inbyggda.
+    caddyWarning: >-
+      Av säkerhetsskäl, använd SNÄLLA NGINX och inte Caddy när du hostar bakom en
+      reverse proxy. Det beror på att wispurr använder loopback. Om du använder
+      Caddy, stäng av den här funktionen eller justera din standardkonfiguration
+      för Caddy.
+    resources: 'Resurser för självhosting:'
+  commands:
+    pm2Config: >-
+      Redigera config.js och sätt production till true om du vill använda pm2
+      (gör VPS-hosting enklare)
+    pm2: användning av pm2-daemon
+    restart: Eller vid efterföljande användning...
+    kill: För att avsluta produktionsprocesser som skapats med pm2
+    buildErrors: Om du får byggfel...
+    serviceErrors: Om du får tjänstefel...
+    nodeVersion: 26 eller senaste
+    start: Om du vill starta projektet
+    test: För att testa endpoints och fel
+    prSet: prSet-funktionens kod här....
+  ubuntu:
+    title: Detaljerad installation (Ubuntu-exempel)
+    intro: >-
+      Du behöver ha <code>Node.js 26.x</code>, <code>curl</code> och
+      <code>git</code> installerade; nedan finns ett exempel för Debian/Ubuntu.
+    summary: Steg-för-steg-guide
+    mirrors: >-
+      För enkelhetens skull kan du gå med i TN:s Discord på discord.gg/unblock
+      och be om spegellänkar (som fylls på och är oblockerade).
+    hosting: Hosting
+    hostingBody: >-
+      Om du vill självhosta behöver du först en VPS eller hostingleverantör:
+    dependencies: Beroenden
+    dependenciesBody: >-
+      Sedan behöver du installera git, musl, nginx (eller caddy) och Node.js.
+      Här är ett exempel för Ubuntu LTS:
+    tor: Tor-stöd (valfritt)
+    configure: Konfigurera InvisiProxy
+    configureBody: >-
+      De viktigaste alternativen är production samt teknikerna för obfuskering
+      och DOM-maskering.
+    configureMore: 'Konfigurera sedan efter behov:'
+    run: Klona och kör InvisiProxy
+    runBody: >-
+      Kör sedan respektive process; om du har satt production till true i
+      konfigurationen aktiveras pm2 automatiskt med vårt eget
+      worker-/cachesystem.
+    restart: Om du använde NGINX eller caddy, starta sedan om eller ladda om det
+  config:
+    title: Konfiguration
+    server: Konfiguration av server
+    port: >-
+      Standardporten för proxyn när den startas är
+      <code>http://localhost:8080</code>. Du kan ändra porten och andra
+      produktionsvärden vid behov i <code>./ecosystem.config.js</code>.
+    local: >-
+      Alla andra lokala ändringar för källrandomisering, automatisk minifiering
+      m.m. finns i <code>./config.json</code>.
+    options:
+      minifyScripts: >-
+        Minifiera automatiskt respektive statiska tillgångar när servern
+        startar.
+      randomizeIdentifiers: >-
+        Aktivera experimentell randomisering av proxyns globala variabler för
+        Ultraviolet. Det minskar risken att UV upptäcks av tilläggsbaserade
+        filter.
+      production: >-
+        Använd en förkonfigurerad produktionsuppsättning för serverhosting.
+        Cachekontroll och omskrivning av källkod ställs in automatiskt.
+      disguiseFiles: >-
+        Aktivera DOM-maskering som döljer de riktiga innehållshämtningarna för
+        InvisiLTS. Det sker genom att förklä förfrågningar, packa upp och sedan
+        bygga upp DOM-trädet igen.
+      usingSEO: >-
+        Aktivera källrandomisering, som slumpar källan genom att byta ut
+        datadelar som anges i <code>./src/data.json</code>. Mycket användbart för
+        att maskera nyckelord som automatiskt flaggar eller blockerar
+        InvisiProxy LTS, och för att förhindra blockering baserad på källkod.
+      verbose: >-
+        Visar kompilerings- och byggmeddelanden så att du kan följa förloppet
+        och se eventuella problem under kompileringen.
+      mirrorLinksFile: >-
+        Serverfil som används av länkutdelaren på länksidan, med
+        <code>private/mirror-links.txt</code> som standard. Relativa sökvägar
+        utgår från projektets rot; absoluta sökvägar stöds också. Ange en
+        HTTP(S)-URL per rad och håll filen utanför <code>views/</code> så att den
+        inte blir offentligt tillgänglig. Starta om servern efter att du ändrat
+        den här inställningen.
+      geoLanguage: >-
+        Aktiverar automatiskt språkval med Cloudflares
+        <code>CF-IPCountry</code>-header. Aktivera bara bakom Cloudflare,
+        eftersom headern annars kan sättas av vem som helst. Länder anges per
+        språk under <code>language.countries</code> i varje
+        <code>./locales/*.yaml</code>-fil.
+      singleLanguage: >-
+        När den är <code>true</code> byggs bara språket som anges i
+        <code>language</code>, och alla besökare får det språket medan
+        språkinställningen döljs. Användbart för Docker eller andra
+        driftsättningar som bara behöver ett språk, eftersom byggen blir
+        snabbare och mindre. Standard är <code>false</code>.
+      language: >-
+        Språket som byggs när <code>singleLanguage</code> är på, motsvarande en
+        fil i <code>./locales/</code> (t.ex. <code>en</code> för
+        <code>en.yaml</code>). Standard är <code>en</code>. För Docker, ange det i
+        <code>config.json</code> innan du kör <code>docker build</code> eller
+        <code>docker compose build</code>, eftersom språk väljs vid byggtid.
+  translations:
+    title: Översättningar
+    crowdin: >-
+      InvisiProxy LTS översätts på <crowdin>Crowdin</crowdin>, och vem som helst
+      kan hjälpa till utan att röra koden. Gå med i projektet, välj ett språk och
+      börja översätta. Färdiga översättningar synkas automatiskt till
+      <code>./locales/</code>.
+    rules: >-
+      Se <readme/> för reglerna för översättning (platshållare, taggar och
+      maskerade termer). Om ditt språk inte finns på Crowdin, skapa ett issue
+      eller fråga i Discord.
+  tor:
+    title: Installation av Tor/Onion/SOCKS5-routing
+    intro: >-
+      Du behöver installera Tor (inget grafiskt gränssnitt behövs, men det går
+      bra med. Med grafiskt gränssnitt, byt port 9050 mot 9150) för att
+      inställningen för Onion-routing ska fungera!
+    guide: 'Hosta bara Tor med den här guiden:'
+    cliGuide: 'Alternativ guide (för CLI):'
+    body: >-
+      Om du hostar InvisiProxy LTS på en VPS med Ubuntu, överväg att koppla Tor
+      till systemctl för enklare hantering i produktion. När Tor är igång på
+      Linux eller Windows fungerar det automatiskt med InvisiProxy LTS när
+      användaren aktiverar det i inställningsmenyn.
+    customWisp: Användare kan också ange sin egen Wisp-server i Proxyinställningar.
+    customProxy: >-
+      Om du vill använda en egen HTTP/HTTPS/SOCKS5-proxy för att routa trafik
+      för Scramjet hanteras det på servern i
+      <code>./src/server/wisp.ts</code>.
+  proxy:
+    title: Proxykonfiguration
+    body: >-
+      Huvudplatsen för att justera webbproxyinställningar som tilldelas via
+      inställningsmenyn är <code>./views/assets/js/register-sw.js</code>. Här
+      kan du ändra överföringsmetoderna som sätts lokalt via en cookie, byta ut
+      SOCKS5-proxyer, ändra portar för Onion-routing, ange en svartlista och
+      mer.
+    options:
+      stockSW: >-
+        Standardkonfigurationsfilen för service worker i Ultraviolet. I
+        InvisiProxy är annonsblockering dock aktiverad automatiskt, så den här
+        används inte som standard.
+      blacklistSW: >-
+        En modifierad version av Ultraviolet som gör det möjligt att svartlista
+        domäner och blockera annonser.
+      proxyUrl: >-
+        Anger en URL med protokollet SOCKS5/HTTPS/HTTP, som standard Tors
+        standardport för proxy. Den kan bytas mot valfri giltig port eller
+        SOCKS5-proxy. Det görs via proxy-alternativet för både epoxy och
+        libcurl.
+      transports: >-
+        Anger portar som ska bytas via Bare-Mux och använda Wisp.
+      wispUrl: Ändra sökvägen eller URL-hanteringen för Wisp
+      defaultMode: >-
+        Anger standardöverföringsmetoden som används globalt (användarna kan
+        fortfarande byta via inställningsmenyn)
+      ScramjetController: >-
+        Den här konstruktorn låter dig dynamiskt byta prefix som används för
+        Scramjet och ange filplatser. Observera att du kan behöva redigera
+        <code>./views/scram/scramjet.sw</code> när du byter filnamn.
+  navigation:
+    title: Konfiguration av klientnavigering
+    body: >-
+      Huvudplatsen för skript för klientnavigering är
+      <code>./views/assets/js/common.js</code>. Filen används främst för
+      adressfältets (sökmotorns) funktioner, byte av proxyalternativ och andra
+      klientinställningar.
+    options:
+      getDomain: >-
+        Den här konstanten anger vilka underdomäner som ska tas bort när en URL
+        läggs till i adressfältet.
+      goFrame: Anger den dolda ramen som används för InvisiProxy LTS
+      sx: >-
+        Den här konstanten anger vilken sökmotor som ska proxyas när en användare
+        skriver något som inte är en URL
+      search: De här funktionerna anger och tolkar frågorna för inskickade URL:er
+      urlHandler: Används för att sätta funktioner för goProx-objektet.
+      goProx: >-
+        Den här konstanten mappar URL-hantering för specifika proxyer eller
+        länkar som behöver gå via en webbproxy.
+      prSet: Kopplar händelselyssnare med goProx till knappar eller inmatningsfält som behövs
+      huLinks: >-
+        Tar automatiskt sökvägar som anges i <code>./views/assets/json</code>
+        och lägger till dem beroende på sida och användning. Det används för att
+        dölja länkar som skulle leda till filterblockeringar och göra det enklare
+        att lägga till appar.
+  structure:
+    title: Struktur
+    summary: Webbsidor
+    info: Strukturinformation
+    root:
+      views: >-
+        Här ligger själva grunden för InvisiProxys sida, där statiska tillgångar
+        serveras.
+      src: För framtida implementering av obfuskering och borttagning av nyckelord.
+    views: Detaljer om <code>/views/</code>
+    folders:
+      dist: används för minifierade filer. Skapas vid bygget.
+      pages: används för sidans HTML.
+      assets: används för att lagra olika CSS-, JS-, bild- och JSON-filer.
+      scram: >-
+        innehåller den lokala Scramjet-implementationen. Vissa filer skrivs över
+        av node-modulen.
+      uv: innehåller UV-implementationen.
+    scripts: Skript i <code>/views/assets/js/</code>
+    files:
+      card: lägger till en snygg visuell effekt på korten som visas på välkomstskärmen.
+      common: >-
+        används på alla sidor och får de flesta funktioner att fungera, till
+        exempel autokomplettering.
+      csel: >-
+        hanterar inställningsmenyn, adressfältets funktion och andra
+        extrafunktioner.
+      loader: används som tillgång för DOM-maskering.
+      registerSw: >-
+        skapar och hanterar service workers som får Ultraviolet att fungera, och
+        använder även bare transport.
+  future:
+    title: Framtida tillägg
+    body: <todo>Det här</todo> är vår (ofullständiga) att göra-lista för InvisiProxy LTS.
+  beginners:
+    title: Enkel förklaring för nybörjare om externa proxyer och hosting
+    intro: Först vill du hosta dina proxyer lokalt eller externt.
+    hosting: 'Lista över några bra hostingalternativ:'
+    current: Nuvarande hostingleverantör
+    paid: Betald
+    freePaidDedicated: Gratis, betald, dedikerad
+    freeAndPaid: Gratis och betald
+    preference: >-
+      Av hostingleverantörerna i listan föredrar vi Dedipath och Azure. Du kan
+      också självhosta.
+    cloudflare: >-
+      När du har valt en bra VPS, använd Cloudflare för DNS-posterna för både
+      sidan och underdomänerna för proxyerna.
+    dns: >-
+      Det här är ett exempel på DNS-poster. Självhosting kräver helst
+      <code>A-poster</code>.
+    dnsAlt: DNS-poster
+    root: >-
+      <code>@</code> och <code>www.example.com</code> används för InvisiProxy
+      LTS.
+    subdomain: >-
+      <code>a.example.com</code> används för andra instanser som Libreddit eller
+      Invidious beroende på vad sidans administratör behöver.
+    local: >-
+      Som nämnts tidigare hostas InvisiProxy lokalt med Scramjet och
+      Ultraviolet direkt från start. Inga externa instanser behövs.
+  domain:
+    title: Domänsteg
+    porkbun: >-
+      Om du vill skaffa premiumdomäner (TLD:er), använd
+      <porkbun>Porkbun</porkbun>, som erbjuder domäner till fantastiska priser.
+      En <code>.org</code>-domän kostar bokstavligen runt $5 första året.
+  cloudflare:
+    title: Cloudflare-steg
+    account: >-
+      Använd Cloudflare (skapa ett konto), lägg till din sida och lägg sedan
+      till dina olika DNS-mål i Cloudflare. Se till att du lägger till
+      Cloudflares namnservrar, som du får när du lägger till din sida.
+    records: >-
+      Se till att de är CNAME, även om A-poster också fungerar, och försök följa
+      den här strukturen:
+    columns: Typ | Namn | Mål
+    ip: VPS-IP HÄR
+    ssl: >-
+      Se till att HTTPS tvingas och att SSL är satt till Flexible (om du inte
+      använder LetsEncrypt). Annars kan du sätta SSL till Full.
+  workspace:
+    title: Konfiguration av arbetsmiljö
+    vsc: >-
+      Om du har en egen enhet är <vsc>Visual Studio Code</vsc> att föredra.
+      Ungefär det bästa alternativet som finns, men det är förstås en åsikt. Se
+      också till att du har <node>Node.JS</node> installerat på din dator.
+    fork: >-
+      Vi går inte in för djupt på den här delen, men forka först repositoryt.
+      Klona det sedan lokalt via en terminal av något slag beroende på vilket
+      operativsystem du använder. Se till att du navigerar till mappen du vill
+      sätta upp det i.
+    gitignore: >-
+      Lägg nu bara till mappen du klonade repot i i VSC. Kör sedan <code>pnpm
+      install</code>. Om du publicerar det här offentligt på GitHub
+      rekommenderar jag att du lägger till en <code>.gitignore</code> i
+      rotmappen med följande undantag:
+    deploy: >-
+      Nu har du din arbetsmiljö uppsatt. För att driftsätta arbetsmiljön du just
+      skapat behöver du kolla upp hur det görs hos din hostingleverantör.
+    gitpod: >-
+      För en online-IDE som du kan använda på skoldatorn och/eller en
+      Chromebook, använd GitPod. I princip samma sak som Visual Studio Code fast
+      i webbläsaren.
+    gitpodAccount: 'Skapa ett konto:'
+    gitpodFork: 'Forka repot och ange den här URL:en för att sätta upp din arbetsmiljö:'
+    gitpodSteps: >-
+      Följ samma steg som ovan genom att köra <code>pnpm install</code> i ditt
+      repository och lägga till en <code>.gitignore</code> i rotmappen som
+      utesluter <code>node_modules</code>.
+  faq:
+    title: Detaljerade vanliga frågor
+    summary: Snabba frågor
+    games: Var hittar jag spelen för det här repot? (404-fel m.m.)
+    gamesBody: Läs <games>här</games>.
+    captcha: >-
+      Varför fungerar inte sidan jag är på korrekt, eller får CAPTCHA-fel?
+    captchaBody: >-
+      Tyvärr är CAPTCHA-stödet opålitligt på alla nuvarande proxyer. Det stöds
+      främst av Scramjet. Därför kanske vissa sidor inte fungerar med någon av
+      proxyerna.
+    badGateway: Jag får 502-fel. Vad gör jag?
+    badGatewayBody: >-
+      När det händer kan du antingen byta sida för att lösa felet eller vänta en
+      stund. Ibland hjälper det att rensa cachen.
+    questions: >-
+      Om du fortfarande har frågor, ställ dem gärna i Discord-servern som länkas
+      här.
+    domains: >-
+      Varför är de officiella domänerna numrerade nu? Underhålls projektet igen?
+    domainsBody: >-
+      Ja, projektet är aktivt igen för LTS-stöd! Men tillvägagångssättet är nu
+      mycket enklare för att säkerställa att allt fungerar: domäner fylls på vid
+      behov och källkoden underhålls noga. Mer än någonsin är projektet ett
+      "proof of concept" för de modiga själar som vill förnya
+      webbproxy-världen.
+  closing:
+    summary: Tidigare avslutningsmeddelande (original - 2022)
+    announcement: >-
+      Det här är inte det roligaste beskedet, förlåt. Efter mycket funderande
+      och stor tvekan lägger jag ner Holy Unblocker och lämnar TN. Det är något
+      jag har varit väldigt kluven över i månader, därav bristen på
+      uppdateringar och de stora luckorna förra året. Jag ville bara inte kasta
+      bort ett projekt som jag brann för och lade tid på, och där jag fick
+      fantastiska vänner och träffade grymma utvecklare. Jag skulle kunna hålla
+      på hur länge som helst om vilka de är, men jag lämnar det här. De vet vilka
+      de är :D
+    reasons: >-
+      Den främsta anledningen till att jag ändrat mig är att jag äntligen sätter
+      punkt nu på grund av 1) brist på motivation 2) communityn är INTE alltid
+      den bästa och inte alltid den trevligaste (det måste sägas) 3) framtiden
+      ser inte så ljus ut för HU/TN som projekt.
+    secrets: >-
+      Vissa saker håller jag hemliga eftersom det finns fler skäl bakom beslutet,
+      även för den som inte tycker att det här är tillräckligt med information.
+      Goda vänner här vet att jag har varit superstressad över det här beslutet
+      i flera månader. En stor bidragande orsak är också att jag snart tar
+      examen.
+    future: >-
+      Det är möjligt att jag fortsätter/kommer tillbaka i framtiden eller bara
+      behåller det på GitHub. Jag skriver det här eftersom jag fortfarande
+      tvivlar på beslutet. Men tills vidare, kolla in andra proxysidor som
+      Incognito (Duce uppdaterar VÄLDIGT ofta och är skaparen/utvecklaren av
+      Ultraviolet, så ge honom lite kärlek) :yayy_hopi:
+    patreon: >-
+      Kolla in hans Patreon också! Nuvarande HU-patrons debiteras inte nästa
+      månad och HU:s Patreon arkiveras, så gå över till Duces Patreon så att han
+      kan köpa fler domäner till Incognito.
+    signoff: Med kärlek <3
+  more:
+    title: Mer information
+    maintained: >-
+      Projektet underhålls av InvisiProxy LTS-teamet och är en officiell
+      flaggskeppssida för webbproxy från TitaniumNetwork.
+    website: Besök den officiella hemsidan för mer information och tack.
+    sources: 'Källor för webbproxyer:'
+    sourcesBody: >-
+      Projektet använder för närvarande Scramjet och Ultraviolet som
+      webbproxyer enligt Wispprotokollet. Bare-Mux används för att byta mellan
+      överföringssystem som används med Wisp. De inkluderade
+      överföringssystemen är EpoxyTransport och libcurl-transport.
+    wispProtocol: Wispprotokollet
+    merp: Merp (obfuskeringsmodul)
+    dnsBlocklists: hagezi DNS-blocklistor
+    dependencies: 'Andra beroenden:'
+    mentions: 'Värda att nämna:'
+    hostingProvider: Hostingleverantör
+  meta:
+    title: InvisiProxy Dokumentation | Självhosting, konfiguration och Tor
+    description: >-
+      Självhosta InvisiProxy: installera med pnpm, konfigurera i config.json,
+      routa trafik genom Tor eller en SOCKS5-proxy och se vad varje beroende
+      gör.
+    social: >-
+      Kör din egen InvisiProxy-instans. Täcker installation, config.json, Tor-
+      och SOCKS5-routing och biblioteken som projektet bygger på.
+
+apps:
+  intro: >-
+    Välj en sida nedan för att öppna den via proxyn. Undvik att logga in med
+    dina huvudkonton eftersom det här är en offentlig proxytjänst. Vi
+    rekommenderar att du skapar alternativa konton och aktiverar 2FA, eftersom
+    vissa sidor lättar på begränsningarna då. Miljontals förfrågningar går
+    genom ett fåtal IP-adresser, så vissa sidor kan blockera åtkomst.
+  patreon: >-
+    Överväg att gå med i vår <patreon>Patreon</patreon> om du vill att din
+    trafik ska gå via en pålitlig hushållsleverantör (residential ISP) och med
+    högre hastighet. Du kan också aktivera Tor-routing eller ändra
+    regioninställningarna om du har problem. För att GeForce Now ska fungera,
+    stäng av annonser i proxyinställningarna.
+  faq: Se sidan <faq>Vanliga frågor</faq> om du har problem med proxyn.
+  loading: Laddar applikationer…
+  categories:
+    all: Alla
+    featured: Utvalda
+    social: Socialt
+    chat: Chatt
+    video: Video
+    music: Musik
+    games: Spel
+    ai: AI
+    education: Utbildning
+    opensource: Öppen källkod
+
+partners:
+  title: Partnertjänster
+  intro: >-
+    Utforska våra partnerprojekt. De körs via proxyn så att du kan använda dem
+    här oblockerade.
+  features: >-
+    Våra partner erbjuder bland annat oblockerade spel, webbportar och
+    emulering. Alla partner har öppen källkod och är gratis att använda. Gå
+    gärna med i deras communityn och stöd dem om du kan. Alla har en liknande
+    modell som InvisiProxy, så gå med i deras respektive Discord-servrar för
+    fler länkar.
+
+credits:
+  title: Tack till
+  intro: >-
+    InvisiProxy LTS är en officiell webbproxy-tjänst som kan kringgå webbfilter
+    oavsett om de finns i ett tillägg eller är nätverksbaserade.<br/>Det här
+    projektet låter dig komma åt innehåll som annars blockeras av regeringar,
+    skolor eller arbetsplatser.
+  name: Namn
+  contributions: Bidrag
+  contact: Anteckningar och kontaktinfo
+  iconAlt: ikon
+  sections:
+    developers: Huvudutvecklare
+    contributors: Bidragsgivare
+    translators: Översättare
+    shoutouts: Särskilt tack
+
+icons:
+  title: Ikoninformation
+  subtitle: Så hittar du en sidas ikon-URL
+  copy: >-
+    Kopiera URL:en som bokmärket ger dig. Gå sedan tillbaka till InvisiProxy och
+    skriv in URL:en som ikon-URL i inställningarna. Klart!
+
+error:
+  pageTitle: Fel
+  title: Sidfel (Gå tillbaka till startsidan)
+  reload: Ladda om sidan eller tryck Ctrl+R. Det löser många problem.
+  unavailable: >-
+    Proxyanslutningen är inte tillgänglig och servern har uppdaterat källkoden.
+  maintenance: Det här händer med slumpmässiga intervall för att slumpa källkoden. Ursäkta strulet! Det håller speglarna vid liv.
+  wait: Vänta i så fall en stund tills det är löst!
+  faq: Ogiltig URL? Se <faq>sidan Vanliga frågor</faq> för hjälp!
+  home: Tillbaka till startsidan
+
+scramjet:
+  pageTitle: Scramjet-proxy
+  description: >-
+    Den nya, mycket innovativa proxyn från Mercury Workshop som använder
+    tekniker som service workers och sofistikerade omskrivningsmetoder med
+    CAPTCHA-stöd. Scramjet fokuserar på hastighet med YouTube, now.gg, Spotify,
+    CoolMathGames och olika .io-sidor!
+  searchPlaceholder: Skriv in en URL här eller sök efter något!
+  search: SÖK
+
+frame:
+  searchPlaceholder: Skriv en URL eller sök...
+  loading: Laddar webbproxyn...
+  restarting: Servern startar om, vänta lite. Det hjälper till att slumpa källkoden...
+  title: Surfning
+  tabs: Proxyflikar
+  newTab: Ny flik
+  closeTab: Stäng flik
+  closeMenu: Stäng
+  bookmarks: Bokmärken
+  addBookmark: Bokmärk den här sidan
+  removeBookmark: Ta bort bokmärke
+  noBookmarks: Inga bokmärken än. Använd stjärnan i adressfältet för att spara sidan du är på.
+
+scramjetError:
+  title: Nätverksfel i Scramjet
+  failed: 'Kunde inte ladda:'
+  reload: Att ladda om sidan kan lösa problemet.
+  refresh: Uppdatera sidan
+  copy: Kopiera
+  try: 'Testa:'
+  tips:
+    reload: Ladda om sidan; det här är ett känt problem med Scramjet
+    idb: >-
+      Vid fel i IDB-databasen, rensa din webbplatsdata genom att klicka på
+      låsikonen i adressfältet, välja "Webbplatsinställningar" eller
+      "Webbplatsdata" och sedan klicka på "Rensa webbplatsdata"
+    cache: >-
+      Rensa webbläsarens eller sidans cache med Ctrl+Shift+R. Du kan också gå
+      till Inställningar > Integritet > Rensa webbplatsdata på Invisi
+    address: Kontrollera att du skrev in rätt adress
+    maintenance: >-
+      Om sidan har underhåll eller uppdateras, vänta tills problemet är löst.
+    censored: Kontrollera att servern inte censureras av ditt nätverk (WebRTC m.m.)
+    faq: Se sidan Vanliga frågor för kompatibilitetsproblem med specifika sidor.
+    github: Felsök felet på <github>Scramjets GitHub.</github>
+    engine: Testa en annan överföringsmetod eller region i inställningspanelen.
+  network: Starta om nätverkstjänsten
+  love: Gjord med kärlek

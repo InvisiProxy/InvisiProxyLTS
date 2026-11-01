@@ -9,6 +9,7 @@ import AntiExfil from '../components/AntiExfil.tsx';
 import Header from '../components/Header.tsx';
 import Terms from '../components/Terms.tsx';
 import Footer from '../components/Footer.tsx';
+import Placements from '../components/Placements.tsx';
 
 export default function Privacy() {
 	return (
@@ -30,6 +31,7 @@ export default function Privacy() {
 				</div>
 			</div>
 			<Keywords />
+			<Placements />
 			<div id="footer" class="fullwidth">
 				<Footer />
 			</div>

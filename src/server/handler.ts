@@ -11,6 +11,7 @@ import {
 	siteUrl,
 } from '../constants.ts';
 import { apiPath, getPathAliases, getAltPrefix } from '../obfuscation/paths.ts';
+import { createAds, type SiteAds, withHead } from './ads.ts';
 import { preloaded404, tryReadFile } from './files.ts';
 import { loadLanguages, pickLanguage } from './language.ts';
 import { type ClientIp, createLinkDispenser } from './link-dispenser.ts';
@@ -24,6 +25,7 @@ export interface SiteOptions {
 	wispRedirect?: string;
 	wispResponse?: string;
 	clientIp?: ClientIp;
+	ads?: (req: IncomingMessage) => SiteAds | undefined;
 }
 
 type Disguise = 'pass' | 'loader' | 'modified';
@@ -186,6 +188,8 @@ export function createSiteHandler({
 	wispRedirect = nonWSRedirect,
 	wispResponse = wispOptions.nonWSResponse,
 	clientIp,
+	// Patreon instances are ad-free.
+	ads = config.patreon === true ? () => undefined : createAds(),
 }: SiteOptions = {}): SiteHandler {
 	const { pages, externalPages } = loadRoutes();
 	const base = serverUrl.pathname;
@@ -193,6 +197,7 @@ export function createSiteHandler({
 	const development = isDevelopment();
 	const dispenserPath = `${base}${apiPath('link')}`;
 	const clearDataPath = `${base}${apiPath('clear')}`;
+	const unitsPath = `${base}${apiPath('units')}`;
 	const dispense = createLinkDispenser(undefined, clientIp);
 	const wispRoute = trimSlash(wispPath());
 	const checkDisguise = disguiseCheck(pages, externalPages);
@@ -270,7 +275,8 @@ export function createSiteHandler({
 		name: string,
 		modified: boolean,
 		language: string,
-		fromPath: boolean
+		fromPath: boolean,
+		head: string
 	) {
 		if (name === 'favicon.ico') return reply(res, 200);
 
@@ -295,7 +301,12 @@ export function createSiteHandler({
 			? pageTypes[disguiseExtension]
 			: pageTypes[extension(file)] || pageTypes.default;
 		if (file === entryPointFile)
-			return reply(res, 200, type, tryReadFile(file, siteUrl));
+			return reply(
+				res,
+				200,
+				type,
+				withHead(tryReadFile(file, siteUrl), head)
+			);
 		if (fromPath && !file.endsWith('.html')) return notFound(res, language);
 		if (!fromPath && languages.codes.length > 1)
 			res.setHeader('Vary', languageVary);
@@ -309,7 +320,13 @@ export function createSiteHandler({
 			const query = url.includes('?') ? url.slice(url.indexOf('?')) : '';
 			return redirect(res, `${base}${language}/${name}${query}`);
 		}
-		reply(res, 200, type, tryReadFile(translated(file, language), siteUrl));
+		const body = tryReadFile(translated(file, language), siteUrl);
+		reply(
+			res,
+			200,
+			type,
+			file.endsWith('.html') ? withHead(body, head) : body
+		);
 	}
 
 	function serveStatic(
@@ -365,6 +382,37 @@ export function createSiteHandler({
 			url = path + (query < 0 ? '' : url.slice(query));
 		}
 		const language = prefix || languageFor(req);
+		const siteAds = ads(req);
+		const head = siteAds?.head ?? '';
+		// Ad networks credit impressions by the Referer origin, so domains
+		// running ads send their origin, never the path.
+		if (siteAds) res.setHeader('Referrer-Policy', 'strict-origin');
+		const rootPath = url.split('?')[0];
+		if (siteAds && (req.method === 'GET' || req.method === 'HEAD')) {
+			if (rootPath === '/ads.txt' && siteAds.adsTxt)
+				return reply(
+					res,
+					200,
+					'text/plain; charset=utf-8',
+					siteAds.adsTxt
+				);
+			if (Object.hasOwn(siteAds.files, rootPath))
+				return reply(
+					res,
+					200,
+					'text/plain; charset=utf-8',
+					siteAds.files[rootPath]
+				);
+		}
+		if (req.method === 'GET' && path === unitsPath) {
+			res.setHeader('Cache-Control', 'private, max-age=60');
+			return reply(
+				res,
+				200,
+				'application/json; charset=utf-8',
+				JSON.stringify(siteAds?.client ?? {})
+			);
+		}
 
 		if (req.method === 'POST' && path === dispenserPath)
 			return void dispense(req, res);
@@ -385,7 +433,7 @@ export function createSiteHandler({
 
 		const disguise = checkDisguise(url);
 		if (disguise === 'loader')
-			return reply(res, 200, pageTypes.html, loaderPage);
+			return reply(res, 200, pageTypes.html, withHead(loaderPage, head));
 		const modified = disguise === 'modified';
 		if (modified) {
 			res.setHeader('Content-Type', pageTypes[disguiseExtension]);
@@ -419,7 +467,8 @@ export function createSiteHandler({
 				modified ? undisguise(name) : name,
 				modified,
 				language,
-				!!prefix
+				!!prefix,
+				head
 			);
 		}
 

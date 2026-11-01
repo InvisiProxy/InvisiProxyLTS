@@ -118,7 +118,7 @@ export const buildValues: SiteValues = {
 	storageNamespace: config.usingSEO ? 'ip' : 'net-time',
 	labels,
 	defaultSearch: labels.DuckDuckGo,
-	splash: [...data.splash],
+	splash: [...(config.usingSEO ? data.splashSEO : data.splash)],
 	get keywordText() {
 		return keywordPool().text;
 	},

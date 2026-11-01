@@ -16,6 +16,7 @@ import HeadContent from '../components/HeadContent.tsx';
 import AntiExfil from '../components/AntiExfil.tsx';
 import Header from '../components/Header.tsx';
 import Footer from '../components/Footer.tsx';
+import Placements from '../components/Placements.tsx';
 
 export default function Credits() {
 	return (
@@ -123,6 +124,7 @@ export default function Credits() {
 					</div>
 				</div>
 			</div>
+			<Placements />
 			<div id="footer" class="fullwidth">
 				<Footer />
 			</div>

@@ -126,5 +126,14 @@ export function PageScripts(props: {
 			/>
 		);
 	}
+	if (!values.patreon) {
+		scripts.push(
+			<script
+				src={route('assets/js/rails.js', 'inline')}
+				defer={true}
+				innerHTML=""
+			/>
+		);
+	}
 	return <Inline>{scripts}</Inline>;
 }

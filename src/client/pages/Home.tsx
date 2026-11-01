@@ -20,6 +20,7 @@ import HeadContent from '../components/HeadContent.tsx';
 import AntiExfil from '../components/AntiExfil.tsx';
 import Header from '../components/Header.tsx';
 import Footer from '../components/Footer.tsx';
+import Placements from '../components/Placements.tsx';
 
 const links = {
 	browse: (text: string) => <a href={route('/browsing')}>{text}</a>,
@@ -550,6 +551,7 @@ export default function Home() {
 					</a>
 				</div>
 			</div>
+			<Placements />
 			<div id="footer" class="fullwidth">
 				<Footer />
 			</div>

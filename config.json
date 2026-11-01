@@ -3,6 +3,7 @@
 	"host": "0.0.0.0",
 	"pathname": "/",
 	"mirrorLinksFile": "private/mirror-links.txt",
+	"adsFile": "private/ads.json",
 	"minifyScripts": true,
 	"disguiseFiles": true,
 	"usingSEO": false,

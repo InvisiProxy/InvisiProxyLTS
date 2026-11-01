@@ -22,6 +22,12 @@ export default function Terms() {
 				<p>
 					<Translation id="privacy.data.body" />
 				</p>
+				<h4 id="Advertising">
+					{translate('privacy.advertising.title')}
+				</h4>
+				<p>
+					<Translation id="privacy.advertising.body" />
+				</p>
 				<h4 id="Security">{translate('privacy.security.title')}</h4>
 				<p>
 					<Translation id="privacy.security.body" />

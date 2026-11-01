@@ -90,6 +90,7 @@ const data = JSON.parse(readFileSync(dataFile, 'utf8')) as {
 	keywords: string[];
 	masks: unknown;
 	splash: unknown;
+	splashSEO: unknown;
 	version: unknown;
 };
 const generic = new Set(
@@ -162,6 +163,7 @@ writeFileSync(
 			content,
 			masks: data.masks,
 			splash: data.splash,
+			splashSEO: data.splashSEO,
 			version: data.version,
 		},
 		null,

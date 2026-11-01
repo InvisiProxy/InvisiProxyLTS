@@ -264,13 +264,14 @@ Every other localized changes for source randomization, auto-minify, etc. are lo
 - `randomizeIdentifiers`: Enable experimental proxy global randomization for Ultraviolet. This reduces the chances of UV being detected by any extension based filters.
 - `production`: Utilize a pre-configured production setup for server hosting. Automatically has cache control and source rewrites setup.
 - `disguiseFiles`: Enable DOM masquerading which obfuscates real the real content fetches for InvisiLTS. This is done through disguising requests, decompressing and then reconstructing the DOM tree.
-- `usingSEO`: Enable Source Randomization which randomizes the source by swapping chunks of data specified in `./src/data.json`. Highly useful for masking keywords that will automatically flag or block InvisiProxy LTS as well as preventing source blocks.
+- `usingSEO`: Serve the site as plain, crawlable pages for search engines and reviewers. This **disables** Source Randomization, DOM masquerading, keyword masking and the challenge page, so `/` serves the readable Overview page and all content is sent as normal HTML. Leave it `false` to keep those protections on
 - `verbose`: Enables compiling and building messages to see progress and possible issues while compiling.
 - `mirrorLinksFile`: Server-only file used by the Links page dispenser, defaulting to `private/mirror-links.txt`. Relative paths are resolved from the project root; absolute paths are also supported. Use one HTTP(S) URL per line and keep the file outside `views/` so it is not publicly served. Restart the server after changing this setting.
+- `adsFile`: Server-only file with each domain's ad setup, defaulting to `private/ads.json`. Copy `private/ads.example.json` to start; edits are picked up without a restart. See [ADVERTISING.md](ADVERTISING.md).
 - `geoLanguage`: Enables automatic language selection using Cloudflare's `CF-IPCountry` header. Only enable this behind Cloudflare, since the header can otherwise be set by anyone. Countries are listed per language under `language.countries` in each `./locales/*.yaml` file.
 - `singleLanguage`: When `true`, only the language set in `language` is built and every visitor gets it, with the Language setting hidden. Useful for Docker or other deployments that only need one language, since builds are faster and smaller. Defaults to `false`.
 - `language`: The language to build when `singleLanguage` is on, matching a file in `./locales/` (e.g. `en` for `en.yaml`). Defaults to `en`. For Docker, set this in `config.json` before running `docker build` or `docker compose build`, since languages are chosen at build time.
-- `patreon`: Enables the Patreon proxy region. Defaults to `false`.
+- `patreon`: Enables the Patreon proxy region and turns off all ads. Defaults to `false`.
 - `dlpcc`: Runs the [DLPCC](#webrtc-relay-dlpcc) WebRTC relay. Defaults to `false`.
 - `dlpccNginx`: Set to `true` when NGINX owns port 443 and splits TURN from page loads with the DLPCC stream config. Leave `false` when Node serves visitors directly. Defaults to `false`.
 
@@ -341,19 +342,6 @@ PATREON_PROXY=socks5h://203.0.113.5:1080
 ```
 
 Add `user:pass@` before the host if the proxy uses a login. For an IP whitelist, whitelist the server's IP. Most SOCKS5 proxies only carry TCP; when one can't do UDP, the relay logs an `upstream proxy` error saying `UDP ASSOCIATE` was refused.
-
-Since the relay is meant for private instances, InvisiProxy uses looser limits than DLPCC's own defaults, so many visitors sharing one school or office IP don't lock each other out:
-
-| Option | InvisiProxy default | DLPCC default |
-|---|---|---|
-| `DLPCC_RATE_LIMIT` (requests per minute per IP) | `600` | `30` |
-| `DLPCC_RATE_LIMIT_BURST` | `100` | `10` |
-| `DLPCC_MAX_ALLOCS_PER_USER` (concurrent relays per visitor) | `32` | `8` |
-| `DLPCC_MAX_ALLOCS` (concurrent relays in total) | `4000` | `1000` |
-
-The relay itself has no bandwidth cap; a single relayed connection measured 170 to 400 Mbps in testing on loopback, so the server's own uplink is the limit. Budget roughly 15 to 50 Mbps per game stream.
-
-Things to keep in mind:
 
 - Anyone who can open the site can get relay credentials, so everyone with the domain shares its bandwidth (a game stream is roughly 15 to 50 Mbps). Keep proxy sites with this feature enabled private.
 - The relay refuses to reach private networks, and credentials are rate limited per visitor. Behind NGINX the visitor's address is read from `X-Real-IP`.
