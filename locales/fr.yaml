@@ -342,6 +342,8 @@ settings:
     title: Confidentialité
     hideAds: Masquer les publicités
     hideAdsDescription: Bloquer les publicités pendant la navigation.
+    blockPopups: Block pop-up ads
+    blockPopupsDescription: Stop our ads from opening new tabs or covering the page. Banner ads still show.
     hideHistory: Masquer l'historique
     hideHistoryDescription: Supprimer l'historique de navigation dans le navigateur local. Le réseau peut toujours voir une activité masquée.
     preventLeaks: Bloquer les fuites de fenêtres

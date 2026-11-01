@@ -320,6 +320,8 @@ settings:
     title: Integritet
     hideAds: Dölj annonser
     hideAdsDescription: Blockera annonser när du surfar.
+    blockPopups: Block pop-up ads
+    blockPopupsDescription: Stop our ads from opening new tabs or covering the page. Banner ads still show.
     hideHistory: Dölj historik
     hideHistoryDescription: Ta bort webbhistorik i den lokala webbläsaren. Nätverk kan fortfarande se maskerad aktivitet.
     preventLeaks: Blockera fönsterläckor

@@ -230,6 +230,8 @@ settings:
     title: 隱私
     hideAds: 隱藏廣告
     hideAdsDescription: 瀏覽時攔截廣告。
+    blockPopups: Block pop-up ads
+    blockPopupsDescription: Stop our ads from opening new tabs or covering the page. Banner ads still show.
     hideHistory: 隱藏歷史記錄
     hideHistoryDescription: 不在本地瀏覽器中留下瀏覽歷史。網路管理方仍可能看到經過偽裝的活動。
     preventLeaks: 阻止視窗洩漏

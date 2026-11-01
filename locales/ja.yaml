@@ -227,6 +227,8 @@ settings:
     title: プライバシー
     hideAds: 広告を隠す
     hideAdsDescription: ブラウジング中の広告をブロックします。
+    blockPopups: Block pop-up ads
+    blockPopupsDescription: Stop our ads from opening new tabs or covering the page. Banner ads still show.
     hideHistory: 履歴を隠す
     hideHistoryDescription: ローカルブラウザ内の閲覧履歴を残しません。ネットワーク側からは偽装されたアクティビティが見える場合があります。
     preventLeaks: ウィンドウ漏洩をブロック

@@ -322,6 +322,8 @@ settings:
     title: Конфиденциальность
     hideAds: Скрывать рекламу
     hideAdsDescription: Блокировать рекламу при просмотре.
+    blockPopups: Block pop-up ads
+    blockPopupsDescription: Stop our ads from opening new tabs or covering the page. Banner ads still show.
     hideHistory: Скрывать историю
     hideHistoryDescription: Не сохранять историю просмотра в локальном браузере. Сеть всё равно может видеть замаскированную активность.
     preventLeaks: Блокировать утечки окон
