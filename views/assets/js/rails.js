@@ -94,14 +94,28 @@ import { values } from 'build:invisiproxy';
     }, emptyAfterMs);
   };
 
-  // Spread a placement's units over its slots so both rails differ when
-  // there is more than one unit to choose from. Units are shuffled by weight,
-  // so a unit with weight 3 comes first three times as often as weight 1.
-  const dealer = (units) => {
-    const deck = (units || [])
+  // Each page view takes its banners from one network, picked by share.
+  const pickNetwork = (shares = []) => {
+    let roll = Math.random() * shares.reduce((sum, share) => sum + share, 0);
+    return shares.findIndex((share) => (roll -= share) < 0);
+  };
+
+  const shuffle = (units) =>
+    units
       .map((unit) => [Math.random() ** (1 / (unit.weight || 1)), unit])
       .sort((a, b) => b[0] - a[0])
       .map(([, unit]) => unit);
+
+  // Spread a placement's units over its slots so both rails differ when
+  // there is more than one unit to choose from. The page's network deals
+  // first; other networks only fill slots it has no unit left for, so a slot
+  // is not left empty or given a code already showing on the page. Units are
+  // shuffled by weight, so weight 3 comes first three times as often as 1.
+  const dealer = (units = [], network) => {
+    const deck = [
+      ...shuffle(units.filter((unit) => unit.network === network)),
+      ...shuffle(units.filter((unit) => unit.network !== network)),
+    ];
     let next = 0;
     return () => (deck.length ? deck[next++ % deck.length] : undefined);
   };
@@ -139,10 +153,11 @@ import { values } from 'build:invisiproxy';
   state.settings.then((settings) => {
     const units = settings.units || {};
     const wide = document.documentElement.clientWidth >= 760;
+    const network = pickNetwork(settings.shares);
     const deal = {
-      rail: dealer(units.rail),
-      banner: dealer(wide && units.banner?.length ? units.banner : units.mobile),
-      loader: dealer(units.loader),
+      rail: dealer(units.rail, network),
+      banner: dealer(wide && units.banner?.length ? units.banner : units.mobile, network),
+      loader: dealer(units.loader, network),
     };
     for (const slot of slots) {
       if (getComputedStyle(slot).display === 'none') continue;

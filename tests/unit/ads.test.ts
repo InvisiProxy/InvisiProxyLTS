@@ -85,6 +85,18 @@ describe('Ads', () => {
 		const units = ads.client.units.rail ?? [];
 		assert.equal(units.length, 3);
 		assert.equal(units[0].weight, 3);
+		// Networks are numbered in order of appearance, Adcash with the
+		// smaller share, and the response never names them.
+		assert.deepEqual(
+			units.map((unit) => unit.network),
+			[0, 1, 2]
+		);
+		assert.equal(ads.client.units.banner?.[0].network, 1);
+		assert.deepEqual(ads.client.shares, [2, 1, 2]);
+		assert.doesNotMatch(
+			JSON.stringify(ads.client),
+			/:"(?:adsterra|adcash|html)"/
+		);
 		const frames = units.map((unit) => unit.html);
 		assert.match(frames[0], /atOptions=\{"key":"abc123"/);
 		assert.match(

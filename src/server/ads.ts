@@ -50,11 +50,13 @@ interface AdsConfig {
 }
 
 // What the browser receives: every network's banner is reduced to a
-// ready-made document for a sized iframe.
+// ready-made document for a sized iframe. Networks are sent as an index into
+// ClientAds.shares so their names stay out of the response.
 export interface ClientUnit {
 	html: string;
 	width: number;
 	height: number;
+	network: number;
 	weight?: number;
 }
 
@@ -72,6 +74,8 @@ export interface ClientScript {
 }
 
 export interface ClientAds {
+	// Each page view fills its banners from one network, picked by share.
+	shares: number[];
 	units: Partial<Record<Placement, ClientUnit[]>>;
 	scripts: ClientScript[];
 }
@@ -125,7 +129,7 @@ const frameDocument = (body: string) =>
 function clientUnit(
 	unit: UnitConfig,
 	warn: (message: string) => void
-): ClientUnit | undefined {
+): Omit<ClientUnit, 'network' | 'weight'> | undefined {
 	const skip = (message: string) => {
 		warn(message);
 		return undefined;
@@ -170,9 +174,9 @@ function clientUnit(
 	}
 }
 
-// Adcash pays the least per pop, so it gets the smaller share by default.
-const defaultScriptWeight = (provider?: string) =>
-	provider === 'adcash' ? 1 : 2;
+// Adcash pays the least, so it gets the smaller share of page views, both
+// for banners and for grouped scripts without a weight of their own.
+const providerShare = (provider?: string) => (provider === 'adcash' ? 1 : 2);
 
 function clientScripts(
 	scripts: ScriptConfig[],
@@ -191,7 +195,7 @@ function clientScripts(
 				rotation.weight =
 					typeof script.weight === 'number' && script.weight > 0
 						? script.weight
-						: defaultScriptWeight(script.provider);
+						: providerShare(script.provider);
 			}
 		}
 		if (script.provider === 'adcash' && script.run) {
@@ -256,22 +260,23 @@ function siteAds(site: SiteConfig, warn: (message: string) => void): SiteAds {
 		)
 		.join('');
 	const units: ClientAds['units'] = {};
+	const networks: string[] = [];
 	for (const placement of placements) {
-		const list = (site.units?.[placement] ?? [])
-			.map((unit) => {
-				const result = clientUnit(unit, (message) =>
-					warn(`${placement}: ${message}`)
-				);
-				// Weights share a placement's impressions between networks.
-				if (
-					result &&
-					typeof unit.weight === 'number' &&
-					unit.weight > 0
-				)
-					result.weight = unit.weight;
-				return result;
-			})
-			.filter((unit) => unit !== undefined);
+		const list: ClientUnit[] = [];
+		for (const unit of site.units?.[placement] ?? []) {
+			const result = clientUnit(unit, (message) =>
+				warn(`${placement}: ${message}`)
+			);
+			if (!result) continue;
+			if (!networks.includes(unit.provider)) networks.push(unit.provider);
+			list.push({
+				...result,
+				network: networks.indexOf(unit.provider),
+				// Weights choose between one network's units in a placement.
+				...(typeof unit.weight === 'number' &&
+					unit.weight > 0 && { weight: unit.weight }),
+			});
+		}
 		if (list.length) units[placement] = list;
 	}
 	const files = Object.fromEntries(
@@ -287,6 +292,7 @@ function siteAds(site: SiteConfig, warn: (message: string) => void): SiteAds {
 		adsTxt: site.adsTxt?.length ? `${site.adsTxt.join('\n')}\n` : undefined,
 		files,
 		client: {
+			shares: networks.map(providerShare),
 			units,
 			scripts: clientScripts(site.scripts ?? [], warn),
 		},
