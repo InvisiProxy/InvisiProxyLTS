@@ -15,6 +15,7 @@ import { values } from 'build:invisiproxy';
   const state = (window[Symbol.for('placements')] ??= {
     settings: null,
     scripts: new Set(),
+    picks: {},
   });
   state.settings ??= fetch(slots[0].dataset.source, { credentials: 'same-origin' })
     .then((response) => (response.ok ? response.json() : {}))
@@ -38,10 +39,27 @@ import { values } from 'build:invisiproxy';
       if (!entry.src) resolve();
     });
 
+  // Scripts sharing a group take turns, so two networks' popunders never
+  // compete for the same click. The pick is kept for this window, which stops
+  // loader navigations from adding a second network to the page.
+  const pickScripts = (scripts) => {
+    const groups = {};
+    for (const entry of scripts)
+      if (entry.group) (groups[entry.group] ??= new Map()).set(entry.pick, entry.weight || 1);
+    for (const [group, weights] of Object.entries(groups)) {
+      if (weights.has(state.picks[group])) continue;
+      let roll = Math.random() * [...weights.values()].reduce((sum, weight) => sum + weight, 0);
+      for (const [pick, weight] of weights) {
+        state.picks[group] = pick;
+        if ((roll -= weight) < 0) break;
+      }
+    }
+    return scripts.filter((entry) => !entry.group || entry.pick === state.picks[entry.group]);
+  };
+
   const runScripts = async (scripts) => {
-    for (const entry of scripts) {
-      // Popunders and overlays are kept off the proxy frame unless asked for.
-      if (onLoader && !entry.frame) continue;
+    // Popunders and overlays are kept off the proxy frame unless asked for.
+    for (const entry of pickScripts(scripts.filter((entry) => !onLoader || entry.frame))) {
       const key = entry.src || entry.code;
       if (state.scripts.has(key)) continue;
       state.scripts.add(key);
@@ -52,36 +70,6 @@ import { values } from 'build:invisiproxy';
 
   const show = (slot) => slot.classList.add('placement-live');
   const hide = (slot) => slot.classList.remove('placement-live');
-
-  const renderAdsense = (slot, unit, client) => {
-    if (!state.scripts.has('adsense')) {
-      state.scripts.add('adsense');
-      loadScript({
-        src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${client}`,
-        attributes: { crossorigin: 'anonymous' },
-      });
-    }
-    const unitElement = document.createElement('ins');
-    unitElement.className = 'adsbygoogle';
-    unitElement.dataset.adClient = client;
-    unitElement.dataset.adSlot = unit.slot;
-    if (unit.width && unit.height) {
-      unitElement.style.display = 'inline-block';
-      unitElement.style.width = `${unit.width}px`;
-      unitElement.style.height = `${unit.height}px`;
-    } else {
-      unitElement.style.display = 'block';
-      unitElement.style.width = '100%';
-      unitElement.dataset.adFormat = 'auto';
-      unitElement.dataset.fullWidthResponsive = 'true';
-    }
-    slot.appendChild(unitElement);
-    show(slot);
-    new MutationObserver(() => {
-      if (unitElement.dataset.adStatus === 'unfilled') hide(slot);
-    }).observe(unitElement, { attributes: true });
-    (window.adsbygoogle = window.adsbygoogle || []).push({});
-  };
 
   // Each banner gets its own blank frame. Writing into it keeps this page's
   // URL, so the networks see the real domain, and their document.write calls
@@ -159,10 +147,7 @@ import { values } from 'build:invisiproxy';
     for (const slot of slots) {
       if (getComputedStyle(slot).display === 'none') continue;
       const unit = deal[slot.dataset.fill]?.();
-      if (!unit) continue;
-      if (unit.type === 'adsense') {
-        if (settings.adsense) renderAdsense(slot, unit, settings.adsense);
-      } else renderFrame(slot, unit);
+      if (unit) renderFrame(slot, unit);
     }
     dockRails();
     // Page-wide formats (popunders, vignettes, Social Bar) can be turned off

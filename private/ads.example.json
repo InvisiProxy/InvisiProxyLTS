@@ -1,15 +1,11 @@
 {
 	"defaults": {
 		"hosts": ["@", "www"],
-		"adsense": { "client": "ca-pub-0000000000000000" },
-		"adsTxt": [
-			"google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0"
-		],
 		"units": {
 			"rail": [
 				{
-					"provider": "adsense",
-					"slot": "1111111111",
+					"provider": "adsterra",
+					"key": "ADSTERRA_160x600_KEY",
 					"width": 160,
 					"height": 600,
 					"weight": 2
@@ -17,16 +13,16 @@
 			],
 			"banner": [
 				{
-					"provider": "adsense",
-					"slot": "2222222222",
+					"provider": "adsterra",
+					"key": "ADSTERRA_728x90_KEY",
 					"width": 728,
 					"height": 90
 				}
 			],
 			"mobile": [
 				{
-					"provider": "adsense",
-					"slot": "3333333333",
+					"provider": "adsterra",
+					"key": "ADSTERRA_300x250_KEY",
 					"width": 300,
 					"height": 250
 				}
@@ -39,17 +35,11 @@
 			"units": {
 				"rail": [
 					{
-						"provider": "adsense",
-						"slot": "1111111111",
-						"width": 160,
-						"height": 600,
-						"weight": 2
-					},
-					{
 						"provider": "adsterra",
 						"key": "ADSTERRA_160x600_KEY",
 						"width": 160,
-						"height": 600
+						"height": 600,
+						"weight": 2
 					},
 					{
 						"provider": "adcash",
@@ -105,8 +95,15 @@
 				{
 					"provider": "monetag",
 					"src": "https://MONETAG_TAG_DOMAIN/tag.min.js",
-					"attributes": { "data-zone": "1234567", "data-cfasync": "false" }
-				}
+					"attributes": { "data-zone": "1234567", "data-cfasync": "false" },
+					"group": "pop"
+				},
+				{
+					"provider": "adsterra",
+					"src": "https://ADSTERRA_POPUNDER_DOMAIN/ab/cd/ef/abcdef.js",
+					"group": "pop"
+				},
+				{ "provider": "adcash", "run": "autoTag", "zone": "1000005", "group": "pop" }
 			]
 		},
 		"mirror-two.net": {

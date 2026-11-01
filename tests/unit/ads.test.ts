@@ -59,19 +59,18 @@ describe('Ads', () => {
 	test('Sites inherit the defaults and can mix every provider in one placement.', async (t) => {
 		const { forHost } = await adsFile(t, {
 			defaults: {
-				adsense: { client: 'ca-pub-123' },
-				adsTxt: ['google.com, pub-123, DIRECT, f08c47fec0942fa0'],
+				meta: { monetag: 'shared' },
+				adsTxt: ['adsterra.com, 123, DIRECT'],
 				units: {
-					rail: [rail('adsense', { slot: '111' })],
-					banner: [rail('adsense', { slot: '222' })],
+					rail: [rail('adcash', { zone: '111' })],
+					banner: [rail('adcash', { zone: '222' })],
 				},
 			},
 			sites: {
 				'example.com': {
 					units: {
 						rail: [
-							rail('adsense', { slot: '111', weight: 3 }),
-							rail('adsterra', { key: 'abc123' }),
+							rail('adsterra', { key: 'abc123', weight: 3 }),
 							rail('adcash', { zone: '999' }),
 							rail('html', { html: '<a href="#">House</a>' }),
 						],
@@ -81,20 +80,12 @@ describe('Ads', () => {
 		});
 		const ads = forHost('example.com');
 		assert.ok(ads);
-		assert.match(ads.head, /google-adsense-account" content="ca-pub-123"/);
-		assert.equal(
-			ads.adsTxt,
-			'google.com, pub-123, DIRECT, f08c47fec0942fa0\n'
-		);
+		assert.match(ads.head, /name="monetag" content="shared"/);
+		assert.equal(ads.adsTxt, 'adsterra.com, 123, DIRECT\n');
 		const units = ads.client.units.rail ?? [];
-		assert.deepEqual(
-			units.map((unit) => unit.type),
-			['adsense', 'frame', 'frame', 'frame']
-		);
+		assert.equal(units.length, 3);
 		assert.equal(units[0].weight, 3);
-		const frames = units.flatMap((unit) =>
-			unit.type === 'frame' ? [unit.html] : []
-		);
+		const frames = units.map((unit) => unit.html);
 		assert.match(frames[0], /atOptions=\{"key":"abc123"/);
 		assert.match(
 			frames[0],
@@ -102,14 +93,16 @@ describe('Ads', () => {
 		);
 		assert.match(frames[1], /aclib\.runBanner\(\{"zoneId":"999"\}\);/);
 		assert.match(frames[2], /House/);
-		assert.equal(ads.client.units.banner?.[0].type, 'adsense');
+		assert.match(
+			ads.client.units.banner?.[0].html ?? '',
+			/"zoneId":"222"/
+		);
 	});
 
-	test('Invalid units are dropped, and AdSense never fills the loader.', async (t) => {
+	test('Invalid units and unknown providers are dropped.', async (t) => {
 		const { forHost } = await adsFile(t, {
 			sites: {
 				'example.com': {
-					adsense: { client: 'ca-pub-123' },
 					units: {
 						loader: [
 							{
@@ -138,10 +131,10 @@ describe('Ads', () => {
 		});
 		const loader = forHost('example.com')?.client.units.loader ?? [];
 		assert.equal(loader.length, 1);
-		assert.equal(loader[0].type, 'frame');
+		assert.match(loader[0].html, /"zoneId":"5"/);
 	});
 
-	test('Adcash formats share one aclib load, and scripts stay off the proxy frame unless allowed.', async (t) => {
+	test('Adcash runs each bring aclib along, and scripts stay off the proxy frame unless allowed.', async (t) => {
 		const { forHost } = await adsFile(t, {
 			sites: {
 				'example.com': {
@@ -167,21 +160,68 @@ describe('Ads', () => {
 			},
 		});
 		const scripts = forHost('example.com')?.client.scripts ?? [];
-		assert.equal(scripts.length, 4);
+		assert.equal(scripts.length, 5);
 		assert.equal(scripts[0].src, 'https://acscdn.com/script/aclib.js');
 		assert.equal(scripts[0].wait, true);
-		assert.equal(scripts[0].frame, true);
+		assert.equal(scripts[0].frame, false);
 		assert.equal(
 			scripts[1].code,
 			`if(typeof aclib.runAutoTag==='function')aclib.runAutoTag({"zoneId":"1"});`
 		);
 		assert.equal(scripts[1].frame, false);
+		assert.equal(scripts[2].src, 'https://acscdn.com/script/aclib.js');
+		assert.equal(scripts[2].frame, true);
 		assert.equal(
-			scripts[2].code,
+			scripts[3].code,
 			`if(typeof aclib.runPop==='function')aclib.runPop({"zoneId":"2"});`
 		);
-		assert.equal(scripts[3].src, 'https://tag.example/tag.min.js');
-		assert.deepEqual(scripts[3].attributes, { 'data-zone': '7' });
+		assert.equal(scripts[4].src, 'https://tag.example/tag.min.js');
+		assert.deepEqual(scripts[4].attributes, { 'data-zone': '7' });
+		assert.equal(scripts[4].group, undefined);
+	});
+
+	test('Grouped scripts share a pick per entry, with Adcash weighted lower by default.', async (t) => {
+		const { forHost } = await adsFile(t, {
+			sites: {
+				'example.com': {
+					scripts: [
+						{
+							provider: 'adsterra',
+							src: 'https://pop.example/a.js',
+							group: 'pop',
+						},
+						{
+							provider: 'adcash',
+							run: 'autoTag',
+							zone: '1',
+							group: 'pop',
+						},
+						{
+							provider: 'monetag',
+							src: 'https://tag.example/tag.min.js',
+							group: 'pop',
+							weight: 5,
+						},
+						{
+							provider: 'adsterra',
+							src: 'https://bar.example/b.js',
+							group: 'bad group',
+						},
+					],
+				},
+			},
+		});
+		const scripts = forHost('example.com')?.client.scripts ?? [];
+		assert.deepEqual(
+			scripts.map(({ group, pick, weight }) => [group, pick, weight]),
+			[
+				['pop', 0, 2],
+				['pop', 1, 1],
+				['pop', 1, 1],
+				['pop', 2, 5],
+				[undefined, undefined, undefined],
+			]
+		);
 	});
 
 	test('Edits to the file are picked up without a restart.', async (t) => {

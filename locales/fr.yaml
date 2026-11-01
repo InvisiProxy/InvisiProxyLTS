@@ -724,8 +724,8 @@ privacy:
     body: >-
       Certains domaines InvisiProxy affichent des publicités pour couvrir les
       frais d'hébergement. Les instances Patreon sont toujours sans publicité.
-      Les publicités sont diffusées par des régies tierces : Google AdSense,
-      Adsterra, Adcash et Monetag. Elles n'apparaissent que sur les propres pages
+      Les publicités sont diffusées par des régies tierces : Adsterra, Adcash
+      et Monetag. Elles n'apparaissent que sur les propres pages
       et écrans de chargement d'InvisiProxy, jamais à l'intérieur des sites que
       vous consultez via le proxy.<br/><br/>Lorsqu'une publicité se charge, la
       régie reçoit votre adresse IP, l'user agent de votre navigateur, le
@@ -735,10 +735,7 @@ privacy:
       leurs performances et prévenir la fraude. Ces régies peuvent exécuter
       leur code sur nos pages ; le traitement de vos données par ces régies est
       régi par leurs propres politiques de confidentialité, et non par la
-      nôtre.<br/><br/>Google et ses partenaires peuvent utiliser des cookies
-      pour diffuser des publicités en fonction de vos visites sur ce site et
-      d'autres sites. Vous pouvez désactiver les annonces Google personnalisées
-      sur adssettings.google.com, et refuser de nombreuses autres régies sur
+      nôtre.<br/><br/>Vous pouvez refuser de nombreuses régies sur
       optout.aboutads.info ou youronlinechoices.eu. Vous pouvez aussi bloquer
       les publicités avec un bloqueur de contenu, ou utiliser une instance
       Patreon.

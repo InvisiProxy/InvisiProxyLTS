@@ -678,7 +678,7 @@ privacy:
     body: >-
       Some InvisiProxy domains show ads to cover hosting costs. Patreon
       instances are always ad-free. Ads are served by third-party networks:
-      Google AdSense, Adsterra, Adcash and Monetag. Ads only appear on
+      Adsterra, Adcash and Monetag. Ads only appear on
       InvisiProxy's own pages and loading screens, never inside the websites
       you browse through the proxy.<br/><br/>When an ad loads, the network
       receives your IP address, browser user agent, the domain you are
@@ -686,10 +686,8 @@ privacy:
       cookies or use similar technologies to show ads, limit how often you see
       them, measure performance and prevent fraud. These networks may run
       their code on our pages; their handling of your data is governed by
-      their own privacy policies, not ours.<br/><br/>Google and its partners
-      may use cookies to serve ads based on your visits to this and other
-      websites. You can block ads
-      with a content blocker such as uBlock Origin, or use a Patreon instance.
+      their own privacy policies, not ours.<br/><br/>You can block ads with a
+      content blocker such as uBlock Origin, or use a Patreon instance.
   usage:
     title: Additional Usage
     storage: >-

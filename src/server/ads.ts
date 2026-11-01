@@ -13,8 +13,7 @@ export const placements = ['rail', 'banner', 'mobile', 'loader'] as const;
 type Placement = (typeof placements)[number];
 
 interface UnitConfig {
-	provider: 'adsense' | 'adsterra' | 'adcash' | 'html';
-	slot?: string;
+	provider: 'adsterra' | 'adcash' | 'html';
 	key?: string;
 	zone?: string;
 	src?: string;
@@ -32,11 +31,12 @@ interface ScriptConfig {
 	run?: string;
 	zone?: string;
 	frame?: boolean;
+	group?: string;
+	weight?: number;
 }
 
 interface SiteConfig {
 	hosts?: string[];
-	adsense?: { client?: string };
 	meta?: Record<string, string>;
 	adsTxt?: string[];
 	files?: Record<string, string>;
@@ -49,12 +49,14 @@ interface AdsConfig {
 	sites?: Record<string, SiteConfig>;
 }
 
-// What the browser receives: every network's banner is reduced to either an
-// AdSense slot or a ready-made document for a sized iframe.
-export type ClientUnit = (
-	| { type: 'adsense'; slot: string; width?: number; height?: number }
-	| { type: 'frame'; html: string; width: number; height: number }
-) & { weight?: number };
+// What the browser receives: every network's banner is reduced to a
+// ready-made document for a sized iframe.
+export interface ClientUnit {
+	html: string;
+	width: number;
+	height: number;
+	weight?: number;
+}
 
 export interface ClientScript {
 	src?: string;
@@ -62,10 +64,14 @@ export interface ClientScript {
 	code?: string;
 	wait?: boolean;
 	frame: boolean;
+	// Scripts in a group take turns: each page view runs the entries of one
+	// pick, chosen by weight. An Adcash run and its library share a pick.
+	group?: string;
+	pick?: number;
+	weight?: number;
 }
 
 export interface ClientAds {
-	adsense?: string;
 	units: Partial<Record<Placement, ClientUnit[]>>;
 	scripts: ClientScript[];
 }
@@ -78,7 +84,6 @@ export interface SiteAds {
 }
 
 const token = /^[\w-]+$/;
-const adsenseClient = /^ca-pub-\d+$/;
 const adcashRuns: Record<string, string> = {
 	autoTag: 'runAutoTag',
 	pop: 'runPop',
@@ -119,8 +124,6 @@ const frameDocument = (body: string) =>
 
 function clientUnit(
 	unit: UnitConfig,
-	placement: Placement,
-	site: SiteConfig,
 	warn: (message: string) => void
 ): ClientUnit | undefined {
 	const skip = (message: string) => {
@@ -130,20 +133,6 @@ function clientUnit(
 	const width = size(unit.width);
 	const height = size(unit.height);
 	switch (unit?.provider) {
-		case 'adsense':
-			// AdSense forbids its ads on loading screens.
-			if (placement === 'loader')
-				return skip('AdSense units are not allowed on the loader.');
-			if (!adsenseClient.test(site.adsense?.client ?? ''))
-				return skip('AdSense units need "adsense.client" set.');
-			if (!/^\d+$/.test(unit.slot ?? ''))
-				return skip('AdSense units need a numeric "slot".');
-			return {
-				type: 'adsense',
-				slot: unit.slot as string,
-				width,
-				height,
-			};
 		case 'adsterra': {
 			if (!token.test(unit.key ?? '') || !width || !height)
 				return skip('Adsterra units need "key", "width" and "height".');
@@ -151,7 +140,6 @@ function clientUnit(
 				httpsUrl(unit.src) ??
 				`https://www.highperformanceformat.com/${unit.key}/invoke.js`;
 			return {
-				type: 'frame',
 				width,
 				height,
 				html: frameDocument(
@@ -163,7 +151,6 @@ function clientUnit(
 			if (!token.test(unit.zone ?? '') || !width || !height)
 				return skip('Adcash units need "zone", "width" and "height".');
 			return {
-				type: 'frame',
 				width,
 				height,
 				html: frameDocument(
@@ -174,7 +161,6 @@ function clientUnit(
 			if (typeof unit.html !== 'string' || !width || !height)
 				return skip('HTML units need "html", "width" and "height".');
 			return {
-				type: 'frame',
 				width,
 				height,
 				html: frameDocument(unit.html),
@@ -184,14 +170,30 @@ function clientUnit(
 	}
 }
 
+// Adcash pays the least per pop, so it gets the smaller share by default.
+const defaultScriptWeight = (provider?: string) =>
+	provider === 'adcash' ? 1 : 2;
+
 function clientScripts(
 	scripts: ScriptConfig[],
 	warn: (message: string) => void
 ): ClientScript[] {
 	const result: ClientScript[] = [];
-	let aclibScript: ClientScript | undefined;
-	for (const script of scripts) {
+	for (const [pick, script] of scripts.entries()) {
 		const frame = script.frame === true;
+		const rotation: Pick<ClientScript, 'group' | 'pick' | 'weight'> = {};
+		if (script.group !== undefined) {
+			if (!token.test(script.group))
+				warn('Script groups may only use letters, digits, _ and -.');
+			else {
+				rotation.group = script.group;
+				rotation.pick = pick;
+				rotation.weight =
+					typeof script.weight === 'number' && script.weight > 0
+						? script.weight
+						: defaultScriptWeight(script.provider);
+			}
+		}
 		if (script.provider === 'adcash' && script.run) {
 			const method = adcashRuns[script.run];
 			if (!method || !token.test(script.zone ?? '')) {
@@ -200,24 +202,26 @@ function clientScripts(
 				);
 				continue;
 			}
-			if (!aclibScript) {
-				aclibScript = {
+			// Every run brings the library along so it can be picked on its
+			// own; the browser still loads the library only once.
+			result.push(
+				{
 					src: aclib,
 					attributes: { id: 'aclib' },
 					wait: true,
 					frame,
-				};
-				result.push(aclibScript);
-			}
-			aclibScript.frame ||= frame;
-			result.push({
-				code: runAclib(method, script.zone as string),
-				frame,
-			});
+					...rotation,
+				},
+				{
+					code: runAclib(method, script.zone as string),
+					frame,
+					...rotation,
+				}
+			);
 			continue;
 		}
 		if (typeof script.code === 'string') {
-			result.push({ code: script.code, frame });
+			result.push({ code: script.code, frame, ...rotation });
 			continue;
 		}
 		const src = httpsUrl(script.src);
@@ -236,17 +240,13 @@ function clientScripts(
 					typeof value === 'string'
 			)
 		);
-		result.push({ src, attributes, frame });
+		result.push({ src, attributes, frame, ...rotation });
 	}
 	return result;
 }
 
 function siteAds(site: SiteConfig, warn: (message: string) => void): SiteAds {
-	const meta: Record<string, string> = { ...site.meta };
-	const client = site.adsense?.client;
-	if (client && adsenseClient.test(client))
-		meta['google-adsense-account'] ??= client;
-	const head = Object.entries(meta)
+	const head = Object.entries(site.meta ?? {})
 		.filter(
 			([name, value]) => token.test(name) && typeof value === 'string'
 		)
@@ -259,7 +259,7 @@ function siteAds(site: SiteConfig, warn: (message: string) => void): SiteAds {
 	for (const placement of placements) {
 		const list = (site.units?.[placement] ?? [])
 			.map((unit) => {
-				const result = clientUnit(unit, placement, site, (message) =>
+				const result = clientUnit(unit, (message) =>
 					warn(`${placement}: ${message}`)
 				);
 				// Weights share a placement's impressions between networks.
@@ -287,7 +287,6 @@ function siteAds(site: SiteConfig, warn: (message: string) => void): SiteAds {
 		adsTxt: site.adsTxt?.length ? `${site.adsTxt.join('\n')}\n` : undefined,
 		files,
 		client: {
-			adsense: client && adsenseClient.test(client) ? client : undefined,
 			units,
 			scripts: clientScripts(site.scripts ?? [], warn),
 		},
@@ -314,7 +313,6 @@ function inherit(defaults: SiteConfig, site: SiteConfig): SiteConfig {
 	return {
 		...defaults,
 		...site,
-		adsense: { ...defaults.adsense, ...site.adsense },
 		meta: { ...defaults.meta, ...site.meta },
 		files: { ...defaults.files, ...site.files },
 		units: { ...defaults.units, ...site.units },

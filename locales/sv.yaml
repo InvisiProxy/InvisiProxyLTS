@@ -678,7 +678,7 @@ privacy:
     body: >-
       Vissa InvisiProxy-domäner visar annonser för att täcka hostingkostnader.
       Patreon-instanser är alltid annonsfria. Annonserna levereras av
-      tredjepartsnätverk: Google AdSense, Adsterra, Adcash och Monetag.
+      tredjepartsnätverk: Adsterra, Adcash och Monetag.
       Annonser visas bara på InvisiProxys egna sidor och laddningsskärmar,
       aldrig inuti sidorna du besöker via proxyn.<br/><br/>När en annons laddas
       tar nätverket emot din IP-adress, webbläsarens user agent, domänen du
@@ -686,11 +686,9 @@ privacy:
       egna cookies eller använda liknande tekniker för att visa annonser,
       begränsa hur ofta du ser dem, mäta resultat och förhindra bedrägerier.
       Nätverken kan köra sin kod på våra sidor; hur de hanterar dina uppgifter
-      styrs av deras egna integritetspolicyer, inte vår.<br/><br/>Google och
-      dess partner kan använda cookies för att visa annonser baserat på dina
-      besök på den här och andra webbplatser. Du kan stänga av anpassade
-      Google-annonser på adssettings.google.com och välja bort många andra
-      nätverk på optout.aboutads.info eller youronlinechoices.eu. Du kan också
+      styrs av deras egna integritetspolicyer, inte vår.<br/><br/>Du kan välja
+      bort många annonsnätverk på optout.aboutads.info eller
+      youronlinechoices.eu. Du kan också
       blockera annonser med en innehållsblockerare, eller använda en
       Patreon-instans.
   usage:

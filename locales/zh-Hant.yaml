@@ -468,7 +468,7 @@ privacy:
   advertising:
     title: 廣告
     body: >-
-      部分 InvisiProxy 域名會展示廣告以支付託管費用。Patreon 實例始終無廣告。廣告由第三方廣告網路投放：Google AdSense、Adsterra、Adcash 和 Monetag。廣告只會出現在 InvisiProxy 自己的頁面和載入介面上，絕不會出現在你透過代理瀏覽的網站內部。<br/><br/>廣告載入時，廣告網路會獲得你的 IP 地址、瀏覽器使用者代理、你正在訪問的域名以及類似的技術資訊，並可能設定或讀取其自身的 Cookie 或使用類似技術來展示廣告、限制展示頻率、衡量效果和防止欺詐。這些廣告網路可能會在我們的頁面上執行它們的程式碼；它們對你資料的處理受其各自的隱私政策約束，而非我們的。<br/><br/>Google 及其合作伙伴可能會使用 Cookie，根據你對本網站及其他網站的訪問來投放廣告。你可以在 adssettings.google.com 關閉個性化 Google 廣告，並在 optout.aboutads.info 或 youronlinechoices.eu 選擇退出許多其他廣告網路。你也可以使用內容攔截器遮蔽廣告，或使用 Patreon 實例。
+      部分 InvisiProxy 域名會展示廣告以支付託管費用。Patreon 實例始終無廣告。廣告由第三方廣告網路投放：Adsterra、Adcash 和 Monetag。廣告只會出現在 InvisiProxy 自己的頁面和載入介面上，絕不會出現在你透過代理瀏覽的網站內部。<br/><br/>廣告載入時，廣告網路會獲得你的 IP 地址、瀏覽器使用者代理、你正在訪問的域名以及類似的技術資訊，並可能設定或讀取其自身的 Cookie 或使用類似技術來展示廣告、限制展示頻率、衡量效果和防止欺詐。這些廣告網路可能會在我們的頁面上執行它們的程式碼；它們對你資料的處理受其各自的隱私政策約束，而非我們的。<br/><br/>你可以在 optout.aboutads.info 或 youronlinechoices.eu 選擇退出許多廣告網路。你也可以使用內容攔截器遮蔽廣告，或使用 Patreon 實例。
   usage:
     title: 其他使用說明
     storage: >-
