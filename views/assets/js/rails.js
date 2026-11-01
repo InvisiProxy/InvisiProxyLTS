@@ -71,10 +71,23 @@ import { values } from 'build:invisiproxy';
   const show = (slot) => slot.classList.add('placement-live');
   const hide = (slot) => slot.classList.remove('placement-live');
 
+  // A network with nothing to show still leaves hidden links and tracking
+  // pixels behind, so only something visible with a real size counts.
+  const hasAd = (frame) =>
+    [
+      ...(frame.contentDocument?.body?.querySelectorAll(
+        'iframe, img, ins, video, canvas, object, embed'
+      ) || []),
+    ].some((element) => {
+      const { width, height } = element.getBoundingClientRect();
+      return width > 2 && height > 2;
+    });
+
   // Each banner gets its own blank frame. Writing into it keeps this page's
   // URL, so the networks see the real domain, and their document.write calls
   // and atOptions globals cannot clash with each other or with the site.
-  const renderFrame = (slot, unit) => {
+  // A slot still empty after the wait tries the next unit, then collapses.
+  const renderFrame = (slot, unit, refill) => {
     const frame = document.createElement('iframe');
     frame.width = String(unit.width);
     frame.height = String(unit.height);
@@ -88,9 +101,11 @@ import { values } from 'build:invisiproxy';
     frameDocument.write(unit.html);
     frameDocument.close();
     setTimeout(() => {
-      const body = frame.contentDocument?.body;
-      if (!body?.querySelector('iframe, img, a, ins, video, canvas, object, embed'))
-        hide(slot);
+      if (hasAd(frame)) return;
+      frame.remove();
+      const next = refill();
+      if (next) renderFrame(slot, next, refill);
+      else hide(slot);
     }, emptyAfterMs);
   };
 
@@ -111,13 +126,22 @@ import { values } from 'build:invisiproxy';
   // first; other networks only fill slots it has no unit left for, so a slot
   // is not left empty or given a code already showing on the page. Units are
   // shuffled by weight, so weight 3 comes first three times as often as 1.
+  // Refills for empty slots only take units not yet tried on this page.
+  const tried = new Set();
   const dealer = (units = [], network) => {
     const deck = [
       ...shuffle(units.filter((unit) => unit.network === network)),
       ...shuffle(units.filter((unit) => unit.network !== network)),
     ];
+    const take = (unit) => {
+      if (unit) tried.add(unit.html);
+      return unit;
+    };
     let next = 0;
-    return () => (deck.length ? deck[next++ % deck.length] : undefined);
+    return {
+      deal: () => take(deck.length ? deck[next++ % deck.length] : undefined),
+      refill: () => take(deck.find((unit) => !tried.has(unit.html))),
+    };
   };
 
   const dockRails = () => {
@@ -161,8 +185,9 @@ import { values } from 'build:invisiproxy';
     };
     for (const slot of slots) {
       if (getComputedStyle(slot).display === 'none') continue;
-      const unit = deal[slot.dataset.fill]?.();
-      if (unit) renderFrame(slot, unit);
+      const cards = deal[slot.dataset.fill];
+      const unit = cards?.deal();
+      if (unit) renderFrame(slot, unit, cards.refill);
     }
     dockRails();
     // Page-wide formats (popunders, vignettes, Social Bar) can be turned off
