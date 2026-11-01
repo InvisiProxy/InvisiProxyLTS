@@ -274,6 +274,17 @@ export default function Settings() {
 							class="hideads"
 							checked
 						/>
+						{!values.patreon && (
+							<SettingToggle
+								label={translate(
+									'settings.privacy.blockPopups'
+								)}
+								description={translate(
+									'settings.privacy.blockPopupsDescription'
+								)}
+								class="block-popups"
+							/>
+						)}
 						<SettingToggle
 							label={translate('settings.privacy.hideHistory')}
 							description={translate(

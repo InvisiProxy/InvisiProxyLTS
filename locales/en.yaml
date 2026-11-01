@@ -326,7 +326,9 @@ settings:
   privacy:
     title: Privacy
     hideAds: Hide ads
-    hideAdsDescription: Block ads while browsing.
+    hideAdsDescription: Block external ads while browsing. This does not remove our own ads on the site.
+    blockPopups: Block pop-up ads
+    blockPopupsDescription: Stop our ads from opening new tabs or covering the page. Banner ads still show.
     hideHistory: Hide history
     hideHistoryDescription: Eliminate browsing history within local browser. Networks can still see masked activity.
     preventLeaks: Block window leaks

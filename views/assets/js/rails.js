@@ -1,6 +1,14 @@
+import { values } from 'build:invisiproxy';
+
 (() => {
   const slots = [...document.querySelectorAll('.placement')];
   if (!slots.length) return;
+
+  const readStorage = (name) => {
+    try {
+      return (JSON.parse(localStorage.getItem(`${values.storageNamespace}-storage`)) || {})[name];
+    } catch {}
+  };
 
   // Page navigations through the loader keep this window, so network scripts
   // and the fetched settings are reused instead of loaded again.
@@ -157,6 +165,8 @@
       } else renderFrame(slot, unit);
     }
     dockRails();
-    runScripts(settings.scripts || []);
+    // Page-wide formats (popunders, vignettes, Social Bar) can be turned off
+    // in settings; banners keep running either way.
+    if (readStorage('BlockPopups') !== true) runScripts(settings.scripts || []);
   });
 })();

@@ -499,6 +499,13 @@ if (document.getElementById('csel')) {
     if (e.isTrusted) location.reload();
   });
 
+  // Popunders arm themselves on page clicks, so a reload is what removes them.
+  attachClassEventListener('block-popups', 'change', (e) => {
+    if (checkBooleanState(e.target) === true) setStorage('BlockPopups', true);
+    else removeStorage('BlockPopups');
+    if (e.isTrusted) location.reload();
+  });
+
   const attachAddressForm = (formId, key, normalize) => {
     const form = document.getElementById(formId);
     if (!form) return;
@@ -865,6 +872,11 @@ useStorageArgs('CustomWisp', (s) => {
 useStorageArgs('BlockWebRTC', (s) => {
   if (s === true)
     classUpdateHandler(document.getElementsByClassName('block-webrtc'), 'on')();
+});
+
+useStorageArgs('BlockPopups', (s) => {
+  if (s === true)
+    classUpdateHandler(document.getElementsByClassName('block-popups'), 'on')();
 });
 
 useStorageArgs('RandomizeFingerprint', (s) => {
