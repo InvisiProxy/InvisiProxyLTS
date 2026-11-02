@@ -1,5 +1,4 @@
-.loader,
-.proxy-tab.proxy-tab-blank {
+.loader {
 	background-color: #0d1117;
 	background-image:
 		radial-gradient(circle, rgba(131, 131, 131, 0.02) 1px, transparent 1px),
@@ -292,22 +291,6 @@
 		right: 12px;
 		transform: none;
 	}
-}
-
-.proxy-tab {
-	position: fixed;
-	display: block;
-	border: none;
-	width: 100vw;
-	height: 100dvh;
-	left: 0;
-	top: 0;
-	background-color: #ffffff;
-	visibility: hidden;
-}
-
-.proxy-tab.active-tab {
-	visibility: visible;
 }
 
 .omnibar .search-box #bookmark-toggle {

@@ -1,0 +1,26 @@
+.proxy-tab {
+	position: fixed;
+	display: block;
+	border: none;
+	width: 100vw;
+	height: 100dvh;
+	left: 0;
+	top: 0;
+	background-color: #ffffff;
+	visibility: hidden;
+}
+
+.proxy-tab.active-tab {
+	visibility: visible;
+}
+
+.proxy-tab.proxy-tab-blank {
+	background-color: #0d1117;
+	background-image:
+		radial-gradient(circle, rgba(131, 131, 131, 0.02) 1px, transparent 1px),
+		radial-gradient(circle, rgba(148, 148, 148, 0.02) 1px, transparent 1px);
+	background-position:
+		0 0,
+		5px 5px;
+	background-size: 10px 10px;
+}

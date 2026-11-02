@@ -81,12 +81,11 @@ if (config.usingSEO) {
 		'window.$invisiScramjet.ready',
 		'const { ScramjetClient } = $scramjet; c[SCRAMJETCLIENT]; loadScramjetWasm();',
 		'throw Error("@mercuryworkshop/scramjet is not loaded")',
+		'Symbol.for("invisiLeakGuard"); Symbol.for("invisiSearchUrlGuard");',
+		'({ key: "invisiNavigationEntry", id: "invisiNavigationEntry" });',
 	].join('\n');
 	const scrubbed = scrubScramjetSignatures(sample);
-	assert.doesNotMatch(
-		scrubbed,
-		/scramjet|scram|sj-cache|invisiScramjet|mercury/i
-	);
+	assert.doesNotMatch(scrubbed, /scramjet|scram|sj-cache|invisi|mercury/i);
 	const Core = tokens.core[0].toUpperCase() + tokens.core.slice(1);
 	assert.ok(scrubbed.includes(`const { ${Core}Client } = $${tokens.core};`));
 	assert.ok(scrubbed.includes(`c[${tokens.core.toUpperCase()}CLIENT]`));
@@ -99,8 +98,42 @@ if (config.usingSEO) {
 	);
 	assert.ok(
 		scrubbed.includes(
-			`this.${tokens.members.cookieJar} = new CookieJar(); await controller.${tokens.members.setTransport}(t);`
+			`this.${tokens.members.cookieJar} = new ${tokens.members.CookieJar}(); await controller.${tokens.members.setTransport}(t);`
 		)
+	);
+	// Rewriter globals get unrelated names instead of a shared `$x$...` prefix.
+	const { names } = tokens;
+	assert.ok(
+		scrubbed.includes(
+			`window.${names['$scramjet$rewrite']} = ${names['$scramjet$wrap']}(location).href;`
+		)
+	);
+	assert.doesNotMatch(scrubbed, /\$\w+\$\w+/);
+	assert.ok(
+		scrubbed.includes(`script[${names['scramjet-injected']}]`),
+		'injected scripts should get a random attribute'
+	);
+	assert.ok(
+		names['scramjet-attr-script-source-src'].startsWith(
+			`${names['scramjet-attr']}-`
+		),
+		'every rewriter attribute should keep the shared prefix'
+	);
+	// Names the WASM rewriter has built in keep their length there.
+	const builtIn = '$scramitize $scramerr rewriter_new';
+	const rewritten = Buffer.from(
+		scrubScramjetWasm(new TextEncoder().encode(builtIn))
+	).toString();
+	assert.equal(rewritten.length, builtIn.length);
+	assert.equal(
+		rewritten,
+		`${names.$scramitize} ${names.$scramerr} ${names.rewriter}_new`
+	);
+	assert.ok(
+		scrubScramjetSignatures('wasm.rewriter_new()').includes(
+			`wasm.${names.rewriter}_new()`
+		),
+		'the JS side should call the renamed WASM exports'
 	);
 	const wasm = new TextEncoder().encode('scramjet scram wasm');
 	const patched = scrubScramjetWasm(wasm);

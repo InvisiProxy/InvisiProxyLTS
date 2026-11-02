@@ -1,4 +1,4 @@
-const installed = Symbol.for('leak prevention');
+const installed = Symbol.for('invisiLeakGuard');
 
 export type ScramjetClientFrameNames = {
 	meta: { topFrameName?: string | null };

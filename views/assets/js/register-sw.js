@@ -409,13 +409,15 @@ import { skipHttpCache } from '../../../src/browser/http-cache.ts';
       const createFrame = (element, onUrl) =>
         controller.createFrame(element, { plugins: buildFramePlugins(onUrl) });
       let frame = null;
-      if (!(document.getElementById('frame') instanceof HTMLIFrameElement)) {
+      if (!document.getElementById('tab-frames')) {
         const hidden = document.createElement('iframe');
         hidden.setAttribute('aria-hidden', 'true');
         hidden.tabIndex = -1;
         hidden.style.cssText =
           'position:fixed;width:0;height:0;border:0;visibility:hidden;pointer-events:none;';
-        document.body.appendChild(hidden);
+        const host = document.createElement('div');
+        document.body.appendChild(host);
+        host.attachShadow({ mode: 'closed' }).appendChild(hidden);
         frame = controller.createFrame(hidden);
       }
 

@@ -2,7 +2,7 @@
 
 const garbageValues = new Set(['undefined', 'null', 'nan', '[object object]']);
 const fallbackHref = 'https://example.com/';
-const guardInstalled = Symbol.for('invisiproxy search url guard');
+const guardInstalled = Symbol.for('invisiSearchUrlGuard');
 const searchInputSelectors = [
 	'#search_form_input',
 	"input[name='q']",
@@ -172,8 +172,8 @@ function installNavigationApiStub(
 
 	const makeEntry = () => ({
 		url: readClientHref(),
-		key: 'invisiproxy-scramjet',
-		id: 'invisiproxy-scramjet',
+		key: 'invisiNavigationEntry',
+		id: 'invisiNavigationEntry',
 		index: 0,
 		sameDocument: true,
 		getState: () => null,

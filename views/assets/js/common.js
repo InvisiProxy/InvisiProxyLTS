@@ -27,9 +27,9 @@ const goFrame = (url) => {
     } else navigateLocalFrame(url);
   },
   navigateLocalFrame = (target) => {
-    const windowFrame = document.getElementById('frame');
+    const tabFrames = document.getElementById('tab-frames');
     const rawUrl = proxiedFrameUrl(target);
-    if (!windowFrame || !rawUrl) return;
+    if (!tabFrames || !rawUrl) return;
     document.getElementsByClassName('loader')[0]?.classList.add('loader-active');
     const tryGo = () => {
       const f = sjBundle && sjBundle.frame;
@@ -74,7 +74,11 @@ const goFrame = (url) => {
         Object.assign(iframe.style, styles);
         iframe.allow = 'fullscreen';
         iframe.src = location.href;
-        doc.body.appendChild(iframe);
+        // A closed shadow root keeps the frame and its URL out of reach of
+        // scripts scanning this window's document.
+        const host = doc.createElement('div');
+        doc.body.appendChild(host);
+        host.attachShadow({ mode: 'closed' }).appendChild(iframe);
         return newWindow;
       } catch (e) {
         console.error('Blank cloaking failed:', e);
@@ -85,11 +89,13 @@ const goFrame = (url) => {
     try {
       const icon =
         (document.querySelector("link[rel*='icon']") || {}).href || '';
-      const html = `<!DOCTYPE html><html><head><title>${
+      // The frame sits in a declarative closed shadow root, as in the
+      // about:blank window above.
+      const html =`<!DOCTYPE html><html><head><title>${
         document.title
-      }</title><link rel="icon" href="${icon}"><style>html,body{height:100%;margin:0;padding:0;overflow:hidden;}</style></head><body><iframe allow="fullscreen" style="position:fixed;inset:0;display:block;border:none;width:100%;height:100%;margin:0;padding:0;overflow:hidden;" src="${
+      }</title><link rel="icon" href="${icon}"><style>html,body{height:100%;margin:0;padding:0;overflow:hidden;}</style></head><body><div><template shadowrootmode="closed"><iframe allow="fullscreen" style="position:fixed;inset:0;display:block;border:none;width:100%;height:100%;margin:0;padding:0;overflow:hidden;" src="${
         location.href
-      }"></iframe></body></html>`;
+      }"></iframe></template></div></body></html>`;
       const blob = new Blob([html], { type: 'text/html' });
       const blobUrl = URL.createObjectURL(blob);
       const newWindow = window.open(blobUrl, '_blank');
@@ -299,6 +305,10 @@ const getSearchTemplate = (
   },
   sjUrl = (url) => frameUrlPrefix + search(url)
 
+// frame.js moves the /s search box into a closed shadow root, so it is found
+// now, while it is still in the document.
+const sjSearchInput = document.querySelector('#pr-sj input[type=text]');
+
 const preparePage = () => {
   if (window.$invisiScramjet?.ready) sjBundle = window.$invisiScramjet;
   else
@@ -401,7 +411,9 @@ const preparePage = () => {
     const formElement = document.getElementById(id);
     if (!formElement) return;
 
-    let prUrl = formElement.querySelector('input[type=text]'),
+    let prUrl =
+        (id === 'pr-sj' && sjSearchInput) ||
+        formElement.querySelector('input[type=text]'),
       prAC = formElement.querySelector('#autocomplete'),
       prGo2 = document.querySelectorAll(`#${id}.pr-go2, #${id} .pr-go2`);
 

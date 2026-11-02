@@ -11,7 +11,7 @@ import {
 } from '../constants.ts';
 import { elementIds } from '../obfuscation/classes.ts';
 import { obfuscateDocument } from '../obfuscation/documents.ts';
-import { cipherMarkup, maskText } from '../obfuscation/masks.ts';
+import { cipherMarkup } from '../obfuscation/masks.ts';
 import type { SiteValues } from '../site.ts';
 import { getPathAliases } from '../obfuscation/paths.ts';
 import {
@@ -161,7 +161,7 @@ export async function renderSite({
 	files[
 		`assets/json/${getPathAliases()['files/splash.json'] || 'splash.json'}`
 	] = JSON.stringify(
-		buildValues.splash.map((text) => cipherMarkup(maskText(text)))
+		buildValues.splash.map((text) => cipherMarkup(text))
 	);
 	const locales = builtLocales(loadLocales());
 	const root = locales[0].code;
