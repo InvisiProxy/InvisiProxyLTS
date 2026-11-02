@@ -4,6 +4,7 @@ import { createServer } from 'node:http';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
+import { enterAddress, tabFrame } from '../helpers/tab-frame.ts';
 
 const load = <T>(path: string): Promise<T> =>
 	import(pathToFileURL(join(process.cwd(), path)).href);
@@ -19,6 +20,9 @@ const { classNames, elementIds } = await load<
 >('src/obfuscation/classes.ts');
 
 const classes = classNames();
+const activeTab = ['proxy-tab', 'active-tab'].map(
+	(name) => classes[name] ?? name
+);
 const cls = (name: string) => `.${classes[name] ?? name}`;
 const ids = elementIds();
 const id = (name: string) => `#${ids[name] ?? name}`;
@@ -140,7 +144,11 @@ try {
 
 	const toggle = page.locator(cls('mirror-links-toggle'));
 	const label = (await toggle.locator('span').textContent()) ?? '';
-	assert.notEqual(label, strip(label), 'Button text should be masked.');
+	assert.equal(
+		label,
+		strip(label),
+		'Ciphered text should carry no mask characters, which Safari draws beside letters in a fallback font.'
+	);
 	assert.notEqual(strip(label), 'Mirrors', 'Button text should be ciphered.');
 	assert.equal(plain(label), 'Mirrors');
 	assert.ok(
@@ -224,8 +232,7 @@ try {
 			.locator(id('search-input'))
 			.fill(`http://127.0.0.1:${targetPort}/`);
 		await page.locator(id('search-input')).press('Enter');
-		await page
-			.frameLocator(id('frame'))
+		await (await tabFrame(page, activeTab))
 			.locator('html[data-proxy-smoke="executed"]')
 			.waitFor()
 			.catch((cause) => {
@@ -236,11 +243,12 @@ try {
 			});
 	}
 
-	await page
-		.locator(id('search-input'))
-		.fill('http://127.0.0.1:9/unreachable');
-	await page.locator(id('search-input')).press('Enter');
-	const errorPage = page.frameLocator(id('frame'));
+	const addressBar = {
+		input: id('search-input'),
+		searchBox: cls('search-box'),
+	};
+	await enterAddress(page, 'http://127.0.0.1:9/unreachable', addressBar);
+	const errorPage = await tabFrame(page, activeTab);
 	await errorPage
 		.locator(id('fetchedURL'), {
 			hasText: 'http://127.0.0.1:9/unreachable',
@@ -260,16 +268,18 @@ try {
 
 	const webrtcResult = async () =>
 		JSON.parse(
-			(await page
-				.frameLocator(id('frame'))
+			(await (
+				await tabFrame(page, activeTab)
+			)
 				.locator('html[data-webrtc]')
 				.getAttribute('data-webrtc')) ?? '{}'
 		);
 	const openWebrtcPage = async () => {
-		await page
-			.locator(id('search-input'))
-			.fill(`http://127.0.0.1:${targetPort}/webrtc`);
-		await page.locator(id('search-input')).press('Enter');
+		await enterAddress(
+			page,
+			`http://127.0.0.1:${targetPort}/webrtc`,
+			addressBar
+		);
 		return webrtcResult();
 	};
 	assert.deepEqual(await openWebrtcPage(), {

@@ -3,6 +3,7 @@ import { createServer } from 'node:http';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
+import { tabFrame } from '../helpers/tab-frame.ts';
 
 const load = <T>(path: string): Promise<T> =>
 	import(pathToFileURL(join(process.cwd(), path)).href);
@@ -13,7 +14,7 @@ const { pages } = (
 		'src/server/routes.ts'
 	)
 ).loadRoutes();
-const { elementIds } = await load<
+const { classNames, elementIds } = await load<
 	typeof import('../../src/obfuscation/classes.ts')
 >('src/obfuscation/classes.ts');
 const { scramjetTokens } = await load<
@@ -22,6 +23,9 @@ const { scramjetTokens } = await load<
 
 const ids = elementIds();
 const id = (name: string) => `#${ids[name] ?? name}`;
+const activeTab = ['proxy-tab', 'active-tab'].map(
+	(name) => classNames()[name] ?? name
+);
 const origin = String(process.env.INVISIPROXY_ORIGIN);
 const base = origin + serverUrl.pathname;
 const route = (file: string) =>
@@ -120,8 +124,9 @@ try {
 		.fill(`http://127.0.0.1:${targetPort}/rtc`);
 	await page.locator(id('search-input')).press('Enter');
 	const result = JSON.parse(
-		(await page
-			.frameLocator(id('frame'))
+		(await (
+			await tabFrame(page, activeTab)
+		)
 			.locator('html[data-rtc]')
 			.getAttribute('data-rtc')) ?? '{}'
 	);

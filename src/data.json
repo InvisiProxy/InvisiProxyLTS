@@ -521,6 +521,6 @@
 		"This site is more than likely blocked. This is the official InvisiProxy site which does not utilize DOM masquerading, font obfuscation, and other anti-censorship tools. Please check the Mirrors/Links menu for more private site links with these features to help bypass censorship. In the case of site support consider enabling Tor browsing on sites like YouTube or GeForce NOW with Libcurl! We offer premium domains, beta features, residential ISP connections and faster speeds. You can donate on the Patreon page if you wish to support the project for more links and hosting!"
 	],
 	"version": [
-		"8.3.3"
+		"8.3.4"
 	]
 }

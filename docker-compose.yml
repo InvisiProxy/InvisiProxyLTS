@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   invisiproxy:
-    image: quiteafancyemerald/invisiproxy:8.3.3
+    image: quiteafancyemerald/invisiproxy:8.3.4
     build: .
     container_name: invisiproxy
     ports:

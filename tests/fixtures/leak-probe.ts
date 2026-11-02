@@ -3,6 +3,7 @@ import { createServer } from 'node:http';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { chromium, type Frame, type Page } from 'playwright';
+import { tabFrame } from '../helpers/tab-frame.ts';
 
 const load = <T>(path: string): Promise<T> =>
 	import(pathToFileURL(join(process.cwd(), path)).href);
@@ -13,7 +14,7 @@ const { pages } = (
 		'src/server/routes.ts'
 	)
 ).loadRoutes();
-const { elementIds } = await load<
+const { classNames, elementIds } = await load<
 	typeof import('../../src/obfuscation/classes.ts')
 >('src/obfuscation/classes.ts');
 const { getPathAliases } = await load<
@@ -25,6 +26,9 @@ const { scramjetTokens } = await load<
 
 const ids = elementIds();
 const id = (name: string) => `#${ids[name] ?? name}`;
+const activeTab = ['proxy-tab', 'active-tab'].map(
+	(name) => classNames()[name] ?? name
+);
 const origin = String(process.env.INVISIPROXY_ORIGIN);
 const base = origin + serverUrl.pathname;
 const route = (file: string) =>
@@ -298,7 +302,10 @@ try {
 	await context.route('**/*', (request) =>
 		new URL(request.request().url()).origin === origin
 			? request.continue()
-			: request.fulfill({ contentType: 'application/javascript', body: '' })
+			: request.fulfill({
+					contentType: 'application/javascript',
+					body: '',
+				})
 	);
 	await context.addInitScript(() =>
 		Object.assign(window, { AOS: { init() {}, refresh() {} } })
@@ -331,14 +338,8 @@ try {
 	const navigationStart = requests.length;
 	await page.locator(id('search-input')).fill(`${targetOrigin}/`);
 	await page.locator(id('search-input')).press('Enter');
-	await page
-		.frameLocator(id('frame'))
-		.locator('html[data-leak-ready="1"]')
-		.waitFor();
-	const frame = await (
-		await page.locator(id('frame')).elementHandle()
-	)?.contentFrame();
-	if (!frame) throw new Error('Proxy frame not found');
+	const frame = await tabFrame(page, activeTab);
+	await frame.locator('html[data-leak-ready="1"]').waitFor();
 
 	const proxied = await frame.evaluate(mainWorldProbe);
 	const isolated = await isolatedWorld(page, frame);
