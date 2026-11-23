@@ -1,12 +1,18 @@
-import { appPresets } from '../document-helpers.tsx';
+import { appPresets, route } from '../document-helpers.tsx';
 
 export default function App(props: {
 	url: string;
 	name: string;
 	newtab?: boolean;
+	local?: boolean;
 	card?: boolean;
 	group?: number;
 }) {
+	const publicUrl = () => (props.local ? route(props.url) : props.url);
+	// Locally hosted apps embed the site favicon server-side, so no icon
+	// request ever leaves the origin.
+	const siteFavicon = () =>
+		props.local ? route('assets/ico/favicon.ico') : undefined;
 	const shared = {
 		class: props.card ? 'app-card' : 'dependencylogo tippy-button',
 		'data-app': appPresets.findIndex((app) => app.url === props.url),
@@ -17,17 +23,17 @@ export default function App(props: {
 	const content = () =>
 		props.card ? (
 			<>
-				<img alt="" />
+				<img alt="" src={siteFavicon()} />
 				<span class="app-name">{props.name}</span>
 			</>
 		) : (
-			<img alt={props.name} />
+			<img alt={props.name} src={siteFavicon()} />
 		);
 	return (
 		<>
-			{props.newtab ? (
+			{props.newtab || props.local ? (
 				<a
-					href={props.url}
+					href={publicUrl()}
 					target="_blank"
 					rel="noopener noreferrer"
 					{...shared}

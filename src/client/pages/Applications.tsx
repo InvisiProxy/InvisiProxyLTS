@@ -90,6 +90,7 @@ export default function Applications() {
 										<App
 											url={app.url}
 											name={app.name}
+											local={app.local}
 											group={group}
 											card
 										/>

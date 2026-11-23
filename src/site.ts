@@ -266,6 +266,9 @@ export interface AppPreset {
 	name: string;
 	url: string;
 	icon?: string;
+	// Locally hosted: the URL is a site path, resolved with route() and opened
+	// directly in a new tab instead of being sent through the proxy.
+	local?: boolean;
 }
 
 const favicon = (domain: string) =>
@@ -277,6 +280,10 @@ export const appLibrary = Object.freeze<{ id: string; apps: AppPreset[] }[]>([
 		apps: [
 			{ name: 'Obsidian', url: 'https://playobsidian.com' },
 			{ name: 'Truffled', url: 'https://truffled.lol' },
+			// Vendored copy of https://github.com/nautilus-os/GUST
+			// (index.html at 78df43014334176ca000bb252efc1185beb893a7), served
+			// from views/assets/gust/gust.html. Re-vendor that file to update.
+			{ name: 'GUST', url: 'assets/gust/gust.html', local: true },
 		],
 	},
 	{
@@ -518,8 +525,17 @@ export const appPresets: readonly AppPreset[] = (() => {
 	return Object.freeze([...presets.values()]);
 })();
 
-export const appIcon = (app: AppPreset) =>
-	app.icon ?? favicon(new URL(app.url).hostname);
+export const appIcon = (app: AppPreset) => {
+	if (app.icon) return app.icon;
+	// Locally hosted apps reuse the site's own favicon instead of asking an
+	// external favicon service for the domain, so nothing leaks.
+	if (app.local) return route('assets/ico/favicon.ico');
+	try {
+		return favicon(new URL(app.url).hostname);
+	} catch {
+		return '';
+	}
+};
 
 interface CreditPerson {
 	name: string;

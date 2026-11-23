@@ -520,12 +520,16 @@ const preparePage = () => {
     if (button.tagName === 'BUTTON')
       button.addEventListener('click', () => goProx.scramjet(app.url, 'stealth'));
     const image = button.querySelector('img');
+    // Locally hosted apps ship their favicon inside the document, so only
+    // remote apps are loaded through the proxied icon loader here.
     return (
       image &&
-      loadAppIcon(image, app.url, appIcon(app)).then(() => {
-        if (!image.src) image.src = letterIcon(app.name);
-        return iconSettled(image);
-      })
+      (image.src
+        ? Promise.resolve()
+        : loadAppIcon(image, app.url, appIcon(app)).then(() => {
+            if (!image.src) image.src = letterIcon(app.name);
+            return iconSettled(image);
+          }))
     );
   });
 
