@@ -28,6 +28,7 @@ import {
 } from './locales.ts';
 import { rootDataFiles } from './sources.ts';
 import { buildValues } from './values.ts';
+import { gustPageFile } from '../gust/index.ts';
 
 type Renderer = typeof import('../client/entry.tsx');
 export type LoadRenderer = () => Promise<Renderer>;
@@ -114,6 +115,7 @@ export async function proxyErrorTemplates(): Promise<SiteValues['errors']> {
 export async function siteRoutes(load: LoadRenderer = importRenderer) {
 	return {
 		...(await load()).pageRoutes(),
+		gust: gustPageFile,
 		...Object.fromEntries(rootDataFiles().map((file) => [file, file])),
 	};
 }

@@ -43,6 +43,7 @@ import { getPathAliases } from '../obfuscation/paths.ts';
 import { hideScramjetParams } from '../obfuscation/scramjet-params.ts';
 import { scrubScramjetWasm } from '../obfuscation/scramjet-signatures.ts';
 import { route } from '../site.ts';
+import { gustEmitAssets, gustPageFile } from '../gust/index.ts';
 import { beginObfuscationBuild } from '../obfuscation/state.ts';
 import {
 	getPlainDocuments,
@@ -357,45 +358,18 @@ export function siteBuildPlugin(): Plugin[] {
 											)
 										)
 									: rewriteAssetReferences(readText(file));
-					// Local patches of the vendored GUST app carry tokens the
-					// build swaps for the site's own (masked) wisp route and
-					// wind favicon (the tokens sit inside quoted strings, so
-					// bare paths are spliced in). A standalone copy of the
-					// file keeps its tokens and then falls back to the
-					// built-in public relay.
-					const patched =
-						/^assets\/gust\//.test(file.target)
-							? new TextEncoder().encode(
-									new TextDecoder()
-										.decode(
-											typeof original === 'string'
-												? new TextEncoder().encode(
-														original
-													)
-												: original
-										)
-										.replaceAll(
-											'__IP_WISP_ROUTE__',
-											route('/wisp/')
-										)
-										.replaceAll(
-											'__IP_GUST_WIND__',
-											route('assets/gust/wind.svg')
-										)
-								)
-							: original;
 					const source =
 						!config.usingSEO && file.kind === 'vendor-script'
 							? obfuscateVendorScript(
 									basename(file.source) === 'scramjet.js'
 										? hideScramjetParams(
-												patched.toString(),
+												original.toString(),
 												buildValues.proxyCodecKey
 											)
-										: patched.toString(),
+										: original.toString(),
 									file.target
 								)
-							: patched;
+							: original;
 					this.emitFile({
 						type: 'asset',
 						fileName: file.target,
@@ -421,6 +395,27 @@ export function siteBuildPlugin(): Plugin[] {
 							}),
 						});
 					}
+				}
+				for (const asset of gustEmitAssets()) {
+					const original = saltAsset(asset.target, asset.bytes);
+					const substituted = new TextEncoder().encode(
+						new TextDecoder()
+							.decode(original)
+							.replaceAll('__IP_WISP_ROUTE__', route('/wisp/'))
+							.replaceAll(
+								'__IP_GUST_WIND__',
+								route("assets/ico/wind.svg")
+							)
+					);
+					this.emitFile({
+						type: 'asset',
+						fileName: asset.target,
+						source:
+							config.disguiseFiles &&
+							asset.target === gustPageFile
+								? gzipSync(substituted)
+								: substituted,
+					});
 				}
 			},
 		},

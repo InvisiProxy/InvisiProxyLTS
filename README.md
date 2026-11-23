@@ -599,6 +599,7 @@ This project currently uses Scramjet and Ultraviolet as web proxies adhering to 
 - <a href="https://github.com/MercuryWorkshop/wisp-protocol">Wisp Protocol</a>
 - <a href="https://github.com/MercuryWorkshop/Epoxy-Transport">EpoxyTransport</a>
 - <a href="https://github.com/MercuryWorkshop/Libcurl-Transport">libcurl-transport</a>
+- <a href="https://github.com/nautilus-os/GUST">GUST</a>
 - <a href="https://github.com/sylvieisnton/merp">Merp (Obfuscation Module)</a>
 - <a href="https://github.com/QuiteAFancyEmerald/Donglalu-Proxy-The-Second-Coming">Donglalu Proxy The Second Coming</a>
 - <a href="https://gitlab.com/fp-production/fp">The Freedom Project (Hard Fork)</a>

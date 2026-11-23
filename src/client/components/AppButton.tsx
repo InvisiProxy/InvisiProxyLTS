@@ -10,8 +10,6 @@ export default function App(props: {
 	icon?: string;
 }) {
 	const publicUrl = () => (props.local ? route(props.url) : props.url);
-	// Locally hosted apps embed their icon server-side, so no icon request
-	// ever leaves the origin.
 	const localIcon = () =>
 		props.local
 			? route(props.icon || 'assets/ico/favicon.ico')

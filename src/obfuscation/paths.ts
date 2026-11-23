@@ -42,6 +42,7 @@ export function getPathAliases(): Record<string, string> {
 		ts.forEachChild(node, visit);
 	}
 	visit(source);
+	keys.add('gust');
 	for (const [name, target] of Object.entries(externalPages)) {
 		keys.add(name);
 		if (typeof target !== 'string')
@@ -83,6 +84,7 @@ export function getPathAliases(): Record<string, string> {
 		'controller.api.js',
 		'controller.inject.js',
 		'controller.sw.js',
+		'wind.svg',
 		'fa-brands-400.woff2',
 		'fa-regular-400.woff2',
 		'fa-solid-900.woff2',

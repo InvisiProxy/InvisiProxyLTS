@@ -87,11 +87,6 @@ export function siteFiles(): SiteFile[] {
 				else if (/^assets\/css\/[^/]+\.css$/.test(target))
 					kind = 'style';
 				else if (file.endsWith('.json')) kind = 'json';
-				// Vendored apps (GUST) are third-party code: copied as raw bytes
-				// so asset-reference rewriting and text transforms can't touch
-				// the scripts embedded in them (only the build's patch-token
-				// substitution modifies them — see the static plugin).
-				else if (/^assets\/gust\//.test(target)) kind = 'copy';
 				else if (/\.(?:html|css|txt|xml)$/.test(file)) kind = 'text';
 			}
 			if (kind !== 'script') claimed.add(target);
