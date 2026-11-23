@@ -25,7 +25,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="description" content="GUST: A service worker -less web browser-in-a-browser" />
     <title>GUST Browser</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%239de5ff' d='M288 32c0 17.7 14.3 32 32 32h32c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32 14.3-32 32s14.3 32 32 32H352c53 0 96-43 96-96s-43-96-96-96H320c-17.7 0-32 14.3-32 32zm64 352c0 17.7 14.3 32 32 32h32c53 0 96-43 96-96s-43-96-96-96H32c-17.7 0-32 14.3-32 32s14.3 32 32 32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H384c-17.7 0-32 14.3-32 32zM128 512h32c53 0 96-43 96-96s-43-96-96-96H32c-17.7 0-32 14.3-32 32s14.3 32 32 32H160c17.7 0 32 14.3 32 32s-14.3 32-32 32H128c-17.7 0-32 14.3-32 32s14.3 32 32 32z'/%3E%3C/svg%3E" />
+    <link rel="icon" type="image/svg+xml" href="__IP_GUST_WIND__" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
@@ -6465,26 +6465,6 @@
                                 </div>
 
                                 <div class="settings-card">
-                                    <div class="settings-card-head"><i class="fas fa-diagram-project"></i> WISP Pool (Round-Robin)</div>
-                                    <div class="settings-card-body">
-                                        <div class="settings-switch-row">
-                                            <div>
-                                                <div class="settings-switch-label">Enable pool round-robin</div>
-                                                <div class="settings-hint">Rotate across a benchmarked pool of public WISP servers for faster loads. Servers that fail for a site are skipped for that site; faster servers are picked more often.</div>
-                                            </div>
-                                            <div class="settings-switch" id="settingsPoolModeSwitch">
-                                                <div class="settings-switch-track"><div class="settings-switch-thumb"></div></div>
-                                            </div>
-                                        </div>
-                                        <div style="display:flex; align-items:center; gap:8px; margin-top:14px;">
-                                            <button class="settings-btn-icon" id="settingsPoolBenchmarkBtn" title="Benchmark all servers"><i class="fas fa-gauge-high"></i></button>
-                                            <span class="settings-hint" id="settingsPoolBenchmarkStatus" style="margin:0;">Not benchmarked yet</span>
-                                        </div>
-                                        <div id="settingsPoolList" style="margin-top:12px; display:flex; flex-direction:column; gap:6px; max-height:260px; overflow-y:auto;"></div>
-                                    </div>
-                                </div>
-
-                                <div class="settings-card">
                                     <div class="settings-card-head"><i class="fas fa-sliders"></i> Concurrent Requests
                                     </div>
                                     <div class="settings-card-body">
@@ -8147,7 +8127,7 @@ const API='https://discord.com/api/v9';
 const CDN='https://cdn.discordapp.com';
 const MEDIA='https://media.discordapp.net';
 const GATEWAY='wss://gateway.discord.gg/?v=9&encoding=json';
-const WISPS=["wss://wisp.mercurywork.shop/","wss://anura.pro/","wss://wisp.terbiumon.top/wisp/"];
+const WISPS=[GUST_PROJECT_WISP]; // Local patch (InvisiProxy): single site relay.
 const UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36';
 
 let token = BAKED_TOKEN || localStorage.getItem('dtoken') || '';
@@ -8195,7 +8175,7 @@ async function connect(){
   if(client) return;
   if(!epoxyReady){ gstatus('Loading WASM TLS…'); await init(); epoxyReady=true; }
   const saved=localStorage.getItem('wisp');
-  for(const w of [...new Set([saved,...WISPS].filter(Boolean))]){
+  for(const w of [...new Set([...WISPS,saved].filter(Boolean))]){ // Local patch (InvisiProxy): this site's relay first.
     gstatus('Probing relay '+w+' …');
     if(await probeWisp(w)){ wispUrl=w; break; }
   }
@@ -10822,6 +10802,11 @@ return api;
 window._libcurlReady = true;
 </script>
     <script>
+        // ── Local patch (InvisiProxy): this site's own WISP relay. The build
+        // swaps the token below for the site's (masked) wisp route; a
+        // standalone copy keeps the token and uses the public relay instead.
+        // Classic, module and settings scripts all share this constant.
+        const GUST_PROJECT_WISP = (function () { try { var p = "__IP_WISP_ROUTE__"; if (p.indexOf("__") !== -1 || !location.host) return "wss://wisp.mercurywork.shop/"; return (location.protocol === "https:" ? "wss://" : "ws://") + location.host + p; } catch (e) { return "wss://wisp.mercurywork.shop/"; } })();
         (function () {
             // ── Private state variables ───────────────────────────────────────────────
             // These replace former window.* leaks – intentionally not exposed on window.
@@ -11036,12 +11021,9 @@ window._libcurlReady = true;
                 try { ls.setItem('gust:wisp:last-working:v1', url); } catch {}
                 lastWorkingWisp = url;
             }
-            // Priority: user-pinned relay (gust:wisp:v1) > fastest relay learned
-            // in the background last session (gust:wisp:fastest:v1) > hardcoded
-            // default. The middle tier is why fresh installs land on the slow
-            // hardcoded default only once — after the first background probe the
-            // next launch starts on whatever relay is actually fastest.
-            let WISP = (function () { try { return ls.getItem('gust:wisp:v1') || ls.getItem('gust:wisp:fastest:v1') || "wss://wisp.mercurywork.shop/"; } catch { return "wss://wisp.mercurywork.shop/"; } })();
+            // Local patch (InvisiProxy): user-pinned relay (gust:wisp:v1) >
+            // this site's own relay. Nothing is learned, rotated or benchmarked.
+            let WISP = (function () { try { return ls.getItem('gust:wisp:v1') || GUST_PROJECT_WISP; } catch { return GUST_PROJECT_WISP; } })();
             // Default fallback relay used when the primary WISP is unreachable
             // (e.g. the primary is down or blocking the client's network). The
             // fallback path is enabled by default but previously shipped with no
@@ -11050,37 +11032,11 @@ window._libcurlReady = true;
             // here lets GUST self-heal; users can override it in Settings.
             const DEFAULT_FALLBACK_WISP = "wss://mages.io/wisp/";
 
-            // ── WISP pool: round-robin across a list of public relays ──────
-            // Benchmarked by raw WebSocket handshake time; the pool is only
-            // consulted when Settings → Connection → "Enable pool round-robin"
-            // is on. WISP (above) stays the sticky single-server config used
-            // everywhere else, so pool mode is fully opt-in.
-            // Every entry verified live END-TO-END from a file:// null-origin
-            // context (the only environment that matches GUST): open WS → WISP
-            // CONTINUE handshake → real CONNECT+DATA proxying a live HTTP request,
-            // 3/3 reliability runs. NOT just DNS/WS-upgrade — a bare handshake
-            // passes on dead-backend proxies and on relays that reject file://
-            // origin, both of which are excluded here. Re-verified 2026-07-16
-            // (13 relays; ~110 candidate hosts tested, the rest were unregistered,
-            // static-only, dead-backend, or file://-rejecting). Ordered
-            // fastest-first by measured median latency, though rankPoolCandidates
-            // re-sorts on live health data at runtime.
-            const WISP_POOL_DEFAULTS = [...new Set([
-                "wss://definitelyscience.com/wisp/",   // 111ms
-                "wss://mages.io/wisp/",                // 114ms
-                "wss://lichology.com/wisp/",           // 118ms
-                "wss://motor-cycle-part.org/wisp/",    // 127ms
-                "wss://area.forwardersoft.com/wisp/",  // 154ms
-                "wss://truf.the-nest.at/wisp/",        // 168ms
-                "wss://thoughts.forwardersoft.com/wisp/", // 198ms
-                "wss://wisp.terbiumon.top/wisp/",      // 223ms
-                "wss://anura.pro/",                    // 280ms
-                "wss://wisp.mercurywork.shop/",        // 294ms
-                "wss://nebulaproxy.io/wisp/",          // 304ms
-                "wss://invisiproxy.com/wisp/",         // 369ms
-                "wss://english.algebra.teacher.vocabulary.homework.forwardersoft.com/wisp/" // 361ms
-            ])];
-            let wispHealth = (function () { try { return JSON.parse(ls.getItem('gust:wisp:health:v1') || '{}'); } catch { return {}; } })();
+            // ── Local patch (InvisiProxy): the relay pool is removed ─────
+            // All traffic always uses WISP (the site's own relay); the only
+            // other candidate ever considered is the fallback WISP taken from
+            // Settings. No probing, rotation or benchmarking remains.
+            const WISP_POOL_DEFAULTS = [];            let wispHealth = (function () { try { return JSON.parse(ls.getItem('gust:wisp:health:v1') || '{}'); } catch { return {}; } })();
             function saveWispHealth() { try { ls.setItem('gust:wisp:health:v1', JSON.stringify(wispHealth)); } catch {} }
             // Per-(server,host) cooldown after a failure — session-only, not persisted.
             const wispHostCooldown = new Map();
@@ -11091,9 +11047,8 @@ window._libcurlReady = true;
             function getWispPool() {
                 return [...new Set([...WISP_POOL_DEFAULTS, WISP, (function () { try { return ls.getItem('gust:fallback:wisp') || DEFAULT_FALLBACK_WISP; } catch { return DEFAULT_FALLBACK_WISP; } })()].filter(Boolean))];
             }
-            // Multi-WISP round-robin. Default ON (unset → enabled): '0' is the only
-            // off value, so a fresh install gets pool resilience without opting in.
-            function poolModeOn() { try { return ls.getItem('gust:wisp:poolmode:v1') !== '0'; } catch { return true; } }
+            // Local patch (InvisiProxy): round-robin is removed outright.
+            function poolModeOn() { return false; }
             function probeWispLatency(url, ms = 6000) {
                 return new Promise(resolve => {
                     const t0 = performance.now();
@@ -11129,43 +11084,9 @@ window._libcurlReady = true;
             // Returns the in-flight benchmark promise if one is already running, so the
             // boot gate can await full completion no matter who kicked it off.
             function benchmarkWispPool(onProgress) {
-                if (wispBenchmarking) return _wispBenchmarkPromise;
-                wispBenchmarking = true;
-                _wispBenchmarkPromise = (async () => {
-                    try {
-                        const pool = getWispPool();
-                        let done = 0;
-                        await Promise.all(pool.map(async url => {
-                            const { latency, healthy, samples } = await probeWispPoolServer(url);
-                            wispHealth[url] = { latency, checkedAt: Date.now(), healthy, samples };
-                            done++;
-                            if (onProgress) { try { onProgress(done, pool.length); } catch (e) {} }
-                            if (typeof renderWispPoolList === 'function') renderWispPoolList();
-                            if (typeof renderGXWispList === 'function') renderGXWispList();
-                        }));
-                        saveWispHealth();
-                    } finally {
-                        wispBenchmarking = false;
-                    }
-                })();
-                return _wispBenchmarkPromise;
-            }
-            // After the pool is benchmarked at startup, remember the fastest
-            // healthy relay as the startup default for NEXT launch
-            // (gust:wisp:fastest:v1, read back by the WISP initializer above).
-            // Reuses benchmarkWispPool's latency data — no extra probing. Never
-            // overrides a user-pinned relay and never swaps the live tunnel
-            // mid-session (which would corrupt in-flight fetches on the global
-            // websocket), so it's purely a next-launch optimization with zero
-            // regression surface this session.
-            function rememberFastestRelay() {
-                try { if (ls.getItem('gust:wisp:v1')) return; } catch {}
-                const ranked = getWispPool()
-                    .filter(u => wispHealth[u] && wispHealth[u].healthy && wispHealth[u].latency != null)
-                    .sort((a, b) => wispHealth[a].latency - wispHealth[b].latency);
-                if (ranked[0]) { try { ls.setItem('gust:wisp:fastest:v1', ranked[0]); } catch {} }
-            }
-            // Servers eligible for `host` right now: known-good (or never-tested),
+                // Local patch (InvisiProxy): the relay pool is removed — no probing.
+                return Promise.resolve();
+            }            function rememberFastestRelay() {} // Local patch (InvisiProxy): removed with the relay pool.            // Servers eligible for `host` right now: known-good (or never-tested),
             // not cooling down for this host, excluding `exclude`. Fastest first.
             function rankPoolCandidates(host, exclude) {
                 const now = Date.now();
@@ -21219,9 +21140,7 @@ _VIEWER_DL_JS +
             }
             $("settingsBtn").onclick = () => go(SETTINGS_INTERNAL);
             wireSettingsEvents();
-            // Background-benchmark the WISP pool at startup so round-robin picks
-            // (if enabled) already have latency data for the first navigation, then
-            // remember the fastest healthy relay as next launch's startup default.
+            // Local patch (InvisiProxy): no startup probing — both calls are no-ops.
             Promise.resolve(benchmarkWispPool()).then(rememberFastestRelay, () => {});
 
             document.querySelectorAll('.settings-nav-item').forEach(navBtn => {
@@ -22000,7 +21919,7 @@ _VIEWER_DL_JS +
                 }
                 if (wispReset && wispInput) {
                     wispReset.onclick = async () => {
-                        const defaultWisp = "wss://wisp.mercurywork.shop/";
+                        const defaultWisp = GUST_PROJECT_WISP;
                         wispInput.value = defaultWisp;
                         try {
                             ls.setItem('gust:wisp:v1', defaultWisp);
@@ -22013,19 +21932,6 @@ _VIEWER_DL_JS +
                     };
                 }
 
-                // ── WISP pool status / benchmark ────────────────────────
-                const poolBenchmarkBtn = $("settingsPoolBenchmarkBtn");
-                const poolBenchmarkStatus = $("settingsPoolBenchmarkStatus");
-                if (poolBenchmarkBtn) {
-                    poolBenchmarkBtn.onclick = async () => {
-                        if (wispBenchmarking) return;
-                        poolBenchmarkBtn.disabled = true;
-                        if (poolBenchmarkStatus) poolBenchmarkStatus.textContent = "Benchmarking…";
-                        await benchmarkWispPool();
-                        poolBenchmarkBtn.disabled = false;
-                        if (poolBenchmarkStatus) poolBenchmarkStatus.textContent = "Last run: just now";
-                    };
-                }
 
                 const blockSwitch = $("settingsBlockSwitch");
 
@@ -22483,7 +22389,6 @@ _VIEWER_DL_JS +
                     { id: 'mediaHeadersSwitch',  key: 'gust:media:headers:v1',  defaultOn: true  },
                     { id: 'webrtcBlockSwitch',   key: 'gust:webrtc:block:v1',   defaultOn: true  },
                     { id: 'faviconProxySwitch',  key: 'gust:favicon-proxy:v1',  defaultOn: false },
-                    { id: 'settingsPoolModeSwitch', key: 'gust:wisp:poolmode:v1', defaultOn: true },
                 ];
                 _mediaSwitches.forEach(({ id, key, defaultOn }) => {
                     const sw = $(id);
@@ -26481,11 +26386,6 @@ _VIEWER_DL_JS +
                         '<div class="gxc-card"><div class="gxc-cardhead"><i class="fa-solid fa-shield-halved"></i><span class="t">Ad Blocker</span>' +
                         '<div class="settings-switch gxc-sw' + ($('blockToggle').classList.contains('on') ? ' on' : '') + '" id="gxcAdSw"><div class="settings-switch-track"><div class="settings-switch-thumb"></div></div></div></div>' +
                         '<div class="gxc-sub">GUST Shields — blocks ads &amp; trackers on proxied pages.</div></div>' +
-                        '<div class="gxc-card wide"><div class="gxc-cardhead"><i class="fa-solid fa-tower-broadcast"></i><span class="t">Multi-WISP Pool</span>' +
-                        '<div class="settings-switch gxc-sw' + (poolModeOn() ? ' on' : '') + '" id="gxcWispSw"><div class="settings-switch-track"><div class="settings-switch-thumb"></div></div></div></div>' +
-                        '<div class="gxc-sub">Round-robins traffic across many WISP relays and fails over to the fastest healthy one. Benchmarked at every startup.</div>' +
-                        '<div id="gxcWisp" class="gxc-wisplist"></div>' +
-                        '<button class="gxe-btn" id="gxcWispBench" style="margin-top:10px;">Re-benchmark relays now</button></div>' +
                         '<div class="gxc-card wide"><div class="gxc-cardhead"><i class="fa-solid fa-fire"></i><span class="t">Hot Tabs Killer</span></div>' +
                         '<div class="gxc-sub">Tabs ranked by cached memory. Kill the heavy ones.</div>' +
                         '<div id="gxcHot"></div></div>' +
@@ -26567,23 +26467,6 @@ _VIEWER_DL_JS +
                         }).join('');
                     };
                     renderGXWispList();
-                    const wispSw = gxControl.querySelector('#gxcWispSw');
-                    wispSw.addEventListener('click', () => {
-                        const nowOn = wispSw.classList.toggle('on');
-                        try { ls.setItem('gust:wisp:poolmode:v1', nowOn ? '1' : '0'); } catch (_) {}
-                        const s = $('settingsPoolModeSwitch'); if (s) s.classList.toggle('on', nowOn);
-                        gxPlay(nowOn ? 'LIMITER_OFF' : 'LIMITER_ON');
-                    });
-                    const wispBench = gxControl.querySelector('#gxcWispBench');
-                    wispBench.addEventListener('click', () => {
-                        wispBench.disabled = true; wispBench.textContent = 'Benchmarking…';
-                        Promise.resolve(benchmarkWispPool()).then(() => {
-                            try { rememberFastestRelay(); } catch (_) {}
-                            renderGXWispList();
-                            wispBench.disabled = false; wispBench.textContent = 'Re-benchmark relays now';
-                            gxPlay('LEVEL_UPGRADE');
-                        });
-                    });
                     function renderHot() {
                         const box = gxControl.querySelector('#gxcHot');
                         if (!box) return;

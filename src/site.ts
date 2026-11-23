@@ -281,9 +281,16 @@ export const appLibrary = Object.freeze<{ id: string; apps: AppPreset[] }[]>([
 			{ name: 'Obsidian', url: 'https://playobsidian.com' },
 			{ name: 'Truffled', url: 'https://truffled.lol' },
 			// Vendored copy of https://github.com/nautilus-os/GUST
-			// (index.html at 78df43014334176ca000bb252efc1185beb893a7), served
-			// from views/assets/gust/gust.html. Re-vendor that file to update.
-			{ name: 'GUST', url: 'assets/gust/gust.html', local: true },
+			// (index.html at 78df43014334176ca000bb252efc1185beb893a7), saved
+			// raw at views/assets/gust/gust.html with local patches applied
+			// (site wisp relay, no round-robin pool, local wind favicon). The
+			// build substitutes its patch tokens; keep them when re-vendoring.
+			{
+				name: 'GUST',
+				url: 'assets/gust/gust.html',
+				icon: 'assets/gust/wind.svg',
+				local: true,
+			},
 		],
 	},
 	{
@@ -526,10 +533,10 @@ export const appPresets: readonly AppPreset[] = (() => {
 })();
 
 export const appIcon = (app: AppPreset) => {
+	// Locally hosted apps resolve a local icon (or the site favicon) instead
+	// of asking an external favicon service for the domain, so nothing leaks.
+	if (app.local) return route(app.icon || 'assets/ico/favicon.ico');
 	if (app.icon) return app.icon;
-	// Locally hosted apps reuse the site's own favicon instead of asking an
-	// external favicon service for the domain, so nothing leaks.
-	if (app.local) return route('assets/ico/favicon.ico');
 	try {
 		return favicon(new URL(app.url).hostname);
 	} catch {

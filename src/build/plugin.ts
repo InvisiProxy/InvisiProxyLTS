@@ -357,18 +357,45 @@ export function siteBuildPlugin(): Plugin[] {
 											)
 										)
 									: rewriteAssetReferences(readText(file));
+					// Local patches of the vendored GUST app carry tokens the
+					// build swaps for the site's own (masked) wisp route and
+					// wind favicon (the tokens sit inside quoted strings, so
+					// bare paths are spliced in). A standalone copy of the
+					// file keeps its tokens and then falls back to the
+					// built-in public relay.
+					const patched =
+						/^assets\/gust\//.test(file.target)
+							? new TextEncoder().encode(
+									new TextDecoder()
+										.decode(
+											typeof original === 'string'
+												? new TextEncoder().encode(
+														original
+													)
+												: original
+										)
+										.replaceAll(
+											'__IP_WISP_ROUTE__',
+											route('/wisp/')
+										)
+										.replaceAll(
+											'__IP_GUST_WIND__',
+											route('assets/gust/wind.svg')
+										)
+								)
+							: original;
 					const source =
 						!config.usingSEO && file.kind === 'vendor-script'
 							? obfuscateVendorScript(
 									basename(file.source) === 'scramjet.js'
 										? hideScramjetParams(
-												original.toString(),
+												patched.toString(),
 												buildValues.proxyCodecKey
 											)
-										: original.toString(),
+										: patched.toString(),
 									file.target
 								)
-							: original;
+							: patched;
 					this.emitFile({
 						type: 'asset',
 						fileName: file.target,

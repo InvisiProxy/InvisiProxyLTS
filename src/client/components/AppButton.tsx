@@ -7,12 +7,15 @@ export default function App(props: {
 	local?: boolean;
 	card?: boolean;
 	group?: number;
+	icon?: string;
 }) {
 	const publicUrl = () => (props.local ? route(props.url) : props.url);
-	// Locally hosted apps embed the site favicon server-side, so no icon
-	// request ever leaves the origin.
-	const siteFavicon = () =>
-		props.local ? route('assets/ico/favicon.ico') : undefined;
+	// Locally hosted apps embed their icon server-side, so no icon request
+	// ever leaves the origin.
+	const localIcon = () =>
+		props.local
+			? route(props.icon || 'assets/ico/favicon.ico')
+			: undefined;
 	const shared = {
 		class: props.card ? 'app-card' : 'dependencylogo tippy-button',
 		'data-app': appPresets.findIndex((app) => app.url === props.url),
@@ -23,11 +26,11 @@ export default function App(props: {
 	const content = () =>
 		props.card ? (
 			<>
-				<img alt="" src={siteFavicon()} />
+				<img alt="" src={localIcon()} />
 				<span class="app-name">{props.name}</span>
 			</>
 		) : (
-			<img alt={props.name} src={siteFavicon()} />
+			<img alt={props.name} src={localIcon()} />
 		);
 	return (
 		<>
