@@ -1,10 +1,8 @@
 import { defineConfig } from 'vite';
 import solid from 'vite-plugin-solid';
-import { wispurrVite } from 'wispurr/vite';
-import { siteDevPlugin } from './src/build/dev.ts';
+import { finalwispDevPlugin, siteDevPlugin } from './src/build/dev.ts';
 import { siteBuildPlugin } from './src/build/plugin.ts';
 import { serverPort, serverUrl } from './src/config.ts';
-import { isWispRequest, wispOptions } from './src/server/wisp.ts';
 
 export default defineConfig({
 	base: serverUrl.pathname,
@@ -12,11 +10,7 @@ export default defineConfig({
 	plugins: [
 		siteBuildPlugin(),
 		siteDevPlugin(),
-		wispurrVite({
-			path: (req: { url?: string | null }) => isWispRequest(req.url),
-			config: wispOptions,
-			apply: 'serve',
-		}),
+		finalwispDevPlugin(),
 		solid({ ssr: true }),
 	],
 	server: {

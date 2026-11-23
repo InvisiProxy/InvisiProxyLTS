@@ -31,11 +31,6 @@ const vendorDirs: [prefix: string, dir: string, files: string[]][] = [
 		modulePath('@mercuryworkshop/scramjet-controller/dist'),
 		['controller.api.js', 'controller.inject.js', 'controller.sw.js'],
 	],
-	[
-		'scram',
-		modulePath('@mercuryworkshop/scramjet-utils/dist'),
-		['scramjet-utils.js'],
-	],
 ];
 
 const clientScript = (name: string): SiteFile => ({

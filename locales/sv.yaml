@@ -315,6 +315,8 @@ settings:
       nord: Nord-aktigt
     autocomplete: Autokomplettering
     autocompleteDescription: Visa proxyade sökförslag.
+    serverRestart: Omstartsfråga för servern
+    serverRestartDescription: Visa omstartsfrågan när proxyn inte kan nås. Stäng av för att låta dina flikar fungera offline.
 
   privacy:
     title: Integritet
@@ -392,7 +394,7 @@ footer:
   about: Om
   solidjs: SolidJS - Enkel och effektiv reaktivitet för att bygga användargränssnitt.
   vite: Vite - Nästa generations frontendverktyg.
-  wispurr: Högpresterande och funktionsrik Wisp v1/v2-server skriven i Golang.
+  finalwisp: Finalwisp - Den snabbaste Wisp-servern för Linux. En enda statisk binär, skriven i Rust.
   nord: Nord Theme - En arktisk, nordiskt blåaktig färgpalett.
   scramjet: Scramjet - Scramjet är en mångsidig webbproxy gjord för att kringgå internetcensur.
   wisp: Wisp - Wisp är ett resurssnålt protokoll som är enkelt att implementera, för att proxya flera TCP/UDP-sockets över en enda websocket.
@@ -915,14 +917,16 @@ docs:
       inbyggda.
     caddyWarning: >-
       Av säkerhetsskäl, använd SNÄLLA NGINX och inte Caddy när du hostar bakom en
-      reverse proxy. Det beror på att wispurr använder loopback. Om du använder
+      reverse proxy. Det beror på att finalwisp använder loopback. Om du använder
       Caddy, stäng av den här funktionen eller justera din standardkonfiguration
       för Caddy.
     resources: 'Resurser för självhosting:'
   commands:
-    pm2Config: >-
-      Redigera config.js och sätt production till true om du vill använda pm2
-      (gör VPS-hosting enklare)
+    pm2Config: Installera beroendena och hämta blockeringslistorna
+    finalwisp: >-
+      Installera finalwisp, Wisp-servern proxyn behöver för att öppna anslutningar
+    pm2Finalwisp: >-
+      Produktion: finalwisp-instanserna, en per region, under pm2 också
     pm2: användning av pm2-daemon
     restart: Eller vid efterföljande användning...
     kill: För att avsluta produktionsprocesser som skapats med pm2
@@ -946,8 +950,8 @@ docs:
       Om du vill självhosta behöver du först en VPS eller hostingleverantör:
     dependencies: Beroenden
     dependenciesBody: >-
-      Sedan behöver du installera git, musl, nginx (eller caddy) och Node.js.
-      Här är ett exempel för Ubuntu LTS:
+      Sedan behöver du installera git, nginx (eller caddy), Node.js och
+      finalwisp-binären (Wisp-servern). Här är ett exempel för Ubuntu LTS:
     tor: Tor-stöd (valfritt)
     configure: Konfigurera InvisiProxy
     configureBody: >-
@@ -956,9 +960,9 @@ docs:
     configureMore: 'Konfigurera sedan efter behov:'
     run: Klona och kör InvisiProxy
     runBody: >-
-      Kör sedan respektive process; om du har satt production till true i
-      konfigurationen aktiveras pm2 automatiskt med vårt eget
-      worker-/cachesystem.
+      Kör sedan respektive process; sajten startar under pm2 med vårt eget
+      worker-/cachesystem, och manageWisp (standard) låter sajtens process köra
+      finalwisp-instanserna själv:
     restart: Om du använde NGINX eller caddy, starta sedan om eller ladda om det
   config:
     title: Konfiguration
@@ -966,7 +970,7 @@ docs:
     port: >-
       Standardporten för proxyn när den startas är
       <code>http://localhost:8080</code>. Du kan ändra porten och andra
-      produktionsvärden vid behov i <code>./ecosystem.config.js</code>.
+      övriga inställningar vid behov i <code>./config.json</code>.
     local: >-
       Alla andra lokala ändringar för källrandomisering, automatisk minifiering
       m.m. finns i <code>./config.json</code>.
@@ -978,9 +982,15 @@ docs:
         Aktivera experimentell randomisering av proxyns globala variabler för
         Ultraviolet. Det minskar risken att UV upptäcks av tilläggsbaserade
         filter.
-      production: >-
-        Använd en förkonfigurerad produktionsuppsättning för serverhosting.
-        Cachekontroll och omskrivning av källkod ställs in automatiskt.
+      manageWisp: >-
+        När true (standard) startar och övervakar sajtens process
+        finalwisp-instanserna själv. Ställ in false för nginx + pm2-uppsättningen,
+        där nginx dirigerar Wisp till pm2-hanterade instanser (se FINALWISP.md),
+        och en ombyggnad av sajten slipper Wisp-sessionerna.
+      dns: >-
+        Hur finalwisp-instanserna slår upp värdnamn: resolve (standard) för
+        finalwisps egna resolver, lookup för systemets, eller en leverantör som
+        nextdns:xxx / xxx.dns.nextdns.io som frågas direkt.
       disguiseFiles: >-
         Aktivera DOM-maskering som döljer de riktiga innehållshämtningarna för
         InvisiLTS. Det sker genom att förklä förfrågningar, packa upp och sedan
@@ -1389,6 +1399,7 @@ frame:
   searchPlaceholder: Skriv en URL eller sök...
   loading: Laddar webbproxyn...
   restarting: Servern startar om, vänta lite. Det hjälper till att slumpa källkoden...
+  continueOffline: Fortsätt offline
   title: Surfning
   tabs: Proxyflikar
   newTab: Ny flik

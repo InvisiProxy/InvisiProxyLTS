@@ -207,7 +207,7 @@ function environments(): Record<string, EnvironmentOptions> {
 		},
 		ssr: {
 			consumer: 'server',
-			resolve: { external: ['send', 'wispurr', 'dlpcc'] },
+			resolve: { external: ['send', 'dlpcc'] },
 			build: {
 				outDir: serverDir,
 				emptyOutDir: true,

@@ -28,8 +28,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install musl runtime (wispurr moments)
-        run: sudo apt-get update && sudo apt-get install -y musl
+      - name: Install finalwisp (wisp server)
+        run: |
+          V=v1.5.0
+          curl -sLO https://github.com/theogbob/finalwisp/releases/download/$V/finalwisp-$V-x86_64-linux.tar.gz
+          curl -sLO https://github.com/theogbob/finalwisp/releases/download/$V/SHA256SUMS
+          tar -xzf finalwisp-$V-x86_64-linux.tar.gz
+          sha256sum -c SHA256SUMS
+          sudo install -m 0755 finalwisp-$V-x86_64-linux/finalwisp /usr/local/bin/finalwisp
+          finalwisp --version
 
       - name: Build libraries
         run: pnpm run build

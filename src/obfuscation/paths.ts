@@ -83,7 +83,6 @@ export function getPathAliases(): Record<string, string> {
 		'controller.api.js',
 		'controller.inject.js',
 		'controller.sw.js',
-		'scramjet-utils.js',
 		'fa-brands-400.woff2',
 		'fa-regular-400.woff2',
 		'fa-solid-900.woff2',

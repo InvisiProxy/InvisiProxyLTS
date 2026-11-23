@@ -5,6 +5,7 @@ This will be our nonexhaustive todo list for InvisiProxy LTS v8.x.x and above. R
 - [ ] Update Scramjet to V3
 - [ ] Finish translations
 - [ ] Implement Rammerhead v1.3.1
+- [x] Swap to finalwisp over wispurr for security and performance - done (see FINALWISP.md)
 
 ## Proxy/Site Functionality
 - [ ] Add Chii + ensuring users can access devtools while browsing; or utilize Scramjet playground instead

@@ -1,6 +1,7 @@
 import { randomInt } from 'node:crypto';
 import ts from 'typescript';
 import { decodeSource, encodeSource } from '../browser/proxy-codec.ts';
+import { scramjetTokens } from './scramjet-signatures.ts';
 
 function paramName(used: Set<string>) {
 	const alphabet = 'abcdefghijklmnopqrstuvwxyz';
@@ -13,6 +14,13 @@ function paramName(used: Set<string>) {
 	used.add(name);
 	return name;
 }
+
+// Their names must match the WASM's scrubbed copies, so they come from the
+// shared tokens instead of paramName().
+const wasmQueryParams: Record<string, string> = {
+	isModule: '%24module',
+	initiatorOrigin: '%24io',
+};
 
 function isQueryParam(node: ts.Expression) {
 	return (
@@ -42,18 +50,33 @@ export function hideScramjetParams(source: string, key: string): string {
 					ts.isPropertyAssignment(property) &&
 					property.name.getText(file) === 'initiatorOrigin'
 			)
-		)
-			for (const property of node.properties)
+		) {
+			const wasmName = (property: ts.PropertyAssignment) =>
+				wasmQueryParams[property.name.getText(file)];
+			for (const property of node.properties) {
 				if (
-					ts.isPropertyAssignment(property) &&
-					ts.isStringLiteral(property.initializer) &&
-					property.initializer.text.startsWith('$')
+					!ts.isPropertyAssignment(property) ||
+					!ts.isStringLiteral(property.initializer) ||
+					!property.initializer.text.startsWith('$')
 				)
-					renames.push({
-						start: property.initializer.getStart(file),
-						end: property.initializer.end,
-						value: JSON.stringify(paramName(used)),
-					});
+					continue;
+				const hardcoded = wasmName(property);
+				let value: string;
+				if (hardcoded) {
+					value = scramjetTokens().names?.[hardcoded];
+					if (!value)
+						throw new Error(
+							`Missing obfuscation token for query parameter ${hardcoded}`
+						);
+				} else value = paramName(used);
+				used.add(value);
+				renames.push({
+					start: property.initializer.getStart(file),
+					end: property.initializer.end,
+					value: JSON.stringify(value),
+				});
+			}
+		}
 		if (
 			ts.isCallExpression(node) &&
 			ts.isPropertyAccessExpression(node.expression) &&

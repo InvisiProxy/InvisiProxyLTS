@@ -61,6 +61,27 @@
 	margin: 0 auto 0 auto;
 }
 
+/* Only shown while the server is unreachable. */
+.loader-dismiss {
+	display: none;
+}
+
+.loader-restarting .loader-dismiss {
+	display: inline-block;
+	background: none;
+	border: 1px solid #ff919369;
+	border-radius: 10px;
+	color: #fff;
+	font-size: 1rem;
+	padding: 8px 18px;
+	cursor: pointer;
+}
+
+.loader-restarting .loader-dismiss:hover,
+.loader-restarting .loader-dismiss:focus-visible {
+	background: #ff91931f;
+}
+
 @keyframes rotation {
 	0% {
 		transform: rotate(0deg);

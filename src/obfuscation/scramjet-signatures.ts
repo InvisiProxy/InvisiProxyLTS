@@ -40,6 +40,8 @@ const memberNames = [
 	'setWasm',
 	'defaultConfig',
 	'flagEnabled',
+	// Fingerprints the exact proxy build to any page that finds the global.
+	'versionInfo',
 ];
 
 // Exact strings proxied pages can see: rewriter globals on window, element
@@ -81,6 +83,10 @@ const literalNames = [
 	'$controller$swrevive',
 	'$sw$setCookieDone',
 	'$sw$initRemoteTransport',
+	// Cross-realm: pages in a frame can probe Symbol.for for it.
+	'controller frame handle',
+	// The controller↔service-worker RPC channel prefix.
+	'tabchannel-',
 ];
 // Also built into the WASM rewriter, where a name has to keep its length.
 const wasmNames = [
@@ -88,6 +94,10 @@ const wasmNames = [
 	'$scramitize',
 	'$scramerr',
 	'rewriter',
+	// Query params hardcoded onto rewritten module URLs; hideScramjetParams
+	// renames the JS side to the same tokens.
+	'%24module',
+	'%24io',
 ];
 
 export interface ScramjetTokens {
@@ -95,9 +105,8 @@ export interface ScramjetTokens {
 	scram: string;
 	wrapper: string;
 	// Separate tokens so the globals don't form the telltale
-	// `$x`, `$xController`, `$xUtils` trio.
+	// `$x`, `$xController` pair.
 	controller: string;
-	utils: string;
 	members: Record<string, string>;
 	names: Record<string, string>;
 }
@@ -118,7 +127,6 @@ export function scramjetTokens(): ScramjetTokens {
 			scram: 'scram',
 			wrapper: 'invisiScramjet',
 			controller: 'scramjetController',
-			utils: 'scramjetUtils',
 			members: {},
 			names: {},
 		};
@@ -135,7 +143,6 @@ export function scramjetTokens(): ScramjetTokens {
 			scram: identifier(5),
 			wrapper: identifier(8),
 			controller: identifier(8),
-			utils: identifier(8),
 			members: Object.fromEntries(
 				memberNames.map((name) => [name, identifier(6)])
 			),
@@ -175,7 +182,7 @@ const capitalize = (token: string) => token[0].toUpperCase() + token.slice(1);
 
 export function scrubScramjetSignatures(source: string): string {
 	if (config.usingSEO) return source;
-	const { core, scram, wrapper, controller, utils, members, names } =
+	const { core, scram, wrapper, controller, members, names } =
 		scramjetTokens();
 	let output = realCacheKeys(source);
 	for (const [name, token] of byLength(names))
@@ -185,7 +192,6 @@ export function scrubScramjetSignatures(source: string): string {
 	output = output
 		.replaceAll('$invisiScramjet', `$${wrapper}`)
 		.replaceAll('$scramjetController', `$${controller}`)
-		.replaceAll('$scramjetUtils', `$${utils}`)
 		.replaceAll('$scramjet', `$${core}`)
 		.replaceAll('scramjet', core)
 		.replaceAll('Scramjet', capitalize(core))

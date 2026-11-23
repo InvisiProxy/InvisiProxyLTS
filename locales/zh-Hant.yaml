@@ -225,6 +225,8 @@ settings:
       nord: Nord 風格
     autocomplete: 自動補全
     autocompleteDescription: 顯示經代理的搜尋建議。
+    serverRestart: 伺服器重啟提示
+    serverRestartDescription: 無法連線到代理時顯示重啟提示。關閉後，標籤頁在離線時仍可繼續使用。
 
   privacy:
     title: 隱私
@@ -301,7 +303,7 @@ footer:
   about: 關於
   solidjs: SolidJS - 用於構建使用者介面的簡單高效的響應式框架。
   vite: Vite - 下一代前端工具鏈。
-  wispurr: 使用 Golang 實現的高效能、功能豐富的 Wisp v1/v2 伺服器。
+  finalwisp: Finalwisp - Linux 上最快的 Wisp 伺服器。使用 Rust 編寫的單一靜態二進位檔。
   nord: Nord Theme - 一套北極風格的藍色調配色方案。
   scramjet: Scramjet - 一款為繞過網路審查而設計的多功能網頁代理。
   wisp: Wisp - 一種低開銷、易於實現的協定，可透過單個 WebSocket 代理多個 TCP/UDP 套接字。
@@ -607,11 +609,14 @@ docs:
     builtIn: >-
       本網站在本地託管，內建了 <scramjet>Scramjet</scramjet>、<wisp>Wisp</wisp>、<merp>Merp 混淆</merp>、<epoxy>EpoxyTransport</epoxy> 和 <libcurl>LibcurlTransport</libcurl>。
     caddyWarning: >-
-      出於安全考慮，使用反向代理託管時請務必使用 NGINX，而不是 Caddy。這是因為 wispurr 使用了迴環地址。如果使用 Caddy，請禁用此功能或調整 Caddy 的預設配置。
+      出於安全考慮，使用反向代理託管時請務必使用 NGINX，而不是 Caddy。這是因為 finalwisp 使用了迴環地址。如果使用 Caddy，請禁用此功能或調整 Caddy 的預設配置。
     resources: '自託管資源：'
   commands:
-    pm2Config: >-
-      如果你想使用 pm2，請編輯 config.js 並將 production 設定為 true（便於在 VPS 上託管）
+    pm2Config: 安裝相依套件並取得封鎖清單
+    finalwisp: >-
+      安裝 finalwisp——代理用來開啟連線的 Wisp 伺服器
+    pm2Finalwisp: >-
+      正式環境：每個區域一個 finalwisp 實例，同樣交給 pm2 管理
     pm2: 使用 pm2 守護程序
     restart: 或在之後的使用中……
     kill: 用於結束透過 pm2 建立的生產程序
@@ -633,7 +638,7 @@ docs:
       不過，如果你想自託管，首先需要一臺 VPS 或一個託管服務商：
     dependencies: 依賴
     dependenciesBody: >-
-      然後你需要安裝 git、musl、nginx（或 caddy）和 Node.js。以下是 Ubuntu LTS 的示例：
+      然後你需要安裝 git、nginx（或 caddy）、Node.js 以及 finalwisp 二進位檔（Wisp 伺服器）。以下是 Ubuntu LTS 的示例：
     tor: Tor 支援（可選）
     configure: 配置 InvisiProxy
     configureBody: >-
@@ -641,13 +646,13 @@ docs:
     configureMore: '之後按需配置即可：'
     run: 克隆並執行 InvisiProxy
     runBody: >-
-      然後執行相應的程序；如果你在配置中將 production 設為 true，pm2 將與我們自己的 worker/快取系統一起自動啟用。
+      然後執行相應的程序；網站會帶著我們自己的 worker/快取系統在 pm2 下啟動，而 manageWisp（預設開啟）會讓網站行程自行執行 finalwisp 實例：
     restart: 當然，如果你使用了 NGINX 或 caddy，請重啟/重新載入它
   config:
     title: 配置
     server: 伺服器配置設定
     port: >-
-      代理啟動時的預設埠為 <code>http://localhost:8080</code>。如有需要，你可以在 <code>./ecosystem.config.js</code> 中更改埠和其他生產環境引數。
+      代理啟動時的預設埠為 <code>http://localhost:8080</code>。如有需要，你可以在 <code>./config.json</code> 中更改埠和其他設定。
     local: >-
       其他所有本地化更改，如原始碼隨機化、自動壓縮等，都位於 <code>./config.json</code> 中。
     options:
@@ -655,8 +660,14 @@ docs:
         在啟動伺服器時自動壓縮相應的靜態資源。
       randomizeIdentifiers: >-
         為 Ultraviolet 啟用實驗性的代理全域性變數隨機化。這可以降低 UV 被基於擴充套件的過濾器檢測到的機率。
-      production: >-
-        使用預先配置好的生產環境方案進行伺服器託管。自動設定快取控制和原始碼重寫。
+      manageWisp: >-
+        為 true（預設）時，網站行程會自行啟動並看護 finalwisp 實例。使用 nginx +
+        pm2 部署時請設為 false——nginx 會把 Wisp 路由到 pm2 管理的實例（見
+        FINALWISP.md），網站重建也不會再中斷 Wisp 連線。
+      dns: >-
+        finalwisp 實例解析網域名稱的方式：resolve（預設）使用 finalwisp 內建解析器，
+        lookup 使用系統解析器，也可以直接查詢 nextdns:xxx 或
+        xxx.dns.nextdns.io 這類供應商。
       disguiseFiles: >-
         啟用 DOM 偽裝，混淆 InvisiLTS 真實的內容獲取過程。具體做法是偽裝請求、解壓，然後重建 DOM 樹。
       usingSEO: >-
@@ -923,6 +934,7 @@ frame:
   searchPlaceholder: 輸入 URL 或搜尋……
   loading: 正在載入網頁代理……
   restarting: 伺服器正在重啟，請稍候。這有助於隨機化原始碼……
+  continueOffline: 離線繼續
   title: 瀏覽
   tabs: 代理標籤頁
   newTab: 新標籤頁

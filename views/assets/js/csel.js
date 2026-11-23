@@ -468,6 +468,14 @@ if (document.getElementById('csel')) {
     else removeStorage('UseAC');
   });
 
+  // Off: no restart prompt when the server can't be reached.
+  attachClassEventListener('server-restart', 'change', (e) => {
+    if (checkBooleanState(e.target) === false)
+      setStorage('HideRestartPrompt', true);
+    else removeStorage('HideRestartPrompt');
+    if (e.isTrusted) location.reload();
+  });
+
   attachClassEventListener('search-nav-fix', 'change', (e) => {
     if (checkBooleanState(e.target) === true) setStorage('SearchNavFix', true);
     else removeStorage('SearchNavFix');
@@ -841,6 +849,14 @@ useStorageArgs('ErudaEnabled', (s) => {
 useStorageArgs('UseAC', (s) => {
   if (s === false)
     classUpdateHandler(document.getElementsByClassName('useac'), 'off')();
+});
+
+useStorageArgs('HideRestartPrompt', (s) => {
+  if (s === true)
+    classUpdateHandler(
+      document.getElementsByClassName('server-restart'),
+      'off'
+    )();
 });
 
 useStorageArgs('SearchNavFix', (s) => {

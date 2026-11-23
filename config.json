@@ -15,5 +15,7 @@
 	"language": "en",
 	"patreon": false,
 	"dlpcc": false,
-	"dlpccNginx": false
+	"dlpccNginx": false,
+	"dns": "resolve",
+	"manageWisp": true
 }

@@ -10,7 +10,8 @@ module.exports = {
 			autorestart: true,
 			watch: false,
 			restart_delay: 3000,
-			kill_timeout: 5000,
+			// keep this above finalwisp's 30 s drain (+ 2 s)
+			kill_timeout: 35000,
 			time: true,
 			env: {
 				NODE_ENV: 'production',

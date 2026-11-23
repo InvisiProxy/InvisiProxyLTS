@@ -17,7 +17,7 @@ import { loadLanguages, pickLanguage } from './language.ts';
 import { type ClientIp, createLinkDispenser } from './link-dispenser.ts';
 import type { ExternalPages } from './links.ts';
 import { loadRoutes } from './routes.ts';
-import { nonWSRedirect, wispOptions, wispPath } from './wisp.ts';
+import { nonWSRedirect, nonWSResponse, wispPath } from './wisp.ts';
 
 export type SiteHandler = (req: IncomingMessage, res: ServerResponse) => void;
 
@@ -186,7 +186,7 @@ function applyResponseHooks(
 
 export function createSiteHandler({
 	wispRedirect = nonWSRedirect,
-	wispResponse = wispOptions.nonWSResponse,
+	wispResponse = nonWSResponse,
 	clientIp,
 	// Patreon instances are ad-free.
 	ads = config.patreon === true ? () => undefined : createAds(),

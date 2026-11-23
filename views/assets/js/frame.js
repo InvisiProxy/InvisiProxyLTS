@@ -44,6 +44,7 @@ import {
   };
 
   const byId = (id) => document.getElementById(id);
+  const loaderDismiss = () => loader?.getElementsByClassName('loader-dismiss')[0];
   const closedRoot = (host, sheet, ...children) => {
     const root = host.attachShadow({ mode: 'closed' });
     const styles = document.createElement('link');
@@ -81,6 +82,8 @@ import {
   let bundle = null;
   let bookmarks = parseBookmarks(read(localStorage, bookmarksKey));
   let restarting = false;
+  let restartDismissed = false;
+  const restartPrompt = () => setting('HideRestartPrompt') !== true;
 
   const documentOf = (tab) => {
     try {
@@ -133,8 +136,16 @@ import {
       JSON.stringify({ urls: tabs.map((tab) => tab.url), active: tabs.indexOf(active) })
     );
 
-  const syncLoader = () =>
-    loader?.classList.toggle('loader-active', restarting || Boolean(active?.loading));
+  const syncLoader = () => {
+    if (!loader) return;
+    // Dismissed, the restart prompt leaves tabs usable offline.
+    const prompt = restarting && !restartDismissed;
+    loader.classList.toggle('loader-restarting', prompt);
+    loader.classList.toggle(
+      'loader-active',
+      prompt || Boolean(active?.loading)
+    );
+  };
   const syncChip = (tab) => {
     tab.label.textContent = cipherText(titleOf(tab));
     tab.iframe.classList.toggle('proxy-tab-blank', !tab.url);
@@ -494,16 +505,22 @@ import {
       return location.reload();
     if (state === 'down' && !restarting) {
       restarting = true;
+      restartDismissed = false;
       if (loaderText?.dataset.restarting)
         loaderText.textContent = loaderText.dataset.restarting;
       syncLoader();
     }
     setTimeout(watchServer, restarting ? 2000 : 30000);
   };
-  if (!values.development)
+  // Optional: no restart prompt and no watcher reloads while offline.
+  if (!values.development && restartPrompt())
     checkBuild().then((state) => {
       if (state === 'same') setTimeout(watchServer, 30000);
     });
+  loaderDismiss()?.addEventListener('click', () => {
+    restartDismissed = true;
+    syncLoader();
+  });
 
   const start = () => {
     bundle = window.$invisiScramjet;

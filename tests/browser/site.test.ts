@@ -24,10 +24,11 @@ describe('Chromium', () => {
 		const wisp = join(root, 'src/server/wisp.ts');
 		const source = await readFile(wisp, 'utf8');
 		const patched = source
-			.replace('allowDirectIP: false', 'allowDirectIP: true')
-			.replace('allowPrivateIPs: false', 'allowPrivateIPs: true')
-			.replace('ports: [80, 443,', `ports: [${targetPort}, 80, 443,`);
-		assert.ok(patched.includes(`ports: [${targetPort},`));
+			.replace('directIp: false', 'directIp: true')
+			.replace('loopbackIps: false', 'loopbackIps: true')
+			.replace('privateIps: false', 'privateIps: true')
+			.replace('ports: [80, 443]', `ports: [${targetPort}, 80, 443]`);
+		assert.ok(patched.includes(`ports: [${targetPort}, 80, 443]`));
 		await writeFile(wisp, patched);
 		await buildFixture(root);
 		const origin = await startServer(root);

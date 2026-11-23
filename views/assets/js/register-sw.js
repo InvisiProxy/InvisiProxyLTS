@@ -1,5 +1,6 @@
 import { values, route } from 'build:invisiproxy';
 import { renderProxyError } from 'build:invisiproxy-errors';
+import { BareResponse } from '@mercuryworkshop/proxy-transports';
 import {
   openTransport,
   proxyRegions,
@@ -37,6 +38,12 @@ import {
 } from '../../../src/browser/error-page.ts';
 import { proxyCodec } from '../../../src/browser/proxy-codec.ts';
 import { skipHttpCache } from '../../../src/browser/http-cache.ts';
+import {
+  CACHE_NAME,
+  HttpCachePlugin,
+} from '../../../src/browser/scramjet-plugins/http-cache-plugin.ts';
+import { UrlWatcherPlugin } from '../../../src/browser/scramjet-plugins/url-watcher.ts';
+import { CatchEscapedLinksPlugin } from '../../../src/browser/scramjet-plugins/catch-escaped-links.ts';
 (() => {
   const swScope = route("/"),
     swAllowedHostnames = ['localhost', '127.0.0.1'],
@@ -112,9 +119,9 @@ import { skipHttpCache } from '../../../src/browser/http-cache.ts';
   };
 
   const clearHttpCache = async () => {
-    if (typeof $scramjetUtils === 'undefined' || !self.caches) return;
+    if (!self.caches) return;
     try {
-      await caches.delete($scramjetUtils.CACHE_NAME);
+      await caches.delete(CACHE_NAME);
     } catch {}
   };
 
@@ -222,7 +229,7 @@ import { skipHttpCache } from '../../../src/browser/http-cache.ts';
           }
         };
         const replaceBody = (response, body) => {
-          const fixed = $scramjet.BareResponse.fromNativeResponse(
+          const fixed = BareResponse.fromNativeResponse(
             body instanceof Response
               ? body
               : new Response(body, {
@@ -328,13 +335,12 @@ import { skipHttpCache } from '../../../src/browser/http-cache.ts';
       buildSiteFixesPlugin(),
     ];
     if (values.dlpcc) plugins.unshift(buildDlpccPlugin());
-    if (typeof $scramjetUtils === 'undefined') return plugins;
-    plugins.push(buildCacheGuardPlugin(), new $scramjetUtils.HttpCachePlugin());
+    plugins.push(buildCacheGuardPlugin(), new HttpCachePlugin());
 
-    if (onUrl) plugins.push(new $scramjetUtils.UrlWatcherPlugin(onUrl));
+    if (onUrl) plugins.push(new UrlWatcherPlugin(onUrl));
 
     plugins.push(
-      new $scramjetUtils.CatchEscapedLinksPlugin((url) => {
+      new CatchEscapedLinksPlugin((url) => {
         try {
           localStorage.setItem(`${values.storageNamespace}-frame-url`, frameUrlPrefix + url.href);
           localStorage.setItem(`${values.storageNamespace}-open-url`, frameUrlPrefix + url.href);

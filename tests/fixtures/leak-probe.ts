@@ -140,6 +140,35 @@ const mainWorldProbe = async () => {
 	const fetched = await fetch('/data.json')
 		.then((response) => response.url)
 		.catch((error) => `throws: ${error}`);
+	// What the shell page (same-origin parent) lets this frame reach.
+	const parentDom = (() => {
+		try {
+			const doc = parent.document;
+			return {
+				iframes: doc.querySelectorAll('iframe').length,
+				inputs: doc.querySelectorAll('input').length,
+				buttons: doc.querySelectorAll('button').length,
+				frames: parent.length,
+				title: doc.title,
+				sheetCount: doc.styleSheets.length,
+			};
+		} catch (error) {
+			return `blocked: ${(error as Error)?.message}`;
+		}
+	})();
+	const ancestorDescriptor = (() => {
+		try {
+			const descriptor = Object.getOwnPropertyDescriptor(
+				location,
+				'ancestorOrigins'
+			);
+			return descriptor
+				? { configurable: descriptor.configurable, ownGet: !!descriptor.get }
+				: 'not an own property';
+		} catch {
+			return 'throws';
+		}
+	})();
 	return {
 		globals: Object.getOwnPropertyNames(window),
 		symbols: Object.getOwnPropertySymbols(window).map(String),
@@ -257,7 +286,6 @@ const signatureTerms: Record<string, RegExp> = {
 			scramToken: tokens.scram,
 			wrapperToken: tokens.wrapper,
 			controllerToken: tokens.controller,
-			utilsToken: tokens.utils,
 			...Object.fromEntries(
 				Object.entries(tokens.members).map(([name, token]) => [
 					`member:${name}`,

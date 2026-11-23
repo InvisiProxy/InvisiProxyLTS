@@ -133,7 +133,7 @@ export function Head() {
 			<PageDescription content={translate('scramjet.description')} />
 			<ProxyPreloads />
 			<HeadContent />
-			<ScramjetScripts utilities />
+			<ScramjetScripts />
 			<RegisterServiceWorkerScript />
 			<ParticlesScript />
 			<TooltipScripts />

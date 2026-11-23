@@ -45,7 +45,7 @@ export function TooltipScripts() {
 	);
 }
 
-export function ScramjetScripts(props: { utilities?: boolean }) {
+export function ScramjetScripts() {
 	return (
 		<>
 			{/* The DLPCC relay's patch, so every proxied page's WebRTC goes through it. */}
@@ -68,14 +68,6 @@ export function ScramjetScripts(props: { utilities?: boolean }) {
 				data-module=""
 				innerHTML=""
 			/>
-			{props.utilities && (
-				<script
-					src={route('/scram/scramjet-utils.js')}
-					defer={true}
-					data-module=""
-					innerHTML=""
-				/>
-			)}
 		</>
 	);
 }

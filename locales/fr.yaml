@@ -337,6 +337,8 @@ settings:
       nord: Style Nord
     autocomplete: Saisie semi-automatique
     autocompleteDescription: Afficher les suggestions de recherche via le proxy.
+    serverRestart: Invite de redémarrage du serveur
+    serverRestartDescription: Afficher l'invite de redémarrage lorsque le proxy est inaccessible. Désactivez-la pour continuer à utiliser vos onglets hors ligne.
 
   privacy:
     title: Confidentialité
@@ -414,7 +416,7 @@ footer:
   about: À propos
   solidjs: SolidJS - Une réactivité simple et performante pour créer des interfaces utilisateur.
   vite: Vite - L'outillage frontend nouvelle génération.
-  wispurr: Implémentation de serveur Wisp v1/v2 performante et riche en fonctionnalités, écrite en Golang.
+  finalwisp: Finalwisp - Le serveur Wisp le plus rapide pour Linux. Un seul binaire statique, écrit en Rust.
   nord: Nord Theme - Une palette de couleurs arctique aux tons bleutés nordiques.
   scramjet: Scramjet - Scramjet est un proxy web polyvalent conçu pour contourner la censure d'Internet.
   wisp: Wisp - Wisp est un protocole léger et facile à implémenter pour faire passer plusieurs sockets TCP/UDP par un seul websocket.
@@ -980,14 +982,17 @@ docs:
     caddyWarning: >-
       Pour des raisons de sécurité, si vous hébergez derrière un proxy inverse,
       utilisez S'IL VOUS PLAÎT NGINX et non Caddy. Cela vient du fait que
-      wispurr utilise des adresses de bouclage. Si vous utilisez Caddy,
+      finalwisp utilise des adresses de bouclage. Si vous utilisez Caddy,
       désactivez cette fonctionnalité ou ajustez votre configuration Caddy par
       défaut.
     resources: "Ressources pour l'auto-hébergement :"
   commands:
-    pm2Config: >-
-      Modifiez config.js et passez production à true si vous voulez utiliser pm2
-      (facilite l'hébergement sur VPS)
+    pm2Config: Installez les dépendances et récupérez les listes de blocage
+    finalwisp: >-
+      Installez finalwisp, le serveur Wisp dont le proxy a besoin pour ouvrir
+      les connexions
+    pm2Finalwisp: >-
+      Production : les instances finalwisp, une par région, sous pm2 également
     pm2: utilisation du démon pm2
     restart: Ou lors des utilisations suivantes...
     kill: Pour arrêter les processus de production créés avec pm2
@@ -1014,8 +1019,8 @@ docs:
       hébergeur :
     dependencies: Dépendances
     dependenciesBody: >-
-      Vous devrez ensuite installer git, musl, nginx (ou caddy) et Node.js. Voici
-      un exemple pour Ubuntu LTS :
+      Vous devrez ensuite installer git, nginx (ou caddy), Node.js et le binaire
+      finalwisp (le serveur Wisp). Voici un exemple pour Ubuntu LTS :
     tor: Prise en charge de Tor (facultatif)
     configure: Configurer InvisiProxy
     configureBody: >-
@@ -1024,9 +1029,9 @@ docs:
     configureMore: 'Ensuite, configurez selon vos besoins :'
     run: Cloner et lancer InvisiProxy
     runBody: >-
-      Lancez ensuite le processus correspondant ; si production est à true dans
-      la configuration, pm2 sera automatiquement activé avec notre propre
-      système de workers et de cache.
+      Lancez ensuite le processus correspondant ; le site démarre sous pm2 avec
+      notre propre système de workers et de cache, et manageWisp (par défaut)
+      laisse le processus du site gérer lui-même les instances finalwisp :
     restart: Et bien sûr, si vous avez utilisé NGINX ou caddy, redémarrez-le ou rechargez-le
   config:
     title: Configuration
@@ -1035,7 +1040,7 @@ docs:
       Le PORT par défaut du proxy au démarrage est
       <code>http://localhost:8080</code>. Vous pouvez modifier le PORT et
       d'autres paramètres de production si nécessaire dans
-      <code>./ecosystem.config.js</code>.
+      <code>./config.json</code>.
     local: >-
       Toutes les autres modifications locales (randomisation du code source,
       minification automatique, etc.) se trouvent dans
@@ -1048,10 +1053,16 @@ docs:
         Activer la randomisation expérimentale des variables globales du proxy
         pour Ultraviolet. Cela réduit les risques que UV soit détecté par des
         filtres basés sur des extensions.
-      production: >-
-        Utiliser une configuration de production préparée pour l'hébergement
-        sur serveur. Le contrôle du cache et la réécriture du code source sont
-        configurés automatiquement.
+      manageWisp: >-
+        Quand c'est true (par défaut), le processus du site démarre et surveille
+        lui-même les instances finalwisp. Passez-le à false pour l'installation
+        nginx + pm2, où nginx route Wisp vers des instances gérées par pm2 (voir
+        FINALWISP.md) et un rebuild du site ne coupe plus les sessions Wisp.
+      dns: >-
+        Comment les instances finalwisp résolvent les noms d'hôte : resolve
+        (par défaut) pour le résolveur intégré de finalwisp, lookup pour le
+        résolveur du système, ou un fournisseur comme nextdns:xxx /
+        xxx.dns.nextdns.io interrogé directement.
       disguiseFiles: >-
         Activer le DOM Masquerading, qui dissimule les véritables récupérations
         de contenu d'InvisiLTS. Cela se fait en déguisant les requêtes, en les
@@ -1479,6 +1490,7 @@ frame:
   searchPlaceholder: Tapez une URL ou une recherche...
   loading: Chargement du proxy web...
   restarting: Le serveur redémarre, veuillez patienter. Cela aide à rendre le code source aléatoire...
+  continueOffline: Continuer hors ligne
   title: Navigation
   tabs: Onglets du proxy
   newTab: Nouvel onglet

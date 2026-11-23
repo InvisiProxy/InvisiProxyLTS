@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { describe, test, type TestContext } from 'node:test';
+import { finalwispAvailable } from '../../src/server/finalwisp.ts';
 import {
 	buildFixture,
 	fixture,
@@ -37,6 +38,11 @@ async function checkSite(
 	const page = await fetch(origin + settings.pathname);
 	assert.equal(page.status, 200);
 	assert.match(await page.text(), /^<!doctype html>/i);
+	// finalwisp is Linux-only; without it the site still serves.
+	if (!finalwispAvailable()) {
+		t.diagnostic('finalwisp is not installed; skipped the Wisp check.');
+		return;
+	}
 	const socket = new WebSocket(
 		`${origin.replace('http', 'ws')}${settings.pathname}${wisp}/`
 	);

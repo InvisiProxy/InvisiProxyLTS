@@ -222,6 +222,8 @@ settings:
       nord: Nord風
     autocomplete: 自動補完
     autocompleteDescription: プロキシ経由の検索候補を表示します。
+    serverRestart: サーバー再起動のプロンプト
+    serverRestartDescription: プロキシに接続できないときに再起動のプロンプトを表示します。オフにするとオフラインでもタブを使い続けられます。
 
   privacy:
     title: プライバシー
@@ -298,7 +300,7 @@ footer:
   about: 概要
   solidjs: SolidJS - ユーザーインターフェースを構築するための、シンプルで高性能なリアクティビティ。
   vite: Vite - 次世代のフロントエンドツール。
-  wispurr: Golangで実装された、高性能で機能重視のWisp v1/v2サーバー。
+  finalwisp: Finalwisp - Linuxで最速のWispサーバー。Rustで書かれた単一の静的バイナリ。
   nord: Nord Theme - 北極のような、青みがかったカラーパレット。
   scramjet: Scramjet - インターネット検閲を回避するために設計された多機能なWebプロキシ。
   wisp: Wisp - 1つのWebSocket上で複数のTCP/UDPソケットをプロキシするための、低オーバーヘッドで実装しやすいプロトコル。
@@ -604,11 +606,14 @@ docs:
     builtIn: >-
       このWebサイトは、<scramjet>Scramjet</scramjet>、<wisp>Wisp</wisp>、<merp>Merp 難読化</merp>、<epoxy>EpoxyTransport</epoxy>、<libcurl>LibcurlTransport</libcurl>を内蔵してローカルでホストされています。
     caddyWarning: >-
-      セキュリティ上の理由から、リバースプロキシでホストする場合はCaddyではなくNGINXを使用してください。wispurrがループバックを使用するためです。Caddyを使う場合は、この機能を無効にするか、Caddyのデフォルト設定を調整してください。
+      セキュリティ上の理由から、リバースプロキシでホストする場合はCaddyではなくNGINXを使用してください。finalwispがループバックを使用するためです。Caddyを使う場合は、この機能を無効にするか、Caddyのデフォルト設定を調整してください。
     resources: 'セルフホスト用のリソース：'
   commands:
-    pm2Config: >-
-      pm2を使用したい場合は、config.jsを編集してproductionをtrueに設定してください（VPSでのホスティングが簡単になります）
+    pm2Config: 依存関係をインストールし、ブロックリストを取得します
+    finalwisp: >-
+      プロキシが接続を開くために必要なWispサーバー「finalwisp」をインストールします
+    pm2Finalwisp: >-
+      本番環境：リージョンごとのfinalwispインスタンスもpm2で実行します
     pm2: pm2デーモンの利用
     restart: もしくは2回目以降の利用では…
     kill: pm2で作成された本番プロセスを終了するには
@@ -630,7 +635,7 @@ docs:
       セルフホストしたい場合は、まずVPSまたはホスティングプロバイダーが必要です：
     dependencies: 依存関係
     dependenciesBody: >-
-      次に、git、musl、nginx（またはcaddy）、Node.jsをセットアップする必要があります。以下はUbuntu LTSでの例です：
+      次に、git、nginx（またはcaddy）、Node.js、そしてWispサーバーのfinalwispバイナリをセットアップする必要があります。以下はUbuntu LTSでの例です：
     tor: Torのサポート（任意）
     configure: InvisiProxyの構成
     configureBody: >-
@@ -638,13 +643,13 @@ docs:
     configureMore: 'あとは必要に応じて構成してください：'
     run: InvisiProxyのクローンと実行
     runBody: >-
-      その後、該当するプロセスを実行します。構成でproductionをtrueにしている場合、独自のワーカー/キャッシュシステムとともにpm2が自動的に有効になります。
+      その後、該当するプロセスを実行します。サイトは独自のワーカー/キャッシュシステムとともにpm2で起動し、manageWisp（デフォルト）ではサイトのプロセスがfinalwispインスタンスを自ら実行します：
     restart: NGINXまたはcaddyを使用した場合は、もちろん再起動/再読み込みしてください
   config:
     title: 構成
     server: サーバー構成のセットアップ
     port: >-
-      起動時のプロキシのデフォルトポートは<code>http://localhost:8080</code>です。必要に応じて、ポートやその他の本番用の指標を<code>./ecosystem.config.js</code>で変更できます。
+      起動時のプロキシのデフォルトポートは<code>http://localhost:8080</code>です。必要に応じて、ポートやその他の設定を<code>./config.json</code>で変更できます。
     local: >-
       ソースのランダム化や自動ミニファイなど、その他のローカルな変更はすべて<code>./config.json</code>にあります。
     options:
@@ -652,8 +657,14 @@ docs:
         サーバー起動時に、該当する静的アセットを自動的にミニファイします。
       randomizeIdentifiers: >-
         Ultraviolet向けの実験的なプロキシグローバル変数のランダム化を有効にします。拡張機能ベースのフィルターにUVが検出される可能性を下げます。
-      production: >-
-        サーバーホスティング用にあらかじめ構成された本番セットアップを使用します。キャッシュ制御とソースの書き換えが自動で設定されます。
+      manageWisp: >-
+        true（デフォルト）の場合、サイトのプロセスがfinalwispインスタンスを自ら起動・監視します。nginx
+        + pm2構成ではfalseにしてください（nginxがWispをpm2管理のインスタンスへルーティングし、
+        FINALWISP.mdを参照。サイトの再ビルドでWispセッションが切れなくなります）。
+      dns: >-
+        finalwispインスタンスの名前解決方法：resolve（デフォルト）はfinalwisp内蔵のリゾルバー、
+        lookupはシステムのリゾルバー、nextdns:xxx や xxx.dns.nextdns.io のような
+        プロバイダーは直接照会します。
       disguiseFiles: >-
         InvisiLTSの実際のコンテンツ取得を難読化するDOMマスカレードを有効にします。リクエストを偽装し、展開してからDOMツリーを再構築することで実現します。
       usingSEO: >-
@@ -920,6 +931,7 @@ frame:
   searchPlaceholder: URLを入力または検索…
   loading: Webプロキシを読み込み中…
   restarting: サーバーを再起動しています。お待ちください。これはソースのランダム化に役立ちます…
+  continueOffline: オフラインで続行
   title: ブラウジング
   tabs: プロキシのタブ
   newTab: 新しいタブ

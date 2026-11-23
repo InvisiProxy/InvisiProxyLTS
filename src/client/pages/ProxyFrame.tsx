@@ -71,6 +71,14 @@ export default function ProxyFrame() {
 					{translate('frame.loading')}
 				</p>
 				<div class="loader-w"></div>
+				<button
+					type="button"
+					class="loader-dismiss"
+					title={translate('frame.continueOffline')}
+					aria-label={translate('frame.continueOffline')}
+				>
+					{translate('frame.continueOffline')}
+				</button>
 				<LoaderPlacements />
 			</div>
 			<div class="omnibar" id="pr-sj">
@@ -187,7 +195,7 @@ export function Head() {
 			<PageDescription />
 			<ProxyPreloads />
 			<HeadContent />
-			<ScramjetScripts utilities />
+			<ScramjetScripts />
 			<PageScripts registerServiceWorker />
 			<Inline>
 				<script

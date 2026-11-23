@@ -116,6 +116,14 @@ export default function Settings() {
 							class="useac"
 							checked
 						/>
+						<SettingToggle
+							label={translate('settings.browsing.serverRestart')}
+							description={translate(
+								'settings.browsing.serverRestartDescription'
+							)}
+							class="server-restart"
+							checked
+						/>
 					</SettingsSection>
 					<section class="settings-card settings-card-last">
 						<h2 class="cseltitle">
