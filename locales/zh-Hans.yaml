@@ -19,17 +19,17 @@ language:
     - Holy Unblocker LTS
     - Webretro
     - Ruffle
-    - 标签页伪装
+    - 标签页伪装器
     - 搜索
-    - 自由
+    - 自由的
     - 免费
-    - 冲浪
+    - 上网
     - VPN
     - 服务器
     - 网络
     - 连接
     - 隐私
-    - 私密
+    - 私密的
     - 游戏
     - Croxy
     - CroxyProxy
@@ -39,16 +39,15 @@ language:
     - 代理链
     - 审查
     - 防火墙
-    - 防火长城
-    - 匿名
+    - 匿名的
     - 匿名性
     - 封锁
     - 过滤
     - 限制
     - 规避
-    - 隐身
-    - 伪装
+    - 隐蔽
     - 无痕
+    - 伪装
     - Chromebook
     - 学校
     - Libcurl
@@ -58,100 +57,100 @@ language:
     - WebRTC
     - 镜像
     - 代理
-    - 解锁
-    - 解除封锁
+    - 解封
+    - 正在解封
+    - 解封工具
     - 绕过
     - 翻墙
     - Titanium Network
     - Wisp
     - Tor
     - Onion
-    - 洋葱
     - Ultraviolet
     - Scramjet
     - Rammerhead
 
 home:
-  title: InvisiProxy LTS | 免费网页代理 - 绕过过滤并访问被封锁的网站
+  title: InvisiProxy LTS | 免费网页代理 - 突破过滤，访问被封网站
   description: >-
-    InvisiProxy LTS 是一款前沿的网页代理服务，专为绕过网页过滤器和拦截器而设计。无论是客户端还是基于网络的审查，InvisiProxy LTS 都能让你在 Chromebook 等设备上无缝访问被封锁的网站，并进行安全、私密的浏览。借助我们先进的代理方案，轻松突破内容拦截器、Chrome 扩展、防火墙等限制。
+    InvisiProxy LTS 是一款前沿网页代理，帮你绕过网络过滤和封锁。无论客户端限制还是网络审查，都能在 Chromebook 等设备上顺畅访问被封网站，安全私密地上网。内容拦截、Chrome 扩展、防火墙，统统搞定 - 先进代理方案，让你一路畅通。
   ogDescription: >-
-    InvisiProxy LTS 是一款顶级网页代理服务，可绕过网络和浏览器限制，安全访问被封锁的网站。享受安全可靠、功能先进的无缝浏览体验。
+    InvisiProxy LTS 是一款顶级网页代理，轻松绕过网络与浏览器限制，安全访问被封网站。强劲的安全防护、丰富的高级功能，让你畅享顺滑上网体验。
   twitterDescription: >-
-    了解 InvisiProxy LTS——一款出色的网页代理服务，可绕过审查和过滤，安全访问被封锁的网站。非常适合私密浏览，以及在 Chromebook 等设备上突破网络限制。
+    认识 InvisiProxy LTS - 顶级网页代理，绕过审查与过滤，安全访问被封网站。私密浏览、突破网络限制，Chromebook 等设备上都能轻松搞定。
 
   headline: 终结网络审查。
-  tagline: 隐私，触手可及。
-  browseNow: 立即浏览
-  bypassNow: 立即绕过
+  tagline: 隐私保护，触手可及
+  browseNow: 立即上网
+  bypassNow: 立即突破
   donate: 捐赠
-  logoAlt: InvisiProxy 主视觉标志
+  logoAlt: InvisiProxy 首页标志
   terminal:
-    setup: 在生产分支上首次部署时……
-    start: 或日常使用……
-    dev: 用于开发……
+    setup: 首次在生产分支上进行配置时...
+    start: 或典型用途...
+    dev:  用于开发时...
 
   free:
     title: InvisiProxy 是免费的。
     body: >-
-      作为开源项目，你可以轻松 fork 本仓库并自行托管，以获得最大的隐私控制权。与众多其他网页代理服务不同，InvisiProxy 拥有基于 TLS 的端到端加密、浏览历史隔离、在 Chromium 浏览器中的 Tor/Onion 路由、完全透明以及隐私控制。<strong>与其他代理服务不同，我们的官方实例不收集任何用户数据，即使是出于调试目的也不会。</strong><br/>我们使用的开源依赖（Wisp、Libcurl 和 Epoxy）以安全和隐私为核心设计，即使面对恶意的自托管实例，也能确保你的浏览内容保持机密。
+      作为开源项目，你可以轻松 fork 本仓库并自行托管，完全掌控数据隐私。与其他网页代理不同，InvisiProxy 凭借端到端 TLS 加密、浏览隔离机制、Chromium 浏览器中的 Tor/Onion 路由、完全透明的代码架构及自主隐私控制脱颖而出。<strong>与大多数代理服务不同，我们的官方托管实例绝不收集任何用户数据 - 甚至连调试用途都不涉及。</strong><br/>我们的开源依赖项（Wisp、Libcurl 与 Epoxy）在设计上以安全和隐私为核心，确保即便在恶意托管的第三方实例上，你的浏览体验依然保持高度私密。
 
   fast:
     title: InvisiProxy 快速且高度先进。
     body: >-
-      InvisiProxy 提供卓越的网页代理性能。它拥有强大的功能集，包括 reCAPTCHA/Botguard 支持、Tor 网络、SOCKS5 代理链、可自定义的黑名单设置、防泄漏、隐藏历史记录设置，以及通过 Scramjet + Wisp（搭配 Libcurl Transport）实现的广泛网站兼容性。CroxyProxy 或 Proxium 等其他热门服务往往只完成了一半的资源重写工作，会泄漏请求，还存在隐私隐患。本项目还支持代理链等功能，让你的流量经过多个代理转发，进一步提升安全性和匿名性。
+      InvisiProxy 网页代理性能卓越、功能强大：全面支持 reCAPTCHA / Botguard 绕过、Tor 网络接入、SOCKS5 代理链、自定义黑名单、防泄漏机制与历史记录隔离；并通过 Scramjet + Wisp（基于 Libcurl 传输层）实现了极高的站点兼容性。相比之下，CroxyProxy、Proxium 等热门服务往往“治标不治本” - 即便重写了资源，请求依然存在泄漏风险，甚至埋下隐私隐患。此外，本项目还支持多级代理链，可将流量经由多个代理节点层层转发，让安全与匿名性再上一层楼。
 
   practical:
-    title: InvisiProxy 很实用。
+    title: InvisiProxy 实用性强。
     body: >-
-      借助我们的源码随机化，以及 Proxy Transports、Wisp 和 Scramjet 等项目，本项目可提供无缝体验，绕过网页、政府和网络层面的过滤。本项目可对抗中国（GFW——防火长城）、俄罗斯等地使用的过滤器，<strong>无需下载任何软件</strong>。这一切完全通过浏览器中的网站和我们的后端（自托管时则是你自己的后端）实现，让用户即使面对最严厉的审查封锁也能绕过。无需下载任何东西，只需输入 InvisiProxy 的域名即可；若被封锁，可前往 InvisiProxy 官方网站获取镜像，然后匿名浏览。
+      依托我们的源码随机化技术，以及 Proxy Transports、Wisp 和 Scramjet 等底层项目，InvisiProxy 能够提供无缝的访问体验，有效绕过国家级与运营商级的网络审查。无论是面对中国（GFW - 防火长城）还是俄罗斯等地的深度封锁，用户均<strong>无需下载任何客户端软件</strong>。整个代理体验完全在浏览器端（基于 Web）运行，配合我们的后端（或你自托管的后端），即便是面对最具侵入性的网络限制也能轻松穿透。没有任何下载门槛 - 只需在浏览器中输入 InvisiProxy 域名（若被封锁，可前往官网获取镜像），即可开启匿名浏览。
 
-  heroSubtitle: 免费且透明，放心使用
+  heroSubtitle: 免费使用，完全透明
   designedWithPrivacy: 以隐私为核心设计<underline/>。
 
   overview:
     title: 概述
     body: >-
-      InvisiProxy LTS 是一项实验性的网页代理服务，无论审查方式是客户端还是基于网络，都可以绕过网页过滤器或"拦截器"。这包括绕过各国政府设置的内容封锁（中国/GFW、俄罗斯等）、Chrome 扩展、本地客户端防火墙以及与网络相关的过滤器。
+      InvisiProxy LTS 是一款实验性网页代理服务，能够轻松绕过客户端及网络层的各类过滤与封锁。无论是 Chrome 管理扩展、本地客户端防火墙，还是各国政府（如中国 GFW、俄罗斯等）设置的内容拦截与国家级网络审查，InvisiProxy LTS 都能提供顺畅、安全的穿透体验。
     donate: >-
-      请考虑为本项目捐赠，帮助我们保持免费！我们为支持者提供每月更多域名、Beta 测试资格、个人专属域名以及功能请求优先处理。<br/>你可以<patreon>在 Patreon 上捐赠</patreon>。
-    patreonLabel: 在 Patreon 上捐赠
-    imageAlt: 服务器图标
+      请考虑为这个项目捐款，让我们能够继续保持免费！我们提供每月更多域名、内测资格、个人专属域名以及优先功能请求。<br/>你可以在 Patreon 上捐款 <patreon>点此前往 Patreon</patreon>。
+    patreonLabel: 在 Patreon 上捐款。
+    imageAlt: Server Icon
 
   intent:
-    title: 宗旨
+    title: 目的
     body: >-
-      本项目主要作为绕过审查的理想无客户端方案的概念验证。作为安全的网页代理服务，它支持大量网站，同时频繁更新，并注重设计、机制和功能上的细节。
+      本项目主要作为一个概念验证，旨在探索绕过审查的理想无客户端方案。作为一款安全的网页代理服务，它支持众多网站，更新频繁，并在设计、机制和功能上精益求精。
     palette: >-
-      本项目的配色方案基于 <nord>Nord Theme</nord> 构建，因其出色的设计配色，以及对代码语法和 UI 组件可读性的重视。
-    imageAlt: 代码文件图标
+      本项目的配色方案采用 <nord>Nord 主题</nord> 构建，以获得最佳的设计配色，并优先保障代码语法与 UI 组件的可读性。
+    imageAlt: File Code Icon
 
   usage:
-    title: 使用方法
+    title: 用法
     body: >-
-      前往<browse>浏览</browse>页面，选择其中一个代理！然后在搜索框中输入你想访问的网站。每个网页代理在有效性、速度和安全性方面各有不同。推荐使用 Scramjet。<br/><br/>可解锁的网站示例：<code>https://youtube.com</code>
-    imageAlt: 盾牌图标
+      前往 <browse>浏览</browse> 页面，选择其中一个推荐的代理！然后在搜索框中输入你想访问的网站。每个网页代理都有各自的效力、速度和安全性。推荐使用 Scramjet。<br/><br/>要解锁的示例网站：<code>https://youtube.com</code>
+    imageAlt: Shield Icon
 
   apps:
-    title: 应用
+    title: App
     body: >-
-      InvisiProxy 提供一系列预先链接好的应用，包括 YouTube、Spotify、GeForce NOW、Discord、ChatGPT、Gemini 等！
-    imageAlt: 应用图标
+      InvisiProxy 汇集了一系列已预置链接的 App，包括 YouTube、Spotify、GeForce NOW、Discord、ChatGPT、Gemini 等！
+    imageAlt: Application Icon
 
   hosting:
-    title: 托管与部署
+    title: 托管与部署指南 
     body: >-
-      <strong>InvisiProxy LTS</strong> 是一个开源方案，在设计时就考虑了模块化、易用性和便捷部署。主要功能包括广告拦截、灵活的源码生成以及先进的代理导航。<br/><br/>如需完整的部署说明，请访问我们的官方 <github>GitHub 仓库</github>或<docs>此处提供的内置文档</docs>。
+      <strong>InvisiProxy LTS</strong> 是一款开源解决方案，在设计上注重模块化、易用性和便捷部署。主要功能包括广告拦截、灵活的源码生成以及高级代理导航。<br/><br/>如需完整的设置说明，请访问我们的官方 <github>GitHub 仓库</github> 或 <docs>此处内置的文档</docs>。
     docsTitle: 更多托管信息
-    imageAlt: 托管与部署图标
+    imageAlt: Hosting and Deployment Icon
     imageTitle: InvisiProxy LTS 的托管与部署
 
   contributing:
-    title: 参与贡献
+    title: 贡献指南
     body: >-
-      <strong>InvisiProxy LTS</strong> 的蓬勃发展离不开众多优秀贡献者的倾力付出。作为开源项目，<strong>InvisiProxy LTS</strong> 依靠社区的热情来突破网络审查，帮助用户更好地获取信息。
+      <strong>InvisiProxy LTS</strong> 的蓬勃发展，离不开我们优秀贡献者的倾力付出。作为一个开源项目，<strong>InvisiProxy LTS</strong> 依靠社区的热情来绕过网络审查，帮助用户更好地获取信息。
     start: 想要开始贡献，请访问我们的 <github>GitHub 仓库。</github>
-    imageAlt: GitHub 贡献图标
+    imageAlt: Contributing Github Icon
     imageTitle: 在 GitHub 上为 InvisiProxy LTS 做贡献
 
   githubTitle: InvisiProxy LTS GitHub 仓库
@@ -159,20 +158,20 @@ home:
   bypass:
     title: 绕过审查与过滤
     body: >-
-      InvisiProxy LTS 是一个开源的<strong>网页代理项目</strong>。借助我们先进的<strong>网页代理解锁</strong>功能，畅享不受限制的在线内容访问与浏览。本项目还让你能够在任何地方自行托管，并绕过像中国（防火长城——GFW）和俄罗斯这样的全国性或地区性封锁。
+      InvisiProxy LTS 是一款开源<strong>网页代理</strong>，致力于带来自由无界的网络体验。支持自由自托管，助你通过<strong>网页代理解封</strong>功能轻松突破中国（GFW 防火长城）、俄罗斯等严格的国家级网络审查。
 
   freeProxy:
     title: 100% 免费网页代理
     body: >-
-      使用我们的<strong>免费网页代理服务</strong>，帮助你<strong>解锁网站</strong>并访问受限内容。非常适合绕过学校和/或工作场所的过滤，本项目就是为了解锁一切而生。
+      借助<strong>免费网页代理服务</strong>，轻松<strong>解锁网站</strong>与受限内容。无论是校园网还是职场过滤，InvisiProxy 都能轻松穿透，解锁一切限制，带来真正自由的无界网络体验。
 
   tor:
-    title: 在 Chromium 浏览器和 Firefox 中使用 Tor 路由
+    title: 在 Chromium 与 Firefox 浏览器中启用 Tor 路由
     body: >-
-      使用 InvisiProxy LTS，你可以直接在基于 Chromium 或 Firefox 的浏览器中<strong>访问 Tor 网络</strong>。这意味着你可以直接在本网站内访问 <strong>.onion</strong> 网站。这让你能够匿名浏览网页（至少在一定程度上；真正的 Tor 有更好的指纹防护），并绕过任何地区限制。本项目还支持设置自定义 SOCKS5 代理以组成代理链。
+      使用 InvisiProxy LTS，你可以直接在基于 Chromium/Firefox 的浏览器中<strong>访问 Tor 网络</strong>。这意味着你能在本网站内直接访问 <strong>.onion</strong> 站点。这让你能够匿名浏览网页（至少在一定程度上如此；真正的 Tor 拥有更好的指纹防护），绕过任何地区限制。本项目还支持设置自定义 SOCKS5 代理，以实现代理链。
 
-  unrestricted: 免费、不受限制的浏览
-  closing: 是时候自由地浏览互联网了。
+  unrestricted: 免费畅享无限制浏览
+  closing: 是时候，自由上网了。
   tryFree: 免费试用 InvisiProxy
 
 settings:
@@ -181,7 +180,7 @@ settings:
 
   language:
     title: 语言
-    description: 选择网站的语言。"自动"将跟随你的浏览器设置。
+    description: 选择站点语言。"自动"模式将跟随浏览器设置
     automatic: 自动
 
   tab:
@@ -232,8 +231,8 @@ settings:
     title: 隐私
     hideAds: 隐藏广告
     hideAdsDescription: 浏览时拦截广告。
-    blockPopups: Block pop-up ads
-    blockPopupsDescription: Stop our ads from opening new tabs or covering the page. Banner ads still show.
+    blockPopups: 拦截弹窗广告
+    blockPopupsDescription: 阻止我们的广告打开新标签页或遮挡页面。横幅广告仍会显示。
     hideHistory: 隐藏历史记录
     hideHistoryDescription: 不在本地浏览器中留下浏览历史。网络管理方仍可能看到经过伪装的活动。
     preventLeaks: 阻止窗口泄漏
@@ -269,12 +268,12 @@ header:
   donate: 在 Patreon 上支持我们
   overview:
     label: 概述
-    title: 概述 - 了解本站提供的功能
+    title: 概述 - 了解本站提供的内容
   browse:
     label: 浏览
     title: 浏览 - 绕过网络上的限制
   apps:
-    label: 应用
+    label: App
     mobileLabel: 应用程序
     title: 应用程序 - 浏览精选实用应用
   partners:
@@ -301,7 +300,7 @@ footer:
   transports: 传输方式
   services: 服务
   about: 关于
-  solidjs: SolidJS - 用于构建用户界面的简单高效的响应式框架。
+  solidjs: SolidJS - 简单而高效的响应式机制，用于构建用户界面。
   vite: Vite - 下一代前端工具链。
   finalwisp: Finalwisp - Linux 上最快的 Wisp 服务器。使用 Rust 编写的单个静态二进制文件。
   nord: Nord Theme - 一套北极风格的蓝色调配色方案。
@@ -324,7 +323,7 @@ common:
   logoAlt: InvisiProxy 标志
   advertisement: 广告
   description: >-
-    InvisiProxy 是一款支持众多网站的安全网页代理服务。绕过过滤，自由享受更安全、更私密的浏览体验，或在 Chromebook 等设备上、在学校或工作场所解锁网站，无需下载任何东西。
+    InvisiProxy 是一款安全高效的网页代理服务，广泛兼容各类网站。无需安装任何客户端，即可轻松绕过网络过滤，畅享更安全、更私密的浏览体验。无论是在 Chromebook 等设备上，还是在校园或工作场所等环境中，都能随时解锁网站。
 
 mirrors:
   toggle: 镜像
@@ -340,92 +339,92 @@ mirrors:
 
 proxySettings:
   donate: >-
-    我们提供高级域名、Beta 功能、家庭宽带 ISP 线路以及更快的速度。你可以在 <patreon>Patreon</patreon> 上捐赠。<br/>如果你在使用服务时遇到困难，请启用 Tor 或地区路由。如果代理有任何问题，请查看<faq>常见问题</faq>页面。
-  title: 代理偏好设置
+    我们为你提供 Premium 高级域名、Beta 早期体验功能、住宅级 ISP 线路以及更高速的连接体验。欢迎通过 <patreon>Patreon</patreon> 赞助支持我们！<br/>如果在使用过程中遇到连接问题，可以尝试开启 Tor 模式或区域路由。如需帮助，请随时参阅 <faq>常见问题（FAQ）</faq> 页面。
+  title: 代理偏好
   connection: 连接
   searchNavFix: 启用网站修复
   searchNavFixDescription: >-
-    使用 The Freedom Project 制作的插件来修复浏览时出现的 "undefined" 等错误。可选。
+    可选用 The Freedom Project 开发的插件，修复浏览过程中出现的“undefined”等错误。
   experimentalSiteFixes: 实验性网站修复
   experimentalSiteFixesDescription: >-
-    手动网站兼容性修复的合集。可能导致网站异常并泄漏真实 IP，使用风险自负。
-  hideHistoryDescription: 隐藏本地浏览历史。网络管理方仍可能嗅探到历史记录，但内容已经过代理。
+    混合了多项手动站点兼容修复。可能导致网站出错并泄漏真实 IP，使用风险自负。
+  hideHistoryDescription: 隐藏本地浏览记录。网络仍能嗅探浏览历史，但该历史已经过代理转发。
   randomizeFingerprint: 随机化浏览器指纹
   randomizeFingerprintDescription: >-
-    每个标签页会话使用一个随机的桌面浏览器，并为 Canvas、WebGL、CPU 和内存读数加入噪声。已选择的用户代理仍然优先。可能导致部分网站异常。
+    每个标签页会话都会随机使用一个桌面浏览器，并为 canvas、WebGL、CPU 及内存读数添加噪声。手动选定的用户代理依然优先生效。可能影响部分网站的正常使用。
   customWisp: 自定义 Wisp 服务器
   customWispDescription: >-
-    让代理流量经过你自己的 Wisp 服务器，以更好地掌控隐私。如果你希望所有流量都经由自托管服务器，这是一种轻量的方式：使用这里的前端，而让相应流量发往你自己的服务器。留空即关闭。
+    将代理流量经由你自己的 Wisp 服务器路由，以便更好地掌控隐私。若想通过自托管路由所有流量，这是一种轻量级方案。可继续使用此处的前端，只将相应流量导向你自己的服务器。留空则关闭此功能。
   invalidWisp: 请输入 ws:// 或 wss:// 地址。
   moreSettings: 查看更多设置
   anotherLink: 需要另一个链接？点击<mirrors>镜像链接按钮</mirrors>。
 
 faq:
   meta:
-    title: InvisiProxy 常见问题 | 网络错误、验证码和 YouTube 修复
+    title: InvisiProxy 常见问题 | 网络错误、验证码与 YouTube
     description: >-
-      遇到网络错误、空白页面、验证码循环或 YouTube 无法加载？这里有 InvisiProxy 最常见问题的解决方法，以及登录网站是否安全的说明。
+      遇到网络错误、空白页面、验证码死循环，或 YouTube 无法加载？这里汇总了 InvisiProxy 最常见问题的解决方法，以及登录网站是否安全。
     social: >-
-      网络错误、空白页面、验证码循环和 YouTube 播放问题的快速修复，以及关于 Discord 支持和安全登录的解答。
+      快速解决网络错误、空白页面、验证码反复出现和 YouTube 播放问题，并解答有关 Discord 支持和登录网站的问题。
   title: 常见问题
   search: 搜索
   searchLabel: 搜索常见问题
   icons:
     question: 如何获取标签页伪装菜单所需的图标 URL？
     bookmarklet: >-
-      前往你想获取图标的网站，然后使用这个书签小工具（将其拖到书签栏）：
+      首先打开你想获取图标的网站，然后使用此小书签（把它拖到书签栏中）：
     button: 查找图标 URL
     copy: >-
       复制书签小工具给出的 URL。然后返回 InvisiProxy，在设置中的图标 URL 处输入该 URL。尽情享用吧！
   networkError:
     question: >-
-      每次使用代理时都出现"Network Error"或网站错误？
+      每次使用时，我都会遇到“Network error”或站点错误。
     answer: >-
-      这是我们现代网页代理的已知问题。由于用户数量众多，标签页通常在约十分钟无活动后会断开连接。只需点击"刷新页面"按钮并重新加载页面即可解决。
+      这是我们现代网页代理的一个已知问题。由于用户量较大，标签页通常在没有活动十分钟后就会断开连接。只需点击“刷新页面”按钮并重新加载页面即可解决。
     note: >-
       这通常发生在你第一次使用代理时。我们会在未来修复此问题。
   bot:
     question: >-
       网站认为我是机器人，导致我无法登录网站或查看内容。
     answer: >-
-      在高峰时段这很常见，因为所有流量都只经过两个 IP。解决方法是通过"地区选择"切换地区，或启用 Tor 路由。你也可以加入我们的 Patreon，使用配备家庭宽带 ISP 的实例来避免此问题。
+      高峰期这种情况很常见，因为所有流量都只走两个 IP。解决办法是通过“区域选择”切换区域，或者开启 Tor 路由。你也可以加入我们的 Patreon，使用带有住宅 ISP 的实例来避开这个问题。
   unreachable:
     question: >-
       我遇到了类似这样的错误："'cdn.example.com' cannot be reached."
     answer: >-
-      重新加载页面。如果第一次没有用，只需使用浏览器的后退按钮，或返回 Scramjet 页面再试一次。
+      刷新页面。如果第一次不管用，直接用浏览器的返回按钮，或者回到 Scramjet 页面再试。
   blank:
     question: 为什么我的网站只加载了一部分或完全空白？
     answer: >-
-      并非所有网站都受支持。这是因为互联网极其广阔，网站使用着各种不同的技术和内容加载方式。如果你在某个特定网站上遇到问题，请在我们的 Discord 服务器或 GitHub 上报告。否则，可以尝试切换我们的代理选项，看看是否有其中一个支持该网站。
+      并非所有网站都能支持。原因很简单：网络世界广阔无垠，各种技术和内容加载方式千差万别。如果某个网站有问题，欢迎在 Discord 服务器或 GitHub 上反馈给我们。也可以试试切换不同的代理选项，看哪个能支持该网站。
   idb:
     question: >-
       我遇到了与 IDB 数据库相关的错误（Scramjet V1 问题）
     answer: >-
-      这通常发生在我们更新项目时。只需点击浏览器左上角的 (i) 图标（或锁形图标），然后选择"清除网站数据"或"Cookie 和网站数据 > 管理设备上的网站数据 > 垃圾桶图标"。这会清除 IndexedDB 数据库，让你可以重新使用代理。
+      这通常在我们更新项目时出现。点击浏览器左上角的 (i) 图标（或锁形图标），选择“清除网站数据”，或者依次点击“清除 Cookie 和网站数据 > 管理网站数据 > 垃圾桶图标”。这样就会清空 IndexedDB 数据库，代理也就能重新使用了。
   discord:
     question: 支持 Discord 吗？
-    answer: 是的，支持 Discord。
+    answer: 我们支持 Discord。
     note: >-
-      不过，免费代理存在一些限制。除非你是自托管或使用小型域名，否则请不要使用你的主账号。
+      不过免费代理也有一些限制。除非你是自托管，或者用的是小型部署，否则最好不要使用自己的主账号。
   youtube:
     question: 为什么 YouTube 视频无法播放？
     answer: >-
-      如果执行上述步骤后问题仍然存在，可能是实例暂时宕机了，尤其是当很多人都遇到同样的问题时。自托管不会出现此问题。
+      如果按上面的步骤操作后问题依然存在，那可能是实例暂时宕机了——如果很多人也遇到同样的问题，就更是如此。自托管的话不会出现这种情况。
     tor: >-
       尝试选择"Tor"选项，这可能会解决问题，但会大幅降低加载速度。
   login:
     question: 登录网站安全吗？
     answer: >-
-      是的，登录网站是安全的。不过，由于大量流量被路由到同一个域名，我们建议你不要登录不信任的网站，也不要使用个人账号。我们通过轮换 IP 来缓解这个问题，但在公共代理上不使用个人账号是一种常识。如果是自托管，则可以放心使用。你也可以加入 Patreon，使用家庭宽带 ISP 来避免此问题。
+      是的，登录网站是安全的。不过我们建议，不要登录你不信任的网站，也尽量别用个人账号，因为大量流量都集中在一个域名上。我们会通过轮换 IP 来缓解这个问题，但公共代理上不用个人账号，本来就是常规操作。如果是自托管，就完全可以放心使用。你也可以加入 Patreon，使用住宅 ISP 来避开这个问题。
   captcha:
     question: >-
       为什么我所在的网站无法正常工作或出现验证码错误？
     answer: >-
-      Scramjet 支持验证码，但需要多次尝试。原因是 Scramjet 往往速度太快，而验证码本身就很不稳定。解决方法就是不断尝试，直到验证通过为止。尽量不要操作得太快。
+      Scramjet 是支持验证码的，不过得反复试才行。原因在于 Scramjet 往往跑得太快，而验证码本身又时灵时不灵。解决办法就是一直尝试解验证码，直到成功。注意不要操作太快。
   youtubeBlank:
     question: >-
-      在任何代理网站上使用 YouTube 时，为什么页面无法完全加载，或者视频一片白？
+      在代理网站上用 YouTube 时，为什么页面加载不全，或者视频直接白屏？
     answer: '有两种方法可以解决：'
     reload: >-
       出现上述错误时，正常重新加载页面应该就能加载视频。
@@ -440,43 +439,43 @@ privacy:
   what:
     title: 什么是 InvisiProxy？
     body: >-
-      InvisiProxy LTS 是一款网页代理服务，帮助你在浏览器内访问可能被网络、政府或政策封锁的网站，无需下载或设置。它以安全的方式实现这一点，并附带额外的隐私功能。在任何浏览器中浏览 Tor/Onion 网站、隐藏浏览活动并绕过过滤。这包括可能绕过政府的内容封锁、Chrome 扩展、本地客户端防火墙以及与网络相关的过滤器。<br/>本项目主要作为绕过审查的理想无客户端方案的概念验证。
+      InvisiProxy LTS 是一款免安装、即开即用的网页代理服务，助你在浏览器内轻松突破各类网络限制、政策过滤与国家级审查。系统在设计上高度注重安全性与隐私保护，不仅能有效隐匿浏览活动、绕过 Chrome 扩展与本地客户端防火墙，还支持在任意浏览器中直接访问 Tor (.onion) 站点。<br/>本项目主要作为一个概念验证（PoC），旨在探索无客户端防审查方案的理想解法。
   data:
     title: 是否收集任何数据？
     body: >-
-      InvisiProxy 本身不会记录或收集你的浏览内容。为保护用户隐私，后端已禁用日志记录。唯一的例外是镜像链接按钮，它会在内存中保存你的 IP 地址几秒钟以防止滥用；该信息绝不会写入磁盘。含广告域名上的广告合作伙伴会收集他们自己的数据，详见下方"广告"部分。NextDNS 查询经过调整，不记录客户端 IP 或域名，并存储在瑞士。NextDNS 对相关数值的日志保留极少，仅用于确保服务顺利运行。鉴于本项目的规模，我们使用 Cloudflare 来提升性能并简化 DNS 管理。Cloudflare 的数值数据仅被最低限度地用于统计访问量和页面浏览量，以判断何时需要升级服务器。NGINX 被设置为不保存任何日志。InvisiProxy LTS 坚守终结网络审查的理念，同时重视用户隐私。除此之外，我们使用 Wisp 协议（用于代理 TCP 连接）配合 libcurl-transport，在 WebAssembly 中运行 SSL/TLS，实现端到端加密。本服务力求尽可能透明，请记住，你随时可以自行托管，确保一切都在你的掌控之中。<br/><br/>如果你希望提出隐私声明或请求，请通过 Discord 联系我们。
+      InvisiProxy LTS 本身绝不会记录或收集你的任何浏览信息，后端已完全禁用日志记录以保障用户隐私。唯一的例外是镜像链接按钮：为了防止恶意滥用，系统仅在内存中将请求 IP 地址暂存数秒，且该信息绝不会写入任何磁盘。在广告支持域名上，第三方广告合作伙伴会按照下文"广告"部分所述自行收集必要的非敏感数据。NextDNS 查询托管于瑞士节点，已配置为不记录客户端 IP 或请求域名，仅保留极短时间的必要运行日志以维持服务稳定。本项目使用 Cloudflare 优化性能并简化 DNS 管理，Cloudflare 仅利用基础访问量与页面浏览量指标数据来评估服务器扩容需求。NGINX Web 服务器已严格设置为零日志模式。InvisiProxy LTS 珍视其终结网络审查的宗旨，同样高度重视用户隐私；在底层传输方面，系统采用 Wisp 协议代理 TCP 连接，并配合 libcurl-transport 直接在 WebAssembly 内运行 SSL/TLS 堆栈，实现真正的端到端加密。本服务始终力求公开透明，且你随时可以自行托管部署，将一切掌控在自己手中。<br/><br/>如果你有任何隐私方面的问询或请求，请通过 [Discord / 邮箱] 与我们联系。
   security:
     title: 安全
     body: >-
-      InvisiProxy LTS 从底层开始构建，旨在为用户提供安全可靠的网页代理服务。InvisiProxy LTS 背后的核心技术之一，是由 Mercury Workshop 开发的全新 Wisp 协议。<br/><br/>与以往的模型相比，该协议带来了多项创新功能和改进，提升了服务的速度和安全性。
+      InvisiProxy LTS 从零构建，致力于提供安全、可靠的网页代理体验。其底层核心技术之一，正是由 Mercury Workshop 推出的全新 Wisp 传输协议。<br/><br/>该协议带来了多项创新功能与增强，相比以往的模式，进一步提升了服务的速度与安全性。
     intro: >-
-      Wisp 协议旨在满足现代网络流量需求，同时保持高安全标准。通过实现 Wisp，本项目获得了以下优势：
+      Wisp 协议旨在应对现代网络流量的需求，同时保持高标准的安全性。通过采用 Wisp，本项目具备以下优势：
     performance: >-
-      性能：Wisp 协议优化了 TCP 数据传输速度，确保用户在浏览时延迟最低。
+      性能：Wisp 协议优化了 TCP 数据传输速度，确保用户在浏览时体验到最低延迟。
     compatibility: >-
-      兼容性：Wisp 与各种网页技术兼容，确保无缝访问各类网站和在线服务。这是通过支持遵循该协议的各种开源传输方式（Libcurl Transport）实现的。
+      兼容性：Wisp 在设计上兼容多种网络技术，确保无缝访问各类网站和在线服务。这得益于对遵循该协议的各种开源传输层（Libcurl Transport）的支持。
     censorship: >-
-      抗审查能力：该协议旨在绕过限制性网络所采用的复杂审查技术，让用户轻松访问被封锁的内容。
+      抗审查能力：该协议旨在绕过限制性网络采用的复杂审查技术，让用户轻松访问被封锁的内容。
     fingerprinting: >-
-      抗指纹识别：本项目在官方实例的反向代理配置中具备强大的抗指纹识别机制。这意味着代理被设计为尽量减少可用于追踪或识别用户的唯一标识符，从而增强隐私。通过遵循行业最佳实践并持续更新方法，用户可以匿名浏览，不留下可识别的痕迹。
+      抗指纹识别：本项目在官方实例的反向代理架构中内置了强大的抗指纹识别机制。这意味着该代理旨在尽可能减少可用于追踪或识别用户的唯一标识符，从而增强隐私保护。通过遵循行业最佳实践并持续更新相关方法，用户可以匿名浏览，而不留下可识别的痕迹。
     transparency: >-
-      透明度：透明是 InvisiProxy LTS 的核心原则。本项目采用开源模式运营，社区可以审查代码库并做出贡献。这种开放性不仅建立了信任，还能通过社区反馈和协作实现持续改进。通过坚持透明的做法，InvisiProxy LTS 确保用户了解他们的数据如何被处理，以及有哪些保护隐私的措施。
+      透明性：透明是 InvisiProxy LTS 的核心原则。本项目以开源模式运作，允许社区审查代码库并为其做出贡献。这种开放不仅有助于建立信任，还能通过社区反馈与协作实现持续改进。通过坚持透明的做法，InvisiProxy LTS 确保用户了解其数据如何处理，以及有哪些措施在保护他们的隐私。
     randomisation: >-
-      源码/全局随机化：为了进一步增强安全性和隐私，InvisiProxy LTS 采用了源码和全局随机化。这让项目能在域名上更长时间不被封锁，同时提升浏览时的匿名性。普通网页代理在重写资源时会留下痕迹，而采用这种方法后，代理更难被检测和封锁。
+      源码/全局随机化：为进一步增强安全性与隐私保护，InvisiProxy LTS 采用了源码随机化与全局随机化。这使项目能够在域名上保持更长时间不被封锁，同时提升浏览时的匿名性。典型的网页代理在重写资源时总会留下痕迹，而采用这种方法后，代理被检测和封锁的难度大大提高。
     encryption: >-
-      加密：InvisiProxy LTS 采用先进的代理技术，专注于端到端加密和安全的数据传输，特别是在 URL 重写代理方面。注意：这仍是一项进行中的大型工作，欢迎贡献。
+      加密：InvisiProxy LTS 采用先进的代理技术，专注于端到端加密与安全数据传输，尤其是在 URL 重写代理的场景中。注意：这部分仍在大量开发中，欢迎参与贡献。
     audits: >-
       定期审计：定期进行安全审计，以发现并修复潜在漏洞。
   advertising:
     title: 广告
     body: >-
-      部分 InvisiProxy 域名会展示广告以支付托管费用。Patreon 实例始终无广告。广告由第三方广告网络投放：Adsterra、Adcash 和 Monetag。广告只会出现在 InvisiProxy 自己的页面和加载界面上，绝不会出现在你通过代理浏览的网站内部。<br/><br/>广告加载时，广告网络会获得你的 IP 地址、浏览器用户代理、你正在访问的域名以及类似的技术信息，并可能设置或读取其自身的 Cookie 或使用类似技术来展示广告、限制展示频率、衡量效果和防止欺诈。这些广告网络可能会在我们的页面上运行它们的代码；它们对你数据的处理受其各自的隐私政策约束，而非我们的。<br/><br/>你可以在 optout.aboutads.info 或 youronlinechoices.eu 选择退出许多广告网络。你也可以使用内容拦截器屏蔽广告，或使用 Patreon 实例。
+      部分 InvisiProxy 域名会展示广告以维持服务器托管成本，Patreon 赞助者的专享节点则始终保持完全无广告。广告均由第三方网络（Adsterra、Adcash 和 Monetag）投放，且仅会出现在 InvisiProxy 本身的页面与加载过渡页上，绝不会植入或干扰你通过代理浏览的任何目标网站。<br/><br/>广告加载时，相关广告网络会获取你的 IP 地址、浏览器 User-Agent、当前访问的域名及其他基础技术参数，并可能通过设置或读取自身的 Cookie 及类似技术来展示广告、控制频次、衡量投放效果与防范欺诈行为。上述广告网络可能会在我们的页面上运行其第三方代码，其对你数据的收集与处理将严格受其自身隐私政策约束，而不适用于本项目的隐私声明。<br/><br/>你可以使用 uBlock Origin 等内容拦截器屏蔽广告，或使用 Patreon 实例。
   usage:
     title: 其他使用说明
     storage: >-
-      InvisiProxy 使用"Cookie"、IndexedDB、localStorage 和 sessionStorage 来维持用户会话（详见下文），并在你的电脑上保存你的偏好设置。所有这些信息都保存在你的设备上，InvisiProxy 不会将其用于任何分析。广告合作伙伴可能会保存他们自己的 Cookie，详见"广告"部分。
+      InvisiProxy 使用“Cookie”、IndexedDB、localStorage 和 sessionStorage 来维持用户会话（详见下文）并在你的电脑上存储你的偏好设置。所有这些信息都保留在你的设备上，InvisiProxy 不会将其用于任何分析用途。广告合作伙伴可能会按照“广告”部分所述存储其自身的 Cookie。
     cookies: >-
-      Cookie 是网站存储在访问者电脑上的一串信息，访问者每次返回时，浏览器都会将其提供给网站。InvisiProxy 使用 Cookie 来确保设置菜单的可用性，以及保存用户偏好。不希望在电脑上存储 Cookie 的用户，应在使用 InvisiProxy 网站前将浏览器设置为拒绝 Cookie，但这样做的缺点是，没有 Cookie、localStorage 或 IndexedDB 的帮助，InvisiProxy 的某些功能将无法正常运行。InvisiProxy 不会出于分析目的使用任何 Cookie、IndexedDB、localStorage 或 sessionStorage 功能；只有以下功能依赖它们在本地存储持久数据：Scramjet（缓存被代理的资源、会话状态等）、标签页、书签、自动补全（经代理）、设置菜单：标签页伪装、图标预设、传输方式选项、搜索引擎、主题、语言、窗口类型、Tor 路由、地区切换、隐藏广告、隐藏历史记录、阻止窗口泄漏、阻止 WebRTC 以及指纹随机化。
+      Cookie 是网站存储在访客电脑上的一串信息，访客每次回访时，浏览器都会将其提供给该网站。InvisiProxy 仅使用 Cookie 及本地存储技术（包含 localStorage、IndexedDB 与 sessionStorage）来保存用户偏好设置并维持“设置”菜单的功能运行，绝不会出于任何分析或追踪目的存储此类数据。你可以将浏览器设置为拒绝 Cookie，但请注意，若缺少 Cookie、localStorage 或 IndexedDB 的支持，本站的某些关键功能将无法正常运作。相关本地存储仅用于在客户端持久化保存各项功能数据，包括：Scramjet 传输引擎（缓存代理资源与会话状态）、标签页、书签、代理自动补全，以及设置菜单中的标签页伪装、图标预设、传输选项、搜索引擎、主题、语言、窗口类型、Tor 路由、区域切换、隐藏广告、隐藏历史、窗口泄漏拦截、WebRTC 阻止与指纹随机化等。
     serviceWorkers: >-
       此外，InvisiProxy 使用 Service Worker 作为我们网页代理的技术。它可以拦截相应的网络流量等，是本项目的核心功能。
     consent: >-
@@ -484,7 +483,7 @@ privacy:
   changes:
     title: 结语
     body: >-
-      虽然大多数变更可能都很小，但 InvisiProxy 可能会不时更改其隐私政策，具体由 InvisiProxy LTS 自行决定。InvisiProxy LTS 鼓励访问者经常查看本页面，了解隐私政策的任何变化。在隐私政策变更后继续使用本网站，即表示你接受该变更。如遇滥用或 DDoS 攻击，InvisiProxy LTS 可能不得不临时记录数据，以缓解攻击并确保服务正常运行。在这种情况下，所有记录的数据将在攻击缓解后立即被安全删除。
+      InvisiProxy LTS 保留在无需事先通知的情况下随时修改本隐私政策的权利（大多数变更通常仅涉及细微调整）。我们建议访客定期查看本页面以获取最新的隐私政策；在本政策更新发布后，你继续使用本网站即视为同意并接受修改后的条款。此外，若遭受恶意滥用或 DDoS 流量攻击，InvisiProxy LTS 可能会临时开启必要的日志记录以缓解攻击并保障服务稳定运行。在此类情况下产生的任何临时数据，均会在攻击被成功拦截后立即安全彻底地删除。
   contact:
     title: 联系方式与致谢
     body: >-
@@ -500,10 +499,10 @@ docs:
     dockerVersion: Docker 镜像版本
     dockerPulls: Docker 拉取次数
   intro: >-
-    <strong>InvisiProxy LTS</strong>（前身为 Holy Unblocker LTS）是一项实验性的网页代理服务，无论审查方式是客户端还是基于网络，都可以绕过网页过滤器或"拦截器"。这包括绕过政府的内容封锁、Chrome 扩展、本地客户端防火墙以及与网络相关的过滤器。本项目甚至可以让你通过一个网站，在任何浏览器（包括 Chromium）中浏览 Tor/Onion 网站！
+    <strong>InvisiProxy LTS</strong>（前身为 Holy Unblocker LTS）是一款实验性网页代理服务。无论是客户端级别的限制还是网络级别的审查，它都能轻松穿透——包括绕过国家级内容封锁、Chrome 管理扩展、本地防火墙及各类网络过滤。更强大的是，它甚至支持在任意浏览器（含 Chromium）中直接访问 Tor (.onion) 站点，这一切只需通过一个网页即可轻松实现！
   star: 给仓库点个 Star 来支持 InvisiProxy 吧！
   about: >-
-    本项目主要作为绕过审查的理想无客户端方案的概念验证。一个很好的使用场景是：当你需要使用 Tor、在浏览时切换地区（或使用外部代理）、无需注册账号即可浏览网站（减少指纹识别）、绕过反广告拦截，以及/或尽量少留下设备活动痕迹时。只需在任意域名上托管本项目，就能拥有一个无需在设备上下载任何东西的 VPN 替代方案。作为安全的网页代理服务，它支持大量网站，更新频繁，并专注于易于自托管。InvisiProxy LTS 可用于大量网站，包括 YouTube、Gemini、ChatGPT、Discord、GeForce NOW 等！与其他网页代理相比，本项目在绕过网页过滤（DOM 伪装和源码随机化）以及各国的全局审查方面，还拥有不少独有功能。目前支持的国家有中国（GFW）和俄罗斯。
+    本项目主要作为一个概念验证（PoC），旨在探索无客户端防审查方案的理想解法。无论是需要访问 Tor 网络、浏览时切换区域（或使用外部代理）、实现无账号匿名浏览（降低指纹识别风险）、绕过反广告拦截，还是尽可能减少本地设备上的活动痕迹，InvisiProxy LTS 都能完美胜任。只需将其部署在任意域名上，即可获得一款无需下载安装任何软件的 VPN 替代方案。作为一款安全高效的网页代理，本项目保持高频更新，广泛兼容包括 YouTube、Gemini、ChatGPT、Discord 和 GeForce NOW 在内的各类主流平台，并提供极简的自托管体验。相比传统网页代理，InvisiProxy LTS 拥有多项独家技术——通过 DOM 伪装与源码随机化技术，轻松穿透局部网络过滤与国家级全局审查（目前已支持中国 GFW 与俄罗斯网络环境）。
   users: >-
     自 2020 年以来已有超过 3000 万用户。非常感谢大家的支持，我从未想过网页代理社区会变得如此庞大。
   branches:
@@ -520,11 +519,11 @@ docs:
   caution:
     title: 注意
     body: >-
-      如果你要自托管 InvisiProxy LTS，请切换到 PRODUCTION 分支，该分支会自动启用过滤规避功能。master 分支包含尚未准备好用于自托管的开发中更改。不过，如果你想为本项目做贡献，请向 master 分支提交 PR。
+      如果你打算自托管 InvisiProxy LTS，请切换到 PRODUCTION 分支，过滤规避功能将自动启用。master 分支包含尚未准备好用于自托管的进行中改动。不过，如果你希望为本项目做出贡献，请向 master 分支提交 PR。
   tip:
     title: 提示
     body: >-
-      InvisiProxy LTS 针对自托管进行了优化，为你提供最大的隐私控制权！fork 本仓库，也欢迎点个 Star。你可以使用免费或付费的部署选项进行自托管，或者将其部署在专用实例（VPS）上以获得更好的性能。
+      InvisiProxy LTS 针对自托管进行了优化，让你最大程度掌控隐私！Fork 本仓库并考虑点个 Star。你可以使用免费或付费的部署方案进行自托管，或将其部署在独立实例（VPS）上以获得更佳性能。
   sites:
     site: 支持的网站
     features: 功能
@@ -609,7 +608,7 @@ docs:
     builtIn: >-
       本网站在本地托管，内置了 <scramjet>Scramjet</scramjet>、<wisp>Wisp</wisp>、<merp>Merp 混淆</merp>、<epoxy>EpoxyTransport</epoxy> 和 <libcurl>LibcurlTransport</libcurl>。
     caddyWarning: >-
-      出于安全考虑，使用反向代理托管时请务必使用 NGINX，而不是 Caddy。这是因为 finalwisp 使用了回环地址。如果使用 Caddy，请禁用此功能或调整 Caddy 的默认配置。
+      出于安全考虑，使用反向代理托管时，请务必使用 NGINX 而非 Caddy。这是因为 finalwisp 会使用回环地址（loopback）。如果使用 Caddy，请禁用此功能，或调整你的默认 Caddy 配置。
     resources: '自托管资源：'
   commands:
     pm2Config: 安装依赖并获取拦截列表
@@ -638,7 +637,8 @@ docs:
       不过，如果你想自托管，首先需要一台 VPS 或一个托管服务商：
     dependencies: 依赖
     dependenciesBody: >-
-      然后你需要安装 git、nginx（或 caddy）、Node.js 以及 finalwisp 二进制文件（Wisp 服务器）。以下是 Ubuntu LTS 的示例：
+      然后你需要安装 git、nginx（或 caddy）、Node.js 以及 finalwisp 二进制文件（Wisp
+      服务器）。以下是 Ubuntu LTS 的示例：
     tor: Tor 支持（可选）
     configure: 配置 InvisiProxy
     configureBody: >-
@@ -646,7 +646,8 @@ docs:
     configureMore: '之后按需配置即可：'
     run: 克隆并运行 InvisiProxy
     runBody: >-
-      然后运行相应的进程；网站会带着我们自己的 worker/缓存系统在 pm2 下启动，而 manageWisp（默认开启）会让网站进程自行运行 finalwisp 实例：
+      然后运行相应的进程；网站会带着我们自己的 worker/缓存系统在 pm2 下启动，而
+      manageWisp（默认开启）会让网站进程自行运行 finalwisp 实例：
     restart: 当然，如果你使用了 NGINX 或 caddy，请重启/重新加载它
   config:
     title: 配置
@@ -666,16 +667,16 @@ docs:
         FINALWISP.md），网站重建也不会再断开 Wisp 会话。
       dns: >-
         finalwisp 实例解析域名的方式：resolve（默认）使用 finalwisp 内置解析器，
-        lookup 使用系统解析器，也可以直接查询 nextdns:xxx 或
-        xxx.dns.nextdns.io 这类提供商。
+        lookup 使用系统解析器，也可以直接查询 nextdns:3192c1 或
+        3192c1.dns.nextdns.io 这类提供商。
       disguiseFiles: >-
         启用 DOM 伪装，混淆 InvisiLTS 真实的内容获取过程。具体做法是伪装请求、解压，然后重建 DOM 树。
       usingSEO: >-
-        启用源码随机化，通过替换 <code>./src/data.json</code> 中指定的数据块来随机化源码。对于掩盖会自动标记或封锁 InvisiProxy LTS 的关键词以及防止源码封锁非常有用。
+        启用源码随机化，它会通过交换 <code>./src/data.json</code> 中指定的数据块来随机化源码。这对于隐藏会自动标记或封锁 InvisiProxy LTS 的关键词非常有用，同时也能防止源码被封锁。
       verbose: >-
         启用编译和构建消息，以便在编译时查看进度和可能出现的问题。
       mirrorLinksFile: >-
-        链接页面分发器使用的仅限服务器端的文件，默认为 <code>private/mirror-links.txt</code>。相对路径以项目根目录为基准解析，也支持绝对路径。每行一个 HTTP(S) URL，并将该文件放在 <code>views/</code> 之外，以免被公开访问。更改此设置后请重启服务器。
+       仅供服务器使用的文件，供链接页面的分发器使用，默认为 <code>private/mirror-links.txt</code>。相对路径从项目根目录解析；也支持绝对路径。每行使用一个 HTTP(S) URL，并将该文件保存在 <code>views/</code> 之外，以免被公开提供。更改此设置后请重启服务器。
       geoLanguage: >-
         使用 Cloudflare 的 <code>CF-IPCountry</code> 请求头启用自动语言选择。仅在 Cloudflare 之后启用此功能，否则任何人都可以伪造该请求头。各语言对应的国家列在每个 <code>./locales/*.yaml</code> 文件的 <code>language.countries</code> 下。
       singleLanguage: >-
@@ -835,7 +836,7 @@ docs:
   closing:
     summary: 以前的停运公告（原文 - 2022 年）
     announcement: >-
-      抱歉，这不是什么好消息。经过反复思考和极度犹豫，我决定关闭 Holy Unblocker 并离开 TN。这件事让我纠结了好几个月，所以才会一直没有更新，去年也出现了很长的空档期。我只是不想放弃一个我热爱、投入了大量时间，并在这里结识了很棒的朋友和厉害的开发者的项目。我可以一直说下去这些人是谁，但就到此为止吧。他们自己知道是谁 :D
+      抱歉，这算不上什么好消息。经过反复思量和极度犹豫，我决定关闭 Holy Unblocker 并离开 TN。这件事我已经纠结了好几个月，所以才有了更新停滞，以及去年出现的那些巨大空档。我只是不想就这样丢掉一个我满怀热情地投入、乐在其中，还因此结识了很棒的朋友、遇到了了不起的开发者的项目。关于这些人是谁，我可以一直说下去，但就先说到这里吧。他们自己心里清楚 :D
     reasons: >-
       想法转变的主要原因是，我终于决定现在就画上句号，因为：1）缺乏动力 2）社区有时并不是最好的，有时也不怎么友善（这点必须说出来） 3）HU/TN 作为项目的前景看起来并不乐观。
     secrets: >-

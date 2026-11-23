@@ -80,8 +80,12 @@ await new Promise<void>((resolve) =>
 	target.listen(targetPort, '127.0.0.1', resolve)
 );
 
-// Everything here runs inside the page, so it must stay self-contained.
-const mainWorldProbe = async () => {
+// Everything here runs inside the page, so it must stay self-contained;
+// `probe` carries the build's obfuscation tokens from the outside.
+const mainWorldProbe = async (probe: {
+	wrapBase: string;
+	clientGlobal: string;
+}) => {
 	const win = window as unknown as Record<string, unknown>;
 	const describe = (fn: unknown) => {
 		try {
@@ -163,10 +167,23 @@ const mainWorldProbe = async () => {
 				'ancestorOrigins'
 			);
 			return descriptor
-				? { configurable: descriptor.configurable, ownGet: !!descriptor.get }
+				? {
+						configurable: descriptor.configurable,
+						ownGet: !!descriptor.get,
+					}
 				: 'not an own property';
 		} catch {
 			return 'throws';
+		}
+	})();
+	const fakeLocation = (win as unknown as Record<string, unknown>)[
+		probe.wrapBase + 'location'
+	] as { ancestorOrigins?: Iterable<string> } | undefined;
+	const fakeAncestorOrigins = (() => {
+		try {
+			return [...(fakeLocation?.ancestorOrigins ?? [])];
+		} catch (error) {
+			return `throws: ${(error as Error).message}`;
 		}
 	})();
 	return {
@@ -196,6 +213,15 @@ const mainWorldProbe = async () => {
 			),
 		},
 		currentScript: (win.__inline as { current?: string })?.current,
+		framing: {
+			topIsSelf: window.top === window.self,
+			parentIsSelf: window.parent === window.self,
+			frameElement: window.frameElement !== null,
+			ancestorOrigins: [...(location.ancestorOrigins ?? [])],
+			ancestorDescriptor,
+			fakeAncestorOrigins,
+			parentDom,
+		},
 		location: {
 			href: location.href,
 			url: document.URL,
@@ -323,7 +349,10 @@ try {
 	const plain = await plainContext.newPage();
 	await plain.goto(`${targetOrigin}/`);
 	await plain.waitForSelector('html[data-leak-ready="1"]');
-	const baseline = await plain.evaluate(mainWorldProbe);
+	const baseline = await plain.evaluate(mainWorldProbe, {
+		wrapBase: '',
+		clientGlobal: '',
+	});
 	await plainContext.close();
 
 	const context = await browser.newContext();
@@ -369,7 +398,10 @@ try {
 	const frame = await tabFrame(page, activeTab);
 	await frame.locator('html[data-leak-ready="1"]').waitFor();
 
-	const proxied = await frame.evaluate(mainWorldProbe);
+	const proxied = await frame.evaluate(mainWorldProbe, {
+		wrapBase: tokens.names['$scramjet__'],
+		clientGlobal: tokens.names['scramjet client global'],
+	});
 	const isolated = await isolatedWorld(page, frame);
 	const known = new Set(baseline.globals);
 	const knownSymbols = new Set(baseline.symbols);
@@ -392,6 +424,7 @@ try {
 		nonNativeFunctions: nonNative,
 		stacks: proxied.stacks,
 		currentScript: proxied.currentScript,
+		framing: proxied.framing,
 		location: proxied.location,
 		fetchedUrl: proxied.fetchedUrl,
 		serviceWorker: proxied.serviceWorker,

@@ -149,8 +149,8 @@ import { CatchEscapedLinksPlugin } from '../../../src/browser/scramjet-plugins/c
       }
       install(frame) {
         super.install(frame);
-        this.tap(frame.hooks.init.post, ({ window: win, client }) =>
-          leakFrame(win, client)
+        this.tap(frame.hooks.init.post, ({ window: win, client, isTopLevel }) =>
+          leakFrame(win, client, isTopLevel)
         );
       }
     })();

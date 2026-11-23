@@ -68,31 +68,36 @@ export const finalwispLimits = {
 // One instance per region ("" is the default); ports must match
 // scripts/wisp-nginx.ts and finalwisp.config.cjs. socks5:// has finalwisp
 // resolve and check the name itself; socks5h:// leaves that to the proxy,
-// which Tor needs for .onion.
+// which Tor needs for .onion. Each port moves on its own env var, so several
+// instances of the site can run their own on the same machine.
 export interface FinalwispRegion {
 	port: number;
 	upstream: string | null;
 	extra: string[];
 }
 export const finalwispRegions = {
-	'': { port: 6001, upstream: null, extra: [] },
+	'': {
+		port: Number(process.env.FINALWISP_PORT ?? 6001),
+		upstream: null,
+		extra: [],
+	},
 	tor: {
-		port: 6002,
+		port: Number(process.env.FINALWISP_TOR_PORT ?? 6002),
 		upstream: 'socks5h://127.0.0.1:9050',
 		extra: ['--connect-timeout', '30', '--dns-threads', '2'],
 	},
 	eu: {
-		port: 6003,
+		port: Number(process.env.FINALWISP_EU_PORT ?? 6003),
 		upstream: 'socks5://127.0.0.1:7000',
 		extra: ['--dns-threads', '4'],
 	},
 	jp: {
-		port: 6004,
+		port: Number(process.env.FINALWISP_JP_PORT ?? 6004),
 		upstream: 'socks5://127.0.0.1:7001',
 		extra: ['--dns-threads', '4'],
 	},
 	patreon: {
-		port: 6005,
+		port: Number(process.env.FINALWISP_PATREON_PORT ?? 6005),
 		upstream: process.env.PATREON_PROXY || 'socks5://127.0.0.1:7002',
 		extra: ['--dns-threads', '4'],
 	},

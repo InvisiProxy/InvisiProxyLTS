@@ -39,7 +39,25 @@ describe('Chromium', () => {
 			INVISIPROXY_TARGET_PORT: String(targetPort),
 			INVISIPROXY_LEAK_REPORT: report,
 		});
-		const { signatures } = JSON.parse(await readFile(report, 'utf8'));
+		const { findings, signatures } = JSON.parse(
+			await readFile(report, 'utf8')
+		);
+		const { framing } = findings;
+		assert.equal(
+			framing.frameElement,
+			false,
+			'window.frameElement must read null in the outermost frame'
+		);
+		assert.equal(
+			framing.parentDom.iframes,
+			0,
+			'the shell tabs must stay inside the closed shadow root'
+		);
+		assert.deepEqual(
+			framing.fakeAncestorOrigins,
+			[],
+			'the fake location must read like a real top-level page'
+		);
 		t.diagnostic(
 			Object.entries(signatures as Record<string, string[]>)
 				.map(([term, hits]) => `${term}: ${hits.length}`)

@@ -115,6 +115,31 @@ The `dns` setting in config.json chooses how the instances resolve hostnames:
 | health checks every 15 s | the managed supervisor keeps them; pm2 restarts a crashed instance under nginx (`curl http://127.0.0.1:6001/` answers 200 for a probe) |
 | `handshakeTimeoutSeconds`, the reputation system (off), frame obfuscation (off) | no finalwisp equivalent; finalwisp's own protections replace them |
 
+## Running more than one instance
+
+Different configs mean different builds: `usingSEO`, `patreon` and the obfuscation settings are baked in at build time, so an SEO variant, the production variant and a Patreon variant each need their own checkout with its own `config.json`, build, port (`PORT`) and pm2 app names (rename the apps in each checkout's `ecosystem.config.cjs`, e.g. `invisiproxy-seo`, so the three do not clash). The integration tests build and serve each of these variants, so the configs themselves are covered.
+
+With `manageWisp` on (the default), each site instance also runs its own finalwisp instances, and those must not fight over ports. Every region port moves on its own with an env var, so several instances of the site can run their own on the same machine. Never edit `src/server/wisp.ts` per instance — it only holds the shared defaults; put the overrides in each checkout's `.env` (loaded before the ports are read) or the pm2 `env` block. `finalwisp.config.cjs` is not involved in this mode: it configures the pm2-managed fleet used with `manageWisp: false`, where one shared fleet (6001-6005) serves every instance:
+
+```sh
+# instance 1 (SEO), in its own checkout — the defaults
+PORT=8081
+# instance 2 (production)
+PORT=8082 FINALWISP_PORT=6101 FINALWISP_TOR_PORT=6102 FINALWISP_EU_PORT=6103 FINALWISP_JP_PORT=6104 FINALWISP_PATREON_PORT=6105
+# instance 3 (patreon; its region proxy comes from PATREON_PROXY)
+PORT=8083 FINALWISP_PORT=6201 FINALWISP_TOR_PORT=6202 FINALWISP_EU_PORT=6203 FINALWISP_JP_PORT=6204 FINALWISP_PATREON_PORT=6205 PATREON_PROXY=socks5h://203.0.113.5:1080
+```
+
+`scripts/wisp-nginx.ts` reads the same table, so generate each instance's nginx routes with the same variables and its own output file:
+
+```sh
+node scripts/wisp-nginx.ts /etc/nginx/snippets/finalwisp-routes.conf
+FINALWISP_PORT=6101 FINALWISP_TOR_PORT=6102 FINALWISP_EU_PORT=6103 FINALWISP_JP_PORT=6104 FINALWISP_PATREON_PORT=6105 \
+	node scripts/wisp-nginx.ts /etc/nginx/snippets/finalwisp-routes-2.conf
+```
+
+Or skip per-instance instances entirely: with `manageWisp: false` on all three, nginx can route every instance's Wisp paths to one shared pm2-managed fleet (finalwisp.config.cjs, ports 6001-6005) — one fleet to watch, and Wisp sessions survive every site rebuild. Note that `pnpm run kill` (`pm2 kill`) stops every pm2 app on the machine; use `pm2 restart/delete <name>` per instance.
+
 ## Restarts and updates
 
 - `pm2 restart finalwisp-eu` (or stop) lets open sessions finish for up to 30 s, then closes them with a normal WebSocket close. `kill_timeout` in `finalwisp.config.cjs` is 35 s for that; keep it above `drain-timeout` + 2 s if you change one.
