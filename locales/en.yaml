@@ -461,6 +461,10 @@ proxySettings:
     Uses a random desktop browser for each tab session and adds noise to
     canvas, WebGL, CPU and memory readings. A chosen user agent still wins.
     May break some sites.
+  proxyVersion: Proxy Version
+  proxyVersionDescription: >-
+    Scramjet V3 (Beta) is the newest release; switch to Scramjet 2.1.0 if a
+    site misbehaves. Switching reloads the page and reconnects your tabs.
   customWisp: Custom Wisp server
   customWispDescription: >-
     Route proxy traffic through your own Wisp server for better privacy control. If you wish to route all your traffic via self-hosting this is a lightweight method. Utilize the frontend here but have respective traffic go to your own servers. Leave empty to turn off.

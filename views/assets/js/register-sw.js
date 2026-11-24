@@ -39,11 +39,14 @@ import {
 import { proxyCodec } from '../../../src/browser/proxy-codec.ts';
 import { skipHttpCache } from '../../../src/browser/http-cache.ts';
 import {
+  selectedScramjetVersion,
+} from '../../../src/browser/scramjet-version.ts';
+import {
   CACHE_NAME,
-  HttpCachePlugin,
+  createHttpCachePlugin,
 } from '../../../src/browser/scramjet-plugins/http-cache-plugin.ts';
-import { UrlWatcherPlugin } from '../../../src/browser/scramjet-plugins/url-watcher.ts';
-import { CatchEscapedLinksPlugin } from '../../../src/browser/scramjet-plugins/catch-escaped-links.ts';
+import { createUrlWatcherPlugin } from '../../../src/browser/scramjet-plugins/url-watcher.ts';
+import { createCatchEscapedLinksPlugin } from '../../../src/browser/scramjet-plugins/catch-escaped-links.ts';
 (() => {
   const swScope = route("/"),
     swAllowedHostnames = ['localhost', '127.0.0.1'],
@@ -59,12 +62,46 @@ import { CatchEscapedLinksPlugin } from '../../../src/browser/scramjet-plugins/c
     transportUrl = route(`/${transportName}/index.mjs`),
     siteFixes = readStorage('ExperimentalSiteFixes') === true;
 
+  // Everything version-specific lives in this table; both builds ship under
+  // their own aliased paths, and the service worker matches the version so
+  // the page and SW always speak the same protocol.
+  const versionName = selectedScramjetVersion(readStorage('ProxyVersion')),
+    scramjetPaths = {
+      v3: {
+        core: route("/scram3/scramjet3.js"),
+        api: route("/scram3/controller3.api.js"),
+        wasm: route("/scram3/scramjet3.wasm"),
+        inject: route("/scram3/controller3.inject.js"),
+        network: route("/scram3/network3/"),
+        sw: "sw.js",
+        swAds: "sw-blacklist.js",
+      },
+      v2: {
+        core: route("/scram/scramjet.js"),
+        api: route("/scram/controller.api.js"),
+        wasm: route("/scram/scramjet.wasm"),
+        inject: route("/scram/controller.inject.js"),
+        network: route("/scram/network/"),
+        sw: "swv2.js",
+        swAds: "swv2-blacklist.js",
+      },
+    },
+    paths = scramjetPaths[versionName];
+  const loadScript = (src) =>
+    new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = () => reject(new Error(`Failed to load ${src}`));
+      document.head.appendChild(script);
+    });
+
   const getTransportOptions = () => ({
     wisp: selectedWisp(storageObject(), transportName, regions, wispBase),
   });
 
   const getSWRoute = () =>
-    route(readStorage('HideAds') !== false ? '/sw-blacklist.js' : '/sw.js');
+    route(readStorage('HideAds') !== false ? paths.swAds : paths.sw);
 
   const unregisterStaleSWs = async () => {
     const expected = new URL(getSWRoute(), location.origin).pathname;
@@ -325,6 +362,13 @@ import { CatchEscapedLinksPlugin } from '../../../src/browser/scramjet-plugins/c
       }
     })();
 
+  // The plugin classes extend the controller's; only after the chosen
+  // version's scripts load (initialize) do the globals exist, so these are
+  // filled in there and read here.
+  let HttpCachePlugin = null;
+  let UrlWatcherPlugin = null;
+  let CatchEscapedLinksPlugin = null;
+
   const buildFramePlugins = (onUrl) => {
     const plugins = [
       buildErrorPagePlugin(),
@@ -352,12 +396,24 @@ import { CatchEscapedLinksPlugin } from '../../../src/browser/scramjet-plugins/c
     return plugins;
   };
 
+  // Load the chosen scramjet version as classic scripts (the controller
+  // bundle assigns its global with a top-level var, which a module import
+  // would scope away), then wire the controller.
   const initialize = async () => {
     try {
       if (window.$invisiScramjet?.ready) {
         window.dispatchEvent(new Event('s-ready'));
         return;
       }
+      await loadScript(paths.core);
+      await loadScript(paths.api);
+      console.log(`Using ${versionName === 'v3' ? 'Scramjet 3.0.0-alpha' : 'Scramjet 2.1.0'} (Proxy Version setting)`);
+      HttpCachePlugin = createHttpCachePlugin($scramjetController.ManagedPlugin);
+      UrlWatcherPlugin = createUrlWatcherPlugin($scramjetController.ManagedPlugin);
+      CatchEscapedLinksPlugin = createCatchEscapedLinksPlugin(
+        $scramjetController.ManagedPlugin,
+        $scramjet.ScramjetHeaders
+      );
 
       const transportOptions = getTransportOptions();
       console.log('Using wisp:', transportOptions.wisp);
@@ -380,10 +436,10 @@ import { CatchEscapedLinksPlugin } from '../../../src/browser/scramjet-plugins/c
         serviceworker,
         transport,
         config: {
-          prefix: route("/scram/network/"),
-          scramjetPath: route("/scram/scramjet.js"),
-          wasmPath: route("/scram/scramjet.wasm"),
-          injectPath: route("/scram/controller.inject.js"),
+          prefix: paths.network,
+          scramjetPath: paths.core,
+          wasmPath: paths.wasm,
+          injectPath: paths.inject,
           codec: proxyCodec(),
         },
         scramjetConfig: {
@@ -444,7 +500,7 @@ import { CatchEscapedLinksPlugin } from '../../../src/browser/scramjet-plugins/c
       if (window.$invisiScramjet?.ready) initialize();
     });
   } else {
-    fetch(route("/scram/scramjet.wasm")).catch(() => {});
+    fetch(paths.wasm).catch(() => {});
     window.$invisiScramjetInitializing = initialize().finally(() => {
       delete window.$invisiScramjetInitializing;
     });

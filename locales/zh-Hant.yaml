@@ -78,7 +78,7 @@ home:
   ogDescription: >-
     InvisiProxy LTS 是一款頂級網頁代理服務，可繞過網路和瀏覽器限制，安全訪問被封鎖的網站。享受安全可靠、功能先進的無縫瀏覽體驗。
   twitterDescription: >-
-    瞭解 InvisiProxy LTS——一款出色的網頁代理服務，可繞過審查和過濾，安全訪問被封鎖的網站。非常適合私密瀏覽，以及在 Chromebook 等裝置上突破網路限制。
+    瞭解 InvisiProxy LTS--一款出色的網頁代理服務，可繞過審查和過濾，安全訪問被封鎖的網站。非常適合私密瀏覽，以及在 Chromebook 等裝置上突破網路限制。
 
   headline: 終結網路審查。
   tagline: 隱私，觸手可及。
@@ -104,7 +104,7 @@ home:
   practical:
     title: InvisiProxy 很實用。
     body: >-
-      藉助我們的原始碼隨機化，以及 Proxy Transports、Wisp 和 Scramjet 等專案，本專案可提供無縫體驗，繞過網頁、政府和網路層面的過濾。本專案可對抗中國（GFW——防火長城）、俄羅斯等地使用的過濾器，<strong>無需下載任何軟體</strong>。這一切完全透過瀏覽器中的網站和我們的後端（自託管時則是你自己的後端）實現，讓使用者即使面對最嚴厲的審查封鎖也能繞過。無需下載任何東西，只需輸入 InvisiProxy 的域名即可；若被封鎖，可前往 InvisiProxy 官方網站獲取鏡像，然後匿名瀏覽。
+      藉助我們的原始碼隨機化，以及 Proxy Transports、Wisp 和 Scramjet 等專案，本專案可提供無縫體驗，繞過網頁、政府和網路層面的過濾。本專案可對抗中國（GFW--防火長城）、俄羅斯等地使用的過濾器，<strong>無需下載任何軟體</strong>。這一切完全透過瀏覽器中的網站和我們的後端（自託管時則是你自己的後端）實現，讓使用者即使面對最嚴厲的審查封鎖也能繞過。無需下載任何東西，只需輸入 InvisiProxy 的域名即可；若被封鎖，可前往 InvisiProxy 官方網站獲取鏡像，然後匿名瀏覽。
 
   heroSubtitle: 免費且透明，放心使用
   designedWithPrivacy: 以隱私為核心設計<underline/>。
@@ -159,7 +159,7 @@ home:
   bypass:
     title: 繞過審查與過濾
     body: >-
-      InvisiProxy LTS 是一個開源的<strong>網頁代理專案</strong>。藉助我們先進的<strong>網頁代理解鎖</strong>功能，暢享不受限制的線上內容訪問與瀏覽。本專案還讓你能夠在任何地方自行託管，並繞過像中國（防火長城——GFW）和俄羅斯這樣的全國性或地區性封鎖。
+      InvisiProxy LTS 是一個開源的<strong>網頁代理專案</strong>。藉助我們先進的<strong>網頁代理解鎖</strong>功能，暢享不受限制的線上內容訪問與瀏覽。本專案還讓你能夠在任何地方自行託管，並繞過像中國（防火長城--GFW）和俄羅斯這樣的全國性或地區性封鎖。
 
   freeProxy:
     title: 100% 免費網頁代理
@@ -353,6 +353,9 @@ proxySettings:
   randomizeFingerprint: 隨機化瀏覽器指紋
   randomizeFingerprintDescription: >-
     每個標籤頁會話使用一個隨機的桌面瀏覽器，併為 Canvas、WebGL、CPU 和記憶體讀數加入噪聲。已選擇的使用者代理仍然優先。可能導致部分網站異常。
+  proxyVersion: 代理版本
+  proxyVersionDescription: >-
+    Scramjet V3（Beta）為最新版本；若某些網站出現異常，可切換到 Scramjet 2.1.0。切換後會重新載入頁面並重連標籤頁。
   customWisp: 自訂 Wisp 伺服器
   customWispDescription: >-
     讓代理流量經過你自己的 Wisp 伺服器，以更好地掌控隱私。如果你希望所有流量都經由自託管伺服器，這是一種輕量的方式：使用這裡的前端，而讓相應流量發往你自己的伺服器。留空即關閉。
@@ -614,7 +617,7 @@ docs:
   commands:
     pm2Config: 安裝相依套件並取得封鎖清單
     finalwisp: >-
-      安裝 finalwisp——代理用來開啟連線的 Wisp 伺服器
+      安裝 finalwisp--代理用來開啟連線的 Wisp 伺服器
     pm2Finalwisp: >-
       正式環境：每個區域一個 finalwisp 實例，同樣交給 pm2 管理
     pm2: 使用 pm2 守護程序
@@ -662,7 +665,7 @@ docs:
         為 Ultraviolet 啟用實驗性的代理全域性變數隨機化。這可以降低 UV 被基於擴充套件的過濾器檢測到的機率。
       manageWisp: >-
         為 true（預設）時，網站行程會自行啟動並看護 finalwisp 實例。使用 nginx +
-        pm2 部署時請設為 false——nginx 會把 Wisp 路由到 pm2 管理的實例（見
+        pm2 部署時請設為 false--nginx 會把 Wisp 路由到 pm2 管理的實例（見
         FINALWISP.md），網站重建也不會再中斷 Wisp 連線。
       dns: >-
         finalwisp 實例解析網域名稱的方式：resolve（預設）使用 finalwisp 內建解析器，

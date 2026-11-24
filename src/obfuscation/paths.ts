@@ -51,10 +51,12 @@ export function getPathAliases(): Record<string, string> {
 	}
 	for (const prefix of [
 		'scram',
+		'scram3',
 		'libcurl',
 		'epoxy',
 		'wisp',
 		'network',
+		'network3',
 		'api',
 		'dlpcc',
 	])
@@ -74,6 +76,8 @@ export function getPathAliases(): Record<string, string> {
 	files.push(
 		'sw.js',
 		'sw-blacklist.js',
+		'swv2.js',
+		'swv2-blacklist.js',
 		'faq-search.js',
 		'particles.js',
 		'tooltips.js',
@@ -84,6 +88,12 @@ export function getPathAliases(): Record<string, string> {
 		'controller.api.js',
 		'controller.inject.js',
 		'controller.sw.js',
+		// Scramjet v3, renamed on copy (see src/build/sources.ts).
+		'scramjet3.js',
+		'scramjet3.wasm',
+		'controller3.api.js',
+		'controller3.inject.js',
+		'controller3.sw.js',
 		'wind.svg',
 		'fa-brands-400.woff2',
 		'fa-regular-400.woff2',

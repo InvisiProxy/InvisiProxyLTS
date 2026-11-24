@@ -456,6 +456,10 @@ proxySettings:
     Använder en slumpad datorwebbläsare för varje flik-session och lägger till
     brus i canvas-, WebGL-, CPU- och minnesvärden. En vald user agent har
     fortfarande företräde. Kan göra att vissa sidor slutar fungera.
+  proxyVersion: Proxy-version
+  proxyVersionDescription: >-
+    Scramjet V3 (Beta) är den senaste utgåvan; byt till Scramjet 2.1.0 om en
+    webbplats krånglar. Byte laddar om sidan och återansluter dina flikar.
   customWisp: Egen Wisp-server
   customWispDescription: >-
     Skicka proxytrafiken genom din egen Wisp-server för bättre kontroll över din

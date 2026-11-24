@@ -4,6 +4,7 @@ import {
 	SettingsSection,
 	SettingToggle,
 	TransportSelect,
+	VersionSelect,
 } from './SettingsControls.tsx';
 
 export default function Settings() {
@@ -54,6 +55,10 @@ export default function Settings() {
 						<TransportSelect
 							id="settings-transport"
 							containerId="transport-setting"
+						/>
+						<VersionSelect
+							id="settings-version"
+							containerId="version-setting"
 						/>
 						<div class="setting-field">
 							<label for="settings-search-engine">

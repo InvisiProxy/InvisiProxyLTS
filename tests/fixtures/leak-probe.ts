@@ -371,6 +371,10 @@ try {
 	page.setDefaultTimeout(60_000);
 	const pageErrors: string[] = [];
 	page.on('pageerror', (error) => pageErrors.push(error.message));
+	const consoleLogs: string[] = [];
+	page.on('console', (message) =>
+		consoleLogs.push(`[${message.type()}] ${message.text().slice(0, 220)}`)
+	);
 	const requests: { url: string; frame: string; type: string }[] = [];
 	page.on('request', (request) =>
 		requests.push({
@@ -385,13 +389,24 @@ try {
 	await page.goto(base);
 	await page.locator(id('dispense-link')).waitFor({ state: 'attached' });
 	await page.goto(route('pages/proxnav/scramjet.html'));
-	await page.waitForFunction(
-		(wrapper) =>
-			(window as unknown as Record<string, { ready?: boolean }>)[
-				`$${wrapper}`
-			]?.ready === true,
-		tokens.wrapper
-	);
+	try {
+		await page.waitForFunction(
+			(wrapper) =>
+				(window as unknown as Record<string, { ready?: boolean }>)[
+					`$${wrapper}`
+				]?.ready === true,
+			tokens.wrapper,
+			{ timeout: 60_000 }
+		);
+	} catch (error) {
+		console.error(
+			'frame never became ready. pageErrors:',
+			JSON.stringify(pageErrors, null, 1),
+			'console:',
+			JSON.stringify(consoleLogs.slice(0, 30), null, 1)
+		);
+		throw error;
+	}
 	const navigationStart = requests.length;
 	await page.locator(id('search-input')).fill(`${targetOrigin}/`);
 	await page.locator(id('search-input')).press('Enter');

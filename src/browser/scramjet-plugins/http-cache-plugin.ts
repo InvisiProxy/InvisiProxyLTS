@@ -48,8 +48,13 @@ import type {
 	ScramjetFetchRequest,
 	ScramjetHeaders,
 } from '@mercuryworkshop/scramjet';
-import { ManagedPlugin } from '@mercuryworkshop/scramjet-controller';
+import type { ManagedPlugin } from '@mercuryworkshop/scramjet-controller';
 import type { Frame } from '@mercuryworkshop/scramjet-controller';
+
+type ManagedPluginCtor = new (
+	name: string,
+	dependencies: string[]
+) => ManagedPlugin;
 
 export const CACHE_NAME = 'scramjet-http-cache-v2';
 
@@ -300,184 +305,206 @@ export interface HttpCachePluginOptions {
  * One instance can be installed onto multiple Frames -- the WeakMap of
  * "did this request come from cache?" book-keeping is per-instance, not
  * per-Frame, so nothing leaks across installs.
+ *
+ * The class is built lazily (see createUrlWatcherPlugin).
  */
-export class HttpCachePlugin extends ManagedPlugin {
-	readonly cacheName: string;
+export function createHttpCachePlugin(ManagedPlugin: ManagedPluginCtor) {
+	return class HttpCachePlugin extends ManagedPlugin {
+		readonly cacheName: string;
 
-	private cachePromise: Promise<Cache> | null = null;
-	// Marks requests whose `earlyResponse` we sourced from the cache, so the
-	// preresponse hook below knows not to re-store them. WeakMap keys are
-	// the request objects so entries clean themselves up automatically.
-	private cameFromCache = new WeakMap<ScramjetFetchRequest, true>();
+		private cachePromise: Promise<Cache> | null = null;
+		// Marks requests whose `earlyResponse` we sourced from the cache, so the
+		// preresponse hook below knows not to re-store them. WeakMap keys are
+		// the request objects so entries clean themselves up automatically.
+		private cameFromCache = new WeakMap<ScramjetFetchRequest, true>();
 
-	constructor(options: HttpCachePluginOptions = {}) {
-		super('scramjet-http-cache', []);
-		this.cacheName = options.cacheName ?? CACHE_NAME;
-	}
-
-	/** Lazy-open the underlying Cache. Memoized for the plugin's lifetime. */
-	private openCache(): Promise<Cache> {
-		if (!this.cachePromise) {
-			this.cachePromise = caches.open(this.cacheName);
+		constructor(options: HttpCachePluginOptions = {}) {
+			super('scramjet-http-cache', []);
+			this.cacheName = options.cacheName ?? CACHE_NAME;
 		}
-		return this.cachePromise;
-	}
 
-	install(frame: Frame): void {
-		super.install(frame);
-
-		const hooks = frame.fetchHandler.hooks.fetch;
-
-		// ----- request: cache lookup --------------------------------------
-		this.tap(hooks.request, async (ctx, props) => {
-			const req = ctx.request;
-			if (!isCacheableMethod(req.method)) return;
-			const reqCache = req.cache as string;
-			// Honour the request's own cache mode where it asks for fresh data.
-			if (reqCache === 'no-store' || reqCache === 'reload') return;
-			// Don't undo an earlyResponse another plugin already set.
-			if (props.earlyResponse) return;
-
-			const cache = await this.openCache();
-			const stored = await cache.match(
-				buildCacheKeyRequest(ctx.parsed.url.href, req.initialHeaders)
-			);
-			if (!stored) {
-				return;
+		/** Lazy-open the underlying Cache. Memoized for the plugin's lifetime. */
+		private openCache(): Promise<Cache> {
+			if (!this.cachePromise) {
+				this.cachePromise = caches.open(this.cacheName);
 			}
+			return this.cachePromise;
+		}
 
-			const storedAt = parseInt(
-				stored.headers.get(STORED_AT_HEADER) ?? '0',
-				10
-			);
-			const cc = parseCacheControl(stored.headers.get('cache-control'));
+		install(frame: Frame): void {
+			super.install(frame);
 
-			const pragmaNoCache = (stored.headers.get('pragma') ?? '')
-				.toLowerCase()
-				.includes('no-cache');
-			const mustRevalidateBeforeUse =
-				cc['no-cache'] === true ||
-				pragmaNoCache ||
-				reqCache === 'no-cache';
+			const hooks = frame.fetchHandler.hooks.fetch;
 
-			const dateMs = (() => {
-				const d = stored.headers.get('date');
-				if (d) {
-					const v = Date.parse(d);
-					if (Number.isFinite(v)) return v;
-				}
-				return storedAt || Date.now();
-			})();
+			// ----- request: cache lookup --------------------------------------
+			this.tap(hooks.request, async (ctx, props) => {
+				const req = ctx.request;
+				if (!isCacheableMethod(req.method)) return;
+				const reqCache = req.cache as string;
+				// Honour the request's own cache mode where it asks for fresh data.
+				if (reqCache === 'no-store' || reqCache === 'reload') return;
+				// Don't undo an earlyResponse another plugin already set.
+				if (props.earlyResponse) return;
 
-			const lifetime = freshnessLifetimeSeconds(
-				stored.headers,
-				cc,
-				dateMs
-			);
-			const age = currentAgeSeconds(stored.headers, storedAt);
-			const fresh =
-				!mustRevalidateBeforeUse && lifetime !== null && age < lifetime;
-
-			// `immutable` short-circuits the freshness check (RFC 8246)
-			// provided the client hasn't asked for a forced revalidation.
-			const immutable =
-				cc.immutable === true &&
-				reqCache !== 'no-cache' &&
-				reqCache !== 'reload';
-
-			if (!fresh && !immutable) {
-				// Stale; fall through to the network. (TODO: 304 revalidation.)
-				return;
-			}
-
-			// Build a BareResponse around the stored bytes/headers and hand
-			// it to doNetworkFetch via earlyResponse. The pipeline will then
-			// run rewriteResponseHeaders/rewriteBody/etc. as if we'd just
-			// fetched it.
-			const headers = strippedHeadersFromStored(stored);
-			// Recompute Age the consumer sees so it isn't stuck at storage
-			// time.
-			if (storedAt) {
-				headers.set(
-					'age',
-					String(Math.floor((Date.now() - storedAt) / 1000))
-				);
-			}
-
-			const isNullBody = NULL_BODY_STATUSES.has(stored.status);
-			const earlyBody = isNullBody ? null : await stored.arrayBuffer();
-
-			const earlyResponse = BareResponse.fromNativeResponse(
-				new Response(earlyBody, {
-					status: stored.status,
-					statusText: stored.statusText,
-					headers,
-				})
-			);
-
-			this.cameFromCache.set(req, true);
-			props.earlyResponse = earlyResponse;
-		});
-
-		// ----- preresponse: cache store -----------------------------------
-		this.tap(hooks.preresponse, async (ctx, props) => {
-			const req = ctx.request;
-			// Skip if this body came back via cache.match -- restoring it
-			// would just rewrite the same bytes with a fresh STORED_AT_HEADER
-			// (resetting the freshness clock).
-			if (this.cameFromCache.has(req)) {
-				this.cameFromCache.delete(req);
-				return;
-			}
-
-			if ((req.cache as string) === 'no-store') return;
-			if (!isCacheableMethod(req.method)) return;
-
-			const headers = nativeHeadersFromRaw(props.response.rawHeaders);
-			if (!responseIsStorable(props.response.status, headers, req.method))
-				return;
-
-			// Drain the stream once and rebuild the BareResponse around the
-			// buffered copy so the rest of doHandleFetch can still read it.
-			const { replacement, bodyBuffer } =
-				await rebuildBareResponseWithBuffer(props.response);
-			props.response = replacement;
-
-			const cacheKey = buildCacheKeyRequest(
-				ctx.parsed.url.href,
-				req.initialHeaders
-			);
-			const toStore = buildStorableResponse(
-				bodyBuffer,
-				props.response.status,
-				props.response.statusText,
-				props.response.rawHeaders
-			);
-
-			try {
 				const cache = await this.openCache();
-				await cache.put(cacheKey, toStore);
-			} catch (err) {
-				// Cache.put can fail on opaque or oddly-headered responses;
-				// don't let a cache write failure break the actual fetch.
-				console.warn('[scramjet-http-cache] cache.put failed:', err);
-			}
-		});
-	}
+				const stored = await cache.match(
+					buildCacheKeyRequest(
+						ctx.parsed.url.href,
+						req.initialHeaders
+					)
+				);
+				if (!stored) {
+					return;
+				}
 
-	/**
-	 * Drop every entry in the HTTP cache. Returns whether the underlying
-	 * Cache existed and was deleted.
-	 */
-	async bust(): Promise<boolean> {
-		try {
-			// Drop the memoized handle too; the next install will re-open
-			// against a fresh empty cache.
-			this.cachePromise = null;
-			return await caches.delete(this.cacheName);
-		} catch (err) {
-			console.error('[scramjet-http-cache] bust failed:', err);
-			return false;
+				const storedAt = parseInt(
+					stored.headers.get(STORED_AT_HEADER) ?? '0',
+					10
+				);
+				const cc = parseCacheControl(
+					stored.headers.get('cache-control')
+				);
+
+				const pragmaNoCache = (stored.headers.get('pragma') ?? '')
+					.toLowerCase()
+					.includes('no-cache');
+				const mustRevalidateBeforeUse =
+					cc['no-cache'] === true ||
+					pragmaNoCache ||
+					reqCache === 'no-cache';
+
+				const dateMs = (() => {
+					const d = stored.headers.get('date');
+					if (d) {
+						const v = Date.parse(d);
+						if (Number.isFinite(v)) return v;
+					}
+					return storedAt || Date.now();
+				})();
+
+				const lifetime = freshnessLifetimeSeconds(
+					stored.headers,
+					cc,
+					dateMs
+				);
+				const age = currentAgeSeconds(stored.headers, storedAt);
+				const fresh =
+					!mustRevalidateBeforeUse &&
+					lifetime !== null &&
+					age < lifetime;
+
+				// `immutable` short-circuits the freshness check (RFC 8246)
+				// provided the client hasn't asked for a forced revalidation.
+				const immutable =
+					cc.immutable === true &&
+					reqCache !== 'no-cache' &&
+					reqCache !== 'reload';
+
+				if (!fresh && !immutable) {
+					// Stale; fall through to the network. (TODO: 304 revalidation.)
+					return;
+				}
+
+				// Build a BareResponse around the stored bytes/headers and hand
+				// it to doNetworkFetch via earlyResponse. The pipeline will then
+				// run rewriteResponseHeaders/rewriteBody/etc. as if we'd just
+				// fetched it.
+				const headers = strippedHeadersFromStored(stored);
+				// Recompute Age the consumer sees so it isn't stuck at storage
+				// time.
+				if (storedAt) {
+					headers.set(
+						'age',
+						String(Math.floor((Date.now() - storedAt) / 1000))
+					);
+				}
+
+				const isNullBody = NULL_BODY_STATUSES.has(stored.status);
+				const earlyBody = isNullBody
+					? null
+					: await stored.arrayBuffer();
+
+				const earlyResponse = BareResponse.fromNativeResponse(
+					new Response(earlyBody, {
+						status: stored.status,
+						statusText: stored.statusText,
+						headers,
+					})
+				);
+
+				this.cameFromCache.set(req, true);
+				props.earlyResponse = earlyResponse;
+			});
+
+			// ----- preresponse: cache store -----------------------------------
+			this.tap(hooks.preresponse, async (ctx, props) => {
+				const req = ctx.request;
+				// Skip if this body came back via cache.match -- restoring it
+				// would just rewrite the same bytes with a fresh STORED_AT_HEADER
+				// (resetting the freshness clock).
+				if (this.cameFromCache.has(req)) {
+					this.cameFromCache.delete(req);
+					return;
+				}
+
+				if ((req.cache as string) === 'no-store') return;
+				if (!isCacheableMethod(req.method)) return;
+
+				const headers = nativeHeadersFromRaw(props.response.rawHeaders);
+				if (
+					!responseIsStorable(
+						props.response.status,
+						headers,
+						req.method
+					)
+				)
+					return;
+
+				// Drain the stream once and rebuild the BareResponse around the
+				// buffered copy so the rest of doHandleFetch can still read it.
+				const { replacement, bodyBuffer } =
+					await rebuildBareResponseWithBuffer(props.response);
+				props.response = replacement;
+
+				const cacheKey = buildCacheKeyRequest(
+					ctx.parsed.url.href,
+					req.initialHeaders
+				);
+				const toStore = buildStorableResponse(
+					bodyBuffer,
+					props.response.status,
+					props.response.statusText,
+					props.response.rawHeaders
+				);
+
+				try {
+					const cache = await this.openCache();
+					await cache.put(cacheKey, toStore);
+				} catch (err) {
+					// Cache.put can fail on opaque or oddly-headered responses;
+					// don't let a cache write failure break the actual fetch.
+					console.warn(
+						'[scramjet-http-cache] cache.put failed:',
+						err
+					);
+				}
+			});
 		}
-	}
+
+		/**
+		 * Drop every entry in the HTTP cache. Returns whether the underlying
+		 * Cache existed and was deleted.
+		 */
+		async bust(): Promise<boolean> {
+			try {
+				// Drop the memoized handle too; the next install will re-open
+				// against a fresh empty cache.
+				this.cachePromise = null;
+				return await caches.delete(this.cacheName);
+			} catch (err) {
+				console.error('[scramjet-http-cache] bust failed:', err);
+				return false;
+			}
+		}
+	};
 }

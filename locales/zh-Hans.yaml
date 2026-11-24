@@ -410,7 +410,7 @@ faq:
   youtube:
     question: 为什么 YouTube 视频无法播放？
     answer: >-
-      如果按上面的步骤操作后问题依然存在，那可能是实例暂时宕机了——如果很多人也遇到同样的问题，就更是如此。自托管的话不会出现这种情况。
+      如果按上面的步骤操作后问题依然存在，那可能是实例暂时宕机了--如果很多人也遇到同样的问题，就更是如此。自托管的话不会出现这种情况。
     tor: >-
       尝试选择"Tor"选项，这可能会解决问题，但会大幅降低加载速度。
   login:
@@ -499,10 +499,10 @@ docs:
     dockerVersion: Docker 镜像版本
     dockerPulls: Docker 拉取次数
   intro: >-
-    <strong>InvisiProxy LTS</strong>（前身为 Holy Unblocker LTS）是一款实验性网页代理服务。无论是客户端级别的限制还是网络级别的审查，它都能轻松穿透——包括绕过国家级内容封锁、Chrome 管理扩展、本地防火墙及各类网络过滤。更强大的是，它甚至支持在任意浏览器（含 Chromium）中直接访问 Tor (.onion) 站点，这一切只需通过一个网页即可轻松实现！
+    <strong>InvisiProxy LTS</strong>（前身为 Holy Unblocker LTS）是一款实验性网页代理服务。无论是客户端级别的限制还是网络级别的审查，它都能轻松穿透--包括绕过国家级内容封锁、Chrome 管理扩展、本地防火墙及各类网络过滤。更强大的是，它甚至支持在任意浏览器（含 Chromium）中直接访问 Tor (.onion) 站点，这一切只需通过一个网页即可轻松实现！
   star: 给仓库点个 Star 来支持 InvisiProxy 吧！
   about: >-
-    本项目主要作为一个概念验证（PoC），旨在探索无客户端防审查方案的理想解法。无论是需要访问 Tor 网络、浏览时切换区域（或使用外部代理）、实现无账号匿名浏览（降低指纹识别风险）、绕过反广告拦截，还是尽可能减少本地设备上的活动痕迹，InvisiProxy LTS 都能完美胜任。只需将其部署在任意域名上，即可获得一款无需下载安装任何软件的 VPN 替代方案。作为一款安全高效的网页代理，本项目保持高频更新，广泛兼容包括 YouTube、Gemini、ChatGPT、Discord 和 GeForce NOW 在内的各类主流平台，并提供极简的自托管体验。相比传统网页代理，InvisiProxy LTS 拥有多项独家技术——通过 DOM 伪装与源码随机化技术，轻松穿透局部网络过滤与国家级全局审查（目前已支持中国 GFW 与俄罗斯网络环境）。
+    本项目主要作为一个概念验证（PoC），旨在探索无客户端防审查方案的理想解法。无论是需要访问 Tor 网络、浏览时切换区域（或使用外部代理）、实现无账号匿名浏览（降低指纹识别风险）、绕过反广告拦截，还是尽可能减少本地设备上的活动痕迹，InvisiProxy LTS 都能完美胜任。只需将其部署在任意域名上，即可获得一款无需下载安装任何软件的 VPN 替代方案。作为一款安全高效的网页代理，本项目保持高频更新，广泛兼容包括 YouTube、Gemini、ChatGPT、Discord 和 GeForce NOW 在内的各类主流平台，并提供极简的自托管体验。相比传统网页代理，InvisiProxy LTS 拥有多项独家技术--通过 DOM 伪装与源码随机化技术，轻松穿透局部网络过滤与国家级全局审查（目前已支持中国 GFW 与俄罗斯网络环境）。
   users: >-
     自 2020 年以来已有超过 3000 万用户。非常感谢大家的支持，我从未想过网页代理社区会变得如此庞大。
   branches:
@@ -613,7 +613,7 @@ docs:
   commands:
     pm2Config: 安装依赖并获取拦截列表
     finalwisp: >-
-      安装 finalwisp——代理用来打开连接的 Wisp 服务器
+      安装 finalwisp--代理用来打开连接的 Wisp 服务器
     pm2Finalwisp: >-
       生产环境：每个区域一个 finalwisp 实例，同样交给 pm2 管理
     pm2: 使用 pm2 守护进程
@@ -663,7 +663,7 @@ docs:
         为 Ultraviolet 启用实验性的代理全局变量随机化。这可以降低 UV 被基于扩展的过滤器检测到的几率。
       manageWisp: >-
         为 true（默认）时，网站进程会自行启动并看护 finalwisp 实例。使用 nginx +
-        pm2 部署时请设为 false——nginx 会把 Wisp 路由到 pm2 管理的实例（见
+        pm2 部署时请设为 false--nginx 会把 Wisp 路由到 pm2 管理的实例（见
         FINALWISP.md），网站重建也不会再断开 Wisp 会话。
       dns: >-
         finalwisp 实例解析域名的方式：resolve（默认）使用 finalwisp 内置解析器，

@@ -88,7 +88,7 @@ Replit is no longer free and Heroku has a set policy against web proxies. Try Gi
 
 ### Docker
 
-The image ships with finalwisp and Tor built in, and the server runs the Wisp instances itself (`manageWisp`), so one container is all it takes. finalwisp supports **x86_64 only** — on an ARM host the build stops with a clear error instead of a silently broken proxy.
+The image ships with finalwisp and Tor built in, and the server runs the Wisp instances itself (`manageWisp`), so one container is all it takes. finalwisp supports **x86_64 Linux only**; no Windows support at this time
 
 ```bash
 docker compose up -d

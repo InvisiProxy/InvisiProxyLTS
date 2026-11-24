@@ -1,8 +1,8 @@
 import { route } from 'build:invisiproxy';
 import { decodeUrl } from '../src/browser/proxy-codec.ts';
-importScripts(route("/scram/controller.sw.js"));
+importScripts(route("/scram3/controller3.sw.js"));
 
-const SJ_CONTROLLER_PREFIX = route("/scram/network/");
+const SJ_CONTROLLER_PREFIX = route("/scram3/network3/");
 
 const blacklist = new Set();
 fetch(route("/assets/txt/blacklist.txt"))
@@ -15,7 +15,7 @@ fetch(route("/assets/txt/blacklist.txt"))
     }
   })
   .catch(() => {});
-  
+
 const isBlacklistedDomain = (domain) => {
   if (!domain || blacklist.size === 0) return false;
   let host = domain.toLowerCase();

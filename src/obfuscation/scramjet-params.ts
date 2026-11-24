@@ -96,7 +96,12 @@ export function hideScramjetParams(source: string, key: string): string {
 			ts.isBinaryExpression(node.whenTrue) &&
 			node.whenTrue.operatorToken.kind === ts.SyntaxKind.EqualsToken &&
 			ts.isElementAccessExpression(node.whenTrue.left) &&
-			ts.isIdentifier(node.whenTrue.right)
+			ts.isIdentifier(node.whenTrue.right) &&
+			// The real read is the parser's `known ? t[name] = value :
+			// (warn(...), extras)` conditional; Scramjet 3 also matches
+			// push idioms like `keep ? list[i] = item : walk(item)` in
+			// functions whose text mentions the marker string.
+			node.getText(file).includes('.warn')
 		)
 			reads.push(node.whenTrue.right);
 		ts.forEachChild(node, (child) => visit(child, inParser));
@@ -110,7 +115,9 @@ export function hideScramjetParams(source: string, key: string): string {
 	}
 	const literal = JSON.stringify(key);
 	const edits = [...renames];
-	if (key && writes.length && reads.length === 1) {
+	// Scramjet 3 has several copies of the QP parser; every read site has
+	// the same `t[e] = value` shape, so all of them decode.
+	if (key && writes.length && reads.length) {
 		const encode = `((url) => { ${encodeSource(literal)} })`;
 		const decode = `((url) => { ${decodeSource(literal)} })`;
 		for (const node of writes)
@@ -119,11 +126,12 @@ export function hideScramjetParams(source: string, key: string): string {
 				end: node.end,
 				value: `${encode}(${node.getText(file)})`,
 			});
-		edits.push({
-			start: reads[0].getStart(file),
-			end: reads[0].end,
-			value: `${decode}(${reads[0].getText(file)})`,
-		});
+		for (const node of reads)
+			edits.push({
+				start: node.getStart(file),
+				end: node.end,
+				value: `${decode}(${node.getText(file)})`,
+			});
 	} else if (key)
 		console.warn(
 			'[Build] Scramjet query parameter values could not be encoded; only the names are changed.'

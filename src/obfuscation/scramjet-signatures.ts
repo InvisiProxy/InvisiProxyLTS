@@ -42,6 +42,36 @@ const memberNames = [
 	'flagEnabled',
 	// Fingerprints the exact proxy build to any page that finds the global.
 	'versionInfo',
+	// Scramjet 3.x additions on the core global.
+	'RAWFRAMES',
+	'CARRIED_HEADER_PREFIX',
+	'MAX_REFERRER_LENGTH',
+	'SCRIPT_SOURCE_ATTRIBUTE',
+	'carriedHeaderName',
+	'uncarriedHeaderName',
+	'isCarriedHeaderName',
+	'canHaveItsURLRewritten',
+	'cssMayHoldUrl',
+	'eventAttributes',
+	'eventHandlerPrelude',
+	'flagValue',
+	'frozenBaseUrl',
+	'generatedFrameName',
+	'isFetchPreload',
+	'isFragmentOnly',
+	'isGeneratedFrameName',
+	'openWindowSteps',
+	'readAddEventListenerOptions',
+	'readCookieInit',
+	'readCookieStoreDeleteOptions',
+	'readCookieStoreGetOptions',
+	'readEventListenerOptions',
+	'readEventSourceInit',
+	'readWorkerOptions',
+	'readWorkletOptions',
+	'rewriteHistoryUrl',
+	'sameDocumentUrl',
+	'splitFragment',
 ];
 
 // Exact strings proxied pages can see: rewriter globals on window, element
@@ -87,6 +117,16 @@ const literalNames = [
 	'controller frame handle',
 	// The controller↔service-worker RPC channel prefix.
 	'tabchannel-',
+	// Scramjet 3.x globals.
+	'$scramjet$call',
+	'$scramjet$registerrealm',
+	'$scramjet$standin',
+	'$scramjet$tempreceiver',
+	'$scramjet$tempcallee',
+	'scramjet raw frames',
+	'scramjet-frame-',
+	'scramjet-attr-content',
+	'scramjet-attr_script-source',
 ];
 // Also built into the WASM rewriter, where a name has to keep its length.
 const wasmNames = [
@@ -161,6 +201,11 @@ function randomNames() {
 	// attributes from pages.
 	names['scramjet-attr-script-source-src'] =
 		`${names['scramjet-attr']}-${identifier(6)}`;
+	names['scramjet-attr_script-source'] =
+		`${names['scramjet-attr']}_${identifier(6)}`;
+	// The generated frame name prefix (3.x); the rewriter checks the length
+	// relative to the prefix, so the prefix keeps its own random token.
+	names['scramjet-frame-'] = `${identifier(8)}-`;
 	for (const name of wasmNames) {
 		const sigil = name.startsWith('$') ? '$' : '';
 		names[name] = sigil + identifier(name.length - sigil.length);
@@ -199,7 +244,10 @@ export function scrubScramjetSignatures(source: string): string {
 		.replaceAll('$scram', `$${scram}`)
 		.replaceAll('scram', scram)
 		.replaceAll(/mercury-?workshop/gi, wrapper);
-	for (const [name, token] of Object.entries(members))
+	// Longest first: `unrewriteUrl` before `rewriteUrl`,
+	// `uncarriedHeaderName` before `carriedHeaderName`, so a member is
+	// never cut short by one it ends with.
+	for (const [name, token] of byLength(members))
 		output = output.replaceAll(name, token);
 	return output;
 }

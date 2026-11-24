@@ -109,9 +109,14 @@ function disguiseCheck(
 		`\\.(?!html$|${disguiseExtension}$)[\\w-]+$`,
 		'i'
 	);
-	const exemptDirs = ['assets', 'scram', 'libcurl', 'epoxy', 'wisp'].map(
-		(dir) => getAltPrefix(dir, base).slice(base.length, -1)
-	);
+	const exemptDirs = [
+		'assets',
+		'scram',
+		'scram3',
+		'libcurl',
+		'epoxy',
+		'wisp',
+	].map((dir) => getAltPrefix(dir, base).slice(base.length, -1));
 	const exemptPages = ['', 'favicon.ico'];
 	for (const [name, target] of Object.entries(externalPages))
 		(typeof target === 'string' ? exemptPages : exemptDirs).push(name);
@@ -205,21 +210,25 @@ export function createSiteHandler({
 		? tryReadFile('pages/misc/deobf/loader.html', siteUrl, false)
 		: '';
 	const serviceWorkers = new Map(
-		['sw.js', 'sw-blacklist.js'].map((file) => {
-			const name = getPathAliases()[`files/${file}`] || file;
-			return [base + name, name];
-		})
+		['sw.js', 'sw-blacklist.js', 'swv2.js', 'swv2-blacklist.js'].map(
+			(file) => {
+				const name = getPathAliases()[`files/${file}`] || file;
+				return [base + name, name];
+			}
+		)
 	);
 
 	const noStorePrefixes = [
 		'scram',
+		'scram3',
 		'libcurl',
 		'epoxy',
 		'wisp',
 		'network',
+		'network3',
 	].map((prefix) => getAltPrefix(prefix, base));
 
-	const staticDirs = ['assets', 'scram', 'libcurl', 'epoxy'].map(
+	const staticDirs = ['assets', 'scram', 'scram3', 'libcurl', 'epoxy'].map(
 		(prefix) => ({
 			prefix: getAltPrefix(prefix, base),
 			root: join(siteDir, prefix),

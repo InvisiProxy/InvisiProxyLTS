@@ -7,6 +7,10 @@ import {
   selectedTransport,
   selectedWisp,
 } from '../../../src/browser/transport.ts';
+import {
+  selectedScramjetVersion,
+  scramjetVersionStored,
+} from '../../../src/browser/scramjet-version.ts';
 import { customWispUrl } from '../../../src/browser/chain.ts';
 import {
   customUserAgent,
@@ -797,6 +801,18 @@ for (const regionSelector of document.getElementsByClassName('region-list')) {
 for (const torToggle of document.getElementsByClassName('useonion')) {
   torToggle.disabled = transportName === 'epoxy';
   torToggle.title = transportName === 'epoxy' ? homoglyphText('Tor routing requires libcurl.') : '';
+}
+// The Proxy Version setting; switching reloads so the matching service
+// worker takes over (v3 is the default and stores nothing).
+for (const versionSelector of document.getElementsByClassName('version-list')) {
+  versionSelector.value = selectedScramjetVersion(readStorage('ProxyVersion'));
+  versionSelector.addEventListener('change', () => {
+    const version = selectedScramjetVersion(versionSelector.value);
+    scramjetVersionStored(version) === null
+      ? removeStorage('ProxyVersion')
+      : setStorage('ProxyVersion', version);
+    location.reload();
+  });
 }
 
 // Ads are disabled by default. Load ads if ads were enabled previously.

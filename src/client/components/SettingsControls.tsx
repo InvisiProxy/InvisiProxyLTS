@@ -87,3 +87,26 @@ export function TransportSelect(props: { id: string; containerId: string }) {
 		</div>
 	);
 }
+
+export function VersionSelect(props: { id: string; containerId: string }) {
+	return (
+		<div id={props.containerId} class="version-setting setting-field">
+			<label for={props.id}>
+				{translate('proxySettings.proxyVersion')}
+			</label>
+			<select
+				id={props.id}
+				class="version-list"
+				aria-label={translate('proxySettings.proxyVersion')}
+			>
+				<option value="v3" selected>
+					Scramjet V3 (Beta)
+				</option>
+				<option value="v2">Scramjet 2.1.0</option>
+			</select>
+			<span class="setting-description">
+				{translate('proxySettings.proxyVersionDescription')}
+			</span>
+		</div>
+	);
+}

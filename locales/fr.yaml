@@ -481,6 +481,10 @@ proxySettings:
     Utilise un navigateur de bureau aléatoire pour chaque session d'onglet et
     ajoute du bruit aux mesures canvas, WebGL, processeur et mémoire. Un user
     agent choisi reste prioritaire. Peut casser certains sites.
+  proxyVersion: Version du proxy
+  proxyVersionDescription: >-
+    Scramjet V3 (Beta) est la nouvelle version ; passez à Scramjet 2.1.0 si un
+    site pose problème. Le changement recharge la page et reconnecte vos onglets.
   customWisp: Serveur Wisp personnalisé
   customWispDescription: >-
     Faites passer le trafic du proxy par votre propre serveur Wisp pour mieux

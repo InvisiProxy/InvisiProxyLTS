@@ -365,7 +365,7 @@ export const gustUpstream: string = `<!doctype html>
             pointer-events: none;
             flex-shrink: 0;
         }
-        /* .tab-drag-slot.slot-open { already full width — no animation needed since tabs are frozen } */
+        /* .tab-drag-slot.slot-open { already full width - no animation needed since tabs are frozen } */
 
         /* Floating ghost that follows the cursor */
         .tab-drag-ghost {
@@ -571,19 +571,19 @@ export const gustUpstream: string = `<!doctype html>
             will-change: transform;
         }
 
-        /* back — slide left */
+        /* back - slide left */
         #back:hover:not(:disabled) i { transform: translateX(-3px); }
-        /* forward — slide right */
+        /* forward - slide right */
         #fwd:hover:not(:disabled) i  { transform: translateX(3px); }
-        /* reload — spin */
+        /* reload - spin */
         #reload:hover:not(:disabled) i               { transform: rotate(180deg); transition: transform .35s cubic-bezier(.34,1.56,.64,1); }
-        /* stop — pulse shrink */
+        /* stop - pulse shrink */
         #stop:hover:not(:disabled) i                 { transform: scale(.78); transition: transform .18s ease; }
-        /* home — bob up */
+        /* home - bob up */
         #home:hover:not(:disabled) i                 { transform: translateY(-3px); }
-        /* history/clock — spin quarter */
+        /* history/clock - spin quarter */
         #historyBtn:hover:not(:disabled) i           { transform: rotate(-45deg); transition: transform .28s cubic-bezier(.34,1.56,.64,1); }
-        /* fullscreen — expand outward */
+        /* fullscreen - expand outward */
         #fullscreenBtn:hover:not(:disabled) i        { transform: scale(1.22); }
 
         .nav-btn:hover:not(:disabled) {
@@ -990,9 +990,9 @@ export const gustUpstream: string = `<!doctype html>
             left: -4px;
         }
 
-        /* bookmark — pop upward like saving */
+        /* bookmark - pop upward like saving */
         #bookmarkBtn:hover:not(.bookmark-btn-disabled) i   { transform: translateY(-3px); }
-        /* go arrow — shoot right */
+        /* go arrow - shoot right */
         .omni-btn.go:hover i   { transform: translateX(3px); transition: transform .18s ease; }
 
         .omni-btn:hover {
@@ -1128,23 +1128,23 @@ export const gustUpstream: string = `<!doctype html>
             will-change: transform;
         }
 
-        /* settings gear — spin */
+        /* settings gear - spin */
         #settingsBtn:hover i      { transform: rotate(72deg); transition: transform .35s cubic-bezier(.34,1.56,.64,1); }
-        /* metrics chart — bob up */
+        /* metrics chart - bob up */
         #metricsBtn:hover i       { transform: translateY(-3px); }
-        /* logs/devToggle — tilt like a console being opened */
+        /* logs/devToggle - tilt like a console being opened */
         #devToggle:hover i        { transform: rotate(-12deg) scale(1.12); }
-        /* elements/codeBtn inspector — pulse */
+        /* elements/codeBtn inspector - pulse */
         #codeBtn:hover i          { transform: scale(1.2); }
 
-        /* Panel button active — blue border */
+        /* Panel button active - blue border */
         #devToggle.active, #codeBtn.active, #aiBtn.active {
             border: 1px solid var(--ac) !important;
             color: var(--ac);
             background: rgba(157, 229, 255, 0.07);
         }
 
-        /* AI button active state — uses the blue border + tint from the rule above */
+        /* AI button active state - uses the blue border + tint from the rule above */
         @keyframes gust-wand-tap {
             0%   { transform: rotate(0deg); }
             40%  { transform: rotate(20deg); }
@@ -1165,7 +1165,7 @@ export const gustUpstream: string = `<!doctype html>
             border-radius: 50%;
             background: var(--ac);
         }
-        /* find — magnify pop */
+        /* find - magnify pop */
         #findBtn:hover i          { transform: scale(1.15); }
 
         .tool-btn:hover {
@@ -3569,52 +3569,52 @@ export const gustUpstream: string = `<!doctype html>
         @keyframes _gust-pop     { 0%{transform:scale(1)} 35%{transform:scale(1.3)} 60%{transform:scale(.92)} 80%{transform:scale(1.08)} 100%{transform:scale(1)} }
         @keyframes _gust-beam    { 0%,100%{transform:scaleX(1) scaleY(1)} 40%{transform:scaleX(1.2) scaleY(.85)} 70%{transform:scaleX(.9) scaleY(1.1)} }
 
-        /* Connection — wired: pulse like signal */
+        /* Connection - wired: pulse like signal */
         .settings-nav-item[data-section="aiassistant"]:hover i { animation: gust-wand-tap 0.35s ease-in-out; }
         .settings-nav-item[data-section="connection"]:hover i {
             animation: _gust-pulse .55s cubic-bezier(.34,1.56,.64,1) forwards;
         }
-        /* Search — magnifying glass: bob/bounce */
+        /* Search - magnifying glass: bob/bounce */
         .settings-nav-item[data-section="search"]:hover i {
             animation: _gust-bob .45s ease forwards;
         }
-        /* Privacy — shield: ping (protective thump) */
+        /* Privacy - shield: ping (protective thump) */
         .settings-nav-item[data-section="privacy"]:hover i {
             animation: _gust-ping .4s ease forwards;
         }
-        /* Cache — database: beam (squish like stacking) */
+        /* Cache - database: beam (squish like stacking) */
         .settings-nav-item[data-section="cache"]:hover i {
             animation: _gust-beam .45s ease forwards;
         }
-        /* Files & Media — film: shake (like a film reel clatter) */
+        /* Files & Media - film: shake (like a film reel clatter) */
         .settings-nav-item[data-section="filesandmedia"]:hover i {
             animation: _gust-shake .45s ease forwards;
         }
-        /* Appearance — palette: spin */
+        /* Appearance - palette: spin */
         .settings-nav-item[data-section="appearance"]:hover i {
             animation: _gust-spin .5s cubic-bezier(.34,1.56,.64,1) forwards;
         }
-        /* Home Screen — house: bob */
+        /* Home Screen - house: bob */
         .settings-nav-item[data-section="homescreen"]:hover i {
             animation: _gust-bob .42s ease forwards;
         }
-        /* Shortcuts — keyboard: tilt (like pressing a key) */
+        /* Shortcuts - keyboard: tilt (like pressing a key) */
         .settings-nav-item[data-section="shortcuts"]:hover i {
             animation: _gust-tilt .4s ease forwards;
         }
-        /* Language — globe: spin reverse (like a globe turning) */
+        /* Language - globe: spin reverse (like a globe turning) */
         .settings-nav-item[data-section="language"]:hover i {
             animation: _gust-spinrev .55s cubic-bezier(.34,1.56,.64,1) forwards;
         }
-        /* Tutorial — map: pop */
+        /* Tutorial - map: pop */
         .settings-nav-item[data-section="tutorial"]:hover i {
             animation: _gust-pop .45s ease forwards;
         }
-        /* About — info circle: pulse */
+        /* About - info circle: pulse */
         .settings-nav-item[data-section="about"]:hover i {
             animation: _gust-pulse .45s cubic-bezier(.34,1.56,.64,1) forwards;
         }
-        /* Fallback — rotate-left: elastic rewind (retry/rollback feel) */
+        /* Fallback - rotate-left: elastic rewind (retry/rollback feel) */
         @keyframes _gust-rewind {
             0%   { transform: rotate(0deg) scale(1); }
             30%  { transform: rotate(-200deg) scale(1.18); }
@@ -4174,7 +4174,7 @@ export const gustUpstream: string = `<!doctype html>
             color: var(--warn);
         }
 
-        /* Allowlist in settings — uses textarea like the filter list */
+        /* Allowlist in settings - uses textarea like the filter list */
 
         
         .nt-search-engine {
@@ -4281,7 +4281,7 @@ export const gustUpstream: string = `<!doctype html>
         /* ── Palette remaps: GUST's own vars adopt the masked browser's tone so every
               popup, modal and panel matches the disguise automatically ── */
         html[data-skin="chrome"] {
-            /* Chrome 150 GM3 dark — colors probed from a real capture */
+            /* Chrome 150 GM3 dark - colors probed from a real capture */
             --bg0: #161c1f; --bg1: #1f272b; --bg2: #242d32; --bg3: #2c363c;
             --bg-elevated: #1f272b;
             --surface: rgba(255, 255, 255, .06); --surface2: rgba(255, 255, 255, .1);
@@ -4331,11 +4331,11 @@ export const gustUpstream: string = `<!doctype html>
         html[data-skin] .navbar > div[style*="width:1px"] { display: none !important; }
         /* Loading readout ("● Ready" / "● N pending…") stays visible in every skin,
            top-right like GUST. It already reads its colors from --bg2/--bd/--tx2 and
-           the dot from --ok/--err/--ac, all of which each skin redefines — so it
+           the dot from --ok/--err/--ac, all of which each skin redefines - so it
            re-themes per skin for free (Chrome blue dot, Brave orange, Firefox cyan,
            Opera GX red). Slimmer + softer here so it sits native on the skin toolbar.
            order/margin-left:auto/flex-shrink pin it to the far right of the titlebar
-           row in EVERY skin — Firefox reorders titlebar children with flex \`order\`
+           row in EVERY skin - Firefox reorders titlebar children with flex \`order\`
            and Brave's curved active-tab pseudo-elements overlap the default slot, so
            without this the pill lands off-position (looked missing on Brave/Firefox). */
         html[data-skin] .status-pill {
@@ -4358,7 +4358,7 @@ export const gustUpstream: string = `<!doctype html>
         html[data-skin] .navbar { border-bottom: none; box-shadow: 0 1px 0 rgba(0, 0, 0, .28); }
         html[data-skin] .bookmarks-bar { background: var(--sk-bar); border-color: rgba(0,0,0,.25); }
 
-        /* Injected skin controls — hidden until a skin needs them */
+        /* Injected skin controls - hidden until a skin needs them */
         #skinMenuBtn, #skinAvatarBtn { display: none; }
         html[data-skin="chrome"] #skinMenuBtn,
         html[data-skin="brave"] #skinMenuBtn,
@@ -4740,7 +4740,7 @@ export const gustUpstream: string = `<!doctype html>
             --mi-photo-camera: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'  viewBox='0 -960 960 960'%3E%3Cpath d='M479.5-267q72.5 0 121.5-49t49-121.5q0-72.5-49-121T479.5-607q-72.5 0-121 48.5t-48.5 121q0 72.5 48.5 121.5t121 49Zm0-60q-47.5 0-78.5-31.5t-31-79q0-47.5 31-78.5t78.5-31q47.5 0 79 31t31.5 78.5q0 47.5-31.5 79t-79 31.5ZM140-120q-24 0-42-18t-18-42v-513q0-23 18-41.5t42-18.5h147l73-87h240l73 87h147q23 0 41.5 18.5T880-693v513q0 24-18.5 42T820-120H140Zm0-60h680v-513H645l-73-87H388l-73 87H140v513Zm340-257Z'/%3E%3C/svg%3E");
         }
 
-        /* ═══════════ CHROME 150 — reference-exact deep skin ═══════════ */
+        /* ═══════════ CHROME 150 - reference-exact deep skin ═══════════ */
         /* Generic icon-swap scaffolding: skins listed in :is() replace glyphs */
         html:is([data-skin="chrome"],[data-skin="brave"],[data-skin="firefox"]) .nav-btn i,
         html:is([data-skin="chrome"],[data-skin="brave"],[data-skin="firefox"]) .tool-btn:not(#skinAvatarBtn):not(#skinExtShieldBtn) i,
@@ -5028,7 +5028,7 @@ export const gustUpstream: string = `<!doctype html>
             box-shadow: 0 4px 16px rgba(0, 0, 0, .55), 0 0 0 1px rgba(255, 255, 255, .05);
         }
 
-        /* ═══════════ OPERA GX — deep skin ═══════════ */
+        /* ═══════════ OPERA GX - deep skin ═══════════ */
         /* GX NTP */
         .gxntp { position: absolute; inset: 0; overflow: auto; font-family: var(--ui); }
         .gxntp-bg { position: absolute; inset: 0; background:
@@ -5174,7 +5174,7 @@ export const gustUpstream: string = `<!doctype html>
         .gxk-load { padding: 22px; text-align: center; color: #6d6879; font-size: 12px; font-family: var(--mono); letter-spacing: .08em; }
         .gxk-load i { color: var(--ac); margin-right: 8px; }
 
-        /* ═══════════ BRAVE — deep skin ═══════════ */
+        /* ═══════════ BRAVE - deep skin ═══════════ */
         html[data-skin="brave"] .titlebar { padding: 7px 8px 0; gap: 0; }
         html[data-skin="brave"] .tab { border: 1px solid transparent; border-bottom: none; border-radius: 10px 10px 0 0; height: 35px; padding: 0 8px 0 10px; color: #9a9eae; align-self: flex-end; }
         html[data-skin="brave"] .tab.active { background: var(--sk-bar); border-color: transparent; color: #e8e9ee; overflow: visible; z-index: 2; }
@@ -5215,7 +5215,7 @@ export const gustUpstream: string = `<!doctype html>
         html[data-skin="brave"] .skin-menu-item .sk-mi { width: 18px; height: 18px; flex-shrink: 0; }
         html[data-skin="brave"] .skin-menu-sep { background: rgba(255, 255, 255, .1); margin: 8px 0; }
         html[data-skin="brave"] #skinPanel { background: #1e2025; }
-        /* Brave NTP — photographic bg, square frosted tiles, stats + news cards */
+        /* Brave NTP - photographic bg, square frosted tiles, stats + news cards */
         .bntp { min-height: 100%; position: relative; font-family: var(--ui); color: #fff; overflow: hidden;
             background: radial-gradient(1200px 700px at 80% -20%, #3b2d3f 0%, transparent 55%),
                         radial-gradient(1000px 600px at -10% 110%, #1d2a3a 0%, transparent 55%), #17171f; }
@@ -5589,7 +5589,7 @@ export const gustUpstream: string = `<!doctype html>
            single color is user-overridable. Below is only the hand scaffolding. */
         html[data-skin="plus"] { --sk-bar: var(--bg1); --sk-field: var(--bg2); }
         html[data-skin="plus"]:not([data-plus-tabs]) .titlebar { border-bottom: 1px solid var(--bd); }
-        /* horizontal dividers (regular-GUST style) — donor navs strip them */
+        /* horizontal dividers (regular-GUST style) - donor navs strip them */
         html[data-skin="plus"] .navbar { border-bottom: 1px solid var(--bd) !important; box-shadow: none !important; }
         html[data-skin="plus"] .bookmarks-bar { border-bottom: 1px solid var(--bd) !important; }
         html[data-skin="plus"] .bookmarks-bar-wrap.hidden .bookmarks-bar { border-bottom-color: transparent !important; }
@@ -5600,7 +5600,7 @@ export const gustUpstream: string = `<!doctype html>
         }
         html[data-skin="plus"]:not([data-plus-nav]) .tool-toggle span { display: inline; }
 
-        /* shape / density / tab width / font — engage only once their attr is set */
+        /* shape / density / tab width / font - engage only once their attr is set */
         html[data-skin="plus"][data-plus-radius] .tab { border-radius: var(--plus-r) var(--plus-r) 0 0 !important; }
         html[data-skin="plus"][data-plus-radius] :is(.omnibox, .nav-btn, .nav-pill-btn, .tool-btn, .tool-toggle, .status-pill, .tab-add, .omni-btn, #skinMenu, #skinSubMenu, #skinPanel) { border-radius: var(--plus-r) !important; }
         html[data-skin="plus"][data-plus-density] .titlebar { padding-top: calc(8px * var(--plus-d)) !important; padding-bottom: calc(8px * var(--plus-d)) !important; }
@@ -5650,7 +5650,7 @@ export const gustUpstream: string = `<!doctype html>
 
         /* ── Chrome-extension toolbar (visible on every mask) ── */
         #extBar { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
-        /* an empty bar still eats a navbar flex gap — collapse it entirely */
+        /* an empty bar still eats a navbar flex gap - collapse it entirely */
         #extBar:empty, html[data-skin] #extBar:empty { display: none !important; }
         .ext-puzzle-btn {
             width: 32px; height: 32px; border: none; background: transparent; border-radius: 6px;
@@ -5659,7 +5659,7 @@ export const gustUpstream: string = `<!doctype html>
         }
         .ext-puzzle-btn:hover { background: var(--surface2, rgba(255,255,255,.08)); color: var(--tx, #e6e6e6); }
         .ext-puzzle-btn i { display: inline-block; transition: transform .22s cubic-bezier(.34,1.56,.64,1); will-change: transform; }
-        /* extensions puzzle — snap into place */
+        /* extensions puzzle - snap into place */
         .ext-puzzle-btn:hover i { transform: rotate(-15deg) scale(1.12); }
         .ext-action-btn {
             position: relative; width: 30px; height: 30px; border: none; background: transparent;

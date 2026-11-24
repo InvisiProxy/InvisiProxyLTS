@@ -350,6 +350,9 @@ proxySettings:
   randomizeFingerprint: ブラウザフィンガープリントをランダム化
   randomizeFingerprintDescription: >-
     タブのセッションごとにランダムなデスクトップブラウザを使用し、Canvas、WebGL、CPU、メモリの読み取り値にノイズを加えます。選択したユーザーエージェントが優先されます。一部のサイトが動作しなくなる場合があります。
+  proxyVersion: プロキシのバージョン
+  proxyVersionDescription: >-
+    Scramjet V3（Beta）が最新リリースです。サイトの調子が悪い場合はScramjet 2.1.0に切り替えてください。切り替えるとページが再読み込みされ、タブが再接続されます。
   customWisp: カスタムWispサーバー
   customWispDescription: >-
     プライバシーをより細かく管理するため、プロキシの通信を自分のWispサーバー経由にします。すべての通信をセルフホスト経由にしたい場合の軽量な方法です。フロントエンドはここのものを使い、通信は自分のサーバーに送られます。オフにするには空欄のままにしてください。

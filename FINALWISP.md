@@ -2,14 +2,8 @@
 
 Wisp runs in [finalwisp](https://github.com/theogbob/finalwisp) processes, replacing the wispurr workers that used to run inside the site's Node process. Two ways to run it:
 
-- **Managed (the default).** `manageWisp: true` in config.json: the site process starts and watches one finalwisp instance per region and pipes Wisp connections to them. Nothing else to set up — this is what `pnpm dev`, the tests, a plain `pnpm start` and the Docker image use. A site rebuild or restart closes the Wisp sessions (they reconnect on their own).
+- **Managed (the default).** `manageWisp: true` in config.json: the site process starts and watches one finalwisp instance per region and pipes Wisp connections to them. Nothing else to set up - this is what `pnpm dev`, the tests, a plain `pnpm start` and the Docker image use. A site rebuild or restart closes the Wisp sessions (they reconnect on their own).
 - **nginx + pm2 (production).** nginx sends Wisp straight to pm2-managed instances, so a site rebuild or restart no longer touches Wisp sessions:
-
-```
-before:  Cloudflare -> nginx -> Node (site) -> finalwisp -> SOCKS proxies / internet
-after:   Cloudflare -> nginx -> finalwisp (x5)           -> SOCKS proxies / internet
-                          \-> Node (site, pages only)
-```
 
 ## Install finalwisp
 
@@ -29,7 +23,7 @@ The supervisor and scripts find it at `/usr/local/bin/finalwisp` or on `PATH`; `
 
 ## The nginx + pm2 setup
 
-1. **Settings.** Generate the config file shared by all instances from config.json — it carries the destination policy, the limits and the `dns` setting (see below):
+1. **Settings.** Generate the config file shared by all instances from config.json - it carries the destination policy, the limits and the `dns` setting (see below):
 
    ```sh
    sudo mkdir -p /etc/finalwisp
@@ -44,7 +38,7 @@ The supervisor and scripts find it at `/usr/local/bin/finalwisp` or on `PATH`; `
    pm2 start finalwisp.config.cjs && pm2 save
    ```
 
-   They listen on 127.0.0.1 ports 6001 (default region) and 6002 to 6005 (tor, eu, jp, patreon). Each instance runs in its own cgroup (`systemd-run --scope`) with `MEMORY_MAX` (in `finalwisp.config.cjs`) as its memory budget, so a busy region cannot crowd out the others or the site — five instances times `MEMORY_MAX` should stay under about 60 % of RAM. This needs systemd and pm2 running as root; as a normal user add `'--user'` after `'--scope'` in the `scope` line (the memory controller must be delegated to your user session). `pm2 save` keeps the list across reboots when `pm2 startup` is set up, like the site's apps.
+   They listen on 127.0.0.1 ports 6001 (default region) and 6002 to 6005 (tor, eu, jp, patreon). Each instance runs in its own cgroup (`systemd-run --scope`) with `MEMORY_MAX` (in `finalwisp.config.cjs`) as its memory budget, so a busy region cannot crowd out the others or the site - five instances times `MEMORY_MAX` should stay under about 60 % of RAM. This needs systemd and pm2 running as root; as a normal user add `'--user'` after `'--scope'` in the `scope` line (the memory controller must be delegated to your user session). `pm2 save` keeps the list across reboots when `pm2 startup` is set up, like the site's apps.
 
 3. **nginx.** Copy the two files from `finalwisp/nginx/`:
 
@@ -80,7 +74,7 @@ The instances use `socks5://` for eu, jp and patreon, and `socks5h://` for Tor.
 - With `socks5://`, finalwisp looks up the name on your server, refuses private, loopback and your own addresses, then asks the proxy to connect to that address. This is what the wispurr workers did too: they resolved and checked names before dialing, even though their config said `socks5h://`.
 - With `socks5h://`, the proxy looks up the name (DNS through Tor or the VPN). Tor needs this for `.onion` names, and Tor refuses private and internal addresses itself. finalwisp cannot see where a name points, so the proxy decides what visitors can reach.
 
-A wireproxy region can be switched to `socks5h://` (`--upstream-trust-dns` is added by itself) only if it runs in full-tunnel mode (no `TunnelDomains`), its `[Interface]` has a `DNS =` line, and you accept that visitors can then reach whatever the VPN side can reach on ports 80 and 443. With `TunnelDomains` a `socks5://` region usually does not match its domain list and the connection leaves directly from your server — a privacy issue, not a safety one; full-tunnel mode avoids it.
+A wireproxy region can be switched to `socks5h://` (`--upstream-trust-dns` is added by itself) only if it runs in full-tunnel mode (no `TunnelDomains`), its `[Interface]` has a `DNS =` line, and you accept that visitors can then reach whatever the VPN side can reach on ports 80 and 443. With `TunnelDomains` a `socks5://` region usually does not match its domain list and the connection leaves directly from your server - a privacy issue, not a safety one; full-tunnel mode avoids it.
 
 ## DNS
 
@@ -95,34 +89,14 @@ The `dns` setting in config.json chooses how the instances resolve hostnames:
 
 `finalwisp --dns-server` takes IP addresses, so a provider hostname is resolved when the config file is generated (`scripts/finalwisp-config.ts`) or when the managed instances start; regenerate or restart if the provider's addresses ever change.
 
-## What moved where
-
-| old (wispurr) | new (finalwisp) |
-|---|---|
-| five wispurr workers inside the site process | five finalwisp processes (managed by the site, or pm2 under nginx) |
-| `allowDirectIP: false` | `no-direct-ip` |
-| `allowPrivateIPs`/`allowLoopbackIPs` | private and loopback targets blocked by default; finalwisp reaches its own SOCKS proxy without loopback access, so clients cannot reach 9050 / 7000-7002 directly any more |
-| port whitelist 80, 443 (+ the proxy ports) | `allow-ports 80,443` (the proxy ports are no longer needed) |
-| blacklist 25, 465, 587 | covered: only 80 and 443 are allowed (and `block-smtp` from the `public` preset) |
-| `connectionsLimitPerIP` 200 per 10 s | `max-conns-per-ip 200` (open at once) + `conn-rate-per-ip 20/200` (the rate) |
-| `maxConnectsPerSourceIPPerSecond` 500 | `stream-rate-per-ip 500` |
-| `maxConnectsPerDestPerSecond` 250, `PerMinute` 6000 | `stream-rate-per-dest 250/250`, `stream-rate-per-dest-minute 6000` |
-| `maxConcurrentConnections` 16384, streams per connection 2048 | `max-conns 16384`, `max-streams-per-conn 2048` |
-| flood protection / SYN flood signature | the `public` preset's guards (`dest-failfast`, `conn-share`, `fd-admission`, `stream-share`, …) |
-| `trustedProxies` + `X-Forwarded-For` | `trusted-proxy 127.0.0.1` + `real-ip-header x-real-ip`; nginx sets `X-Real-IP` (the managed instances keep `x-forwarded-for`) |
-| `logLevel: none` | `log-level error` |
-| the origin check in `fromOwnSite()` | the same rule in nginx (`$finalwisp_origin_bad`); the site still checks it for the managed mode |
-| health checks every 15 s | the managed supervisor keeps them; pm2 restarts a crashed instance under nginx (`curl http://127.0.0.1:6001/` answers 200 for a probe) |
-| `handshakeTimeoutSeconds`, the reputation system (off), frame obfuscation (off) | no finalwisp equivalent; finalwisp's own protections replace them |
-
 ## Running more than one instance
 
 Different configs mean different builds: `usingSEO`, `patreon` and the obfuscation settings are baked in at build time, so an SEO variant, the production variant and a Patreon variant each need their own checkout with its own `config.json`, build, port (`PORT`) and pm2 app names (rename the apps in each checkout's `ecosystem.config.cjs`, e.g. `invisiproxy-seo`, so the three do not clash). The integration tests build and serve each of these variants, so the configs themselves are covered.
 
-With `manageWisp` on (the default), each site instance also runs its own finalwisp instances, and those must not fight over ports. Every region port moves on its own with an env var, so several instances of the site can run their own on the same machine. Never edit `src/server/wisp.ts` per instance — it only holds the shared defaults; put the overrides in each checkout's `.env` (loaded before the ports are read) or the pm2 `env` block. `finalwisp.config.cjs` is not involved in this mode: it configures the pm2-managed fleet used with `manageWisp: false`, where one shared fleet (6001-6005) serves every instance:
+With `manageWisp` on (the default), each site instance also runs its own finalwisp instances, and those must not fight over ports. Every region port moves on its own with an env var, so several instances of the site can run their own on the same machine. Never edit `src/server/wisp.ts` per instance - it only holds the shared defaults; put the overrides in each checkout's `.env` (loaded before the ports are read) or the pm2 `env` block. `finalwisp.config.cjs` is not involved in this mode: it configures the pm2-managed fleet used with `manageWisp: false`, where one shared fleet (6001-6005) serves every instance:
 
 ```sh
-# instance 1 (SEO), in its own checkout — the defaults
+# instance 1 (SEO), in its own checkout - the defaults
 PORT=8081
 # instance 2 (production)
 PORT=8082 FINALWISP_PORT=6101 FINALWISP_TOR_PORT=6102 FINALWISP_EU_PORT=6103 FINALWISP_JP_PORT=6104 FINALWISP_PATREON_PORT=6105
@@ -138,7 +112,7 @@ FINALWISP_PORT=6101 FINALWISP_TOR_PORT=6102 FINALWISP_EU_PORT=6103 FINALWISP_JP_
 	node scripts/wisp-nginx.ts /etc/nginx/snippets/finalwisp-routes-2.conf
 ```
 
-Or skip per-instance instances entirely: with `manageWisp: false` on all three, nginx can route every instance's Wisp paths to one shared pm2-managed fleet (finalwisp.config.cjs, ports 6001-6005) — one fleet to watch, and Wisp sessions survive every site rebuild. Note that `pnpm run kill` (`pm2 kill`) stops every pm2 app on the machine; use `pm2 restart/delete <name>` per instance.
+Or skip per-instance instances entirely: with `manageWisp: false` on all three, nginx can route every instance's Wisp paths to one shared pm2-managed fleet (finalwisp.config.cjs, ports 6001-6005) - one fleet to watch, and Wisp sessions survive every site rebuild. Note that `pnpm run kill` (`pm2 kill`) stops every pm2 app on the machine; use `pm2 restart/delete <name>` per instance.
 
 ## Restarts and updates
 

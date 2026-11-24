@@ -3,8 +3,10 @@ const clientGlobal = Symbol.for('scramjet client global');
 const wrapLocation = '$scramjet__location';
 
 export type ScramjetClientFrameNames = {
-	meta: { topFrameName?: string | null };
-	url?: URL;
+	// Scramjet 2.1.0
+	meta?: { topFrameName?: string | null };
+	// Scramjet 3.x names the frame itself
+	frameName?: () => string;
 };
 
 const originList = (origins: string[]) => {
@@ -69,7 +71,7 @@ export function leakFrame(
 		target?.trim().toLowerCase() === '_blank';
 	const frameName = () => {
 		try {
-			return client.meta.topFrameName || '_self';
+			return client.frameName?.() || client.meta?.topFrameName || '_self';
 		} catch {
 			return '_self';
 		}

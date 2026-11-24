@@ -3,6 +3,7 @@ import {
 	AddressField,
 	SettingToggle,
 	TransportSelect,
+	VersionSelect,
 } from './SettingsControls.tsx';
 
 const links = {
@@ -43,6 +44,10 @@ export default function ProxySettings() {
 						<TransportSelect
 							id="browsing-transport"
 							containerId="browsing-transport-setting"
+						/>
+						<VersionSelect
+							id="browsing-version"
+							containerId="browsing-version-setting"
 						/>
 						<div class="setting-field">
 							<label for="browsing-region">

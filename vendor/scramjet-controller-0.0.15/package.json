@@ -1,0 +1,38 @@
+{
+  "name": "@mercuryworkshop/scramjet-controller",
+  "version": "0.0.15",
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "main": "./dist/controller-external.mjs",
+  "module": "./dist/controller-external.mjs",
+  "types": "./dist/types/typesEntry.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MercuryWorkshop/scramjet.git",
+    "directory": "packages/controller"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/types/typesEntry.d.ts",
+      "default": "./dist/controller-external.mjs"
+    },
+    "./path": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.cjs"
+    }
+  },
+  "peerDependencies": {
+    "@mercuryworkshop/scramjet": "*"
+  },
+  "dependencies": {
+    "@fastify/deepmerge": "^3.2.1",
+    "@mercuryworkshop/proxy-transports": "1.0.2",
+    "semver": "^7.7.3"
+  },
+  "devDependencies": {
+    "@mercuryworkshop/rpc": "0.0.1",
+    "@mercuryworkshop/scramjet": "3.0.0-alpha",
+    "@types/semver": "^7.8.0",
+    "@types/serviceworker": "^0.0.197"
+  }
+}

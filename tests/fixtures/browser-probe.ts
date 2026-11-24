@@ -258,12 +258,21 @@ try {
 	const version =
 		(await errorPage.locator(id('scramjetVersion')).textContent()) ?? '';
 	assert.match(version, /^v\d\S* - build \w+$/);
-	const scramjetVersion = JSON.parse(
+	// The Proxy Version setting picks between the pinned v2 dependency and
+	// the vendored continuous build (the default).
+	const v2Version = JSON.parse(
 		readFileSync(join(process.cwd(), 'package.json'), 'utf8')
 	).dependencies['@mercuryworkshop/scramjet'];
+	const v3Version = JSON.parse(
+		readFileSync(
+			join(process.cwd(), 'vendor/scramjet-3.0.0-alpha/package.json'),
+			'utf8'
+		)
+	).version;
 	assert.ok(
-		version.startsWith(`v${scramjetVersion} `),
-		`Scramjet version should stay pinned to v${scramjetVersion}, got ${version}`
+		version.startsWith(`v${v2Version} `) ||
+			version.startsWith(`v${v3Version} `),
+		`Scramjet version should be v${v2Version} or v${v3Version}, got ${version}`
 	);
 
 	const webrtcResult = async () =>

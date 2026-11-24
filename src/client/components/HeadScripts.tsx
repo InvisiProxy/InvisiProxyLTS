@@ -45,6 +45,9 @@ export function TooltipScripts() {
 	);
 }
 
+// The scramjet core and controller load per the Proxy Version setting in
+// register-sw.js (both versions ship under their own aliased paths), so
+// only the DLPCC patch is a static script here.
 export function ScramjetScripts() {
 	return (
 		<>
@@ -56,18 +59,6 @@ export function ScramjetScripts() {
 					innerHTML=""
 				/>
 			)}
-			<script
-				src={route('/scram/scramjet.js')}
-				defer={true}
-				data-module=""
-				innerHTML=""
-			/>
-			<script
-				src={route('/scram/controller.api.js')}
-				defer={true}
-				data-module=""
-				innerHTML=""
-			/>
 		</>
 	);
 }
