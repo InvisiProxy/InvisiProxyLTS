@@ -519,64 +519,6 @@ privacy:
     title: 聯絡方式
     body: 關於本政策的問題，或資料與隱私請求：請致函
 
-rivacy:
-  title: 隱私政策
-  subtitle: InvisiProxy，一款私密的網頁代理服務。
-  effective: '生效日期：2021-07-16'
-  updated: '更新日期：2026-10-31'
-  what:
-    title: 什麼是 InvisiProxy？
-    body: >-
-      InvisiProxy LTS 是一款網頁代理服務，幫助你在瀏覽器內訪問可能被網路、政府或政策封鎖的網站，無需下載或設定。它以安全的方式實現這一點，並附帶額外的隱私功能。在任何瀏覽器中瀏覽 Tor/Onion 網站、隱藏瀏覽活動並繞過過濾。這包括可能繞過政府的內容封鎖、Chrome 擴充套件、本地客戶端防火牆以及與網路相關的過濾器。<br/>本專案主要作為繞過審查的理想無客戶端方案的概念驗證。
-  data:
-    title: 是否收集任何資料？
-    body: >-
-      InvisiProxy 本身不會記錄或收集你的瀏覽內容。為保護使用者隱私，後端已禁用日誌記錄。唯一的例外是鏡像連結按鈕，它會在記憶體中儲存你的 IP 地址幾秒鐘以防止濫用；該資訊絕不會寫入磁碟。含廣告域名上的廣告合作伙伴會收集他們自己的資料，詳見下方"廣告"部分。NextDNS 查詢經過調整，不記錄客戶端 IP 或域名，並儲存在瑞士。NextDNS 對相關數值的日誌保留極少，僅用於確保服務順利執行。鑑於本專案的規模，我們使用 Cloudflare 來提升效能並簡化 DNS 管理。Cloudflare 的數值資料僅被最低限度地用於統計訪問量和頁面瀏覽量，以判斷何時需要升級伺服器。NGINX 被設定為不儲存任何日誌。InvisiProxy LTS 堅守終結網路審查的理念，同時重視使用者隱私。除此之外，我們使用 Wisp 協定（用於代理 TCP 連線）配合 libcurl-transport，在 WebAssembly 中執行 SSL/TLS，實現端到端加密。本服務力求儘可能透明，請記住，你隨時可以自行託管，確保一切都在你的掌控之中。<br/><br/>如果你希望提出隱私宣告或請求，請透過 Discord 聯絡我們。
-  security:
-    title: 安全
-    body: >-
-      InvisiProxy LTS 從底層開始構建，旨在為使用者提供安全可靠的網頁代理服務。InvisiProxy LTS 背後的核心技術之一，是由 Mercury Workshop 開發的全新 Wisp 協定。<br/><br/>與以往的模型相比，該協定帶來了多項創新功能和改進，提升了服務的速度和安全性。
-    intro: >-
-      Wisp 協定旨在滿足現代網路流量需求，同時保持高安全標準。透過實現 Wisp，本專案獲得了以下優勢：
-    performance: >-
-      效能：Wisp 協定最佳化了 TCP 資料傳輸速度，確保使用者在瀏覽時延遲最低。
-    compatibility: >-
-      相容性：Wisp 與各種網頁技術相容，確保無縫訪問各類網站和線上服務。這是透過支援遵循該協定的各種開源傳輸方式（Libcurl Transport）實現的。
-    censorship: >-
-      抗審查能力：該協定旨在繞過限制性網路所採用的複雜審查技術，讓使用者輕鬆訪問被封鎖的內容。
-    fingerprinting: >-
-      抗指紋識別：本專案在官方實例的反向代理配置中具備強大的抗指紋識別機制。這意味著代理被設計為儘量減少可用於追蹤或識別使用者的唯一識別碼，從而增強隱私。透過遵循行業最佳實踐並持續更新方法，使用者可以匿名瀏覽，不留下可識別的痕跡。
-    transparency: >-
-      透明度：透明是 InvisiProxy LTS 的核心原則。本專案採用開源模式運營，社群可以審查程式碼庫並做出貢獻。這種開放性不僅建立了信任，還能透過社群反饋和協作實現持續改進。透過堅持透明的做法，InvisiProxy LTS 確保使用者瞭解他們的資料如何被處理，以及有哪些保護隱私的措施。
-    randomisation: >-
-      原始碼/全域性隨機化：為了進一步增強安全性和隱私，InvisiProxy LTS 採用了原始碼和全域性隨機化。這讓專案能在域名上更長時間不被封鎖，同時提升瀏覽時的匿名性。普通網頁代理在重寫資源時會留下痕跡，而採用這種方法後，代理更難被檢測和封鎖。
-    encryption: >-
-      加密：InvisiProxy LTS 採用先進的代理技術，專注於端到端加密和安全的資料傳輸，特別是在 URL 重寫代理方面。注意：這仍是一項進行中的大型工作，歡迎貢獻。
-    audits: >-
-      定期審計：定期進行安全審計，以發現並修復潛在漏洞。
-  advertising:
-    title: 廣告
-    body: >-
-      部分 InvisiProxy 域名會展示廣告以支付託管費用。Patreon 實例始終無廣告。廣告由第三方廣告網路投放：Adsterra、Adcash 和 Monetag。廣告只會出現在 InvisiProxy 自己的頁面和載入介面上，絕不會出現在你透過代理瀏覽的網站內部。<br/><br/>廣告載入時，廣告網路會獲得你的 IP 地址、瀏覽器使用者代理、你正在訪問的域名以及類似的技術資訊，並可能設定或讀取其自身的 Cookie 或使用類似技術來展示廣告、限制展示頻率、衡量效果和防止欺詐。這些廣告網路可能會在我們的頁面上執行它們的程式碼；它們對你資料的處理受其各自的隱私政策約束，而非我們的。<br/><br/>你可以在 optout.aboutads.info 或 youronlinechoices.eu 選擇退出許多廣告網路。你也可以使用內容攔截器遮蔽廣告，或使用 Patreon 實例。
-  usage:
-    title: 其他使用說明
-    storage: >-
-      InvisiProxy 使用"Cookie"、IndexedDB、localStorage 和 sessionStorage 來維持使用者會話（詳見下文），並在你的電腦上儲存你的偏好設定。所有這些資訊都儲存在你的裝置上，InvisiProxy 不會將其用於任何分析。廣告合作伙伴可能會儲存他們自己的 Cookie，詳見"廣告"部分。
-    cookies: >-
-      Cookie 是網站儲存在訪問者電腦上的一串資訊，訪問者每次返回時，瀏覽器都會將其提供給網站。InvisiProxy 使用 Cookie 來確保設定選單的可用性，以及儲存使用者偏好。不希望在電腦上儲存 Cookie 的使用者，應在使用 InvisiProxy 網站前將瀏覽器設定為拒絕 Cookie，但這樣做的缺點是，沒有 Cookie、localStorage 或 IndexedDB 的幫助，InvisiProxy 的某些功能將無法正常執行。InvisiProxy 不會出於分析目的使用任何 Cookie、IndexedDB、localStorage 或 sessionStorage 功能；只有以下功能依賴它們在本地儲存持久資料：Scramjet（快取被代理的資源、會話狀態等）、標籤頁、書籤、自動補全（經代理）、設定選單：標籤頁偽裝、圖示預設、傳輸方式選項、搜尋引擎、主題、語言、視窗類型、Tor 路由、地區切換、隱藏廣告、隱藏歷史記錄、阻止視窗洩漏、阻止 WebRTC 以及指紋隨機化。
-    serviceWorkers: >-
-      此外，InvisiProxy 使用 Service Worker 作為我們網頁代理的技術。它可以攔截相應的網路流量等，是本專案的核心功能。
-    consent: >-
-      在不更改 Cookie 設定的情況下繼續瀏覽我們的網站，即表示你在法律不要求單獨同意的範圍內，確認並同意 InvisiProxy 使用 Cookie，以及上述廣告合作伙伴使用的 Cookie。
-  changes:
-    title: 結語
-    body: >-
-      雖然大多數變更可能都很小，但 InvisiProxy 可能會不時更改其隱私政策，具體由 InvisiProxy LTS 自行決定。InvisiProxy LTS 鼓勵訪問者經常檢視本頁面，瞭解隱私政策的任何變化。在隱私政策變更後繼續使用本網站，即表示你接受該變更。如遇濫用或 DDoS 攻擊，InvisiProxy LTS 可能不得不臨時記錄資料，以緩解攻擊並確保服務正常執行。在這種情況下，所有記錄的資料將在攻擊緩解後立即被安全刪除。
-  contact:
-    title: 聯絡方式與致謝
-    body: >-
-      如果你對我們的隱私政策有任何疑問，請透過以下電子郵件聯絡我們：
-
 docs:
   chemical: >-
     如果你想從零開始建立自己的網頁代理服務，可以試試 <chemical>Chemical</chemical>。

@@ -513,63 +513,6 @@ privacy:
     title: Contact
     body: 'Des questions sur cette politique, ou une demande de données ou de confidentialité : écrivez à'
 
-rivacy:
-  title: Politique de confidentialité
-  subtitle: InvisiProxy, un service de proxy Web privé.
-  effective: 'Date d''entrée en vigueur : 16/07/2021'
-  updated: 'Date de mise à jour : 31/10/2026'
-  what:
-    title: Qu'est-ce qu'InvisiProxy ?
-    body: >-
-      InvisiProxy LTS est un service de proxy web vous permettant d'accéder à des sites web qui pourraient avoir été bloqués par votre réseau, gouvernement ou politique dans votre navigateur, sans téléchargement ou configuration. Cela se passe en toute sécurité avec des fonctionnalités de confidentialité supplémentaires. Consultez des sites Tor/Onion sur n'importe quel navigateur, cachez votre historique de navigation et contournez les filtres. Cela inclut la capacité de contourner les bloqueurs de contenu des gouvernements, des extensions Chrome, des pare-feu client localisés, et les filtres réseau.<br/>Ce projet sert majoritairement comme preuve de concept pour la solution sans client idéale pour contourner la censure.
-  data:
-    title: Est-ce que des données sont collectées ?
-    body: >-
-      InvisiProxy lui-même ne trace et ne collecte pas votre historique de navigation. Le traçage est désactivé pour s'assurer de la confidentialité des utilisateurs sur le côté backend. La seule exception est le bouton de liens miroir, qui garde votre adresse IP en mémoire pour quelque secondes pour empêcher l'abus; elle n'est jamais écrite sur le disque dur. Nos partenaires de publicité sur les domaines soutenus par les annonces collectent leur propres données, comme décrit ci-dessous sous Publicités. Les requêtes NextDNS sont ajustées pour ne pas tracer ou stocker les IP en Suisse. La conservation du traçage de NextDNS pour les valeurs numériques respectives est minime et est mis au point pour s'assurer que le service opère fluidement. Ce projet utilise Cloudflare pour augmenter la performance et pour avoir une gestion DNS plus facile à cause de l'étendue de ce projet. À un minimum, les valeurs numériques de Cloudflare sont utilisées pour tracer les visites et les visionnements de page indiquant lorsque les mises à niveau de serveur sont nécessaires. NGINX est configuré pour stocker aucun log. InvisiProxy LTS valorise sa déclaration d'en finir avec la censure Internet tout en valorisant la confidentialité utilisateur. En dehors de cela, le protocole Wisp (pour proxier les connections TCP) est utilisé avec le transport libcurl pour le chiffrement de bout en bout en exécutant SSL/TLS dans WebAssembly. Ce service est fait pour être le plus transparent possible. N'oubliez pas que vous pouvez héberger le projet vous-même en tout temps pour assurer votre contrôle total.<br/><br/>Si vous voulez faire une déclaration ou une requête de confidentialité veuillez nous contacter via Discord.
-  security:
-    title: Sécurité
-    body: >-
-      InvisiProxy LTS est dévéloppé à partir de zéro pour assurer un service de proxy web sécurisé et fiable à ses utilisateurs. Une des technologies principales derrière InvisiProxy LTS est le nouveau protocole Wisp, développé par Mercury Workshop.<br/><br/>Ce protocole amène plusieurs fonctionnalités et améliorations innovantes qui contribuent à la vitesse et la sécurité du service comparée aux modèles précédents.
-    intro: >-
-      Le protocole Wisp est conçu pour gérer les demandes du trafic web moderne tout en maintenant des normes de sécurité élevées. En choisissant Wisp, ce projet bénéficie des avantages suivants :
-    performance: >-
-      Performance : le protocole Wisp optimise les vitesses de transfert de données TCP, assurant ainsi aux utilisateurs une latence minimale lors de la navigation.
-    compatibility: >-
-      Compatibilité : Wisp est conçu pour être compatible avec plusieurs technologies web, assurant un accès fluide à divers sites web et services en ligne. Ceci est fait grâce à la prise en charge de plusieurs transports open source du protocole (Transport Libcurl).
-    censorship: >-
-      Résilience à la censure : le protocole est conçu pour contourner des techniques de censure sophistiquées employées par des réseaux restrictifs, permettant aux utilisateurs d'accéder au contenu bloqué avec facilité.
-    fingerprinting: >-
-      Résistance à l'empreinte : Ce projet a des mécanismes forts de résistance à l'empreinte dans sa configuration de proxy inverse pour les serveurs officiels. Cela signifie que le proxy est conçu pour minimiser les identifiants uniques qui peuvent être utilisés pour tracer ou identifier les utilisateurs si bien que la confidentialité augmente. InvisiProxy suit les meilleures pratiques de l'industrie et en met ses méthodes à jour constamment de sorte que les utilisateurs peuvent naviguer en tout anonymat sans laisser de traces identifiables.
-    transparency: >-
-      Transparence : La transparence est un principe clé pour InvisiProxy LTS. Le projet opère avec un modèle open-source, permettant à la communauté d'examiner et de contribué au code source. Cette ouverture ne crée pas seulement de la confiance mais ouvre la porte à l'amélioration continue via la rétroaction et la collaboration de la communauté. En adhérant à des pratiques transparentes, InvisiProxy LTS s'assure que les utilisateurs sont conscients de la façon dont leur données sont gérées et quelles mesures sont en place pour protéger leur confidentialité.
-    randomisation: >-
-      Randomisation du code source/globale : De façon à renforcer la sécurité et la confidentialité, InvisiProxy LTS utilise la randomisation du code source et la randomisation globale. Cela permet au projet de rester débloqué pour plus longtemps sur des domaines et d'améliorer l'anonymat lors de la navigation. Les proxy web typiques vont laisser des traces lors de la réécriture des ressources, mais avec cette méthode, c'est beaucoup plus difficile de détecter le proxy et de le bloquer.
-    encryption: >-
-      Chiffrement : InvisiProxy LTS utilise des technologies de proxy avancées qui se concentrent sur le chiffrement de bout en bout et le transfert de données sécuritaires, particulièrement dans le contexte de proxies réécrivant l'URL. NOTE : Ceci est encore un travail en cours massif et nous sommes ouverts aux contributions.
-    audits: >-
-      Audits réguliers : nous menons des audits de sécurité réguliers pour identifier et combattre de possibles vulnérabilités.
-  advertising:
-    title: Publicités
-    body: >-
-      Certains domaines d'InvisiProxy affichent des publicités pour couvrir les coûts de l'hébergement. Les instances Patreon sont toujours sans publicités. Les annonces sont servies par des réseaux tierces : Adsterra, Adcash, et Monetag. Les publicités apparaissent seulement sur les pages et les écrans de chargement d'InvisiProxy, jamais dans les sites que vous naviguez via le proxy.<br/><br/>Lorsqu'une publicité charge, le réseau reçoit votre adresse IP, votre agent utilisateur de navigateur, le domaine que vous visitez et des détails techniques similaires, et pourrait créer ou lire ses propres cookies ou utiliser des technologies similaires pour afficher des annonces, limiter comment souvent vous les voyez, pour mesurer la performance et prévenir la fraude. Ces réseaux pourraient exécuter leur code sur nos pages : leur manipulation des données est gouvernée par leurs propres politiques de confidentialité, pas la notre.<br/><br/>Vous pouvez bloquer les annonces avec un bloqueur de contenu comme uBlock Origin, ou utiliser une instance Patreon.
-  usage:
-    title: Usage supplémentaire
-    storage: >-
-      InvisiProxy utilise des « cookies », IndexedDB, localStorage, et sessionStorage pour maintenir une session d'utilisateur (décrit en plus grand détail ci-dessous) et stocker vos préférences sur votre ordinateur. Toute cette information demeure sur votre appareil et InvisiProxy ne l'utilise pas pour des analytiques. Les partenaires publicitaires pourraient stocker leur propres cookies, comme décrit sous Publicités.
-    cookies: >-
-      Un cookie est un bout d'information qu'un site web stocke sur l'ordinateur du visiteur, et que le navigateur du visiteur passe au site web à chaque fois que le visiteur y retourne. InvisiProxy utilise les cookies pour s'assurer de l'utilisabilité du menu des paramètres, et finalement pour les préférences utilisateur. Les utilisateurs qui ne veulent pas avoir des cookies stockés sur leurs ordinateurs devraient configurer leur navigateurs pour refuser les cookies avant d'utiliser les sites web d'InvisiProxy, avec l'inconvénient que certaines fonctions d'InvisiProxy NE VONT PAS fonctionner correctement sans les cookies, localStorage, ou IndexedDB. Aucun cookie, IndexedDB, localStorage, ou fonctionnalités de sessionStorage sont stockées à des fins d'analyse par InvisiProxy ; Seulement les fonctionnalités (Scramjet (Cache des ressources proxiées, état de la session, etc.), Onglets, Favoris, Saisie semi-automatique (Proxiée), Menu des paramètres : Dissimulation d'onglets, préréglages d'icône, Options de transport, Moteurs de recherche, Personnalisation, Langue, Type de fenêtre, Routage Tor, Changement de région, Masquer les publicités, Historique caché, Bloquer les fuites de fenêtre, Bloquer WebRTC, et la randomisation de l'empreinte) les utilisent pour stocker des données persistantes localement.
-    serviceWorkers: >-
-      De plus, InvisiProxy utilise des Service Workers comme technologie pour nos proxies web. Cela permet d'intercepter le trafic de réseau respectif, etc. et est une fonction principale du projet.
-    consent: >-
-      En continuant à consulter notre site web sans changer vos paramètres de cookie, vous comprenez et acceptez à l'usage d'InvisiProxy des cookies et aux cookies des partenaires publicitaires décrits ci-dessus, lorsque la loi n'exige pas votre consentement séparé.
-  changes:
-    title: Note de fin
-    body: >-
-      Même si la majorité des changements seront probablement mineurs, InvisiProxy pourrait changer sa politique de confidentialité de temps en temps, et dans la seule discrétion d'InvisiProxy LTS. InvisiProxy LTS encourage les visiteurs à vérifier cette page fréquemment pour des changement à la politique de confidentialité. Votre usage continué de ce site après un changement de cette politique de confidentialité constituera un consentement à la politique modifiée. Dans le cas d'abus ou d'attaques DDoS, InvisiProxy LTS pourrait être forcé à tracer des données temporairement pour atténuer l'impact de l'attaque et s'assurer que le service reste opérationnel. Les données tracées seront supprimées de manière sécuritaire suite à l'atténuation de l'attaque.
-  contact:
-    title: Informations de contact et Crédit
-    body: >-
-      Si vous avez des questions à propos de notre politique de confidentialité, veuillez nous contacter via email au
 docs:
   chemical: >-
     Essayez <chemical>Chemical</chemical> si vous voulez créer votre propre service de proxy web à partir de zéro.
