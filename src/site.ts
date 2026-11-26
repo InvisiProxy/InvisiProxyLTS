@@ -651,6 +651,12 @@ export const credits = Object.freeze<CreditSection[]>([
 				contributions: 'Simplified Chinese Translation',
 				contact: '@fallenphoenix5954',
 			},
+			{
+				name: 'Sxlphuric',
+				contributions: 'French Translation',
+				url: 'https://sulphuric.dev',
+				contact: '@sxlphuric',
+			},
 		],
 	},
 	{
