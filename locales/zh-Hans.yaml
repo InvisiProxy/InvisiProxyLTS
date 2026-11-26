@@ -69,6 +69,54 @@ language:
     - Ultraviolet
     - Scramjet
     - Rammerhead
+    - Tab Cloaker
+    - Tab Cloakers
+    - Search
+    - Searching
+    - Freely
+    - Free
+    - Surfing
+    - Surf
+    - VPNs
+    - Server
+    - Servers
+    - Network
+    - Networks
+    - Connection
+    - Connections
+    - Privacy
+    - Private
+    - Games
+    - Proxychain
+    - Proxychaining
+    - Censorship
+    - Firewall
+    - Firewalls
+    - Anonymous
+    - Anonymity
+    - Block
+    - Filter
+    - Restrict
+    - Censor
+    - Evade
+    - Evasion
+    - Stealth
+    - Cloak
+    - Incognito
+    - Disguise
+    - School
+    - Mirror
+    - Proxy
+    - Proxies
+    - Proxied
+    - Proxying
+    - Unblock
+    - Unblocked
+    - Unblocking
+    - Unblocks
+    - Unblocker
+    - Unblockers
+    - Bypass
 
 home:
   title: InvisiProxy LTS | 免费网页代理 - 突破过滤，访问被封网站
@@ -352,6 +400,9 @@ proxySettings:
   randomizeFingerprint: 随机化浏览器指纹
   randomizeFingerprintDescription: >-
     每个标签页会话都会随机使用一个桌面浏览器，并为 canvas、WebGL、CPU 及内存读数添加噪声。手动选定的用户代理依然优先生效。可能影响部分网站的正常使用。
+  proxyVersion: 代理版本
+  proxyVersionDescription: >-
+    Scramjet V3（Beta）为最新版本；若某些网站出现异常，可切换到 Scramjet 2.1.0。切换后会重新加载页面并重连标签页。
   customWisp: 自定义 Wisp 服务器
   customWispDescription: >-
     将代理流量经由你自己的 Wisp 服务器路由，以便更好地掌控隐私。若想通过自托管路由所有流量，这是一种轻量级方案。可继续使用此处的前端，只将相应流量导向你自己的服务器。留空则关闭此功能。
@@ -432,6 +483,42 @@ faq:
       或者，如果你在使用某种隐身模式，右键单击页面并选择<code>重新加载框架</code>。
 
 privacy:
+  title: 隐私政策
+  subtitle: InvisiProxy LTS，一个注重隐私的网页代理服务。
+  effective: 生效日期：2021-07-16
+  updated: 更新日期：2026-11-26
+  what:
+    title: 什么是 InvisiProxy？
+    body: InvisiProxy LTS 是一款在浏览器中运行的网页代理。网站不再直连，而是经由代理打开，因此网络只会看到代理。被网络、学校或政府封锁的网站重新可达，Tor/Onion 网站也能在任何浏览器中打开。无需下载，无需安装。
+  data:
+    title: 收集哪些数据？
+    body: InvisiProxy 不记录你的浏览。Wisp 服务器以关闭连接日志的方式启动：不记录地址，不记录目标，不生成记录。项目随附的 nginx 配置在代理路径上关闭了访问日志，任何请求日志都不会写入磁盘。<br/><br/>唯一的例外，仅存在于内存中：镜像链接按钮会记住你的地址五秒钟，以防止按钮被滥用。它永远不会写入磁盘，也不留记录。<br/><br/>攻击与洪泛由速率限制和连接上限处理，而不是靠日志。按连接的日志作为调试选项存在，但在本项目交付的每份配置中默认均为关闭。<br/><br/>DNS 查询在服务器上解析。DNS 供应商由运营者选择（自托管者常用带过滤的 DNS）；项目不会在其上再添加任何日志。<br/><br/>官方网站经由 Cloudflare 分发。与任何 CDN 一样，它会看到你的 IP 地址和每个请求的目标地址；这些数据的处理方式见 Cloudflare 自己的隐私政策。<br/><br/>这一切不必全凭信任。全部开源，你可以随时自托管，由自己掌控整套设施。
+  security:
+    title: 安全
+    body: Wisp 把浏览器原本要开的每条流都通过一条 WebSocket 送到代理服务器，由它建立真正的连接。简要说：
+    performance: 速度：Wisp 直接以 WebSocket 帧发送站点数据，页面保持快速。
+    compatibility: 兼容性：Libcurl 等开放传输让代理与各类网站和服务保持兼容。
+    censorship: 抗审查：协议的设计让过滤器难以看到、也难以封锁你访问的内容。
+    fingerprinting: 指纹：反向代理对重写进行随机化，会话更难被单独识别，代理也更难被封禁。
+    encryption: 加密：HTTPS 网站在你和它之间保持端到端加密；官方网站的 Wisp 连接本身使用 wss://（TLS）。重写栈的一部分仍在开发中，这一节会随之完善。
+    transparency: 开源：以上全部都可在仓库中核查，变更公开。
+  advertising:
+    title: 广告
+    body: 免费域名会展示广告以支付托管费用。Patreon 实例始终无广告。广告由第三方广告网络投放：Adsterra、Adcash、Monetag。广告只出现在 InvisiProxy 自己的页面和加载画面中，绝不出现在你经代理浏览的网站里。<br/><br/>广告加载时，其网络会收到你的 IP 地址、User-Agent 和所在页面，并可能写入或读取自己的 Cookie。其数据处理遵循各自的隐私政策，而非本政策。<br/><br/>广告拦截器可以停掉这一切；uBlock Origin 有效，或使用 Patreon 实例。
+  usage:
+    title: 存储在你设备上的内容
+    storage: 你的设置、标签页和书签保存在浏览器里：Cookie、localStorage、sessionStorage 和 IndexedDB。它们不会离开你的设备，也完全不用于分析。
+    cookies: 如果浏览器拒绝 Cookie，标签页、书签和设置菜单等功能将停止工作，因为没有地方可存。任何内容都不用于追踪；只有代理自身功能依赖它（Scramjet 缓存与会话状态、标签页、书签、自动补全、标签伪装、图标预设、传输选项、搜索引擎、主题、语言、窗口类型、Tor 路由、区域切换、隐藏广告、隐藏历史、阻止窗口泄漏、阻止 WebRTC 和指纹随机化）。
+    serviceWorkers: Service Worker 位于页面与网络之间；代理需要它来转发流量。清除站点存储即会将其移除。
+    consent: 继续使用本站即视为接受上述存储，以及在法律不要求另行同意处广告伙伴的 Cookie。
+  changes:
+    title: 变更
+    body: 政策可能变化；顶部的更新日期标明最近一次改动。本页始终列出现行政策。
+  contact:
+    title: 联系方式
+    body: 关于本政策的问题，或数据与隐私请求：请致函
+
+rivacy:
   title: 隐私政策
   subtitle: InvisiProxy，一款私密的网页代理服务。
   effective: '生效日期：2021-07-16'

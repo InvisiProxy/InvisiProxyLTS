@@ -601,6 +601,12 @@ export const credits = Object.freeze<CreditSection[]>([
 				contact: '@havi11368',
 			},
 			{
+				name: 'slqnt',
+				contributions: 'Domains',
+				url: 'https://slqnt.dev',
+				contact: '@slqnt',
+			},
+			{
 				name: 'Kinglalu',
 				contributions: 'Games Page, Developer',
 				url: 'https://github.com/kinglalu',

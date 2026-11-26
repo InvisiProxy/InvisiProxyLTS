@@ -67,6 +67,54 @@ language:
     - Ultraviolet
     - Scramjet
     - Rammerhead
+    - Tab Cloaker
+    - Tab Cloakers
+    - Search
+    - Searching
+    - Freely
+    - Free
+    - Surfing
+    - Surf
+    - VPNs
+    - Server
+    - Servers
+    - Network
+    - Networks
+    - Connection
+    - Connections
+    - Privacy
+    - Private
+    - Games
+    - Proxychain
+    - Proxychaining
+    - Censorship
+    - Firewall
+    - Firewalls
+    - Anonymous
+    - Anonymity
+    - Block
+    - Filter
+    - Restrict
+    - Censor
+    - Evade
+    - Evasion
+    - Stealth
+    - Cloak
+    - Incognito
+    - Disguise
+    - School
+    - Mirror
+    - Proxy
+    - Proxies
+    - Proxied
+    - Proxying
+    - Unblock
+    - Unblocked
+    - Unblocking
+    - Unblocks
+    - Unblocker
+    - Unblockers
+    - Bypass
 
 home:
   title: InvisiProxy LTS | 無料Webプロキシ - フィルターを回避してブロックされたサイトにアクセス
@@ -433,6 +481,42 @@ faq:
       または、何らかのステルスモードを使用している場合は、ページを右クリックして<code>フレームを再読み込み</code>を実行してください。
 
 privacy:
+  title: プライバシーポリシー
+  subtitle: InvisiProxy LTS、プライベートなWebプロキシサービス。
+  effective: '発効日: 2021年7月16日'
+  updated: '更新日: 2026年11月26日'
+  what:
+    title: InvisiProxyとは？
+    body: InvisiProxy LTSはブラウザ内で動くWebプロキシです。サイトに直接接続する代わりにプロキシ経由で開くため、ネットワークからはプロキシしか見えません。ネットワーク・学校・政府にブロックされたサイトが再び開けるようになり、Tor/Onionサイトもどのブラウザでも開けます。ダウンロードもインストールも不要です。
+  data:
+    title: 何が収集されますか？
+    body: InvisiProxyはブラウジングを記録しません。Wispサーバーは接続ログを無効にして起動され、アドレスも宛先も記録しません。同梱のnginx設定はプロキシのパスでアクセスログを無効にしており、リクエストログはディスクに書き込まれません。<br/><br/>唯一の例外で、メモリ上のみの話です。ミラーリンクボタンはスパム防止のため、あなたのアドレスをその場の処理のために5秒間だけ保持します。ディスクに書き込まれることはなく、記録も残りません。<br/><br/>攻撃や大量リクエストはレート制限と接続上限で対処します。記録では対処しません。接続単位のロギングはデバッグ用のオプションとして存在しますが、このプロジェクトが同梱するすべての設定で初期状態は無効です。<br/><br/>DNS問い合わせはサーバー側で解決します。利用するDNSプロバイダーは運営者選択です（多くのセルフホストではフィルタリングDNSを指定）。その上にInvisiProxyが付け加える記録はありません。<br/><br/>公式サイトはCloudflare経由で配信されます。CDNは、あらゆるCDNと同じようにIPアドレスと各リクエストの宛先を見ます。その扱いはCloudflare自身のプライバシーポリシーによります。<br/><br/>これらを鵜呑みにする必要はありません。すべてオープンソースで、いつでもセルフホストして全体を自分で管理できます。
+  security:
+    title: セキュリティ
+    body: Wispは、ブラウザが通常開く各ストリームを1本のWebSocketにまとめてプロキシサーバーへ運び、そこで実際の接続が行われます。要点は次のとおりです。
+    performance: 速度：WispはサイトのデータをそのままWebSocketフレームで送るため、ページは速いままです。
+    compatibility: 互換性：Libcurlなどのオープンなトランスポートにより、幅広いサイトやサービスに対応できます。
+    censorship: 検閲への耐性：フィルターが開いた宛先を見たりブロックしたりしにくいよう、プロトコルは設計されています。
+    fingerprinting: フィンガープリント：リバースプロキシ側で書き換えをランダム化し、セッションの識別もプロキシのブロックも難しくしています。
+    encryption: 暗号化：HTTPSサイトはあなたとサイトの間でエンドツーエンドの暗号化が保たれ、公式サイトのWisp接続自体もwss://（TLS）です。書き換えまわりの一部は開発中で、この節は今後対応してきます。
+    transparency: オープンソース：上記すべてはリポジトリで確認でき、変更履歴も公開です。
+  advertising:
+    title: 広告
+    body: 無料ドメインはホスティング費をまかなうため広告を表示します。Patreonのインスタンスは常に広告なしです。広告はサードパーティのネットワーク：Adsterra、Adcash、Monetagが配信します。広告はInvisiProxy自身のページと読み込み画面にのみ表示され、プロキシ経由で閲覧するサイト内には出ません。<br/><br/>広告が読み込まれると、そのネットワークはあなたのIPアドレス、ユーザーエージェント、現在のページを受け取り、独自のCookieを設定・読み取ることがあります。データの扱いは各社のプライバシーポリシーに従い、このポリシーには従いません。<br/><br/>広告ブロッカーがこれらをすべて止めます。uBlock Originで機能します。Patreonインスタンスの利用もその一つです。
+  usage:
+    title: 端末に保存されるもの
+    storage: 設定・タブ・ブックマークはブラウザ内に保存されます。Cookie、localStorage、sessionStorage、IndexedDBです。端末の外に出ることはなく、解析には一切使われません。
+    cookies: Cookieを拒否する設定にすると、タブ・ブックマーク・設定メニューなどの機能は保存先がなくなり動かなくなります。追跡のための保存は一切なく、プロキシの機能だけがこれに依存します。Scramjetのキャッシュとセッション状態、タブ、ブックマーク、自動補完、タブ隠蔽、アイコンのプリセット、トランスポートのオプション、検索エンジン、テーマ、言語、ウィンドウの種類、Torルーティング、リージョンの切り替え、広告を隠す、履歴を隠す、ウィンドウ漏洩ブロック、WebRTCブロック、フィンガープリントのランダム化。
+    serviceWorkers: Service Workerはページとネットワークの間に立つ仕組みで、プロキシが通信を経路付けするために必要です。サイトのストレージを消去すれば削除されます。
+    consent: 本サイトを使い続けることは、上記の保存、および法律で個別の同意が求められない範囲での広告パートナーのCookieへの同意とみなされます。
+  changes:
+    title: 変更
+    body: このポリシーは変更されることがあります。上部の更新日が最後の変更を示します。このページには常に現行のポリシーを載せます。
+  contact:
+    title: 連絡先
+    body: このポリシーについてのご質問や、データ・プライバシーに関するお問い合わせは、次のアドレスへ：
+
+rivacy:
   title: プライバシーポリシー
   subtitle: InvisiProxy、プライベートなWebプロキシサービス。
   effective: '発効日: 2021年7月16日'

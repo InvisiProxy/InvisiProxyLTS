@@ -99,6 +99,50 @@ language:
     - Ultraviolet
     - Scramjet
     - Rammerhead
+    - Tab Cloaker
+    - Tab Cloakers
+    - Search
+    - Searching
+    - Freely
+    - Free
+    - Surfing
+    - Surf
+    - Server
+    - Servers
+    - Network
+    - Networks
+    - Connection
+    - Connections
+    - Privacy
+    - Private
+    - Games
+    - Proxychain
+    - Proxychaining
+    - Censorship
+    - Firewall
+    - Firewalls
+    - Anonymous
+    - Anonymity
+    - Block
+    - Filter
+    - Restrict
+    - Censor
+    - Evade
+    - Evasion
+    - Stealth
+    - Cloak
+    - Disguise
+    - School
+    - Mirror
+    - Proxied
+    - Proxying
+    - Unblock
+    - Unblocked
+    - Unblocking
+    - Unblocks
+    - Unblocker
+    - Unblockers
+    - Bypass
 home:
   title: InvisiProxy LTS | Proxy en ligne gratuit - Contourner les filtres & accéder aux sites bloqués
   description: >-
@@ -434,6 +478,42 @@ faq:
     reloadFrame: >-
       Ou faire un clic droit sur la page et appuyer sur <code>Rafraîchir le cadre</code> si vous utilisez une sorte de mode discret.
 privacy:
+  title: Politique de confidentialité
+  subtitle: InvisiProxy LTS, un service de proxy Web privé.
+  effective: "Date d'entrée en vigueur : 16/07/2021"
+  updated: 'Date de mise à jour : 26/11/2026'
+  what:
+    title: Qu'est-ce qu'InvisiProxy ?
+    body: InvisiProxy LTS est un proxy web qui fonctionne dans votre navigateur. Au lieu d'ouvrir un site directement, vous l'ouvrez par le proxy, si bien que votre réseau ne voit que celui-ci. Les sites bloqués par votre réseau, votre école ou votre gouvernement redeviennent accessibles, et les sites Tor/Onion s'ouvrent dans n'importe quel navigateur. Rien à télécharger, rien à installer.
+  data:
+    title: Quelles données sont collectées ?
+    body: "InvisiProxy ne consigne pas votre navigation. Le serveur Wisp fonctionne sans journal des connexions : aucune adresse, aucune destination, aucun enregistrement. La configuration nginx livrée avec ce projet désactive les journaux d'accès sur les chemins du proxy, et aucun journal n'est écrit sur le disque.<br/><br/>Une exception, en mémoire uniquement : le bouton des liens miroirs retient votre adresse pendant cinq secondes pour empêcher le spam. Elle n'est jamais écrite sur le disque et ne laisse aucune trace.<br/><br/>Les attaques et les floods sont gérés par des limites de débit et des plafonds de connexions, pas par des journaux. La journalisation par connexion existe comme option de débogage, mais elle est désactivée par défaut dans toutes les configurations livrées par ce projet.<br/><br/>Les requêtes DNS sont résolues sur le serveur. Le choix du fournisseur DNS appartient à l'opérateur ; ce projet ne rajoute aucun journal par-dessus.<br/><br/>Le site officiel est servi via Cloudflare. Comme tout CDN, il voit votre adresse IP et l'adresse de chaque requête ; la manière dont ces données sont traitées est décrite dans la politique de confidentialité de Cloudflare.<br/><br/>Rien de tout cela ne doit être pris sur parole : tout est open source, et vous pouvez héberger le projet vous-même pour contrôler l'ensemble de la pile."
+  security:
+    title: Sécurité
+    body: "Wisp transporte chaque flux qu'ouvrirait normalement votre navigateur sur une seule WebSocket vers le serveur proxy, où les vraies connexions sont établies. En bref :"
+    performance: 'Rapidité : Wisp envoie les données des sites comme de simples frames WebSocket, les pages restent rapides.'
+    compatibility: 'Compatibilité : des transports ouverts comme Libcurl gardent le proxy compatible avec un large éventail de sites et de services.'
+    censorship: 'Résistance à la censure : le protocole est conçu pour que les filtres aient du mal à voir et à bloquer ce que vous ouvrez.'
+    fingerprinting: 'Empreintes : le proxy inverse randomise ses réécritures, si bien que les sessions sont plus dures à distinguer et le proxy plus dur à bloquer.'
+    encryption: 'Chiffrement : les sites HTTPS restent chiffrés de bout en bout entre vous et eux, et la connexion Wisp elle-même tourne en wss:// (TLS) sur le site officiel. Une partie de la pile de réécriture est encore en construction ; cette section grandira avec elle.'
+    transparency: 'Open source : tout ce qui précède peut être vérifié dans le dépôt, et les changements sont publics.'
+  advertising:
+    title: Publicités
+    body: "Les domaines gratuits affichent des publicités pour couvrir les coûts d'hébergement. Les instances Patreon sont toujours sans publicités. Les annonces sont servies par des réseaux tiers : Adsterra, Adcash et Monetag. Elles n'apparaissent que sur les pages et écrans de chargement d'InvisiProxy, jamais dans les sites que vous naviguez via le proxy.<br/><br/>Lorsqu'une publicité charge, son réseau reçoit votre adresse IP, votre agent utilisateur et la page sur laquelle vous êtes, et peut poser ou lire ses propres cookies. Le traitement de vos données relève de leurs politiques de confidentialité, pas de celle-ci.<br/><br/>Un bloqueur de publicités arrête tout cela ; uBlock Origin fonctionne, ou utilisez une instance Patreon."
+  usage:
+    title: Ce qui est stocké sur votre appareil
+    storage: "Vos réglages, onglets et favoris vivent dans votre navigateur : cookies, localStorage, sessionStorage et IndexedDB. Ils ne quittent jamais votre appareil et rien de tout cela ne sert à l'analyse."
+    cookies: Si vous refusez les cookies dans votre navigateur, des fonctions comme les onglets, les favoris ou le menu des réglages cessent de fonctionner, faute d'endroit où les sauvegarder. Rien n'est stocké pour le pistage ; seules les fonctions du proxy en dépendent (cache et état de session Scramjet, onglets, favoris, saisie semi-automatique, dissimulation d'onglets, préréglages d'icônes, options de transport, moteurs de recherche, thèmes, langue, type de fenêtre, routage Tor, changement de région, masquage des publicités, historique caché, blocage des fuites de fenêtre, blocage WebRTC et randomisation de l'empreinte).
+    serviceWorkers: Un service worker s'intercale entre les pages et le réseau ; le proxy en a besoin pour acheminer le trafic. Effacer le stockage du site le supprime aussi.
+    consent: Utiliser le site vaut acceptation du stockage ci-dessus, plus les cookies des partenaires publicitaires là où la loi n'exige pas votre consentement séparé.
+  changes:
+    title: Changements
+    body: Cette politique peut changer ; la date de mise à jour en haut vous dit quand c'est arrivé. Cette page énonce toujours la politique en vigueur.
+  contact:
+    title: Contact
+    body: 'Des questions sur cette politique, ou une demande de données ou de confidentialité : écrivez à'
+
+rivacy:
   title: Politique de confidentialité
   subtitle: InvisiProxy, un service de proxy Web privé.
   effective: 'Date d''entrée en vigueur : 16/07/2021'

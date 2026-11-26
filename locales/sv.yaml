@@ -81,6 +81,51 @@ language:
     - Ultraviolet
     - Scramjet
     - Rammerhead
+    - Tab Cloaker
+    - Tab Cloakers
+    - Search
+    - Searching
+    - Freely
+    - Free
+    - Surfing
+    - Surf
+    - VPNs
+    - Servers
+    - Network
+    - Networks
+    - Connection
+    - Connections
+    - Privacy
+    - Private
+    - Games
+    - Proxychain
+    - Proxychaining
+    - Censorship
+    - Firewall
+    - Firewalls
+    - Anonymous
+    - Anonymity
+    - Block
+    - Restrict
+    - Censor
+    - Evade
+    - Evasion
+    - Stealth
+    - Cloak
+    - Incognito
+    - Disguise
+    - School
+    - Mirror
+    - Proxies
+    - Proxied
+    - Proxying
+    - Unblock
+    - Unblocked
+    - Unblocking
+    - Unblocks
+    - Unblocker
+    - Unblockers
+    - Bypass
 
 home:
   title: InvisiProxy LTS | Gratis webbproxy - Kringgå filter och kom åt blockerade sidor
@@ -582,6 +627,42 @@ faq:
       använder någon form av smygläge.
 
 privacy:
+  title: Integritetspolicy
+  subtitle: InvisiProxy LTS, en privat webbproxytjänst.
+  effective: 'Gäller från: 2021-07-16'
+  updated: 'Uppdaterad: 2026-11-26'
+  what:
+    title: Vad är InvisiProxy?
+    body: InvisiProxy LTS är en webbproxy som körs i din webbläsare. I stället för att öppna en sajt direkt öppnar du den via proxyn, så ditt nätverk ser bara proxyn. Sajter som nätverket, skolan eller staten blockerat blir nåbara igen, och Tor/Onion-sajter öppnas i valfri webbläsare. Inget att ladda ner, inget att installera.
+  data:
+    title: Vad samlas in?
+    body: 'InvisiProxy loggar inte ditt surfande. Wisp-servern startas utan anslutningsloggar: inga adresser, inga destinationer, inga poster. Nginx-konfigurationen som följer med projektet stänger av åtkomstloggar på proxyvägarna, och ingen förfrågningslogg skrivs till disk.<br/><br/>Ett undantag, endast i minnet: knappen för spegellänkar spårar din adress i fem sekunder så att knappen inte kan spammas. Den skrivs aldrig till disk och lämnar inga spår.<br/><br/>Attacker och översvämningar hanteras med hastighetsgränser och anslutningstak, inte med loggar. Anslutningsloggning finns som felsökningsalternativ men är avstängd från början i varje konfiguration projektet levererar.<br/><br/>DNS-uppslag sker på servern. DNS-leverantören väljs av den som driver sajten; projektet lägger ingen loggning ovanpå denna.<br/><br/>Den officiella sajten distribueras via Cloudflare. Som alla CDN ser den din IP-adress och måladressen på varje förfrågan; hur de uppgifterna hanteras står i Cloudflares egen integritetspolicy.<br/><br/>Inget av detta behöver tas på tro. Allting tillhandahålls med öppen källkod, och du kan när som helst hosta projektet själv och styra hela stacken.'
+  security:
+    title: Säkerhet
+    body: 'Wisp bär varje ström webbläsaren normalt skulle öppna över en enda WebSocket till proxyservern, där de riktiga anslutningarna skapas. Kort sagt:'
+    performance: 'Hastighet: Wisp skickar sajtdata som vanliga WebSocket-ramar, sidorna förblir snabba.'
+    compatibility: 'Kompatibilitet: öppna transporter som Libcurl håller proxyn kompatibel med ett brett spektrum av sajter och tjänster.'
+    censorship: 'Censurresistens: protokollet är utformat så att filter svårligen ser och blockerar vad du öppnar.'
+    fingerprinting: 'Fingeravtryck: reverse-proxyn randomiserar sin omskrivning, så sessioner är svårare att urskilja och proxyn svårare att blockera.'
+    encryption: 'Kryptering: HTTPS-sajter förblir krypterade från slut till slut mellan dig och dem, och själva Wisp-anslutningen går över wss:// (TLS) på den officiella sajten. Delar av omskrivningsstacken byggs fortfarande; det här avsnittet växer med den.'
+    transparency: 'Öppen källkod: allt ovan kan kontrolleras i kodförrådet, och ändringar är offentliga.'
+  advertising:
+    title: Reklam
+    body: 'Gratisdomäner visar reklam för att täcka värdkostnaderna. Patreoninstanser är alltid reklamfria. Annonserna kommer från tredjepartsnätverk: Adsterra, Adcash och Monetag. De visas bara på InvisiProxys egna sidor och laddningsskärmar, aldrig inuti sajterna du surfar via proxy.<br/><br/>När en annons laddas får nätverket din IP-adress, din user agent och sidan du är på, och kan sätta eller läsa egna kakor. Deras hantering av dina uppgifter styrs av deras egna integritetspolicyer, inte denna.<br/><br/>En annonsblockerare stoppar allt detta; uBlock Origin fungerar, eller använd en Patreoninstans.'
+  usage:
+    title: Vad som sparas på din enhet
+    storage: 'Dina inställningar, flikar och bokmärken bor i din webbläsare: kakor, localStorage, sessionStorage och IndexedDB. De lämnar aldrig din enhet och används inte till analys.'
+    cookies: Om du nekar kakor i webbläsaren slutar funktioner som flikar, bokmärken och inställningsmenyn fungera, eftersom ingenstans finns att spara dem. Inget sparas för spårning; bara proxyfunktionerna behöver det (Scramjets cachning och sessionstillstånd, flikar, bokmärken, automatisk komplettering, flikmaskering, ikonförinställningar, transportval, sökmotorer, teman, språk, fönstertyp, Tor-routning, regionsbyte, dölj reklam, dold historik, blockera fönsterläckor, blockera WebRTC och fingeravtrycksrandomisering).
+    serviceWorkers: En service worker står mellan sidor och nätverket; proxyn behöver den för att leda trafiken. Rensar du sajtens lagring tas den bort med.
+    consent: Att använda sajterna räknas som accept av lagringen ovan, plus annonspartnernas kakor där lagen inte kräver ditt separata samtycke.
+  changes:
+    title: Ändringar
+    body: Denna policy kan ändras; uppdateringsdatumet överst visar när det senast hände. Denna sida anger alltid gällande policy.
+  contact:
+    title: Kontakt
+    body: 'Frågor om denna policy, eller en begäran om data eller integritet: skriv till'
+
+rivacy:
   title: Integritetspolicy
   subtitle: InvisiProxy, en privat webbproxy-tjänst.
   effective: 'Gäller från: 2021-07-16'

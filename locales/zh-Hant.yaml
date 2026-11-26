@@ -70,6 +70,54 @@ language:
     - Ultraviolet
     - Scramjet
     - Rammerhead
+    - Tab Cloaker
+    - Tab Cloakers
+    - Search
+    - Searching
+    - Freely
+    - Free
+    - Surfing
+    - Surf
+    - VPNs
+    - Server
+    - Servers
+    - Network
+    - Networks
+    - Connection
+    - Connections
+    - Privacy
+    - Private
+    - Games
+    - Proxychain
+    - Proxychaining
+    - Censorship
+    - Firewall
+    - Firewalls
+    - Anonymous
+    - Anonymity
+    - Block
+    - Filter
+    - Restrict
+    - Censor
+    - Evade
+    - Evasion
+    - Stealth
+    - Cloak
+    - Incognito
+    - Disguise
+    - School
+    - Mirror
+    - Proxy
+    - Proxies
+    - Proxied
+    - Proxying
+    - Unblock
+    - Unblocked
+    - Unblocking
+    - Unblocks
+    - Unblocker
+    - Unblockers
+    - Bypass
 
 home:
   title: InvisiProxy LTS | 免費網頁代理 - 繞過過濾並訪問被封鎖的網站
@@ -436,6 +484,42 @@ faq:
       或者，如果你在使用某種隱身模式，右鍵單擊頁面並選擇<code>重新載入框架</code>。
 
 privacy:
+  title: 隱私政策
+  subtitle: InvisiProxy LTS，一個注重隱私的網頁代理服務。
+  effective: 生效日期：2021-07-16
+  updated: 更新日期：2026-11-26
+  what:
+    title: 什麼是 InvisiProxy？
+    body: InvisiProxy LTS 是一款在瀏覽器中運作的網頁代理。網站不再直連，而是經由代理開啟，因此網路只會看到代理。被網路、學校或政府封鎖的網站重新可達，Tor/Onion 網站也能在任何瀏覽器中開啟。無需下載，無需安裝。
+  data:
+    title: 收集哪些資料？
+    body: InvisiProxy 不記錄你的瀏覽。Wisp 伺服器以關閉連線日誌的方式啟動：不記錄位址，不記錄目標，不產生記錄。專案隨附的 nginx 設定在代理路徑上關閉了存取日誌，任何請求日誌都不會寫入磁碟。<br/><br/>唯一的例外，僅存在於記憶體中：鏡像連結按鈕會記住你的位址五秒鐘，以防止按鈕被灌爆。它永遠不會寫入磁碟，也不留記錄。<br/><br/>攻擊與洪泛由速率限制與連線上限處理，而不是靠日誌。按連線的日誌作為除錯選項存在，但在本專案隨附的每份設定中預設皆為關閉。<br/><br/>DNS 查詢在伺服器上解析。DNS 供應商由營運者選擇（自架者常用過濾式 DNS）；專案不會在其上再添加任何日誌。<br/><br/>官方網站經由 Cloudflare 分發。與任何 CDN 一樣，它會看到你的 IP 位址和每個請求的目標位址；這些資料的處理方式見 Cloudflare 自己的隱私政策。<br/><br/>這一切不必全憑信任。全部開源，你可以隨時自架，由自己掌控整套設施。
+  security:
+    title: 安全
+    body: Wisp 把瀏覽器原本要開的每條流都透過一條 WebSocket 送到代理伺服器，由它建立真正的連線。簡要說：
+    performance: 速度：Wisp 直接以 WebSocket 幀傳送站點資料，頁面保持快速。
+    compatibility: 相容性：Libcurl 等開放傳輸讓代理與各類網站和服務保持相容。
+    censorship: 抗審查：協議的設計讓過濾器難以看到、也難以封鎖你存取的內容。
+    fingerprinting: 指紋：反向代理對重寫進行隨機化，工作階段更難被單獨識別，代理也更難被封鎖。
+    encryption: 加密：HTTPS 網站在你和它之間保持端對端加密；官方網站的 Wisp 連線本身使用 wss://（TLS）。重寫棧的一部分仍在開發中，這一節會隨之完善。
+    transparency: 開源：以上全部都可在儲存庫中查核，變更公開。
+  advertising:
+    title: 廣告
+    body: 免費網域會顯示廣告以支付託管費用。Patreon 實例始終無廣告。廣告由第三方廣告網路投放：Adsterra、Adcash、Monetag。廣告只出現在 InvisiProxy 自己的頁面和載入畫面中，絕不出現在你經代理瀏覽的網站裡。<br/><br/>廣告載入時，其網路會收到你的 IP 位址、User-Agent 和所在頁面，並可能寫入或讀取自己的 Cookie。其資料處理遵循各自的隱私政策，而非本政策。<br/><br/>廣告阻擋器可以擋掉這一切；uBlock Origin 有效，或使用 Patreon 實例。
+  usage:
+    title: 儲存在你裝置上的內容
+    storage: 你的設定、分頁和書籤存在瀏覽器裡：Cookie、localStorage、sessionStorage 和 IndexedDB。它們不會離開你的裝置，也完全不用於分析。
+    cookies: 如果瀏覽器拒絕 Cookie，分頁、書籤和設定選單等功能將停止運作，因為沒有地方可存。任何內容都不用於追蹤；只有代理自身功能依賴它（Scramjet 快取與工作階段狀態、分頁、書籤、自動補全、分頁偽裝、圖示預設、傳輸選項、搜尋引擎、主題、語言、視窗類型、Tor 路由、區域切換、隱藏廣告、隱藏紀錄、封鎖視窗洩漏、封鎖 WebRTC 和指紋隨機化）。
+    serviceWorkers: Service Worker 位於頁面與網路之間；代理需要它來轉發流量。清除站點儲存即會將其移除。
+    consent: 繼續使用本站即視為接受上述儲存，以及在法律不要求另行同意時廣告夥伴的 Cookie。
+  changes:
+    title: 變更
+    body: 政策可能變化；頂部的更新日期標明最近一次改動。本頁始終列出現行政策。
+  contact:
+    title: 聯絡方式
+    body: 關於本政策的問題，或資料與隱私請求：請致函
+
+rivacy:
   title: 隱私政策
   subtitle: InvisiProxy，一款私密的網頁代理服務。
   effective: '生效日期：2021-07-16'
