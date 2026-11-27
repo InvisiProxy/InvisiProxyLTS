@@ -1,6 +1,6 @@
 services:
   invisiproxy:
-    image: quiteafancyemerald/invisiproxy:8.3.4
+    image: quiteafancyemerald/invisiproxy:8.4.2
     build: .
     container_name: invisiproxy
     ports:
