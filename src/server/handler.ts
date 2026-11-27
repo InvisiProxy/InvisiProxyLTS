@@ -385,6 +385,19 @@ export function createSiteHandler({
 
 	return (req, res) => {
 		applyResponseHooks(req, res, development);
+		// Emergency lever for poisoned client state (a bad release that
+		// persisted broken settings): while true, wrapper navigations
+		// carry Clear-Site-Data and wipe the browser's storage, caches and
+		// cookies for this origin -- users lose bookmarks and tabs too, so
+		// leave it off outside a one-release repair window. Only browser
+		// document navigations carry it; the service worker's fetches (dest
+		// "empty") never do, so proxied sessions are not wiped mid-flight.
+		if (
+			config.forceClearSiteData &&
+			(req.method === 'GET' || req.method === 'HEAD') &&
+			req.headers['sec-fetch-dest'] === 'document'
+		)
+			res.setHeader('Clear-Site-Data', '"cache", "cookies", "storage"');
 		let url = req.url || '/';
 		let path = trimSlash(url.split('?')[0].replace(/\/{2,}/g, '/'));
 		// /fr/questions is the French copy of /questions.

@@ -17,5 +17,6 @@
 	"dlpcc": false,
 	"dlpccNginx": false,
 	"dns": "resolve",
-	"manageWisp": true
+	"manageWisp": true,
+	"forceClearSiteData": false
 }

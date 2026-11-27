@@ -40,6 +40,7 @@ import {
 } from '../../../src/browser/error-page.ts';
 import { proxyCodec } from '../../../src/browser/proxy-codec.ts';
 import { skipHttpCache } from '../../../src/browser/http-cache.ts';
+import { migrateSettings } from '../../../src/browser/settings-migration.ts';
 import {
   selectedScramjetVersion,
 } from '../../../src/browser/scramjet-version.ts';
@@ -59,6 +60,13 @@ import { createCatchEscapedLinksPlugin } from '../../../src/browser/scramjet-plu
     storageId = `${values.storageNamespace}-storage`,
     storageObject = () => JSON.parse(localStorage.getItem(storageId)) || {},
     readStorage = (name) => storageObject()[name];
+
+  // Repair settings older builds persisted (the removed site-fixes
+  // default-on coupling saved Tor routing); runs once per browser before
+  // any setting is read.
+  const repairedSettings = JSON.stringify(migrateSettings(storageObject()));
+  if (repairedSettings !== localStorage.getItem(storageId))
+    localStorage.setItem(storageId, repairedSettings);
 
   const transportName = selectedTransport(readStorage('Transport')),
     transportUrl = values.transportPaths[transportName],

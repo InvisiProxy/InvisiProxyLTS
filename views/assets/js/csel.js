@@ -21,6 +21,7 @@ import {
   storedUserAgent,
   userAgentPresets,
 } from '../../../src/browser/fingerprint.ts';
+import { migrateSettings } from '../../../src/browser/settings-migration.ts';
 /* -----------------------------------------------
 /* Authors: Yoct, OlyB, b4kt
 /* GNU Affero General Public License v3.0: https://www.gnu.org/licenses/agpl-3.0.en.html
@@ -294,6 +295,14 @@ const storageId = `${values.storageNamespace}-storage`,
   }),
   defaultTheme = 'dark',
   defaultSearch = values.defaultSearch;
+
+// Repair settings written by older builds before anything reads them: the
+// removed site-fixes default-on coupling saved Tor routing for anyone it
+// switched on, leaving those sessions on a dead upstream. Runs once per
+// browser; any future repair bumps the version in migrateSettings.
+const repairedSettings = JSON.stringify(migrateSettings(storageObject()));
+if (repairedSettings !== localStorage.getItem(storageId))
+  localStorage.setItem(storageId, repairedSettings);
 
 // All code in this block is used by menu items that adjust website settings.
 

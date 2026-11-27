@@ -32,6 +32,7 @@ const settingKeys = [
 	'Sandbox',
 	'SearchEngine',
 	'SearchNavFix',
+	'SettingsMigrated',
 	'Theme',
 	'Title',
 	'Transport',
