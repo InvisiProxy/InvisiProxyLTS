@@ -11,6 +11,7 @@ import {
 	siteUrl,
 } from '../constants.ts';
 import { apiPath, getPathAliases, getAltPrefix } from '../obfuscation/paths.ts';
+import { settingKey } from '../obfuscation/settings.ts';
 import { createAds, type SiteAds, withHead } from './ads.ts';
 import { preloaded404, tryReadFile } from './files.ts';
 import { loadLanguages, pickLanguage } from './language.ts';
@@ -149,13 +150,21 @@ function applyResponseHooks(
 ) {
 	for (const [name, value] of securityHeaders) res.setHeader(name, value);
 	const cookies = (req.headers.cookie || '').split('; ');
-	if (
-		cookies.includes('ExperimentalSiteFixes=true') ||
-		cookies.includes('AutoSiteFixes=true')
-	)
+	// Both the per-build cookie names and the plain ones: development
+	// ships unsanitized and an old state file must not break the cookies.
+	const siteFixesNames = [
+		settingKey('ExperimentalSiteFixes'),
+		settingKey('AutoSiteFixes'),
+		'ExperimentalSiteFixes',
+		'AutoSiteFixes',
+	];
+	if (siteFixesNames.some((name) => cookies.includes(`${name}=true`)))
 		res.setHeader('Cross-Origin-Embedder-Policy', 'credentialless');
-	const historyHide = cookies
-		.find((cookie) => cookie.startsWith('HistoryHide='))
+	const historyHide = [settingKey('HistoryHide'), 'HistoryHide']
+		.map((name) =>
+			cookies.find((cookie) => cookie.startsWith(`${name}=`))
+		)
+		.find(Boolean)
 		?.split('=')[1];
 	const hide =
 		historyHide === 'true' && req.headers['sec-fetch-dest'] === 'document';

@@ -226,10 +226,10 @@ import {
     if (
       crossOriginIsolated ||
       !autoSiteFixes(url) ||
-      document.cookie.split('; ').includes('AutoSiteFixes=true')
+      document.cookie.split('; ').includes(`${'AutoSiteFixes'}=true`) // quoted so the cookie name gets the build's settings token
     )
       return false;
-    document.cookie = 'AutoSiteFixes=true; path=/; SameSite=None; Secure;';
+    document.cookie = `${'AutoSiteFixes'}=true; path=/; SameSite=None; Secure;`;
     save();
     location.reload();
     return true;

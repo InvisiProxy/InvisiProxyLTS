@@ -407,7 +407,7 @@ import { createCatchEscapedLinksPlugin } from '../../../src/browser/scramjet-plu
       }
       await loadScript(paths.core);
       await loadScript(paths.api);
-      console.log(`Using ${versionName === 'v3' ? 'Scramjet 3.0.0-alpha' : 'Scramjet 2.1.0'} (Proxy Version setting)`);
+      console.log(`Using ${versionName === 'v3' ? 'Scramjet 3.0.0-alpha' : 'Scramjet 2.1.0'} (Version setting)`);
       HttpCachePlugin = createHttpCachePlugin($scramjetController.ManagedPlugin);
       UrlWatcherPlugin = createUrlWatcherPlugin($scramjetController.ManagedPlugin);
       CatchEscapedLinksPlugin = createCatchEscapedLinksPlugin(
@@ -416,7 +416,7 @@ import { createCatchEscapedLinksPlugin } from '../../../src/browser/scramjet-plu
       );
 
       const transportOptions = getTransportOptions();
-      console.log('Using wisp:', transportOptions.wisp);
+      console.log('Using endpoint:', transportOptions.wisp);
       console.log('Transport mode:', transportUrl);
 
       const [registration, transport] = await Promise.all([

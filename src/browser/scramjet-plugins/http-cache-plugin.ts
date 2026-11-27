@@ -222,13 +222,24 @@ function nativeHeadersFromRaw(
 	return h;
 }
 
-/** Strip our internal bookkeeping from a stored Response's headers. */
+/**
+ * Rebuild the stored response's Headers, keeping multi-value `set-cookie`
+ * intact. `stored.headers.entries()` would join separate Set-Cookie lines
+ * with ", ", which breaks scramjet's cookie parsing; `getSetCookie()` gives
+ * them back one by one.
+ */
 function strippedHeadersFromStored(stored: Response): Headers {
 	const out = new Headers();
 	for (const [k, v] of stored.headers.entries()) {
 		if (k.toLowerCase() === STORED_AT_HEADER) continue;
+		if (k.toLowerCase() === 'set-cookie') continue;
 		try {
 			out.append(k, v);
+		} catch {}
+	}
+	for (const cookie of stored.headers.getSetCookie()) {
+		try {
+			out.append('set-cookie', cookie);
 		} catch {}
 	}
 	return out;
@@ -263,14 +274,19 @@ async function rebuildBareResponseWithBuffer(
 	}
 
 	const buf = await bare.arrayBuffer();
+	const replacement = BareResponse.fromNativeResponse(
+		new Response(buf, {
+			status,
+			statusText: bare.statusText,
+			headers,
+		})
+	);
+	// The Headers round-trip above collapses multiple `set-cookie` lines and
+	// reformats header casing; the pipeline's cookie machinery reads the raw
+	// pairs, so hand it the untouched originals verbatim.
+	replacement.rawHeaders = bare.rawHeaders;
 	return {
-		replacement: BareResponse.fromNativeResponse(
-			new Response(buf, {
-				status,
-				statusText: bare.statusText,
-				headers,
-			})
-		),
+		replacement,
 		bodyBuffer: buf,
 	};
 }

@@ -17,6 +17,7 @@ export interface ObfuscationState {
 	ids: Record<string, string>;
 	fontCipher?: FontCipher;
 	scramjet?: ScramjetTokens;
+	settings?: Record<string, string>;
 }
 let cached: ObfuscationState | undefined;
 let serialized: string | undefined;
