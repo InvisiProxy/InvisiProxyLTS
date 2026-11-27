@@ -5,6 +5,8 @@ import {
 	fixFetchHandler,
 	headlessBody,
 	fixScriptSource,
+	isDownloadResponse,
+	isHtmlContentType,
 	obsidianSameTab,
 	type ScramjetFetchRequestTarget,
 	siteCacheKey,
@@ -79,6 +81,76 @@ describe('Experimental site fixes', () => {
 			'GET script default',
 			'HEAD  default',
 		]);
+	});
+
+	test('File downloads are recognized from the response, without site-specific rules.', () => {
+		const response = (url: string, headers?: HeadersInit) => ({
+			url: new URL(url),
+			headers: new Headers(headers),
+		});
+		for (const download of [
+			// A text/html mislabel on an attachment is GameBanana, MediaFire, and
+			// Discord CDN behavior; the disposition wins over the content type.
+			response('https://site/files/map.zip', {
+				'content-type': 'text/html',
+				'content-disposition': 'attachment; filename="map.zip"',
+			}),
+			response('https://site/files/skin', {
+				'content-type': 'application/octet-stream',
+			}),
+			response('https://site/files/pack.7z', {
+				'content-type': 'application/x-7z-compressed',
+			}),
+			response('https://site/files/client', {
+				'content-type': 'audio/mpeg',
+			}),
+			response('https://site/dl/65536/tool.exe'),
+			response('https://site/assets/save.tar.gz'),
+		])
+			assert.ok(
+				isDownloadResponse(download, download.url),
+				download.url.href
+			);
+
+		for (const page of [
+			response('https://site/downloads', { 'content-type': 'text/html' }),
+			response('https://site/downloads/index', {
+				'content-type': 'text/html',
+				'content-disposition': 'inline',
+			}),
+			// A rendered page that merely lives on a file-style path stays a
+			// page: leaving it unrewritten would leak raw site links.
+			response('https://site/dl/65536/repack', {
+				'content-type': 'text/html',
+			}),
+			response('https://site/files/preview.png', {
+				'content-type': 'image/png',
+			}),
+			response('https://site/docs/read-me', {
+				'content-type': 'text/plain',
+			}),
+		])
+			assert.equal(
+				isDownloadResponse(page, page.url),
+				false,
+				page.url.href
+			);
+	});
+
+	test('Only the HTML text type is treated as rewritable HTML.', () => {
+		for (const type of [
+			'text/html',
+			'TEXT/HTML',
+			'text/html; charset=utf-8',
+		])
+			assert.equal(isHtmlContentType(type), true, type);
+		for (const type of [
+			'text/plain',
+			'application/json',
+			'text/htmlx',
+			null,
+		])
+			assert.equal(isHtmlContentType(type), false, String(type));
 	});
 
 	test('A HEAD answered by a GET keeps its headers and drops its body.', async () => {

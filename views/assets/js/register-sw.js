@@ -26,6 +26,8 @@ import {
   autoSiteFixes,
   fixFetchHandler,
   headlessBody,
+  isDownloadResponse,
+  isHtmlContentType,
   keepHistoryUrl,
   obsidianSameTab,
   scriptSafeBody,
@@ -296,6 +298,19 @@ import { createCatchEscapedLinksPlugin } from '../../../src/browser/scramjet-plu
               response.ok
             )
               props.response = replaceBody(response, scriptSafeBody(response));
+            else if (
+              ['document', 'iframe'].includes(parsed.destination) &&
+              isDownloadResponse(response, parsed.url)
+            ) {
+              // File downloads bypass the HTTP cache (which buffers whole
+              // bodies) and the HTML rewriter. Only the internal headers
+              // change, and the page-facing headers are rebuilt from the
+              // untouched raw ones, so the server's own Content-Type and
+              // Content-Disposition still reach the browser.
+              request.cache = 'no-store';
+              if (isHtmlContentType(response.headers.get('content-type')))
+                response.headers.set('content-type', 'application/octet-stream');
+            }
           },
           { before: ['scramjet-http-cache'] }
         );
