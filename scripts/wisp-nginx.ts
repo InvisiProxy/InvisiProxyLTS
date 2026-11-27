@@ -10,6 +10,7 @@
 // instances while manageWisp is on.
 import { spawnSync } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
+import { settingKey } from '../src/obfuscation/settings.ts';
 import {
 	finalwispRegionNames,
 	finalwispRegions,
@@ -39,7 +40,16 @@ for (const region of finalwispRegionNames()) {
 	if (!ROUTED.has(region)) continue;
 	const port = finalwispRegions[region]?.port;
 	if (!port) throw new Error(`no finalwisp instance for region "${region}"`);
-	const paths = region === '' ? [base] : [base + region, `${base + region}/`];
+	// The per-build token serves the sanitized client bundles; the plain
+	// region name keeps development builds and clients that predate the
+	// tokenized paths routed.
+	const segments = [
+		...new Set(region === '' ? [''] : [region, settingKey(region)]),
+	];
+	const paths = new Set<string>();
+	for (const segment of segments)
+		for (const suffix of segment === '' ? [''] : [segment, `${segment}/`])
+			paths.add(`${base}${suffix}`);
 	for (const path of paths)
 		lines.push(
 			`location = ${path} {`,

@@ -6,6 +6,7 @@ import data from '../data.json' with { type: 'json' };
 import { fontCipher } from '../obfuscation/fonts.ts';
 import { keywordPool } from '../obfuscation/keywords.ts';
 import { getPathAliases } from '../obfuscation/paths.ts';
+import { settingKey } from '../obfuscation/settings.ts';
 import { type HoneypotForm, type SiteValues, setSiteValues } from '../site.ts';
 import { builtLocales, loadLocales } from './locales.ts';
 
@@ -104,6 +105,19 @@ export const buildValues: SiteValues = {
 	basePath: serverUrl.pathname,
 	get aliases() {
 		return getPathAliases();
+	},
+	get transportPaths() {
+		const path = (name: string) =>
+			`${this.basePath}${getPathAliases()[`prefixes/${name}`] || name}/index.mjs`;
+		// Keyed by the per-build tokens and the plain names: development
+		// serves unsanitized bundles, and the sanitizer maps the plain keys
+		// to the same tokens before the production chunks ship.
+		return {
+			[settingKey('libcurl')]: path('libcurl'),
+			[settingKey('epoxy')]: path('epoxy'),
+			libcurl: path('libcurl'),
+			epoxy: path('epoxy'),
+		};
 	},
 	cacheBust: {},
 	version: String(data.version),

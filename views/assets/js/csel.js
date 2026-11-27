@@ -170,7 +170,7 @@ const storageId = `${values.storageNamespace}-storage`,
     if (window.$invisiScramjetError) return null;
     const transportName = selectedTransport(readStorage('Transport'));
     return openTransport(
-      route(`/${transportName}/index.mjs`),
+      values.transportPaths[transportName],
       selectedWisp(
         storageObject(),
         transportName,
@@ -777,20 +777,16 @@ useStorageArgs('SearchEngine', (s) => {
 });
 
 const mobileBrowser = isMobileBrowser(),
-  transportName = selectedTransport(readStorage('Transport'), mobileBrowser),
-  transportValue = (name) => values.aliases[`prefixes/${name}`] || name;
+  transportName = selectedTransport(readStorage('Transport'), mobileBrowser);
 if (mobileBrowser || transportName === 'epoxy') setStorage('Transport', transportName);
 else if (readStorage('Transport') !== undefined) removeStorage('Transport');
 for (const transportSelector of document.getElementsByClassName('transport-list')) {
-  transportSelector.value = transportValue(transportName);
+  // The select values are the per-build transport tokens, so the stored
+  // value is the token the transport module URL is looked up by.
+  transportSelector.value = transportName;
   transportSelector.closest('.transport-setting').hidden = mobileBrowser;
   transportSelector.addEventListener('change', () => {
-    setStorage(
-      'Transport',
-      ['libcurl', 'epoxy'].find(
-        (name) => transportValue(name) === transportSelector.value
-      ) || 'libcurl'
-    );
+    setStorage('Transport', transportSelector.value);
     location.reload();
   });
 }

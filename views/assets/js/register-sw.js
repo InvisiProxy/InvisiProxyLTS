@@ -59,7 +59,7 @@ import { createCatchEscapedLinksPlugin } from '../../../src/browser/scramjet-plu
     readStorage = (name) => storageObject()[name];
 
   const transportName = selectedTransport(readStorage('Transport')),
-    transportUrl = route(`/${transportName}/index.mjs`),
+    transportUrl = values.transportPaths[transportName],
     siteFixes = readStorage('ExperimentalSiteFixes') === true;
 
   // Everything version-specific lives in this table; both builds ship under

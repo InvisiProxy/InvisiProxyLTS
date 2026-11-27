@@ -197,6 +197,10 @@ function randomNames() {
 	const names: Record<string, string> = Object.fromEntries(
 		literalNames.map((name) => [name, identifier(8)])
 	);
+	// The rewriter strips a hardcoded 14 - the length of "scramjet-attr-"
+	// (13 chars plus the hyphen) - from hidden attributes to restore their
+	// original names, so the token has to keep that length exactly.
+	names['scramjet-attr'] = identifier(13);
 	// Kept under the attribute prefix, which Scramjet uses to hide its own
 	// attributes from pages.
 	names['scramjet-attr-script-source-src'] =

@@ -1,4 +1,5 @@
 import { config } from '../config.ts';
+import { isDevelopment } from '../constants.ts';
 import {
 	generatedNames,
 	obfuscationState,
@@ -37,6 +38,15 @@ const settingKeys = [
 	'UseAC',
 	'UseSocks5',
 	'UserAgent',
+	// Stored values that identify the transport and the wisp region: the
+	// client picks the transport module and the wisp path suffix with the
+	// token too, and the server maps the token back to the real region.
+	'epoxy',
+	'eu',
+	'jp',
+	'libcurl',
+	'patreon',
+	'tor',
 ];
 
 // localStorage and CacheStorage entries assembled as
@@ -56,13 +66,20 @@ const storageKeyParts = [
 ];
 
 export function settingTokens(): Record<string, string> {
-	if (config.usingSEO) return {};
+	// Development serves unobfuscated scripts, so the plain names stay in
+	// sync with everything the dev client sends; SEO builds keep them too.
+	if (config.usingSEO || isDevelopment()) return {};
 	const state = obfuscationState();
-	if (!state.settings) {
-		state.settings = generatedNames(
-			[...settingKeys, ...storageKeyParts],
-			'settings'
-		);
+	// Extends an existing mapping instead of regenerating it, so settings
+	// keys keep their names across builds (users keep their settings) and
+	// words added to the lists get tokens on the next build.
+	const wanted = [...settingKeys, ...storageKeyParts];
+	const missing = wanted.filter((key) => !state.settings?.[key]);
+	if (!state.settings || missing.length) {
+		state.settings = {
+			...state.settings,
+			...generatedNames(missing, 'settings'),
+		};
 		saveObfuscationState(state);
 	}
 	return state.settings;
@@ -76,15 +93,46 @@ export function settingKey(key: string): string {
 	return settingTokens()[key] || key;
 }
 
-// Swaps the quoted settings key literals in bundled site scripts.
+// Swaps the quoted settings key literals in bundled site scripts. Runs on
+// the bundler output before the minifier (renderChunk) and again at
+// generateBundle; the minified output may carry \x-escaped copies, so the
+// escaped spellings are matched too.
 export function scrubSettingKeys(source: string): string {
 	if (config.usingSEO) return source;
 	const tokens = settingTokens();
-	for (const key of settingKeys)
+	for (const key of settingKeys) {
+		const token = tokens[key];
+		if (!token) continue;
 		source = source
-			.replaceAll(`'${key}'`, `'${tokens[key]}'`)
-			.replaceAll(`"${key}"`, `"${tokens[key]}"`);
+			.replaceAll(`'${key}'`, `'${token}'`)
+			.replaceAll(`"${key}"`, `"${token}"`)
+			.replaceAll(
+				new RegExp(
+					`(["'])${escapeSpelling(key)}\\1`,
+					'g'
+				),
+				`'${token}'`
+			);
+	}
 	return source;
+}
+
+// Matches a word spelled with any per-character mix of plain letters, \xNN
+// and \u00NN escapes, as the minifier emits inside quoted strings.
+function escapeSpelling(word: string): string {
+	const plain = (ch: string) => ch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	return word
+		.split('')
+		.map((ch) => {
+			const hex = ch.charCodeAt(0).toString(16).padStart(2, '0');
+			// Hex escapes decode case-insensitively, so an a-f digit can be
+			// spelled with either case; the other nibble stays literal.
+			const lo = /[a-f]/.test(hex[1])
+				? `[${hex[1]}${hex[1].toUpperCase()}]`
+				: hex[1];
+			return `(?:${plain(ch)}|\\x${hex[0]}${lo}|\\u00${hex[0]}${lo})`;
+		})
+		.join('');
 }
 
 // Swaps the `-<part>` storage name suffixes wherever a key is assembled.

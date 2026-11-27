@@ -32,6 +32,7 @@ import {
 	stripObfuscatedMarker,
 } from '../obfuscation/scripts.ts';
 import { saltAsset, saltBlocklist, saltToken } from '../obfuscation/assets.ts';
+import { settingTokens } from '../obfuscation/settings.ts';
 import {
 	builtFonts,
 	cipherFontFamilies,
@@ -233,6 +234,10 @@ async function buildApp(builder: ViteBuilder) {
 	readFromStaging(true);
 	try {
 		await getPlainDocuments(true);
+		// Generate the settings/storage token names before any environment
+		// builds: every script and page build must scrub and render with
+		// the same mapping.
+		settingTokens();
 		await builder.build(built.client);
 		await Promise.all(
 			siteScripts().map((_, index) =>

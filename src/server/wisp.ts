@@ -2,6 +2,7 @@ import type { IncomingMessage } from 'node:http';
 import { isIP } from 'node:net';
 import { config, serverUrl } from '../config.ts';
 import { getAltPrefix } from '../obfuscation/paths.ts';
+import { settingKey } from '../obfuscation/settings.ts';
 
 export const wispPath = () => getAltPrefix('wisp', serverUrl.pathname);
 
@@ -124,7 +125,16 @@ export function wispRegion(url: string | null | undefined): string | null {
 	if (path === base) return '';
 	if (!path.startsWith(base)) return null;
 	const region = path.slice(base.length).replace(/\/$/, '');
-	return region in finalwispRegions ? region : null;
+	if (region === '') return '';
+	// The sanitized client sends the per-build token; the plain name keeps
+	// development builds and clients from before the tokenized paths
+	// working.
+	if (region in finalwispRegions) return region;
+	return (
+		(Object.keys(finalwispRegions) as WispRegion[]).find(
+			(name) => name !== '' && settingKey(name) === region
+		) ?? null
+	);
 }
 export const isWispRequest = (url: string | null | undefined) =>
 	wispRegion(url) !== null;

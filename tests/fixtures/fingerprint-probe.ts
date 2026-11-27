@@ -30,7 +30,15 @@ const base = origin + serverUrl.pathname;
 
 const target = createServer((req, res) => {
 	res.setHeader('Content-Type', 'text/html');
-	res.end(`<!doctype html><meta charset="utf-8"><div id="mine"></div>`);
+	if ((req.url ?? '/').includes('inner')) {
+		res.end('<!doctype html><p>inner</p>');
+		return;
+	}
+	res.end(
+		`<!doctype html><meta charset="utf-8"><div id="mine"></div>` +
+			`<iframe src="/inner" width="100" height="50"></iframe>` +
+			`<script>var x = 1</script>`
+	);
 });
 await new Promise<void>((resolve) =>
 	target.listen(targetPort, '127.0.0.1', resolve)
@@ -97,6 +105,7 @@ try {
 			styles: [] as string[],
 			elements: [] as string[],
 			metas: [] as string[],
+			name: String(window.name ?? ''),
 		};
 		for (const s of document.querySelectorAll('style'))
 			out.styles.push(s.textContent?.slice(0, 200) ?? '');
@@ -128,10 +137,45 @@ try {
 	console.log(JSON.stringify(dump, null, 1));
 	const frameAttrs = await frame
 		.frameElement()
-		.then((e) => e.outerHTML.slice(0, 300))
+		.then((e) =>
+			e.evaluate((el) =>
+				(
+					el as unknown as Element & { outerHTML: string }
+				).outerHTML.slice(0, 300)
+			)
+		)
 		.catch(() => '(frame element not reachable)');
 	console.log('--- the tab iframe element (in the app page):');
 	console.log(frameAttrs);
+
+	// Extensions read the NATIVE dom, not scramjet's fakes; reach the tab
+	// iframe through its element handle (it sits in a closed shadow root).
+	const native = await frame
+		.frameElement()
+		.then((el) =>
+			el.evaluate((node) => {
+				const f = node as unknown as HTMLIFrameElement;
+				const doc = f.contentDocument;
+				return doc
+					? {
+							ifame: f.outerHTML.slice(0, 400),
+							native: doc.documentElement.outerHTML.slice(
+								0,
+								2500
+							),
+						}
+					: null;
+			})
+		)
+		.catch((e) => `error: ${String(e).split('\n')[0]}`);
+	console.log('--- the tab iframe (native, from the app page):');
+	console.log(
+		typeof native === 'string' ? native : (native?.ifame ?? '(missing)')
+	);
+	console.log('--- proxied page NATIVE html (what extensions see):');
+	console.log(
+		typeof native === 'string' ? native : (native?.native ?? '(missing)')
+	);
 } finally {
 	await browser.close();
 	target.close();

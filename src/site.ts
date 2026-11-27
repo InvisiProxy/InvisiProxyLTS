@@ -6,6 +6,9 @@ export interface SiteValues {
 	inlineAssets: boolean;
 	basePath: string;
 	aliases: Record<string, string>;
+	// The transport module URLs keyed by the per-build transport tokens
+	// (and by the plain names, for development bundles).
+	transportPaths: Record<string, string>;
 	cacheBust: Record<string, string>;
 	version: string;
 	cacheKey: number;

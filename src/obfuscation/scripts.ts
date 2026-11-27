@@ -55,6 +55,13 @@ export function browserObfuscationPlugin(): Plugin {
 		name: 'invisiproxy-obfuscation',
 		apply: 'build',
 		enforce: 'post',
+		// Runs before the bundler's minifier, whose output escapes quoted
+		// strings into \x sequences the signature replacements cannot match.
+		async renderChunk(code) {
+			const scrubbed = scrubSettingKeys(code);
+			if (scrubbed === code) return null;
+			return { code: scrubbed, map: null };
+		},
 		generateBundle(_options, bundle) {
 			if (config.usingSEO) return;
 			for (const output of Object.values(bundle)) {
