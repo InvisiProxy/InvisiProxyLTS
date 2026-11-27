@@ -454,7 +454,7 @@ proxySettings:
     when browsing. Optional.
   experimentalSiteFixes: Experimental site fixes
   experimentalSiteFixesDescription: >-
-    Mix of manual site support fixes. May break sites and leak real IP; use at own risk.
+    Mix of manual site support fixes including downloading files. May break sites and leak real IP; use at own risk.
   hideHistoryDescription: Hide local browsing history. Networks can still sniff history but it is proxied.
   randomizeFingerprint: Randomize browser fingerprint
   randomizeFingerprintDescription: >-
