@@ -21,5 +21,6 @@ export const obfuscatedMarker = '/* obfuscated */';
 export const disguiseExtension = 'ico';
 
 export const linkCooldownMs = 5000;
+export const linkDailyLimit = 2;
 export const linkRotationMs = 24 * 60 * 60 * 1000;
 export const maxTrackedClients = 10000;

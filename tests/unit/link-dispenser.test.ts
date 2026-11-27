@@ -5,7 +5,11 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import type { IncomingMessage } from 'node:http';
-import { linkRotationMs } from '../../src/constants.ts';
+import {
+	linkCooldownMs,
+	linkDailyLimit,
+	linkRotationMs,
+} from '../../src/constants.ts';
 import {
 	clientKeys,
 	createLinkDispenser,
@@ -141,6 +145,23 @@ describe('Mirror link API', () => {
 		for (let i = 1; i <= 10; i++)
 			assert.equal((await request(`203.0.113.${i}`)).statusCode, 200);
 		assert.equal((await request('192.0.2.50')).statusCode, 200);
+	});
+
+	test('Clients only get a few links per day.', async (t) => {
+		t.mock.timers.enable({ apis: ['Date'], now: 1000 });
+		const { request } = await dispenser(t, 'https://one.example/');
+		assert.equal((await request()).statusCode, 200);
+		for (let i = 1; i < linkDailyLimit; i++) {
+			t.mock.timers.tick(linkCooldownMs);
+			assert.equal((await request()).statusCode, 200);
+		}
+		t.mock.timers.tick(linkCooldownMs);
+		const capped = await request();
+		assert.equal(capped.statusCode, 429);
+		assert.ok(Number(capped.headers['retry-after']) > 0);
+		// Rejected attempts never count, and the limit lifts after a day.
+		t.mock.timers.tick(linkRotationMs);
+		assert.equal((await request()).statusCode, 200);
 	});
 
 	test('The cooldown covers an IPv6 /64 and IPv4-mapped addresses.', async (t) => {

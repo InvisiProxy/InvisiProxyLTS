@@ -7,6 +7,7 @@ import { pathToFileURL } from 'node:url';
 import { config } from '../config.ts';
 import {
 	linkCooldownMs,
+	linkDailyLimit,
 	linkRotationMs,
 	maxTrackedClients,
 	projectDir,
@@ -126,17 +127,24 @@ function assignedLink(
 
 export interface DispenserOptions {
 	maxClients?: number;
+	dailyLimit?: number;
 }
 
 export function createLinkDispenser(
 	file: URL = linksFile,
 	clientIp: ClientIp = defaultClientIp,
-	{ maxClients = maxTrackedClients }: DispenserOptions = {}
+	{
+		maxClients = maxTrackedClients,
+		dailyLimit = linkDailyLimit,
+	}: DispenserOptions = {}
 ) {
 	// Per process, so the assignments can't be computed from the source.
 	const key = randomBytes(32);
 	// Ordered oldest first: every request re-inserts its client.
 	const requests = new Map<string, number>();
+	// When each client was last dispensed a link, oldest first, to count
+	// against the daily limit.
+	const dispensed = new Map<string, number[]>();
 	let cached: { mtimeMs: number; size: number; links: string[] } | undefined;
 
 	async function loadLinks() {
@@ -172,10 +180,37 @@ export function createLinkDispenser(
 		}
 		requests.delete(client);
 		requests.set(client, now + linkCooldownMs);
+		// Same eviction as above: entries that still count block the oldest
+		// expired ones, and a flood of fresh addresses can't lock others out.
+		for (const [tracked, served] of dispensed) {
+			if (
+				served.some((at) => at > now - linkRotationMs) &&
+				dispensed.size < maxClients
+			)
+				break;
+			dispensed.delete(tracked);
+		}
 
 		try {
 			const links = await loadLinks();
-			if (links.length)
+			if (links.length) {
+				const served = (dispensed.get(client) ?? []).filter(
+					(at) => at > now - linkRotationMs
+				);
+				if (served.length >= dailyLimit && dailyLimit > 0)
+					return json(
+						res,
+						429,
+						{
+							error: `You can only receive ${dailyLimit} mirror links per day. Please try again later.`,
+						},
+						{
+							'Retry-After': Math.ceil(
+								(served[0] + linkRotationMs - now) / 1000
+							),
+						}
+					);
+				dispensed.set(client, [...served, now]);
 				return json(res, 200, {
 					link: assignedLink(
 						links,
@@ -184,6 +219,7 @@ export function createLinkDispenser(
 						key
 					),
 				});
+			}
 		} catch {}
 		return json(res, 503, {
 			error: 'No mirror links are available right now. Please check back later.',
