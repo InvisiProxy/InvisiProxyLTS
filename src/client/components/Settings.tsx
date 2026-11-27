@@ -61,6 +61,31 @@ export default function Settings() {
 							containerId="version-setting"
 						/>
 						<div class="setting-field">
+							<label for="settings-region">
+								{translate('settings.advanced.region')}
+							</label>
+							<select id="settings-region" class="region-list">
+								<option value="off">
+									{translate(
+										'settings.advanced.regions.default'
+									)}
+								</option>
+								<option value="eu">
+									{translate(
+										'settings.advanced.regions.sweden'
+									)}
+								</option>
+								<option value="jp">
+									{translate(
+										'settings.advanced.regions.japan'
+									)}
+								</option>
+								{values.patreon && (
+									<option value="patreon">Patreon</option>
+								)}
+							</select>
+						</div>
+						<div class="setting-field">
 							<label for="settings-search-engine">
 								{translate('settings.browsing.searchEngine')}
 							</label>
@@ -121,14 +146,6 @@ export default function Settings() {
 							class="useac"
 							checked
 						/>
-						<SettingToggle
-							label={translate('settings.browsing.serverRestart')}
-							description={translate(
-								'settings.browsing.serverRestartDescription'
-							)}
-							class="server-restart"
-							checked
-						/>
 					</SettingsSection>
 					<section class="settings-card settings-card-last">
 						<h2 class="cseltitle">
@@ -159,31 +176,14 @@ export default function Settings() {
 							)}
 							class="randomize-fingerprint"
 						/>
-						<div class="setting-field">
-							<label for="settings-region">
-								{translate('settings.advanced.region')}
-							</label>
-							<select id="settings-region" class="region-list">
-								<option value="off">
-									{translate(
-										'settings.advanced.regions.default'
-									)}
-								</option>
-								<option value="eu">
-									{translate(
-										'settings.advanced.regions.sweden'
-									)}
-								</option>
-								<option value="jp">
-									{translate(
-										'settings.advanced.regions.japan'
-									)}
-								</option>
-								{values.patreon && (
-									<option value="patreon">Patreon</option>
-								)}
-							</select>
-						</div>
+						<SettingToggle
+							label={translate('settings.browsing.serverRestart')}
+							description={translate(
+								'settings.browsing.serverRestartDescription'
+							)}
+							class="server-restart"
+							checked
+						/>
 						<div class="setting-field">
 							<label for="settings-window">
 								{translate('settings.advanced.window')}

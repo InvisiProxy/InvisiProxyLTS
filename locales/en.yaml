@@ -448,7 +448,7 @@ proxySettings:
     <faq>FAQ</faq> page if you have any issues with the proxy.
   title: Proxy Preferences
   connection: Connection
-  searchNavFix: Enable site fixes
+  searchNavFix: Enable browsing fixes
   searchNavFixDescription: >-
     Utilize plugin made by The Freedom Project to fix errors like "undefined"
     when browsing. Optional.
@@ -459,8 +459,7 @@ proxySettings:
   randomizeFingerprint: Randomize browser fingerprint
   randomizeFingerprintDescription: >-
     Uses a random desktop browser for each tab session and adds noise to
-    canvas, WebGL, CPU and memory readings. A chosen user agent still wins.
-    May break some sites.
+    canvas, WebGL, CPU and memory readings. May break some sites.
   proxyVersion: Proxy Version
   proxyVersionDescription: >-
     Scramjet V3 (Beta) is the newest release; switch to Scramjet 2.1.0 if a

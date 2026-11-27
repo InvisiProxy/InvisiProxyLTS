@@ -446,7 +446,7 @@ import { createCatchEscapedLinksPlugin } from '../../../src/browser/scramjet-plu
           ...defaultConfig,
           flags: {
             ...defaultConfig.flags,
-            allowFailedIntercepts: true,
+            allowFailedIntercepts: false,
             allowInvalidJs: false,
           },
         },
