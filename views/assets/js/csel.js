@@ -821,15 +821,10 @@ useStorageArgs('HideAds', (s) => {
   }
 });
 
-// Tor routing is only enabled by default when ExperimentalSiteFixes is on.
 useStorageArgs('UseSocks5', (s) => {
   const tor = document.getElementsByClassName('useonion'),
     regionList = document.getElementsByClassName('region-list');
-  if (
-    s === 'tor' ||
-    (s === undefined && readStorage('ExperimentalSiteFixes') === true)
-  )
-    classUpdateHandler(tor, 'on', classEvent(tor, 'change'))();
+  if (s === 'tor') classUpdateHandler(tor, 'on', classEvent(tor, 'change'))();
   else if ('string' === typeof s) classUpdateHandler(regionList, s)();
 });
 

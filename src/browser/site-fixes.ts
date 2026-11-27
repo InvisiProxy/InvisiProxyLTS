@@ -1,4 +1,4 @@
-const autoSites = ['playobsidian.com', 'truffled.lol'];
+const autoSites = ['playobsidian.com', 'gamebanana.com', 'truffled.lol'];
 const encapsulated =
 	/(?:importScripts\("|import ")(data:text\/javascript;charset=utf-8;base64,[\w+/=]+)"\)?;?\n$/;
 const workerDestinations = ['worker', 'sharedworker'];

@@ -28,6 +28,50 @@ describe('HTTP cache guard', () => {
 			);
 	});
 
+	test('Attachment responses bypass the cache, however they are labeled.', () => {
+		for (const headers of [
+			[['content-disposition', 'attachment; filename="map.zip"']],
+			[
+				['content-type', 'text/html'],
+				['content-disposition', 'attachment; filename="map.zip"'],
+			],
+			[
+				['content-type', 'application/zip'],
+				['content-disposition', 'attachment; filename="map.zip"'],
+			],
+		] as [string, string][][]) {
+			assert.equal(
+				skipHttpCache('document', [], headers),
+				true,
+				`${headers}`
+			);
+		}
+		
+		assert.equal(
+			skipHttpCache(
+				'iframe',
+				[],
+				[
+					['content-type', 'text/html'],
+					['content-disposition', 'ATTACHMENT; filename="skin.zip"'],
+				]
+			),
+			true
+		);
+
+		assert.equal(
+			skipHttpCache(
+				'document',
+				[],
+				[
+					['content-disposition', 'inline'],
+					['content-length', '128'],
+				]
+			),
+			false
+		);
+	});
+
 	test('Large or unsized fetch bodies bypass the cache, page assets do not.', () => {
 		assert.equal(skipHttpCache('', [], length(1024)), false);
 		assert.equal(skipHttpCache('', [], length(512 * 1024)), true);

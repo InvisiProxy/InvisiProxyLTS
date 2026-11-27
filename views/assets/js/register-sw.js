@@ -298,19 +298,6 @@ import { createCatchEscapedLinksPlugin } from '../../../src/browser/scramjet-plu
               response.ok
             )
               props.response = replaceBody(response, scriptSafeBody(response));
-            else if (
-              ['document', 'iframe'].includes(parsed.destination) &&
-              isDownloadResponse(response, parsed.url)
-            ) {
-              // File downloads bypass the HTTP cache (which buffers whole
-              // bodies) and the HTML rewriter. Only the internal headers
-              // change, and the page-facing headers are rebuilt from the
-              // untouched raw ones, so the server's own Content-Type and
-              // Content-Disposition still reach the browser.
-              request.cache = 'no-store';
-              if (isHtmlContentType(response.headers.get('content-type')))
-                response.headers.set('content-type', 'application/octet-stream');
-            }
           },
           { before: ['scramjet-http-cache'] }
         );
@@ -324,7 +311,9 @@ import { createCatchEscapedLinksPlugin } from '../../../src/browser/scramjet-plu
     })();
 
   // Keeps video and other large bodies from being buffered whole by the
-  // HTTP cache plugin, which otherwise exhausts tab memory on streaming sites.
+  // HTTP cache plugin, which otherwise exhausts tab memory on streaming sites,
+  // and keeps Scramjet's text/html rewriter (which also buffers whole bodies,
+  // without honouring Content-Disposition) from slurping file attachments.
   const buildCacheGuardPlugin = () =>
     new (class extends $scramjetController.ManagedPlugin {
       constructor() {
@@ -335,11 +324,25 @@ import { createCatchEscapedLinksPlugin } from '../../../src/browser/scramjet-plu
         this.tap(
           frame.hooks.fetch.preresponse,
           ({ request, parsed }, props) => {
+            const response = props.response;
+            if (
+              ['document', 'iframe'].includes(parsed.destination) &&
+              isDownloadResponse(response, parsed.url)
+            ) {
+              // File downloads bypass the HTTP cache (which buffers whole
+              // bodies) and the HTML rewriter. Only the internal headers
+              // change, and the page-facing headers are rebuilt from the
+              // untouched raw ones, so the server's own Content-Type and
+              // Content-Disposition still reach the browser.
+              request.cache = 'no-store';
+              if (isHtmlContentType(response.headers.get('content-type')))
+                response.headers.set('content-type', 'application/octet-stream');
+            }
             if (
               skipHttpCache(
                 parsed.destination ?? '',
                 request.initialHeaders?.toRawHeaders() ?? [],
-                props.response.rawHeaders ?? []
+                response.rawHeaders ?? []
               )
             )
               request.cache = 'no-store';

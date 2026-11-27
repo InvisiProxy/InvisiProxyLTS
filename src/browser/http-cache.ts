@@ -21,6 +21,14 @@ export function skipHttpCache(
 	responseHeaders: RawHeaders
 ): boolean {
 	if (mediaDestinations.includes(destination)) return true;
+
+	if (
+		header(responseHeaders, 'content-disposition')
+			?.trim()
+			.toLowerCase()
+			.startsWith('attachment')
+	)
+		return true;
 	if (header(requestHeaders, 'range') !== null) return true;
 	if (mediaType.test(header(responseHeaders, 'content-type') ?? ''))
 		return true;
