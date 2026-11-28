@@ -18,6 +18,10 @@
 
 This project serves mostly as a proof of concept for the ideal clientless solution to bypassing censorship. A good use case of this project would be if you ever needed a method to use Tor, swap regions when browsing (or use an external proxy), browse websites without making accounts (reduces fingerprinting), bypass adblocking, and/or leave minimal traces of device activity. Simply host this project on any domain and have an alternative solution to a VPN without needing to download anything on said device. Being a secure web proxy service, it supports numerous sites while being updated frequently and concentrating on being easy to self-host. InvisiProxy LTS works with a large number of sites, including YouTube, Gemini, ChatGPT, Discord, GeForce NOW and more! This project also features good amount of exclusive features compared to other web proxies in terms of bypassing web filters (DOM Masquerading, Font Obfuscation, Global Mangling and Source Randomization) and global censorship from countries. Current countries supported are China (GFW) and Russia.
 
+**Live Demo (Koyeb):** https://philosophical-kristi-quiteafancyemerald-a087c9e7.apps.mistral.run
+
+**Official Website (No Obfuscation):** https://invisiproxy.com
+
 #### Over 30M+ users since 2020. Thank you so much for the support I could have never imagined how massive the web proxy community has become.
 
 #### Current Branch: Latest
