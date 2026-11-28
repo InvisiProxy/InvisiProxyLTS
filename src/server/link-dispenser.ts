@@ -87,24 +87,17 @@ function ipv6Groups(ip: string) {
 	);
 }
 
-// `client` is who the cooldown applies to; `area` is the wider network that
-// shares one assigned link, so rotating addresses inside an ISP allocation
-// (an IPv6 /32 or an IPv4 /16) never reveals a second mirror.
-export function clientKeys(address: string) {
+// A client is an IPv4 address or an IPv6 /64. It keys the cooldown and the
+// assigned link alike, so rotating addresses inside one IPv6 allocation never
+// reveals a second mirror.
+export function clientKey(address: string) {
 	const ip = address.replace(/%.*$/, '').replace(/^::ffff:(?=[\d.]+$)/i, '');
-	if (isIPv4(ip))
-		return { client: ip, area: ip.split('.').slice(0, 2).join('.') };
-	if (isIPv6(ip)) {
-		const groups = ipv6Groups(ip);
-		return {
-			client: `${groups.slice(0, 4).join(':')}::/64`,
-			area: `${groups.slice(0, 2).join(':')}::/32`,
-		};
-	}
-	return { client: ip, area: ip };
+	if (isIPv4(ip)) return ip;
+	if (isIPv6(ip)) return `${ipv6Groups(ip).slice(0, 4).join(':')}::/64`;
+	return ip;
 }
 
-// Rendezvous hashing: removing a dead link only moves the areas that had it.
+// Rendezvous hashing: removing a dead link only moves the clients that had it.
 function assignedLink(
 	links: string[],
 	area: string,
@@ -160,7 +153,7 @@ export function createLinkDispenser(
 
 	return async (req: IncomingMessage, res: ServerResponse) => {
 		req.resume();
-		const { client, area } = clientKeys(clientIp(req) || '');
+		const client = clientKey(clientIp(req) || '');
 		const now = Date.now();
 		const nextRequest = requests.get(client) || 0;
 		if (nextRequest > now)
@@ -214,7 +207,7 @@ export function createLinkDispenser(
 				return json(res, 200, {
 					link: assignedLink(
 						links,
-						area,
+						client,
 						Math.floor(now / linkRotationMs),
 						key
 					),

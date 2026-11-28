@@ -11,7 +11,7 @@ import {
 	linkRotationMs,
 } from '../../src/constants.ts';
 import {
-	clientKeys,
+	clientKey,
 	createLinkDispenser,
 	defaultClientIp,
 	type DispenserOptions,
@@ -91,7 +91,8 @@ describe('Mirror link API', () => {
 		assert.equal((await request()).statusCode, 200);
 	});
 
-	test('Every address in a network area gets the same link, so rotating addresses never reveals another mirror.', async (t) => {
+	test('Every address is assigned its own link, spread across mirrors.', async (t) => {
+		t.mock.timers.enable({ apis: ['Date'], now: 1000 });
 		const { request } = await dispenser(t, mirrors.join('\n'));
 		const link = async (ip: string) => (await request(ip)).json().link;
 		const ipv4 = new Set<string>();
@@ -100,18 +101,17 @@ describe('Mirror link API', () => {
 			ipv4.add(await link(`198.51.${i}.${i + 1}`));
 			ipv6.add(await link(`2001:db8:${i.toString(16)}:${i}::1`));
 		}
-		assert.equal(ipv4.size, 1);
-		assert.equal(ipv6.size, 1);
+		assert.ok(ipv4.size > 1, 'IPv4 clients should spread across mirrors.');
+		assert.ok(ipv6.size > 1, 'IPv6 clients should spread across mirrors.');
 
-		const areas = new Set<string>();
-		for (let i = 0; i < 40; i++) areas.add(await link(`10.${i}.0.1`));
-		assert.ok(
-			areas.size > 1,
-			'Different areas should spread across mirrors.'
-		);
+		// One IPv6 allocation still shares an assignment, like the cooldown.
+		t.mock.timers.tick(linkCooldownMs);
+		const allocated = await link('2001:db8:1:2:ffff::9');
+		t.mock.timers.tick(linkCooldownMs);
+		assert.equal(await link('2001:db8:1:2::1'), allocated);
 	});
 
-	test('Removing a link only moves the areas that were assigned it, and assignments rotate daily.', async (t) => {
+	test('Removing a link only moves the clients that were assigned it, and assignments rotate daily.', async (t) => {
 		t.mock.timers.enable({ apis: ['Date'], now: 1000 });
 		const { request, file } = await dispenser(t, mirrors.join('\n'));
 		const assign = async () => {
@@ -173,28 +173,16 @@ describe('Mirror link API', () => {
 		assert.equal((await request('192.0.2.7')).statusCode, 429);
 	});
 
-	test('Client keys group addresses by cooldown client and assignment area.', () => {
-		assert.deepEqual(clientKeys('::ffff:203.0.113.5'), {
-			client: '203.0.113.5',
-			area: '203.0',
-		});
-		assert.deepEqual(clientKeys('2001:DB8:abcd:0012::1'), {
-			client: '2001:db8:abcd:12::/64',
-			area: '2001:db8::/32',
-		});
-		assert.deepEqual(clientKeys('2001:db8::'), {
-			client: '2001:db8:0:0::/64',
-			area: '2001:db8::/32',
-		});
-		assert.deepEqual(clientKeys('64:ff9b::192.0.2.1'), {
-			client: '64:ff9b:0:0::/64',
-			area: '64:ff9b::/32',
-		});
-		assert.deepEqual(clientKeys('fe80::1%eth0'), {
-			client: 'fe80:0:0:0::/64',
-			area: 'fe80:0::/32',
-		});
-		assert.deepEqual(clientKeys(''), { client: '', area: '' });
+	test('A client is an IPv4 address or an IPv6 /64.', () => {
+		assert.equal(clientKey('::ffff:203.0.113.5'), '203.0.113.5');
+		assert.equal(
+			clientKey('2001:DB8:abcd:0012::1'),
+			'2001:db8:abcd:12::/64'
+		);
+		assert.equal(clientKey('2001:db8::'), '2001:db8:0:0::/64');
+		assert.equal(clientKey('64:ff9b::192.0.2.1'), '64:ff9b:0:0::/64');
+		assert.equal(clientKey('fe80::1%eth0'), 'fe80:0:0:0::/64');
+		assert.equal(clientKey(''), '');
 	});
 
 	test('X-Real-IP is only trusted from a reverse proxy on loopback.', () => {

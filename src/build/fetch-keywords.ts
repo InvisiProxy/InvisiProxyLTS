@@ -22,11 +22,17 @@ const shuffle = <T>(items: T[]) => {
 };
 
 async function fetchBook(id: number) {
-	const response = await fetch(
-		`https://www.gutenberg.org/cache/epub/${id}/pg${id}.txt`
-	);
-	if (!response.ok) throw new Error(`HTTP ${response.status} for book ${id}`);
-	return response.text();
+	const fetchFrom = (host: string) =>
+		fetch(`https://${host}/cache/epub/${id}/pg${id}.txt`).then((response) => {
+			if (!response.ok)
+				throw new Error(`HTTP ${response.status} for book ${id}`);
+			return response.text();
+		});
+	try {
+		return await fetchFrom('www.gutenberg.org');
+	} catch {
+		return fetchFrom('gutenberg.pglaf.org');
+	}
 }
 
 function bookBody(text: string) {
