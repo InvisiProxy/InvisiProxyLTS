@@ -47,12 +47,20 @@ export function wispDns(setting: string = dnsSetting()): WispDns {
 }
 
 // Destination policy; tests flip these to reach an in-process target.
+const envFlag = (name: string) => process.env[name]?.toLowerCase() === 'true';
+const envPortList = (): number[] | null => {
+	const ports = (process.env.WISP_PORTS ?? '')
+		.split(',')
+		.map((value) => Number(value.trim()))
+		.filter((port) => Number.isInteger(port) && port >= 1 && port <= 65535);
+	return ports.length ? ports : null;
+};
 export const finalwispPolicy = {
-	directIp: false,
-	loopbackIps: false,
-	privateIps: false,
-	ports: [80, 443],
-} as const;
+	directIp: envFlag('WISP_DIRECT_IP'),
+	loopbackIps: envFlag('WISP_LOOPBACK_IPS'),
+	privateIps: envFlag('WISP_PRIVATE_IPS'),
+	ports: envPortList() ?? [80, 443],
+};
 
 // Limits for every instance; see FINALWISP.md for the full translation.
 export const finalwispLimits = {

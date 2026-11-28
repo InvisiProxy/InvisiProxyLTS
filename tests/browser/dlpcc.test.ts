@@ -1,6 +1,3 @@
-import assert from 'node:assert/strict';
-import { readFile, writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
 import { describe, test } from 'node:test';
 import {
 	buildFixture,
@@ -9,25 +6,17 @@ import {
 	probe,
 	run,
 	startServer,
+	wispPolicyEnv,
 } from '../helpers/fixture.ts';
 
 describe('DLPCC relay', () => {
 	test('Every proxied WebRTC connection goes through the relay at 50 Mbps or more.', {
 		timeout: 900_000,
 	}, async (t) => {
-		const root = await fixture(t, { dlpcc: true }, true);
-		const targetPort = await freePort();
-		const wisp = join(root, 'src/server/wisp.ts');
-		const source = await readFile(wisp, 'utf8');
-		const patched = source
-			.replace('directIp: false', 'directIp: true')
-			.replace('loopbackIps: false', 'loopbackIps: true')
-			.replace('privateIps: false', 'privateIps: true')
-			.replace('ports: [80, 443]', `ports: [${targetPort}, 80, 443]`);
-		assert.ok(patched.includes(`ports: [${targetPort}, 80, 443]`));
-		await writeFile(wisp, patched);
+		const root = await fixture(t, { dlpcc: true });
 		await buildFixture(root);
-		const origin = await startServer(root);
+		const targetPort = await freePort();
+		const origin = await startServer(root, wispPolicyEnv(targetPort));
 		const output = await run(root, [probe('dlpcc-probe.ts')], {
 			INVISIPROXY_ORIGIN: origin,
 			INVISIPROXY_TARGET_PORT: String(targetPort),

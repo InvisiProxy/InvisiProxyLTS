@@ -22,7 +22,7 @@ async function checkSite(
 	},
 	relay = false
 ) {
-	const root = await fixture(t, settings, true);
+	const root = await fixture(t, settings);
 	await buildFixture(root);
 	await run(root, [probe('http-probe.ts')]);
 

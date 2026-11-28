@@ -26,11 +26,6 @@ const activeTab = ['proxy-tab', 'active-tab'].map(
 const cls = (name: string) => `.${classes[name] ?? name}`;
 const ids = elementIds();
 const id = (name: string) => `#${ids[name] ?? name}`;
-const { getPathAliases } = await load<
-	typeof import('../../src/obfuscation/paths.ts')
->('src/obfuscation/paths.ts');
-const aliases = getPathAliases();
-const transportValue = (name: string) => aliases[`prefixes/${name}`] ?? name;
 const strip = (text: string) =>
 	text.replace(/[\u00ad\u200b-\u200f\u2060-\u206f]|\ufe0f/g, '');
 const { fontCipher } = await load<
@@ -39,6 +34,9 @@ const { fontCipher } = await load<
 const { scramjetTokens } = await load<
 	typeof import('../../src/obfuscation/scramjet-signatures.ts')
 >('src/obfuscation/scramjet-signatures.ts');
+const { settingKey } = await load<
+	typeof import('../../src/obfuscation/settings.ts')
+>('src/obfuscation/settings.ts');
 const scramjetReady = (wrapper: string) =>
 	(window as unknown as Record<string, { ready?: boolean }>)[`$${wrapper}`]
 		?.ready === true;
@@ -50,6 +48,7 @@ const plain = (text: string) =>
 		/[A-Za-z]/g,
 		(letter) => letters[cipher.key.indexOf(letter)]
 	);
+const transportValue = (name: string) => settingKey(name);
 const origin = String(process.env.INVISIPROXY_ORIGIN);
 const base = origin + serverUrl.pathname;
 const route = (file: string) =>
@@ -195,12 +194,14 @@ try {
 	const title = await page.title();
 	await page.locator(id('icon-list')).selectOption({ index: 1 });
 	await page.waitForFunction(
-		(title) =>
+		({ title, iconName }) =>
 			document.title !== title &&
 			Object.keys(localStorage).some((key) =>
-				/"Icon":"https:/.test(localStorage.getItem(key) ?? '')
+				(localStorage.getItem(key) ?? '').includes(
+					`"${iconName}":"https:`
+				)
 			),
-		title
+		{ title, iconName: settingKey('Icon') }
 	);
 	const presetTitle = await page.title();
 	await page.reload();
