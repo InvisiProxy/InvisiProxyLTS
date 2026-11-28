@@ -3,40 +3,21 @@ import { Socket } from 'node:net';
 import { config, serverPort } from '../config.ts';
 import { entryPointFile } from '../constants.ts';
 import type { Relay } from 'dlpcc';
+import {
+	type FinalwispInstances,
+	startFinalwispInstances,
+	stopFinalwispInstances,
+} from './finalwisp.ts';
 import { startDlpcc, withDlpcc } from './dlpcc.ts';
 import { createSiteHandler } from './handler.ts';
-import {
-	fromOwnSite,
-	wispPath,
-	wispOptions,
-	wispProxies,
-	wispRegion,
-	wispRegions,
-} from './wisp.ts';
-import {
-	forgetWorkers,
-	reapOrphanedWorkers,
-	recordWorkers,
-	SupervisedWisp,
-} from './wisp-supervisor.ts';
+import { fromOwnSite, wispRegion } from './wisp.ts';
 
-reapOrphanedWorkers();
-const recordAll = () =>
-	recordWorkers([...wisps.values()].flatMap((wisp) => wisp.pids));
-const wisps = new Map<string, SupervisedWisp>([
-	['', new SupervisedWisp('default', wispOptions, recordAll)],
-	...wispRegions.map(
-		(region) =>
-			[
-				region,
-				new SupervisedWisp(
-					region,
-					{ ...wispOptions, proxy: wispProxies[region] },
-					recordAll
-				),
-			] as const
-	),
-]);
+// manageWisp (default): this process runs the finalwisp instances. The
+// nginx + pm2 setup replaces it; see FINALWISP.md.
+const manageWisp = config.manageWisp !== false;
+const wisps: FinalwispInstances = manageWisp
+	? await startFinalwispInstances()
+	: new Map();
 
 let relay: Relay | null = null;
 const server = createServer(withDlpcc(() => relay, createSiteHandler())).on(
@@ -44,9 +25,10 @@ const server = createServer(withDlpcc(() => relay, createSiteHandler())).on(
 	(req, socket, head) => {
 		const region = wispRegion(req.url);
 		if (socket instanceof Socket && region !== null && fromOwnSite(req)) {
-			req.url = wispPath();
-			wisps.get(region)?.route(req, socket, head);
-		} else socket.destroy();
+			const wisp = wisps.get(region);
+			if (wisp) return wisp.route(req, socket, head);
+		}
+		socket.destroy();
 	}
 );
 
@@ -55,10 +37,7 @@ const stopServer = async () => {
 	if (shuttingDown) return;
 	shuttingDown = true;
 	server.close();
-	await Promise.all([
-		...[...wisps.values()].map((wisp) => wisp.stop()),
-		relay?.stop(),
-	]);
+	await Promise.all([stopFinalwispInstances(wisps), relay?.stop()]);
 	server.closeAllConnections();
 	process.exit(0);
 };
@@ -66,7 +45,6 @@ process.once('SIGTERM', () => void stopServer());
 process.once('SIGINT', () => void stopServer());
 process.once('exit', () => {
 	for (const wisp of wisps.values()) wisp.kill();
-	forgetWorkers();
 });
 
 let listenAttempts = 0;
@@ -78,8 +56,12 @@ server.on('error', (error: NodeJS.ErrnoException) => {
 server.once('listening', () => {
 	process.send?.({ type: 'ready' });
 	console.log(`InvisiProxy is listening on port ${serverPort}.`);
+	if (manageWisp)
+		console.log(
+			'manageWisp is on: this process runs the finalwisp instances. For nginx + pm2 instead, set manageWisp to false in config.json and follow FINALWISP.md.'
+		);
 	console.log(
-		'When hosting with a reverse proxy please ensure you are using NGINX only.\nCaddy and Apache have security risks due to wispurr and loopbacks. Please configure them correctly.\nNGINX is recommended and used for production. Ports are whitelisted and security is maintained with NGINX only.'
+		'When hosting with a reverse proxy please ensure you are using NGINX only.\nCaddy and Apache have security risks due to loopbacks. Please configure them correctly.\nNGINX is recommended and used for production. Ports are whitelisted and security is maintained with NGINX only.'
 	);
 	if (config.disguiseFiles)
 		console.log(

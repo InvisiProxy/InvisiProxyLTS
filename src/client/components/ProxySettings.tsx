@@ -1,8 +1,10 @@
 import { route, translate, Translation, values } from '../document-helpers.tsx';
+import { settingKey } from '../../obfuscation/settings.ts';
 import {
 	AddressField,
 	SettingToggle,
 	TransportSelect,
+	VersionSelect,
 } from './SettingsControls.tsx';
 
 const links = {
@@ -44,6 +46,10 @@ export default function ProxySettings() {
 							id="browsing-transport"
 							containerId="browsing-transport-setting"
 						/>
+						<VersionSelect
+							id="browsing-version"
+							containerId="browsing-version-setting"
+						/>
 						<div class="setting-field">
 							<label for="browsing-region">
 								{translate('settings.advanced.region')}
@@ -54,18 +60,23 @@ export default function ProxySettings() {
 										'settings.advanced.regions.default'
 									)}
 								</option>
-								<option value="eu">
+								{/* Option values are the per-build region
+								    tokens; the client appends the chosen
+								    token to the Wisp URL. */}
+								<option value={settingKey('eu')}>
 									{translate(
 										'settings.advanced.regions.sweden'
 									)}
 								</option>
-								<option value="jp">
+								<option value={settingKey('jp')}>
 									{translate(
 										'settings.advanced.regions.japan'
 									)}
 								</option>
 								{values.patreon && (
-									<option value="patreon">Patreon</option>
+									<option value={settingKey('patreon')}>
+										Patreon
+									</option>
 								)}
 							</select>
 						</div>

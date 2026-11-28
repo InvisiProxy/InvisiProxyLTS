@@ -77,11 +77,14 @@ export function escapeText(text: string) {
 		.replaceAll('>', '&gt;');
 }
 
+// Ciphered text is left unmasked: no keyword matches it anyway, and Safari
+// draws a letter beside a mask character in a fallback font, which shows the
+// letter still ciphered.
 export function cipherMarkup(text: string) {
 	const { tag } = values.fontCipher;
 	return tag && /[A-Za-z]/.test(text)
 		? `<${tag}>${escapeText(cipherText(text))}</${tag}>`
-		: escapeText(text);
+		: escapeText(maskText(text));
 }
 
 export function getSplash() {

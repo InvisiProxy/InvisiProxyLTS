@@ -12,6 +12,7 @@ import AntiExfil from '../components/AntiExfil.tsx';
 import Header from '../components/Header.tsx';
 import Documentation from '../components/Documentation.tsx';
 import Footer from '../components/Footer.tsx';
+import Placements from '../components/Placements.tsx';
 
 export default function DocumentationPage() {
 	return (
@@ -31,6 +32,7 @@ export default function DocumentationPage() {
 					</div>
 				</div>
 			</div>
+			<Placements />
 			<div id="footer" class="fullwidth">
 				<Footer />
 			</div>

@@ -9,12 +9,15 @@ import {
 	projectDir,
 	routesFile,
 } from '../constants.ts';
-import data from '../data.json' with { type: 'json' };
 import { elementIds } from '../obfuscation/classes.ts';
 import { obfuscateDocument } from '../obfuscation/documents.ts';
-import { cipherMarkup, maskText } from '../obfuscation/masks.ts';
-import type { SiteValues } from '../site.ts';
+import { cipherMarkup } from '../obfuscation/masks.ts';
 import { getPathAliases } from '../obfuscation/paths.ts';
+import {
+	scrubStorageKeys,
+	settingTokens,
+} from '../obfuscation/settings.ts';
+import type { SiteValues } from '../site.ts';
 import {
 	obfuscationState,
 	obfuscationStateFile,
@@ -29,6 +32,7 @@ import {
 } from './locales.ts';
 import { rootDataFiles } from './sources.ts';
 import { buildValues } from './values.ts';
+import { gustPageFile } from '../gust/index.ts';
 
 type Renderer = typeof import('../client/entry.tsx');
 export type LoadRenderer = () => Promise<Renderer>;
@@ -115,6 +119,7 @@ export async function proxyErrorTemplates(): Promise<SiteValues['errors']> {
 export async function siteRoutes(load: LoadRenderer = importRenderer) {
 	return {
 		...(await load()).pageRoutes(),
+		gust: gustPageFile,
 		...Object.fromEntries(rootDataFiles().map((file) => [file, file])),
 	};
 }
@@ -154,14 +159,19 @@ export async function renderSite({
 		const html = head
 			? document.replace(/<head>(?:<meta charset="utf-8">)?/, `$&${head}`)
 			: document;
+		// Names the browser writes at runtime (the inline loader script's
+		// storage keys) match the renamed keys in the bundled scripts.
+		const content = scrubStorageKeys(html);
 		files[path] = isDisguisedDocument(stripLocale(path))
-			? await gzip(html)
-			: html;
+			? await gzip(content)
+			: content;
 	}
 	files[routesFile] = JSON.stringify(await siteRoutes(load));
 	files[
 		`assets/json/${getPathAliases()['files/splash.json'] || 'splash.json'}`
-	] = JSON.stringify(data.splash.map((text) => cipherMarkup(maskText(text))));
+	] = JSON.stringify(
+		buildValues.splash.map((text) => cipherMarkup(text))
+	);
 	const locales = builtLocales(loadLocales());
 	const root = locales[0].code;
 	const plain = await getPlainDocuments(fresh, load);
@@ -169,6 +179,10 @@ export async function renderSite({
 		files[localePath(code, notFoundFile, root)] =
 			plain[localePath(code, 'error.html', root)];
 	files[localesFile] = JSON.stringify(localeManifest(locales));
+	// Make sure the settings/storage name mapping exists in the saved
+	// state even if no chunk triggered its generation first, so the
+	// server resolves the same names the bundles were built with.
+	settingTokens();
 	files[obfuscationStateFile] = JSON.stringify(obfuscationState());
 	return files;
 }

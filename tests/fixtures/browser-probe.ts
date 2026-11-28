@@ -4,6 +4,7 @@ import { createServer } from 'node:http';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { chromium } from 'playwright';
+import { enterAddress, tabFrame } from '../helpers/tab-frame.ts';
 
 const load = <T>(path: string): Promise<T> =>
 	import(pathToFileURL(join(process.cwd(), path)).href);
@@ -19,14 +20,12 @@ const { classNames, elementIds } = await load<
 >('src/obfuscation/classes.ts');
 
 const classes = classNames();
+const activeTab = ['proxy-tab', 'active-tab'].map(
+	(name) => classes[name] ?? name
+);
 const cls = (name: string) => `.${classes[name] ?? name}`;
 const ids = elementIds();
 const id = (name: string) => `#${ids[name] ?? name}`;
-const { getPathAliases } = await load<
-	typeof import('../../src/obfuscation/paths.ts')
->('src/obfuscation/paths.ts');
-const aliases = getPathAliases();
-const transportValue = (name: string) => aliases[`prefixes/${name}`] ?? name;
 const strip = (text: string) =>
 	text.replace(/[\u00ad\u200b-\u200f\u2060-\u206f]|\ufe0f/g, '');
 const { fontCipher } = await load<
@@ -35,6 +34,9 @@ const { fontCipher } = await load<
 const { scramjetTokens } = await load<
 	typeof import('../../src/obfuscation/scramjet-signatures.ts')
 >('src/obfuscation/scramjet-signatures.ts');
+const { settingKey } = await load<
+	typeof import('../../src/obfuscation/settings.ts')
+>('src/obfuscation/settings.ts');
 const scramjetReady = (wrapper: string) =>
 	(window as unknown as Record<string, { ready?: boolean }>)[`$${wrapper}`]
 		?.ready === true;
@@ -46,6 +48,7 @@ const plain = (text: string) =>
 		/[A-Za-z]/g,
 		(letter) => letters[cipher.key.indexOf(letter)]
 	);
+const transportValue = (name: string) => settingKey(name);
 const origin = String(process.env.INVISIPROXY_ORIGIN);
 const base = origin + serverUrl.pathname;
 const route = (file: string) =>
@@ -140,7 +143,11 @@ try {
 
 	const toggle = page.locator(cls('mirror-links-toggle'));
 	const label = (await toggle.locator('span').textContent()) ?? '';
-	assert.notEqual(label, strip(label), 'Button text should be masked.');
+	assert.equal(
+		label,
+		strip(label),
+		'Ciphered text should carry no mask characters, which Safari draws beside letters in a fallback font.'
+	);
 	assert.notEqual(strip(label), 'Mirrors', 'Button text should be ciphered.');
 	assert.equal(plain(label), 'Mirrors');
 	assert.ok(
@@ -187,12 +194,14 @@ try {
 	const title = await page.title();
 	await page.locator(id('icon-list')).selectOption({ index: 1 });
 	await page.waitForFunction(
-		(title) =>
+		({ title, iconName }) =>
 			document.title !== title &&
 			Object.keys(localStorage).some((key) =>
-				/"Icon":"https:/.test(localStorage.getItem(key) ?? '')
+				(localStorage.getItem(key) ?? '').includes(
+					`"${iconName}":"https:`
+				)
 			),
-		title
+		{ title, iconName: settingKey('Icon') }
 	);
 	const presetTitle = await page.title();
 	await page.reload();
@@ -224,8 +233,7 @@ try {
 			.locator(id('search-input'))
 			.fill(`http://127.0.0.1:${targetPort}/`);
 		await page.locator(id('search-input')).press('Enter');
-		await page
-			.frameLocator(id('frame'))
+		await (await tabFrame(page, activeTab))
 			.locator('html[data-proxy-smoke="executed"]')
 			.waitFor()
 			.catch((cause) => {
@@ -236,11 +244,12 @@ try {
 			});
 	}
 
-	await page
-		.locator(id('search-input'))
-		.fill('http://127.0.0.1:9/unreachable');
-	await page.locator(id('search-input')).press('Enter');
-	const errorPage = page.frameLocator(id('frame'));
+	const addressBar = {
+		input: id('search-input'),
+		searchBox: cls('search-box'),
+	};
+	await enterAddress(page, 'http://127.0.0.1:9/unreachable', addressBar);
+	const errorPage = await tabFrame(page, activeTab);
 	await errorPage
 		.locator(id('fetchedURL'), {
 			hasText: 'http://127.0.0.1:9/unreachable',
@@ -250,26 +259,37 @@ try {
 	const version =
 		(await errorPage.locator(id('scramjetVersion')).textContent()) ?? '';
 	assert.match(version, /^v\d\S* - build \w+$/);
-	const scramjetVersion = JSON.parse(
+	// The Proxy Version setting picks between the pinned v2 dependency and
+	// the vendored continuous build (the default).
+	const v2Version = JSON.parse(
 		readFileSync(join(process.cwd(), 'package.json'), 'utf8')
 	).dependencies['@mercuryworkshop/scramjet'];
+	const v3Version = JSON.parse(
+		readFileSync(
+			join(process.cwd(), 'vendor/scramjet-3.0.0-alpha/package.json'),
+			'utf8'
+		)
+	).version;
 	assert.ok(
-		version.startsWith(`v${scramjetVersion} `),
-		`Scramjet version should stay pinned to v${scramjetVersion}, got ${version}`
+		version.startsWith(`v${v2Version} `) ||
+			version.startsWith(`v${v3Version} `),
+		`Scramjet version should be v${v2Version} or v${v3Version}, got ${version}`
 	);
 
 	const webrtcResult = async () =>
 		JSON.parse(
-			(await page
-				.frameLocator(id('frame'))
+			(await (
+				await tabFrame(page, activeTab)
+			)
 				.locator('html[data-webrtc]')
 				.getAttribute('data-webrtc')) ?? '{}'
 		);
 	const openWebrtcPage = async () => {
-		await page
-			.locator(id('search-input'))
-			.fill(`http://127.0.0.1:${targetPort}/webrtc`);
-		await page.locator(id('search-input')).press('Enter');
+		await enterAddress(
+			page,
+			`http://127.0.0.1:${targetPort}/webrtc`,
+			addressBar
+		);
 		return webrtcResult();
 	};
 	assert.deepEqual(await openWebrtcPage(), {

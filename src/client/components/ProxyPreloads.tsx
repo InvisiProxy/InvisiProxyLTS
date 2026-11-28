@@ -6,12 +6,12 @@ export default function ProxyPreloads() {
 			<link
 				rel="preload"
 				as="script"
-				href={route('/scram/scramjet.js')}
+				href={route('/scram3/scramjet3.js')}
 			/>
 			<link
 				rel="preload"
 				as="script"
-				href={route('/scram/controller.api.js')}
+				href={route('/scram3/controller3.api.js')}
 			/>
 		</>
 	);

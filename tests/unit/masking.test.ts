@@ -110,6 +110,17 @@ describe('Masking', () => {
 		assert.equal(maskDocument(html), html);
 	});
 
+	test('Ciphered text carries no mask characters, which Safari draws beside letters in a fallback font.', () => {
+		mask(false, true);
+		const masked = maskDocument(
+			'<p>Proxy and residential speeds</p><button data-tippy-content="Enable Tor"></button>'
+		);
+		assert.ok(masked.includes('<x-c>'), masked);
+		assert.ok(!masked.includes('​'), masked);
+		mask(false);
+		assert.ok(maskDocument('<p>Proxy</p>').includes('​'));
+	});
+
 	test('Patched fonts draw swapped letters and lookalikes with the original glyphs.', async () => {
 		mask(false, true);
 		const face = fontFaces().find((face) => face.letters);

@@ -19,6 +19,7 @@ import AntiExfil from '../components/AntiExfil.tsx';
 import Header from '../components/Header.tsx';
 import ProxySettings from '../components/ProxySettings.tsx';
 import Footer from '../components/Footer.tsx';
+import Placements from '../components/Placements.tsx';
 import { partners } from '../../site.ts';
 import App from '../components/AppButton.tsx';
 
@@ -59,6 +60,7 @@ export default function Partners() {
 				</div>
 			</div>
 			<Keywords />
+			<Placements />
 			<div id="footer" class="fullwidth">
 				<Footer />
 			</div>

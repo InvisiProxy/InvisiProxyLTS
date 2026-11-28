@@ -45,7 +45,10 @@ export function TooltipScripts() {
 	);
 }
 
-export function ScramjetScripts(props: { utilities?: boolean }) {
+// The scramjet core and controller load per the Proxy Version setting in
+// register-sw.js (both versions ship under their own aliased paths), so
+// only the DLPCC patch is a static script here.
+export function ScramjetScripts() {
 	return (
 		<>
 			{/* The DLPCC relay's patch, so every proxied page's WebRTC goes through it. */}
@@ -53,26 +56,6 @@ export function ScramjetScripts(props: { utilities?: boolean }) {
 				<script
 					src={route('/dlpcc/client.js')}
 					defer={true}
-					innerHTML=""
-				/>
-			)}
-			<script
-				src={route('/scram/scramjet.js')}
-				defer={true}
-				data-module=""
-				innerHTML=""
-			/>
-			<script
-				src={route('/scram/controller.api.js')}
-				defer={true}
-				data-module=""
-				innerHTML=""
-			/>
-			{props.utilities && (
-				<script
-					src={route('/scram/scramjet-utils.js')}
-					defer={true}
-					data-module=""
 					innerHTML=""
 				/>
 			)}
@@ -121,6 +104,15 @@ export function PageScripts(props: {
 		scripts.push(
 			<script
 				src={route('assets/js/common.js', 'inline')}
+				defer={true}
+				innerHTML=""
+			/>
+		);
+	}
+	if (!values.patreon) {
+		scripts.push(
+			<script
+				src={route('assets/js/rails.js', 'inline')}
 				defer={true}
 				innerHTML=""
 			/>

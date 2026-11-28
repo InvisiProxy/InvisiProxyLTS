@@ -1,6 +1,7 @@
 import { randomInt } from 'node:crypto';
 import ts from 'typescript';
 import { decodeSource, encodeSource } from '../browser/proxy-codec.ts';
+import { scramjetTokens } from './scramjet-signatures.ts';
 
 function paramName(used: Set<string>) {
 	const alphabet = 'abcdefghijklmnopqrstuvwxyz';
@@ -13,6 +14,13 @@ function paramName(used: Set<string>) {
 	used.add(name);
 	return name;
 }
+
+// Their names must match the WASM's scrubbed copies, so they come from the
+// shared tokens instead of paramName().
+const wasmQueryParams: Record<string, string> = {
+	isModule: '%24module',
+	initiatorOrigin: '%24io',
+};
 
 function isQueryParam(node: ts.Expression) {
 	return (
@@ -42,18 +50,33 @@ export function hideScramjetParams(source: string, key: string): string {
 					ts.isPropertyAssignment(property) &&
 					property.name.getText(file) === 'initiatorOrigin'
 			)
-		)
-			for (const property of node.properties)
+		) {
+			const wasmName = (property: ts.PropertyAssignment) =>
+				wasmQueryParams[property.name.getText(file)];
+			for (const property of node.properties) {
 				if (
-					ts.isPropertyAssignment(property) &&
-					ts.isStringLiteral(property.initializer) &&
-					property.initializer.text.startsWith('$')
+					!ts.isPropertyAssignment(property) ||
+					!ts.isStringLiteral(property.initializer) ||
+					!property.initializer.text.startsWith('$')
 				)
-					renames.push({
-						start: property.initializer.getStart(file),
-						end: property.initializer.end,
-						value: JSON.stringify(paramName(used)),
-					});
+					continue;
+				const hardcoded = wasmName(property);
+				let value: string;
+				if (hardcoded) {
+					value = scramjetTokens().names?.[hardcoded];
+					if (!value)
+						throw new Error(
+							`Missing obfuscation token for query parameter ${hardcoded}`
+						);
+				} else value = paramName(used);
+				used.add(value);
+				renames.push({
+					start: property.initializer.getStart(file),
+					end: property.initializer.end,
+					value: JSON.stringify(value),
+				});
+			}
+		}
 		if (
 			ts.isCallExpression(node) &&
 			ts.isPropertyAccessExpression(node.expression) &&
@@ -73,7 +96,12 @@ export function hideScramjetParams(source: string, key: string): string {
 			ts.isBinaryExpression(node.whenTrue) &&
 			node.whenTrue.operatorToken.kind === ts.SyntaxKind.EqualsToken &&
 			ts.isElementAccessExpression(node.whenTrue.left) &&
-			ts.isIdentifier(node.whenTrue.right)
+			ts.isIdentifier(node.whenTrue.right) &&
+			// The real read is the parser's `known ? t[name] = value :
+			// (warn(...), extras)` conditional; Scramjet 3 also matches
+			// push idioms like `keep ? list[i] = item : walk(item)` in
+			// functions whose text mentions the marker string.
+			node.getText(file).includes('.warn')
 		)
 			reads.push(node.whenTrue.right);
 		ts.forEachChild(node, (child) => visit(child, inParser));
@@ -87,7 +115,9 @@ export function hideScramjetParams(source: string, key: string): string {
 	}
 	const literal = JSON.stringify(key);
 	const edits = [...renames];
-	if (key && writes.length && reads.length === 1) {
+	// Scramjet 3 has several copies of the QP parser; every read site has
+	// the same `t[e] = value` shape, so all of them decode.
+	if (key && writes.length && reads.length) {
 		const encode = `((url) => { ${encodeSource(literal)} })`;
 		const decode = `((url) => { ${decodeSource(literal)} })`;
 		for (const node of writes)
@@ -96,11 +126,12 @@ export function hideScramjetParams(source: string, key: string): string {
 				end: node.end,
 				value: `${encode}(${node.getText(file)})`,
 			});
-		edits.push({
-			start: reads[0].getStart(file),
-			end: reads[0].end,
-			value: `${decode}(${reads[0].getText(file)})`,
-		});
+		for (const node of reads)
+			edits.push({
+				start: node.getStart(file),
+				end: node.end,
+				value: `${decode}(${node.getText(file)})`,
+			});
 	} else if (key)
 		console.warn(
 			'[Build] Scramjet query parameter values could not be encoded; only the names are changed.'

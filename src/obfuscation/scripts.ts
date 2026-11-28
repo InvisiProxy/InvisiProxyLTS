@@ -5,6 +5,7 @@ import { config } from '../config.ts';
 import { obfuscatedMarker as marker } from '../constants.ts';
 import { rewriteClassReferences } from './classes.ts';
 import { scrubScramjetSignatures } from './scramjet-signatures.ts';
+import { scrubSettingKeys, scrubStorageKeys } from './settings.ts';
 import { obfuscationState } from './state.ts';
 
 export function stripObfuscatedMarker(source: string): string {
@@ -21,11 +22,15 @@ function transformScript(
 	if (config.usingSEO) return source;
 	if (!source.trim() || source.trimStart().startsWith(marker)) return source;
 	const scrubbed = scrubScramjetSignatures(source);
+	// Setting keys ship only in site scripts; vendor bundles never touch
+	// browser storage. The storage-name suffixes go last, after class
+	// rewriting, so class names that contain a part are left alone.
+	const keyed = rewriteClasses ? scrubSettingKeys(scrubbed) : scrubbed;
 	const result = transformSources(
 		{
 			[rewriteClasses ? 'script.js' : name]: rewriteClasses
-				? rewriteClassReferences(scrubbed, name)
-				: scrubbed,
+				? scrubStorageKeys(rewriteClassReferences(keyed, name))
+				: keyed,
 		},
 		{
 			seed: `${obfuscationState().seed}:${randomBytes(16).toString('hex')}`,
@@ -50,6 +55,13 @@ export function browserObfuscationPlugin(): Plugin {
 		name: 'invisiproxy-obfuscation',
 		apply: 'build',
 		enforce: 'post',
+		// Runs before the bundler's minifier, whose output escapes quoted
+		// strings into \x sequences the signature replacements cannot match.
+		async renderChunk(code) {
+			const scrubbed = scrubSettingKeys(code);
+			if (scrubbed === code) return null;
+			return { code: scrubbed, map: null };
+		},
 		generateBundle(_options, bundle) {
 			if (config.usingSEO) return;
 			for (const output of Object.values(bundle)) {

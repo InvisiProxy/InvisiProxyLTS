@@ -1,5 +1,6 @@
 import type { ParentProps } from 'solid-js';
 import { translate, values } from '../document-helpers.tsx';
+import { settingKey } from '../../obfuscation/settings.ts';
 
 export function SettingsSection(
 	props: ParentProps<{ title: string; class: string; last?: boolean }>
@@ -65,9 +66,6 @@ export function AddressField(props: {
 	);
 }
 
-const transportValue = (name: string) =>
-	values.aliases[`prefixes/${name}`] || name;
-
 export function TransportSelect(props: { id: string; containerId: string }) {
 	return (
 		<div id={props.containerId} class="transport-setting setting-field">
@@ -79,11 +77,36 @@ export function TransportSelect(props: { id: string; containerId: string }) {
 				class="transport-list"
 				aria-label={translate('settings.browsing.transport')}
 			>
-				<option value={transportValue('libcurl')} selected>
+				{/* Option values are per-build transport tokens; the client
+				    stores the chosen token and loads the module by it. */}
+				<option value={settingKey('libcurl')} selected>
 					Libcurl
 				</option>
-				<option value={transportValue('epoxy')}>Epoxy</option>
+				<option value={settingKey('epoxy')}>Epoxy</option>
 			</select>
+		</div>
+	);
+}
+
+export function VersionSelect(props: { id: string; containerId: string }) {
+	return (
+		<div id={props.containerId} class="version-setting setting-field">
+			<label for={props.id}>
+				{translate('proxySettings.proxyVersion')}
+			</label>
+			<select
+				id={props.id}
+				class="version-list"
+				aria-label={translate('proxySettings.proxyVersion')}
+			>
+				<option value="v3" selected>
+					Scramjet V3 (Beta)
+				</option>
+				<option value="v2">Scramjet 2.1.0</option>
+			</select>
+			<span class="setting-description">
+				{translate('proxySettings.proxyVersionDescription')}
+			</span>
 		</div>
 	);
 }

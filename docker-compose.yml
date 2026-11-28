@@ -1,12 +1,12 @@
-version: "3.9"
-
 services:
   invisiproxy:
-    image: quiteafancyemerald/invisiproxy:8.3.1
+    image: quiteafancyemerald/invisiproxy:8.4.2
     build: .
     container_name: invisiproxy
     ports:
       - "8080:8080"
     restart: unless-stopped
+    # lets the finalwisp instances finish their 30 s session drain
+    stop_grace_period: 35s
     environment:
       NODE_ENV: production

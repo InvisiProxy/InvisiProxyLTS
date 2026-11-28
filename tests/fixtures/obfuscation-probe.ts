@@ -18,6 +18,9 @@ const { scrubScramjetSignatures, scrubScramjetWasm, scramjetTokens } =
 	await load<typeof import('../../src/obfuscation/scramjet-signatures.ts')>(
 		'src/obfuscation/scramjet-signatures.ts'
 	);
+const { hideScramjetParams } = await load<
+	typeof import('../../src/obfuscation/scramjet-params.ts')
+>('src/obfuscation/scramjet-params.ts');
 const { obfuscateScript, obfuscateVendorScript, stripObfuscatedMarker } =
 	await load<typeof import('../../src/obfuscation/scripts.ts')>(
 		'src/obfuscation/scripts.ts'
@@ -81,12 +84,11 @@ if (config.usingSEO) {
 		'window.$invisiScramjet.ready',
 		'const { ScramjetClient } = $scramjet; c[SCRAMJETCLIENT]; loadScramjetWasm();',
 		'throw Error("@mercuryworkshop/scramjet is not loaded")',
+		'Symbol.for("invisiLeakGuard"); Symbol.for("invisiSearchUrlGuard");',
+		'({ key: "invisiNavigationEntry", id: "invisiNavigationEntry" });',
 	].join('\n');
 	const scrubbed = scrubScramjetSignatures(sample);
-	assert.doesNotMatch(
-		scrubbed,
-		/scramjet|scram|sj-cache|invisiScramjet|mercury/i
-	);
+	assert.doesNotMatch(scrubbed, /scramjet|scram|sj-cache|invisi|mercury/i);
 	const Core = tokens.core[0].toUpperCase() + tokens.core.slice(1);
 	assert.ok(scrubbed.includes(`const { ${Core}Client } = $${tokens.core};`));
 	assert.ok(scrubbed.includes(`c[${tokens.core.toUpperCase()}CLIENT]`));
@@ -99,8 +101,87 @@ if (config.usingSEO) {
 	);
 	assert.ok(
 		scrubbed.includes(
-			`this.${tokens.members.cookieJar} = new CookieJar(); await controller.${tokens.members.setTransport}(t);`
+			`this.${tokens.members.cookieJar} = new ${tokens.members.CookieJar}(); await controller.${tokens.members.setTransport}(t);`
 		)
+	);
+	// Rewriter globals get unrelated names instead of a shared `$x$...` prefix.
+	const { names } = tokens;
+	assert.ok(
+		scrubbed.includes(
+			`window.${names['$scramjet$rewrite']} = ${names['$scramjet$wrap']}(location).href;`
+		)
+	);
+	assert.doesNotMatch(scrubbed, /\$\w+\$\w+/);
+	assert.ok(
+		scrubbed.includes(`script[${names['scramjet-injected']}]`),
+		'injected scripts should get a random attribute'
+	);
+	assert.ok(
+		names['scramjet-attr-script-source-src'].startsWith(
+			`${names['scramjet-attr']}-`
+		),
+		'every rewriter attribute should keep the shared prefix'
+	);
+	// Names the WASM rewriter has built in keep their length there.
+	const builtIn = '$scramitize $scramerr rewriter_new';
+	const rewritten = Buffer.from(
+		scrubScramjetWasm(new TextEncoder().encode(builtIn))
+	).toString();
+	assert.equal(rewritten.length, builtIn.length);
+	assert.equal(
+		rewritten,
+		`${names.$scramitize} ${names.$scramerr} ${names.rewriter}_new`
+	);
+	assert.ok(
+		scrubScramjetSignatures('wasm.rewriter_new()').includes(
+			`wasm.${names.rewriter}_new()`
+		),
+		'the JS side should call the renamed WASM exports'
+	);
+	// Cross-realm symbol and RPC prefix, renamed so pages can't probe for them.
+	assert.ok(
+		scrubScramjetSignatures('Symbol.for("controller frame handle")').includes(
+			`Symbol.for("${names['controller frame handle']}")`
+		)
+	);
+	assert.ok(
+		scrubScramjetSignatures('"tabchannel-" + id').includes(
+			`"${names['tabchannel-']}" + id`
+		)
+	);
+	assert.ok(
+		scrubScramjetSignatures('$scramjet.versionInfo.version').includes(
+			`$${tokens.core}.${tokens.members.versionInfo}.version`
+		)
+	);
+	// Both sides must agree on the renamed values, same length in the WASM.
+	const moduleUrl = '?%24module=module&%24io=https://x';
+	const scrubbedUrl = scrubScramjetSignatures(
+		`rewritten.push_str("${moduleUrl}")`
+	);
+	assert.doesNotMatch(scrubbedUrl, /%24|\$module|\$io/);
+	assert.ok(
+		scrubbedUrl.includes(
+			`?${names['%24module']}=module&${names['%24io']}=https://x`
+		)
+	);
+	const wasmPatch = Buffer.from(
+		scrubScramjetWasm(new TextEncoder().encode(moduleUrl))
+	).toString();
+	assert.equal(wasmPatch.length, moduleUrl.length);
+	assert.ok(
+		wasmPatch.startsWith(
+			`?${names['%24module']}=module&${names['%24io']}=https://x`
+		),
+		'the WASM emits the same parameter names as the JS parser'
+	);
+	assert.equal(
+		hideScramjetParams(
+			'scramjet(); const QP = { isModule: "$module", initiatorOrigin: "$io" };',
+			'unit-test-key'
+		),
+		`scramjet(); const QP = { isModule: "${names['%24module']}", initiatorOrigin: "${names['%24io']}" };`,
+		'JS query parameters keep their WASM counterparts in sync'
 	);
 	const wasm = new TextEncoder().encode('scramjet scram wasm');
 	const patched = scrubScramjetWasm(wasm);

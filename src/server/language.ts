@@ -3,6 +3,7 @@ import type { IncomingMessage } from 'node:http';
 import type { LocaleManifest } from '../build/locales.ts';
 import { config } from '../config.ts';
 import { localesFile, siteUrl } from '../constants.ts';
+import { settingKey } from '../obfuscation/settings.ts';
 
 export interface Languages {
 	default: string;
@@ -85,7 +86,10 @@ export function pickLanguage(
 	useCountry = config.geoLanguage
 ) {
 	const { codes } = languages;
-	const chosen = readCookie(req.headers.cookie, 'Language')?.toLowerCase();
+	const chosen = (
+		readCookie(req.headers.cookie, settingKey('Language')) ??
+		readCookie(req.headers.cookie, 'Language')
+	)?.toLowerCase();
 	if (chosen && codes.includes(chosen)) return chosen;
 
 	const country = req.headers['cf-ipcountry'];

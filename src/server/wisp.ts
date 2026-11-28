@@ -1,24 +1,121 @@
 import type { IncomingMessage } from 'node:http';
-import type { wispurrOptions } from 'wispurr';
+import { isIP } from 'node:net';
 import { config, serverUrl } from '../config.ts';
 import { getAltPrefix } from '../obfuscation/paths.ts';
+import { settingKey } from '../obfuscation/settings.ts';
 
 export const wispPath = () => getAltPrefix('wisp', serverUrl.pathname);
 
-export const wispProxies = {
-	tor: 'socks5h://127.0.0.1:9050',
-	eu: 'socks5h://127.0.0.1:7000',
-	jp: 'socks5h://127.0.0.1:7001',
-	patreon: process.env.PATREON_PROXY || 'socks5h://127.0.0.1:7002',
+// What a plain HTTP hit on a Wisp path gets when it reaches the site.
+export const nonWSResponse = 'meow';
+export const nonWSRedirect = '/pages/404.html';
+
+export interface WispDns {
+	method: 'lookup' | 'resolve';
+	servers: string[];
+}
+
+const dnsSetting = () => {
+	const setting = process.env.DNS ?? config.dns;
+	return typeof setting === 'string' ? setting.trim() : '';
+};
+
+const isDnsAddress = (value: string) =>
+	isIP(value) !== 0 ||
+	/^[\da-z](?:[\da-z-]*[\da-z])?(?:\.[\da-z](?:[\da-z-]*[\da-z])?)+$/i.test(
+		value
+	);
+
+// "resolve" (default) keeps finalwisp's own resolver, "lookup" uses the
+// system's, and "nextdns:<id>" or a provider hostname is queried directly.
+export function wispDns(setting: string = dnsSetting()): WispDns {
+	const value = setting.toLowerCase();
+	if (!value || value === 'resolve')
+		return { method: 'resolve', servers: [] };
+	if (value === 'lookup') return { method: 'lookup', servers: [] };
+	const profile = /^nextdns:([\da-f]{6})$/.exec(value)?.[1];
+	if (profile)
+		return { method: 'resolve', servers: [`${profile}.dns.nextdns.io`] };
+	if (/^nextdns:/i.test(value))
+		throw new Error(
+			`Invalid NextDNS profile in dns setting "${setting}"; expected nextdns:xxx.`
+		);
+	if (isDnsAddress(setting)) return { method: 'resolve', servers: [setting] };
+	throw new Error(
+		`Invalid dns setting "${setting}"; use "resolve", "lookup", "nextdns:<profile id>" or a provider hostname such as xxx.dns.nextdns.io.`
+	);
+}
+
+// Destination policy; tests flip these to reach an in-process target.
+const envFlag = (name: string) => process.env[name]?.toLowerCase() === 'true';
+const envPortList = (): number[] | null => {
+	const ports = (process.env.WISP_PORTS ?? '')
+		.split(',')
+		.map((value) => Number(value.trim()))
+		.filter((port) => Number.isInteger(port) && port >= 1 && port <= 65535);
+	return ports.length ? ports : null;
+};
+export const finalwispPolicy = {
+	directIp: envFlag('WISP_DIRECT_IP'),
+	loopbackIps: envFlag('WISP_LOOPBACK_IPS'),
+	privateIps: envFlag('WISP_PRIVATE_IPS'),
+	ports: envPortList() ?? [80, 443],
+};
+
+// Limits for every instance; see FINALWISP.md for the full translation.
+export const finalwispLimits = {
+	maxConns: 16384,
+	maxStreamsPerConn: 2048,
+	maxConnsPerIp: 200,
+	connRatePerIp: '20/200',
+	streamRatePerIp: 500,
+	streamRatePerDest: '250/250',
+	streamRatePerDestMinute: 6000,
+	logLevel: 'error',
 } as const;
-export type WispRegion = keyof typeof wispProxies;
 
-export const wispRegions = (Object.keys(wispProxies) as WispRegion[]).filter(
-	(region) => region !== 'patreon' || config.patreon === true
-);
-
-const isRegion = (name: string): name is WispRegion =>
-	(wispRegions as string[]).includes(name);
+// One instance per region ("" is the default); ports must match
+// scripts/wisp-nginx.ts and finalwisp.config.cjs. socks5:// has finalwisp
+// resolve and check the name itself; socks5h:// leaves that to the proxy,
+// which Tor needs for .onion. Each port moves on its own env var, so several
+// instances of the site can run their own on the same machine.
+export interface FinalwispRegion {
+	port: number;
+	upstream: string | null;
+	extra: string[];
+}
+export const finalwispRegions = {
+	'': {
+		port: Number(process.env.FINALWISP_PORT ?? 6001),
+		upstream: null,
+		extra: [],
+	},
+	tor: {
+		port: Number(process.env.FINALWISP_TOR_PORT ?? 6002),
+		upstream: 'socks5h://127.0.0.1:9050',
+		extra: ['--connect-timeout', '30', '--dns-threads', '2'],
+	},
+	eu: {
+		port: Number(process.env.FINALWISP_EU_PORT ?? 6003),
+		upstream: 'socks5://127.0.0.1:7000',
+		extra: ['--dns-threads', '4'],
+	},
+	jp: {
+		port: Number(process.env.FINALWISP_JP_PORT ?? 6004),
+		upstream: 'socks5://127.0.0.1:7001',
+		extra: ['--dns-threads', '4'],
+	},
+	patreon: {
+		port: Number(process.env.FINALWISP_PATREON_PORT ?? 6005),
+		upstream: process.env.PATREON_PROXY || 'socks5://127.0.0.1:7002',
+		extra: ['--dns-threads', '4'],
+	},
+} satisfies Record<string, FinalwispRegion>;
+export type WispRegion = keyof typeof finalwispRegions;
+export const finalwispRegionNames = () =>
+	(Object.keys(finalwispRegions) as WispRegion[]).filter(
+		(region) => region !== 'patreon' || config.patreon === true
+	);
 
 export function fromOwnSite(req: IncomingMessage): boolean {
 	const { origin, host } = req.headers;
@@ -36,104 +133,16 @@ export function wispRegion(url: string | null | undefined): string | null {
 	if (path === base) return '';
 	if (!path.startsWith(base)) return null;
 	const region = path.slice(base.length).replace(/\/$/, '');
-	return isRegion(region) ? region : null;
+	if (region === '') return '';
+	// The sanitized client sends the per-build token; the plain name keeps
+	// development builds and clients from before the tokenized paths
+	// working.
+	if (region in finalwispRegions) return region;
+	return (
+		(Object.keys(finalwispRegions) as WispRegion[]).find(
+			(name) => name !== '' && settingKey(name) === region
+		) ?? null
+	);
 }
 export const isWispRequest = (url: string | null | undefined) =>
 	wispRegion(url) !== null;
-
-const wispConfig = {
-	port: 4432,
-	host: '127.0.0.1',
-	allowTCP: true,
-	allowUDP: false,
-	allowDirectIP: false,
-	allowPrivateIPs: false,
-	allowLoopbackIPs: true,
-	tcpBufferSize: 1048576,
-	socketBufferSize: 33554432,
-	pendingQueueSize: 268435456,
-	bufferRemainingLength: 2147483647,
-	tcpNoDelay: true,
-	blacklist: {
-		hostnames: [],
-		ports: [25, 465, 587],
-	},
-	whitelist: {
-		hostnames: [],
-		ports: [80, 443, 9050, 7000, 7001, 7002],
-	},
-	websocketPermessageDeflate: false,
-	frameObfuscation: {
-		enabled: false,
-		version: 2,
-		key: '',
-		tag: '',
-		headerLength: 0,
-		nonceLength: 0,
-		metadataOffset: 0,
-		paddingMinimum: 0,
-		paddingMaximum: 0,
-		paddingPlacement: 'split',
-		keyStride: 0,
-		nonceStride: 0,
-	},
-	dnsServers: [],
-	dnsMethod: 'resolve',
-	dnsResultOrder: 'ipv4first',
-	enableTwisp: false,
-	enableV2: true,
-	handshakeTimeoutSeconds: 5,
-	motd: '',
-	passwordAuth: false,
-	passwordAuthRequired: false,
-	passwordUsers: {},
-	parseRealIP: true,
-	trustedProxies: ['127.0.0.1', '::1'],
-	trustedHeaders: ['X-Forwarded-For'],
-	nonWSResponse: 'meow',
-	nonWSRedirect: '/pages/404.html',
-	logLevel: 'none',
-	proxy: '',
-	maxMessageSize: 1048581,
-	staticDir: '',
-	bandwidthLimitKbps: 0,
-	connectionsLimitPerIP: 200,
-	connectionWindowSeconds: 10,
-	floodProtection: {
-		enabled: true,
-		maxConnectsPerSourceIPPerSecond: 500,
-		maxConnectsPerDestPerSecond: 250,
-		maxConnectsPerDestPerMinute: 6000,
-		maxInFlightSyns: 4096,
-		maxConcurrentStreamsPerConnection: 2048,
-		maxConcurrentConnections: 16384,
-		synFloodSignature: {
-			enabled: false,
-			windowMs: 2000,
-			minSamples: 128,
-			failedHandshakeRatio: 0.75,
-		},
-		wsCloseAfterViolations: 64,
-		logBlockedDials: false,
-	},
-	reputation: {
-		enabled: false,
-		storePath: './data/wispurr-reputation.json',
-		saveIntervalSeconds: 30,
-		scoreDecayPerHour: 1,
-		evictAfterDays: 7,
-		thresholds: {
-			warn: 21,
-			throttle: 51,
-			strict: 81,
-		},
-		weights: {},
-		destinationWeights: {},
-	},
-} satisfies wispurrOptions & Record<string, unknown>;
-
-const { frameObfuscation, nonWSRedirect, ...wispOptions } = wispConfig;
-if (frameObfuscation.enabled)
-	throw new Error('This Wispurr version does not support frame obfuscation.');
-
-export { nonWSRedirect, wispOptions };

@@ -1,7 +1,11 @@
-const autoSites = ['playobsidian.com', 'truffled.lol'];
+const autoSites = ['playobsidian.com', 'gamebanana.com', 'truffled.lol'];
 const encapsulated =
 	/(?:importScripts\("|import ")(data:text\/javascript;charset=utf-8;base64,[\w+/=]+)"\)?;?\n$/;
 const workerDestinations = ['worker', 'sharedworker'];
+const downloadFileTypes =
+	/\.(?:7z|apk|bin|cab|crx|dmg|epub|exe|gz|iso|jar|msi|pkg|rar|tar|xpi|zip)$/i;
+const downloadMimeTypes =
+	/^(?:application\/(?:octet-stream|force-download|pdf|zip|gzip|x-gzip|x-tar|x-rar-compressed|vnd\.rar|x-7z-compressed|x-msdownload|x-msi|java-archive)|audio\/|video\/)/i;
 const bracelessDebugger = /(\)|\belse)(\s*)debugger\b/g;
 const evalImport = /\beval\(\s*(['"`])import\((['"])([^'"`]+)\2\)\1\s*\)/g;
 const storageCacheMethods = ['delete', 'match', 'matchAll', 'put'] as const;
@@ -79,6 +83,34 @@ export function fixScriptSource(js: string): string {
 	return js
 		.replace(bracelessDebugger, '$1$2void 0')
 		.replace(evalImport, 'import("$3")');
+}
+
+export type ScramjetDownloadResponseTarget = {
+	headers: Headers;
+};
+
+export function isDownloadResponse(
+	response: ScramjetDownloadResponseTarget,
+	url: URL
+): boolean {
+	const disposition = response.headers.get('content-disposition');
+	if (disposition?.trim().toLowerCase().startsWith('attachment')) return true;
+	// An HTML response on a file-extension route is a rendered page (some
+	// sites keep download pages at .zip-style paths). Leaving it rewritten is
+	// safe; sending it through unrewritten would leave raw site links pointing
+	// outside the proxy. Only a real attachment disposition overrides HTML.
+	if (isHtmlContentType(response.headers.get('content-type'))) return false;
+	const type = response.headers.get('content-type');
+	if (type && downloadMimeTypes.test(type)) return true;
+	return downloadFileTypes.test(url.pathname);
+}
+
+// The rewriter only skips HTML for documents whose parsed mime essence is
+// text/html; attachment responses never render, so reporting a harmless
+// binary type instead of a text/html mislabel sends their raw bytes through
+// without touching what the page receives.
+export function isHtmlContentType(type: string | null): boolean {
+	return type !== null && /^text\/html(?:\s*;|$)/i.test(type.trim());
 }
 
 export function scriptSafeBody(response: Response): ReadableStream<Uint8Array> {

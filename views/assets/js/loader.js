@@ -228,7 +228,9 @@ import { values, homoglyphText } from 'build:invisiproxy';
                                   event.altKey ||
                                   (target && target.toLowerCase() !== '_self') ||
                                   elementCopy.hasAttribute('download') ||
-                                  _document.cookie.split('; ').includes('HistoryHide=true')
+                                  _document.cookie
+                                    .split('; ')
+                                    .includes(`${'HistoryHide'}=true`)
                                 ) return;
                                 event.preventDefault();
                                 loadPage(new URL(attrValue, origin))();

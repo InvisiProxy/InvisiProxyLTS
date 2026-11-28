@@ -1,5 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { mkdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import type { Socket } from 'node:net';
 import { dirname, join, relative } from 'node:path';
 import {
 	createBuilder,
@@ -7,7 +8,14 @@ import {
 	type Rolldown,
 	type ViteDevServer,
 } from 'vite';
+import { config } from '../config.ts';
 import { developmentEnv, siteDir } from '../constants.ts';
+import {
+	type FinalwispInstances,
+	startFinalwispInstances,
+	stopFinalwispInstances,
+} from '../server/finalwisp.ts';
+import { fromOwnSite, isWispRequest, wispRegion } from '../server/wisp.ts';
 import { beginObfuscationBuild } from '../obfuscation/state.ts';
 import { watchedEnvironments } from './plugin.ts';
 import { type LoadRenderer, renderSite } from './render.ts';
@@ -53,6 +61,36 @@ async function writeDocuments(server: ViteDevServer) {
 		writeFileSync(`${target}.tmp`, content);
 		renameSync(`${target}.tmp`, target);
 	}
+}
+
+// Dev stand-in for nginx: runs the instances and pipes Wisp upgrades to them.
+export function finalwispDevPlugin(): Plugin {
+	return {
+		name: 'invisiproxy-finalwisp-dev',
+		apply: 'serve',
+		async configureServer(server: ViteDevServer) {
+			if (config.manageWisp === false) return;
+			const wisps: FinalwispInstances = await startFinalwispInstances();
+			const upgrade = (
+				req: IncomingMessage,
+				socket: Socket,
+				head: Buffer
+			) => {
+				if (!isWispRequest(req.url)) return;
+				const region = wispRegion(req.url);
+				if (region === null || !fromOwnSite(req))
+					return socket.destroy();
+				const wisp = wisps.get(region);
+				if (wisp) wisp.route(req, socket, head);
+				else socket.destroy();
+			};
+			server.httpServer?.on('upgrade', upgrade);
+			server.httpServer?.once('close', () => {
+				server.httpServer?.off('upgrade', upgrade);
+				void stopFinalwispInstances(wisps);
+			});
+		},
+	};
 }
 
 export function siteDevPlugin(): Plugin {

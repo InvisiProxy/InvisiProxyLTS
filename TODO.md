@@ -2,17 +2,18 @@ This will be our nonexhaustive todo list for InvisiProxy LTS v8.x.x and above. R
 
 ## Priority
 
-- [ ] Class managling and DOM masquerading functionality to Scramjet (or stealth window) 
-- [ ] Update Scramjet to V3
 - [ ] Finish translations
-
-#### Known Regressions
-- Bing will leak out of the respective stealth frame
-- Clean epoxy errors if unreleated to ProxyTransports
+- [ ] Implement Rammerhead v1.3.1
+- [x] Swap to finalwisp over wispurr for security and performance - done (see FINALWISP.md)
 
 ## Proxy/Site Functionality
-- [ ] Add Chii + ensuring users can access devtools while browsing; or utilize Scramjet playground instead - partial
-- [ ] Ads are being implemented into the project. This will be on loading pages.
+- [ ] Add Chii + ensuring users can access devtools while browsing; or utilize Scramjet playground instead
+- [x] Update Scramjet to V3 - done (vendored continuous build in vendor/, with the Proxy Version setting to fall back to 2.1.0; no patches involved)
+- [x] Ads are being implemented into the project. This will be on loading pages.
+- [x] Shadow DOM on Invisi side - done
+- [x] Font obfuscation - done
+- [x] Randomize Scramjet globals - done
+- [x] Class managling and DOM masquerading functionality to Scramjet (or stealth window) - done
 - [x] Improve obfuscation to include basic managling for classes, ids and exposed keywords - partial
 - [x] Implement Browser Fingerprinting randomization setting and UA changing menu - done
 - [x] On non SEO instances default page becomes Browsing instead of the homepage. Homepage will now be added as Overview - done

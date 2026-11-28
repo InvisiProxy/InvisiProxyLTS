@@ -43,10 +43,10 @@ export default function Footer() {
 							<a
 								target="_blank"
 								rel="noopener noreferrer"
-								href={route('/wispurr')}
-								title={translate('footer.wispurr')}
+								href={route('/finalwisp')}
+								title={translate('footer.finalwisp')}
 							>
-								Wispurr{' '}
+								Finalwisp{' '}
 							</a>
 						</li>
 						<li>

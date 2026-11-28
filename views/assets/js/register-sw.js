@@ -1,5 +1,6 @@
 import { values, route } from 'build:invisiproxy';
 import { renderProxyError } from 'build:invisiproxy-errors';
+import { BareResponse } from '@mercuryworkshop/proxy-transports';
 import {
   openTransport,
   proxyRegions,
@@ -25,6 +26,8 @@ import {
   autoSiteFixes,
   fixFetchHandler,
   headlessBody,
+  isDownloadResponse,
+  isHtmlContentType,
   keepHistoryUrl,
   obsidianSameTab,
   scriptSafeBody,
@@ -37,6 +40,16 @@ import {
 } from '../../../src/browser/error-page.ts';
 import { proxyCodec } from '../../../src/browser/proxy-codec.ts';
 import { skipHttpCache } from '../../../src/browser/http-cache.ts';
+import { migrateSettings } from '../../../src/browser/settings-migration.ts';
+import {
+  selectedScramjetVersion,
+} from '../../../src/browser/scramjet-version.ts';
+import {
+  CACHE_NAME,
+  createHttpCachePlugin,
+} from '../../../src/browser/scramjet-plugins/http-cache-plugin.ts';
+import { createUrlWatcherPlugin } from '../../../src/browser/scramjet-plugins/url-watcher.ts';
+import { createCatchEscapedLinksPlugin } from '../../../src/browser/scramjet-plugins/catch-escaped-links.ts';
 (() => {
   const swScope = route("/"),
     swAllowedHostnames = ['localhost', '127.0.0.1'],
@@ -48,16 +61,57 @@ import { skipHttpCache } from '../../../src/browser/http-cache.ts';
     storageObject = () => JSON.parse(localStorage.getItem(storageId)) || {},
     readStorage = (name) => storageObject()[name];
 
+  // Repair settings older builds persisted (the removed site-fixes
+  // default-on coupling saved Tor routing); runs once per browser before
+  // any setting is read.
+  const repairedSettings = JSON.stringify(migrateSettings(storageObject()));
+  if (repairedSettings !== localStorage.getItem(storageId))
+    localStorage.setItem(storageId, repairedSettings);
+
   const transportName = selectedTransport(readStorage('Transport')),
-    transportUrl = route(`/${transportName}/index.mjs`),
+    transportUrl = values.transportPaths[transportName],
     siteFixes = readStorage('ExperimentalSiteFixes') === true;
+
+  // Everything version-specific lives in this table; both builds ship under
+  // their own aliased paths, and the service worker matches the version so
+  // the page and SW always speak the same protocol.
+  const versionName = selectedScramjetVersion(readStorage('ProxyVersion')),
+    scramjetPaths = {
+      v3: {
+        core: route("/scram3/scramjet3.js"),
+        api: route("/scram3/controller3.api.js"),
+        wasm: route("/scram3/scramjet3.wasm"),
+        inject: route("/scram3/controller3.inject.js"),
+        network: route("/scram3/network3/"),
+        sw: "sw.js",
+        swAds: "sw-blacklist.js",
+      },
+      v2: {
+        core: route("/scram/scramjet.js"),
+        api: route("/scram/controller.api.js"),
+        wasm: route("/scram/scramjet.wasm"),
+        inject: route("/scram/controller.inject.js"),
+        network: route("/scram/network/"),
+        sw: "swv2.js",
+        swAds: "swv2-blacklist.js",
+      },
+    },
+    paths = scramjetPaths[versionName];
+  const loadScript = (src) =>
+    new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = () => reject(new Error(`Failed to load ${src}`));
+      document.head.appendChild(script);
+    });
 
   const getTransportOptions = () => ({
     wisp: selectedWisp(storageObject(), transportName, regions, wispBase),
   });
 
   const getSWRoute = () =>
-    route(readStorage('HideAds') !== false ? '/sw-blacklist.js' : '/sw.js');
+    route(readStorage('HideAds') !== false ? paths.swAds : paths.sw);
 
   const unregisterStaleSWs = async () => {
     const expected = new URL(getSWRoute(), location.origin).pathname;
@@ -112,9 +166,9 @@ import { skipHttpCache } from '../../../src/browser/http-cache.ts';
   };
 
   const clearHttpCache = async () => {
-    if (typeof $scramjetUtils === 'undefined' || !self.caches) return;
+    if (!self.caches) return;
     try {
-      await caches.delete($scramjetUtils.CACHE_NAME);
+      await caches.delete(CACHE_NAME);
     } catch {}
   };
 
@@ -142,8 +196,8 @@ import { skipHttpCache } from '../../../src/browser/http-cache.ts';
       }
       install(frame) {
         super.install(frame);
-        this.tap(frame.hooks.init.post, ({ window: win, client }) =>
-          leakFrame(win, client)
+        this.tap(frame.hooks.init.post, ({ window: win, client, isTopLevel }) =>
+          leakFrame(win, client, isTopLevel)
         );
       }
     })();
@@ -222,7 +276,7 @@ import { skipHttpCache } from '../../../src/browser/http-cache.ts';
           }
         };
         const replaceBody = (response, body) => {
-          const fixed = $scramjet.BareResponse.fromNativeResponse(
+          const fixed = BareResponse.fromNativeResponse(
             body instanceof Response
               ? body
               : new Response(body, {
@@ -265,7 +319,9 @@ import { skipHttpCache } from '../../../src/browser/http-cache.ts';
     })();
 
   // Keeps video and other large bodies from being buffered whole by the
-  // HTTP cache plugin, which otherwise exhausts tab memory on streaming sites.
+  // HTTP cache plugin, which otherwise exhausts tab memory on streaming sites,
+  // and keeps Scramjet's text/html rewriter (which also buffers whole bodies,
+  // without honouring Content-Disposition) from slurping file attachments.
   const buildCacheGuardPlugin = () =>
     new (class extends $scramjetController.ManagedPlugin {
       constructor() {
@@ -276,11 +332,25 @@ import { skipHttpCache } from '../../../src/browser/http-cache.ts';
         this.tap(
           frame.hooks.fetch.preresponse,
           ({ request, parsed }, props) => {
+            const response = props.response;
+            if (
+              ['document', 'iframe'].includes(parsed.destination) &&
+              isDownloadResponse(response, parsed.url)
+            ) {
+              // File downloads bypass the HTTP cache (which buffers whole
+              // bodies) and the HTML rewriter. Only the internal headers
+              // change, and the page-facing headers are rebuilt from the
+              // untouched raw ones, so the server's own Content-Type and
+              // Content-Disposition still reach the browser.
+              request.cache = 'no-store';
+              if (isHtmlContentType(response.headers.get('content-type')))
+                response.headers.set('content-type', 'application/octet-stream');
+            }
             if (
               skipHttpCache(
                 parsed.destination ?? '',
                 request.initialHeaders?.toRawHeaders() ?? [],
-                props.response.rawHeaders ?? []
+                response.rawHeaders ?? []
               )
             )
               request.cache = 'no-store';
@@ -318,6 +388,13 @@ import { skipHttpCache } from '../../../src/browser/http-cache.ts';
       }
     })();
 
+  // The plugin classes extend the controller's; only after the chosen
+  // version's scripts load (initialize) do the globals exist, so these are
+  // filled in there and read here.
+  let HttpCachePlugin = null;
+  let UrlWatcherPlugin = null;
+  let CatchEscapedLinksPlugin = null;
+
   const buildFramePlugins = (onUrl) => {
     const plugins = [
       buildErrorPagePlugin(),
@@ -328,13 +405,12 @@ import { skipHttpCache } from '../../../src/browser/http-cache.ts';
       buildSiteFixesPlugin(),
     ];
     if (values.dlpcc) plugins.unshift(buildDlpccPlugin());
-    if (typeof $scramjetUtils === 'undefined') return plugins;
-    plugins.push(buildCacheGuardPlugin(), new $scramjetUtils.HttpCachePlugin());
+    plugins.push(buildCacheGuardPlugin(), new HttpCachePlugin());
 
-    if (onUrl) plugins.push(new $scramjetUtils.UrlWatcherPlugin(onUrl));
+    if (onUrl) plugins.push(new UrlWatcherPlugin(onUrl));
 
     plugins.push(
-      new $scramjetUtils.CatchEscapedLinksPlugin((url) => {
+      new CatchEscapedLinksPlugin((url) => {
         try {
           localStorage.setItem(`${values.storageNamespace}-frame-url`, frameUrlPrefix + url.href);
           localStorage.setItem(`${values.storageNamespace}-open-url`, frameUrlPrefix + url.href);
@@ -346,15 +422,27 @@ import { skipHttpCache } from '../../../src/browser/http-cache.ts';
     return plugins;
   };
 
+  // Load the chosen scramjet version as classic scripts (the controller
+  // bundle assigns its global with a top-level var, which a module import
+  // would scope away), then wire the controller.
   const initialize = async () => {
     try {
       if (window.$invisiScramjet?.ready) {
         window.dispatchEvent(new Event('s-ready'));
         return;
       }
+      await loadScript(paths.core);
+      await loadScript(paths.api);
+      console.log(`Using ${versionName === 'v3' ? 'Scramjet 3.0.0-alpha' : 'Scramjet 2.1.0'} (Version setting)`);
+      HttpCachePlugin = createHttpCachePlugin($scramjetController.ManagedPlugin);
+      UrlWatcherPlugin = createUrlWatcherPlugin($scramjetController.ManagedPlugin);
+      CatchEscapedLinksPlugin = createCatchEscapedLinksPlugin(
+        $scramjetController.ManagedPlugin,
+        $scramjet.ScramjetHeaders
+      );
 
       const transportOptions = getTransportOptions();
-      console.log('Using wisp:', transportOptions.wisp);
+      console.log('Using endpoint:', transportOptions.wisp);
       console.log('Transport mode:', transportUrl);
 
       const [registration, transport] = await Promise.all([
@@ -374,17 +462,17 @@ import { skipHttpCache } from '../../../src/browser/http-cache.ts';
         serviceworker,
         transport,
         config: {
-          prefix: route("/scram/network/"),
-          scramjetPath: route("/scram/scramjet.js"),
-          wasmPath: route("/scram/scramjet.wasm"),
-          injectPath: route("/scram/controller.inject.js"),
+          prefix: paths.network,
+          scramjetPath: paths.core,
+          wasmPath: paths.wasm,
+          injectPath: paths.inject,
           codec: proxyCodec(),
         },
         scramjetConfig: {
           ...defaultConfig,
           flags: {
             ...defaultConfig.flags,
-            allowFailedIntercepts: true,
+            allowFailedIntercepts: false,
             allowInvalidJs: false,
           },
         },
@@ -409,13 +497,15 @@ import { skipHttpCache } from '../../../src/browser/http-cache.ts';
       const createFrame = (element, onUrl) =>
         controller.createFrame(element, { plugins: buildFramePlugins(onUrl) });
       let frame = null;
-      if (!(document.getElementById('frame') instanceof HTMLIFrameElement)) {
+      if (!document.getElementById('tab-frames')) {
         const hidden = document.createElement('iframe');
         hidden.setAttribute('aria-hidden', 'true');
         hidden.tabIndex = -1;
         hidden.style.cssText =
           'position:fixed;width:0;height:0;border:0;visibility:hidden;pointer-events:none;';
-        document.body.appendChild(hidden);
+        const host = document.createElement('div');
+        document.body.appendChild(host);
+        host.attachShadow({ mode: 'closed' }).appendChild(hidden);
         frame = controller.createFrame(hidden);
       }
 
@@ -436,7 +526,7 @@ import { skipHttpCache } from '../../../src/browser/http-cache.ts';
       if (window.$invisiScramjet?.ready) initialize();
     });
   } else {
-    fetch(route("/scram/scramjet.wasm")).catch(() => {});
+    fetch(paths.wasm).catch(() => {});
     window.$invisiScramjetInitializing = initialize().finally(() => {
       delete window.$invisiScramjetInitializing;
     });

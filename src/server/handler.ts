@@ -11,12 +11,14 @@ import {
 	siteUrl,
 } from '../constants.ts';
 import { apiPath, getPathAliases, getAltPrefix } from '../obfuscation/paths.ts';
+import { settingKey } from '../obfuscation/settings.ts';
+import { createAds, type SiteAds, withHead } from './ads.ts';
 import { preloaded404, tryReadFile } from './files.ts';
 import { loadLanguages, pickLanguage } from './language.ts';
 import { type ClientIp, createLinkDispenser } from './link-dispenser.ts';
 import type { ExternalPages } from './links.ts';
 import { loadRoutes } from './routes.ts';
-import { nonWSRedirect, wispOptions, wispPath } from './wisp.ts';
+import { nonWSRedirect, nonWSResponse, wispPath } from './wisp.ts';
 
 export type SiteHandler = (req: IncomingMessage, res: ServerResponse) => void;
 
@@ -24,6 +26,7 @@ export interface SiteOptions {
 	wispRedirect?: string;
 	wispResponse?: string;
 	clientIp?: ClientIp;
+	ads?: (req: IncomingMessage) => SiteAds | undefined;
 }
 
 type Disguise = 'pass' | 'loader' | 'modified';
@@ -107,9 +110,14 @@ function disguiseCheck(
 		`\\.(?!html$|${disguiseExtension}$)[\\w-]+$`,
 		'i'
 	);
-	const exemptDirs = ['assets', 'scram', 'libcurl', 'epoxy', 'wisp'].map(
-		(dir) => getAltPrefix(dir, base).slice(base.length, -1)
-	);
+	const exemptDirs = [
+		'assets',
+		'scram',
+		'scram3',
+		'libcurl',
+		'epoxy',
+		'wisp',
+	].map((dir) => getAltPrefix(dir, base).slice(base.length, -1));
 	const exemptPages = ['', 'favicon.ico'];
 	for (const [name, target] of Object.entries(externalPages))
 		(typeof target === 'string' ? exemptPages : exemptDirs).push(name);
@@ -142,13 +150,21 @@ function applyResponseHooks(
 ) {
 	for (const [name, value] of securityHeaders) res.setHeader(name, value);
 	const cookies = (req.headers.cookie || '').split('; ');
-	if (
-		cookies.includes('ExperimentalSiteFixes=true') ||
-		cookies.includes('AutoSiteFixes=true')
-	)
+	// Both the per-build cookie names and the plain ones: development
+	// ships unsanitized and an old state file must not break the cookies.
+	const siteFixesNames = [
+		settingKey('ExperimentalSiteFixes'),
+		settingKey('AutoSiteFixes'),
+		'ExperimentalSiteFixes',
+		'AutoSiteFixes',
+	];
+	if (siteFixesNames.some((name) => cookies.includes(`${name}=true`)))
 		res.setHeader('Cross-Origin-Embedder-Policy', 'credentialless');
-	const historyHide = cookies
-		.find((cookie) => cookie.startsWith('HistoryHide='))
+	const historyHide = [settingKey('HistoryHide'), 'HistoryHide']
+		.map((name) =>
+			cookies.find((cookie) => cookie.startsWith(`${name}=`))
+		)
+		.find(Boolean)
 		?.split('=')[1];
 	const hide =
 		historyHide === 'true' && req.headers['sec-fetch-dest'] === 'document';
@@ -184,8 +200,10 @@ function applyResponseHooks(
 
 export function createSiteHandler({
 	wispRedirect = nonWSRedirect,
-	wispResponse = wispOptions.nonWSResponse,
+	wispResponse = nonWSResponse,
 	clientIp,
+	// Patreon instances are ad-free.
+	ads = config.patreon === true ? () => undefined : createAds(),
 }: SiteOptions = {}): SiteHandler {
 	const { pages, externalPages } = loadRoutes();
 	const base = serverUrl.pathname;
@@ -193,6 +211,7 @@ export function createSiteHandler({
 	const development = isDevelopment();
 	const dispenserPath = `${base}${apiPath('link')}`;
 	const clearDataPath = `${base}${apiPath('clear')}`;
+	const unitsPath = `${base}${apiPath('units')}`;
 	const dispense = createLinkDispenser(undefined, clientIp);
 	const wispRoute = trimSlash(wispPath());
 	const checkDisguise = disguiseCheck(pages, externalPages);
@@ -200,21 +219,25 @@ export function createSiteHandler({
 		? tryReadFile('pages/misc/deobf/loader.html', siteUrl, false)
 		: '';
 	const serviceWorkers = new Map(
-		['sw.js', 'sw-blacklist.js'].map((file) => {
-			const name = getPathAliases()[`files/${file}`] || file;
-			return [base + name, name];
-		})
+		['sw.js', 'sw-blacklist.js', 'swv2.js', 'swv2-blacklist.js'].map(
+			(file) => {
+				const name = getPathAliases()[`files/${file}`] || file;
+				return [base + name, name];
+			}
+		)
 	);
 
 	const noStorePrefixes = [
 		'scram',
+		'scram3',
 		'libcurl',
 		'epoxy',
 		'wisp',
 		'network',
+		'network3',
 	].map((prefix) => getAltPrefix(prefix, base));
 
-	const staticDirs = ['assets', 'scram', 'libcurl', 'epoxy'].map(
+	const staticDirs = ['assets', 'scram', 'scram3', 'libcurl', 'epoxy'].map(
 		(prefix) => ({
 			prefix: getAltPrefix(prefix, base),
 			root: join(siteDir, prefix),
@@ -270,7 +293,8 @@ export function createSiteHandler({
 		name: string,
 		modified: boolean,
 		language: string,
-		fromPath: boolean
+		fromPath: boolean,
+		head: string
 	) {
 		if (name === 'favicon.ico') return reply(res, 200);
 
@@ -295,7 +319,12 @@ export function createSiteHandler({
 			? pageTypes[disguiseExtension]
 			: pageTypes[extension(file)] || pageTypes.default;
 		if (file === entryPointFile)
-			return reply(res, 200, type, tryReadFile(file, siteUrl));
+			return reply(
+				res,
+				200,
+				type,
+				withHead(tryReadFile(file, siteUrl), head)
+			);
 		if (fromPath && !file.endsWith('.html')) return notFound(res, language);
 		if (!fromPath && languages.codes.length > 1)
 			res.setHeader('Vary', languageVary);
@@ -309,7 +338,13 @@ export function createSiteHandler({
 			const query = url.includes('?') ? url.slice(url.indexOf('?')) : '';
 			return redirect(res, `${base}${language}/${name}${query}`);
 		}
-		reply(res, 200, type, tryReadFile(translated(file, language), siteUrl));
+		const body = tryReadFile(translated(file, language), siteUrl);
+		reply(
+			res,
+			200,
+			type,
+			file.endsWith('.html') ? withHead(body, head) : body
+		);
 	}
 
 	function serveStatic(
@@ -350,6 +385,19 @@ export function createSiteHandler({
 
 	return (req, res) => {
 		applyResponseHooks(req, res, development);
+		// Emergency lever for poisoned client state (a bad release that
+		// persisted broken settings): while true, wrapper navigations
+		// carry Clear-Site-Data and wipe the browser's storage, caches and
+		// cookies for this origin -- users lose bookmarks and tabs too, so
+		// leave it off outside a one-release repair window. Only browser
+		// document navigations carry it; the service worker's fetches (dest
+		// "empty") never do, so proxied sessions are not wiped mid-flight.
+		if (
+			config.forceClearSiteData &&
+			(req.method === 'GET' || req.method === 'HEAD') &&
+			req.headers['sec-fetch-dest'] === 'document'
+		)
+			res.setHeader('Clear-Site-Data', '"cache", "cookies", "storage"');
 		let url = req.url || '/';
 		let path = trimSlash(url.split('?')[0].replace(/\/{2,}/g, '/'));
 		// /fr/questions is the French copy of /questions.
@@ -365,6 +413,37 @@ export function createSiteHandler({
 			url = path + (query < 0 ? '' : url.slice(query));
 		}
 		const language = prefix || languageFor(req);
+		const siteAds = ads(req);
+		const head = siteAds?.head ?? '';
+		// Ad networks credit impressions by the Referer origin, so domains
+		// running ads send their origin, never the path.
+		if (siteAds) res.setHeader('Referrer-Policy', 'strict-origin');
+		const rootPath = url.split('?')[0];
+		if (siteAds && (req.method === 'GET' || req.method === 'HEAD')) {
+			if (rootPath === '/ads.txt' && siteAds.adsTxt)
+				return reply(
+					res,
+					200,
+					'text/plain; charset=utf-8',
+					siteAds.adsTxt
+				);
+			if (Object.hasOwn(siteAds.files, rootPath))
+				return reply(
+					res,
+					200,
+					'text/plain; charset=utf-8',
+					siteAds.files[rootPath]
+				);
+		}
+		if (req.method === 'GET' && path === unitsPath) {
+			res.setHeader('Cache-Control', 'private, max-age=60');
+			return reply(
+				res,
+				200,
+				'application/json; charset=utf-8',
+				JSON.stringify(siteAds?.client ?? {})
+			);
+		}
 
 		if (req.method === 'POST' && path === dispenserPath)
 			return void dispense(req, res);
@@ -385,7 +464,7 @@ export function createSiteHandler({
 
 		const disguise = checkDisguise(url);
 		if (disguise === 'loader')
-			return reply(res, 200, pageTypes.html, loaderPage);
+			return reply(res, 200, pageTypes.html, withHead(loaderPage, head));
 		const modified = disguise === 'modified';
 		if (modified) {
 			res.setHeader('Content-Type', pageTypes[disguiseExtension]);
@@ -419,7 +498,8 @@ export function createSiteHandler({
 				modified ? undisguise(name) : name,
 				modified,
 				language,
-				!!prefix
+				!!prefix,
+				head
 			);
 		}
 

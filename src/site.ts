@@ -6,6 +6,9 @@ export interface SiteValues {
 	inlineAssets: boolean;
 	basePath: string;
 	aliases: Record<string, string>;
+	// The transport module URLs keyed by the per-build transport tokens
+	// (and by the plain names, for development bundles).
+	transportPaths: Record<string, string>;
 	cacheBust: Record<string, string>;
 	version: string;
 	cacheKey: number;
@@ -266,6 +269,7 @@ export interface AppPreset {
 	name: string;
 	url: string;
 	icon?: string;
+	local?: boolean;
 }
 
 const favicon = (domain: string) =>
@@ -277,6 +281,12 @@ export const appLibrary = Object.freeze<{ id: string; apps: AppPreset[] }[]>([
 		apps: [
 			{ name: 'Obsidian', url: 'https://playobsidian.com' },
 			{ name: 'Truffled', url: 'https://truffled.lol' },
+			{
+				name: 'GUST',
+				url: 'gust',
+				icon: 'assets/ico/wind.svg',
+				local: true,
+			},
 		],
 	},
 	{
@@ -518,8 +528,15 @@ export const appPresets: readonly AppPreset[] = (() => {
 	return Object.freeze([...presets.values()]);
 })();
 
-export const appIcon = (app: AppPreset) =>
-	app.icon ?? favicon(new URL(app.url).hostname);
+export const appIcon = (app: AppPreset) => {
+	if (app.local) return route(app.icon || 'assets/ico/favicon.ico');
+	if (app.icon) return app.icon;
+	try {
+		return favicon(new URL(app.url).hostname);
+	} catch {
+		return '';
+	}
+};
 
 interface CreditPerson {
 	name: string;
@@ -587,6 +604,12 @@ export const credits = Object.freeze<CreditSection[]>([
 				contact: '@havi11368',
 			},
 			{
+				name: 'slqnt',
+				contributions: 'Domains',
+				url: 'https://slqnt.dev',
+				contact: '@slqnt',
+			},
+			{
 				name: 'Kinglalu',
 				contributions: 'Games Page, Developer',
 				url: 'https://github.com/kinglalu',
@@ -631,6 +654,17 @@ export const credits = Object.freeze<CreditSection[]>([
 				name: 'aster',
 				contributions: 'Japanese Translation',
 				contact: '@asterf._.',
+			},
+			{
+				name: 'Fallen Phoenix',
+				contributions: 'Simplified Chinese Translation',
+				contact: '@fallenphoenix5954',
+			},
+			{
+				name: 'Sxlphuric',
+				contributions: 'French Translation',
+				url: 'https://sulphuric.dev',
+				contact: '@sxlphuric',
 			},
 		],
 	},

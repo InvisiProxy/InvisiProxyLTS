@@ -1,0 +1,81 @@
+.placement {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+	box-sizing: border-box;
+	visibility: hidden;
+}
+
+.placement-live {
+	visibility: visible;
+}
+
+.placement-label {
+	font-size: 11px;
+	letter-spacing: 0.08em;
+	color: var(--nord4);
+	opacity: 0.55;
+}
+
+.placement iframe {
+	display: block;
+	border: 0;
+	max-width: 100%;
+}
+
+/* The rails sit 20px outside the 1250px content column. */
+.placement-rail {
+	position: fixed;
+	top: max(140px, calc(50dvh - 300px));
+	z-index: 1;
+	width: 160px;
+}
+
+.placement-left {
+	left: calc(50% - 625px - 180px);
+}
+
+.placement-right {
+	right: calc(50% - 625px - 180px);
+}
+
+.placement-strip {
+	width: 90%;
+	max-width: 1250px;
+	margin: 0 auto 40px;
+}
+
+/* Empty slots collapse instead of using display: none, which is kept for
+   screens a slot does not fit so rails.js knows not to fill it. */
+.placement-strip:not(.placement-live),
+.placement-card:not(.placement-live) {
+	height: 0;
+	margin: 0 auto;
+	overflow: hidden;
+}
+
+@media (max-width: 1659px) {
+	.placement-rail {
+		display: none;
+	}
+}
+
+/* Laptop heights: tighten the loader so the card fits under the omnibar. */
+@media (max-height: 900px) {
+	.loader:has(.placement-card.placement-live) {
+		gap: 16px;
+		padding-top: 100px;
+		box-sizing: border-box;
+	}
+
+	.loader:has(.placement-card.placement-live) .pr-logo {
+		max-width: 80px;
+	}
+}
+
+@media (max-height: 700px) {
+	.placement-card {
+		display: none;
+	}
+}

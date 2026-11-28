@@ -28,14 +28,53 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install musl runtime (wispurr moments)
-        run: sudo apt-get update && sudo apt-get install -y musl
+      - name: Install finalwisp (wisp server)
+        run: |
+          V=v1.5.0
+          curl -sLO https://github.com/theogbob/finalwisp/releases/download/$V/finalwisp-$V-x86_64-linux.tar.gz
+          curl -sLO https://github.com/theogbob/finalwisp/releases/download/$V/SHA256SUMS
+          tar -xzf finalwisp-$V-x86_64-linux.tar.gz
+          sha256sum -c SHA256SUMS
+          sudo install -m 0755 finalwisp-$V-x86_64-linux/finalwisp /usr/local/bin/finalwisp
+          finalwisp --version
 
       - name: Build libraries
         run: pnpm run build
 
       - name: Test configuration, privacy and production routes
         run: pnpm test
+
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6.1.0
+        with:
+          version: 12.15.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          cache: 'pnpm'
+          node-version: '26'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install finalwisp (wisp server)
+        run: |
+          V=v1.5.0
+          curl -sLO https://github.com/theogbob/finalwisp/releases/download/$V/finalwisp-$V-x86_64-linux.tar.gz
+          curl -sLO https://github.com/theogbob/finalwisp/releases/download/$V/SHA256SUMS
+          tar -xzf finalwisp-$V-x86_64-linux.tar.gz
+          sha256sum -c SHA256SUMS
+          sudo install -m 0755 finalwisp-$V-x86_64-linux/finalwisp /usr/local/bin/finalwisp
+          finalwisp --version
 
       - name: Install Chromium
         run: pnpm exec playwright install --with-deps chromium

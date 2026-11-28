@@ -1,5 +1,14 @@
 import { translate, Translation } from '../document-helpers.tsx';
 
+const securityPoints = [
+	'performance',
+	'compatibility',
+	'censorship',
+	'fingerprinting',
+	'encryption',
+	'transparency',
+] as const;
+
 export default function Terms() {
 	return (
 		<div id="tos" class="box-clear textm">
@@ -10,42 +19,56 @@ export default function Terms() {
 				</div>
 				<p>
 					<strong>{translate('privacy.effective')}</strong>
-				</p>
-				<p>
+					<br />
 					<strong>{translate('privacy.updated')}</strong>
 				</p>
 				<h4>{translate('privacy.what.title')}</h4>
 				<p>
 					<Translation id="privacy.what.body" />
 				</p>
-				<h4>{translate('privacy.data.title')}</h4>
+				<h4 id="Data">{translate('privacy.data.title')}</h4>
 				<p>
 					<Translation id="privacy.data.body" />
+				</p>
+				<h4 id="Advertising">
+					{translate('privacy.advertising.title')}
+				</h4>
+				<p>
+					<Translation id="privacy.advertising.body" />
 				</p>
 				<h4 id="Security">{translate('privacy.security.title')}</h4>
 				<p>
 					<Translation id="privacy.security.body" />
 				</p>
-				<p>{translate('privacy.security.intro')}</p>
-				<p>{translate('privacy.security.performance')}</p>
-				<p>{translate('privacy.security.compatibility')}</p>
-				<p>{translate('privacy.security.censorship')}</p>
-				<p>{translate('privacy.security.fingerprinting')}</p>
-				<p>{translate('privacy.security.transparency')}</p>
-				<p>{translate('privacy.security.randomisation')}</p>
-				<p>{translate('privacy.security.encryption')}</p>
-				<p>{translate('privacy.security.audits')}</p>
+				<ul>
+					{securityPoints.map((point) => (
+						<li>
+							<Translation id={`privacy.security.${point}`} />
+						</li>
+					))}
+				</ul>
 				<h4 id="Cookies">{translate('privacy.usage.title')}</h4>
-				<p>{translate('privacy.usage.storage')}</p>
-				<p>{translate('privacy.usage.cookies')}</p>
-				<p>{translate('privacy.usage.serviceWorkers')}</p>
-				<p>{translate('privacy.usage.consent')}</p>
+				<ul>
+					<li>
+						<Translation id="privacy.usage.storage" />
+					</li>
+					<li>
+						<Translation id="privacy.usage.cookies" />
+					</li>
+					<li>
+						<Translation id="privacy.usage.serviceWorkers" />
+					</li>
+					<li>
+						<Translation id="privacy.usage.consent" />
+					</li>
+				</ul>
 				<h4 id="Changes">{translate('privacy.changes.title')}</h4>
-				<p>{translate('privacy.changes.body')}</p>
-				<h4 id="Credit">{translate('privacy.contact.title')}</h4>
 				<p>
-					{translate('privacy.contact.body')} d9tcv6vgx@mozmail.com{' '}
-					<br />
+					<Translation id="privacy.changes.body" />
+				</p>
+				<h4 id="Contact">{translate('privacy.contact.title')}</h4>
+				<p>
+					{translate('privacy.contact.body')} d9tcv6vgx@mozmail.com
 					<br />
 				</p>
 			</div>

@@ -4,5 +4,5 @@
 	"features": {
 		"node": "26"
 	},
-	"postCreateCommand": "corepack enable && corepack prepare pnpm@latest --activate && pnpm install"
+	"postCreateCommand": "corepack enable && corepack prepare pnpm@latest --activate && pnpm install && curl -sLO https://github.com/theogbob/finalwisp/releases/download/v1.5.0/finalwisp-v1.5.0-x86_64-linux.tar.gz && curl -sLO https://github.com/theogbob/finalwisp/releases/download/v1.5.0/SHA256SUMS && tar -xzf finalwisp-v1.5.0-x86_64-linux.tar.gz && sha256sum -c SHA256SUMS && sudo install -m 0755 finalwisp-v1.5.0-x86_64-linux/finalwisp /usr/local/bin/finalwisp"
 }

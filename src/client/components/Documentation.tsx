@@ -61,6 +61,7 @@ function DeployButton(props: {
 		<Ext href={props.href}>
 			<img
 				src={props.src}
+				referrerpolicy="no-referrer"
 				alt={translate(
 					props.run ? 'docs.deploy.run' : 'docs.deploy.to',
 					{
@@ -191,8 +192,19 @@ pnpm fetch-adblock
 pnpm build
 pnpm start
 
+${comment('finalwisp')}
+V=v1.5.0
+curl -LO https://github.com/theogbob/finalwisp/releases/download/\\$V/finalwisp-\\$V-x86_64-linux.tar.gz
+curl -LO https://github.com/theogbob/finalwisp/releases/download/\\$V/SHA256SUMS
+tar -xzf finalwisp-\\$V-x86_64-linux.tar.gz
+sudo install -m 0755 finalwisp-\\$V-x86_64-linux/finalwisp /usr/local/bin/finalwisp
+
 ${comment('pm2')}
 pm2 start ecosystem.config.cjs
+
+${comment('pm2Finalwisp')}
+# sudo node scripts/finalwisp-config.ts /etc/finalwisp/common.conf
+# pm2 start finalwisp.config.cjs && pnpm run wisp:nginx
 
 ${comment('restart')}
 pnpm restart
@@ -208,7 +220,7 @@ pnpm run test`;
 
 const ubuntuDependencies = () => `sudo apt update
 sudo apt upgrade
-sudo apt install curl git nginx musl
+sudo apt install curl git nginx
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
@@ -217,7 +229,14 @@ export NVM_DIR="$HOME/.nvm"
 
 ${comment('nodeVersion')}
 nvm install 26
-nvm use 26`;
+nvm use 26
+
+${comment('finalwisp')}
+V=v1.5.0
+curl -LO https://github.com/theogbob/finalwisp/releases/download/\\$V/finalwisp-\\$V-x86_64-linux.tar.gz
+tar -xzf finalwisp-\\$V-x86_64-linux.tar.gz
+sudo install -m 0755 finalwisp-\\$V-x86_64-linux/finalwisp /usr/local/bin/finalwisp
+finalwisp --version`;
 
 const cloneAndRun = `git clone ${repo}.git
 cd InvisiProxy
@@ -227,10 +246,11 @@ pnpm run fresh-start`;
 const restartServices = `sudo systemctl restart nginx
 sudo systemctl restart tor`;
 
-const wispProxies = `export const wispProxies = {
-  tor: 'socks5h://127.0.0.1:9050',
-  eu: 'socks5h://127.0.0.1:7000',
-  jp: 'socks5h://127.0.0.1:7001',
+const wispProxies = `export const finalwispRegions = {
+  '': { port: 6001, upstream: null, extra: [] },
+  tor: { port: 6002, upstream: 'socks5h://127.0.0.1:9050', extra: [] },
+  eu: { port: 6003, upstream: 'socks5://127.0.0.1:7000', extra: [] },
+  jp: { port: 6004, upstream: 'socks5://127.0.0.1:7001', extra: [] },
 }`;
 
 const goProxExample = `const goProx = Object.freeze({
@@ -291,27 +311,32 @@ export default function Documentation() {
 				<p class="docs-badges">
 					<img
 						src={`${repo}/workflows/CI-Production/badge.svg`}
+						referrerpolicy="no-referrer"
 						alt={translate('docs.badges.ci')}
 					/>
 					<img
 						src={`${repo}/workflows/CI-Win/badge.svg`}
+						referrerpolicy="no-referrer"
 						alt={translate('docs.badges.ci')}
 					/>
 					<Ext href="https://hub.docker.com/r/quiteafancyemerald/InvisiProxy">
 						<img
 							src="https://img.shields.io/docker/v/quiteafancyemerald/invisiproxy.svg"
+							referrerpolicy="no-referrer"
 							alt={translate('docs.badges.dockerVersion')}
 						/>
 					</Ext>
 					<Ext href="https://hub.docker.com/r/quiteafancyemerald/InvisiProxy">
 						<img
 							src="https://img.shields.io/docker/pulls/quiteafancyemerald/invisiproxy.svg"
+							referrerpolicy="no-referrer"
 							alt={translate('docs.badges.dockerPulls')}
 						/>
 					</Ext>
 					<Ext href="https://hub.docker.com/r/quiteafancyemerald/holy-unblocker">
 						<img
 							src="https://img.shields.io/docker/pulls/quiteafancyemerald/holy-unblocker.svg"
+							referrerpolicy="no-referrer"
 							alt={translate('docs.badges.dockerPulls')}
 						/>
 					</Ext>
@@ -595,7 +620,6 @@ export default function Documentation() {
 				names={[
 					['minifyScripts'],
 					['randomizeIdentifiers'],
-					['production'],
 					['disguiseFiles'],
 					['usingSEO'],
 					['verbose'],
@@ -603,6 +627,8 @@ export default function Documentation() {
 					['geoLanguage'],
 					['singleLanguage'],
 					['language'],
+					['manageWisp'],
+					['dns'],
 				]}
 			/>
 			<h4 id="translations">{translate('docs.translations.title')}</h4>
@@ -864,7 +890,7 @@ export default function Documentation() {
 			<p>{translate('docs.more.sourcesBody')}</p>
 			<ul>
 				<li>
-					<Ext href={route('/wispurr')}>wispurr</Ext>
+					<Ext href={route('/finalwisp')}>finalwisp</Ext>
 				</li>
 				<li>
 					<Ext href={route('/github/scramjet')}>Scramjet</Ext>

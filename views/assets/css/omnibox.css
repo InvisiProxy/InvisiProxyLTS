@@ -1,0 +1,41 @@
+:host {
+	display: contents;
+}
+
+input {
+	position: relative;
+	z-index: 1;
+	box-sizing: border-box;
+	width: 100%;
+	padding: 8px 36px 8px 12px;
+	border-radius: 6px;
+	border: 1px solid var(--nord1);
+	background: var(--nord0);
+	color: var(--nord4);
+	font-family:
+		"Montserrat Alternates", "Montserrat Alternates Fallback", sans-serif;
+	font-size: 1rem;
+}
+
+input:focus {
+	outline: none;
+	animation: glowshadow 2s linear infinite;
+}
+
+@keyframes glowshadow {
+	0%,
+	100% {
+		box-shadow: 0 0 8px 2px var(--glowshadow1, var(--nord0));
+	}
+
+	50% {
+		box-shadow: 0 0 8px 2px var(--glowshadow2, var(--nord1));
+	}
+}
+
+@media (max-width: 800px) {
+	input {
+		padding: 6px 36px 6px 10px;
+		font-size: 16px;
+	}
+}

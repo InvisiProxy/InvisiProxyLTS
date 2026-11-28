@@ -19,6 +19,125 @@ const memberNames = [
 	'cookieUpdatedAt',
 	'BareResponse',
 	'invisiParticles',
+	// The public API on the core global, which every proxied page can list.
+	'unrewriteLinkHeader',
+	'unrewriteUrl',
+	'unrewriteHtml',
+	'unrewriteCss',
+	'unrewriteBlob',
+	'rewriteUrl',
+	'rewriteHtml',
+	'rewriteCss',
+	'rewriteJs',
+	'rewriteSrcset',
+	'rewriteBlob',
+	'rewriteWorkers',
+	'createLocationProxy',
+	'IncrementalHtmlRewriter',
+	'getRewriter',
+	'CookieJar',
+	'htmlRules',
+	'setWasm',
+	'defaultConfig',
+	'flagEnabled',
+	// Fingerprints the exact proxy build to any page that finds the global.
+	'versionInfo',
+	// Scramjet 3.x additions on the core global.
+	'RAWFRAMES',
+	'CARRIED_HEADER_PREFIX',
+	'MAX_REFERRER_LENGTH',
+	'SCRIPT_SOURCE_ATTRIBUTE',
+	'carriedHeaderName',
+	'uncarriedHeaderName',
+	'isCarriedHeaderName',
+	'canHaveItsURLRewritten',
+	'cssMayHoldUrl',
+	'eventAttributes',
+	'eventHandlerPrelude',
+	'flagValue',
+	'frozenBaseUrl',
+	'generatedFrameName',
+	'isFetchPreload',
+	'isFragmentOnly',
+	'isGeneratedFrameName',
+	'openWindowSteps',
+	'readAddEventListenerOptions',
+	'readCookieInit',
+	'readCookieStoreDeleteOptions',
+	'readCookieStoreGetOptions',
+	'readEventListenerOptions',
+	'readEventSourceInit',
+	'readWorkerOptions',
+	'readWorkletOptions',
+	'rewriteHistoryUrl',
+	'sameDocumentUrl',
+	'splitFragment',
+];
+
+// Exact strings proxied pages can see: rewriter globals on window, element
+// attributes, storage, channel and header names, symbol descriptions and
+// message types. Each gets its own random name so none share a token or word.
+const literalNames = [
+	'$scramjet$wrap',
+	'$scramjet$wrappostmessage',
+	'$scramjet__',
+	'$scramjet$prop',
+	'$scramjet$clean',
+	'$scramjet$import',
+	'$scramjet$rewrite',
+	'$scramjet$meta',
+	'$scramjet$pushsourcemap',
+	'$scramjet$tryset',
+	'$scramjet$temploc',
+	'$scramjet$tempunused',
+	'$scramjet$messagetype',
+	'$scramjet$origin',
+	'$scramjet$data',
+	'$scramdbg',
+	'scramjet-attr',
+	'scramjet-attr-script-source-src',
+	'scramjet-injected',
+	'__scramjet_controller',
+	'__scramjet_controller_channel',
+	'scramjet-http-cache',
+	'scramjet-http-cache-v2',
+	'x-sj-cached-at',
+	'scramjet realm pollutant',
+	'scramjet original onevent function',
+	'scramjet client global',
+	'invisiLeakGuard',
+	'invisiSearchUrlGuard',
+	'invisiNavigationEntry',
+	'$controller$init',
+	'$controller$setCookie',
+	'$controller$swrevive',
+	'$sw$setCookieDone',
+	'$sw$initRemoteTransport',
+	// Cross-realm: pages in a frame can probe Symbol.for for it.
+	'controller frame handle',
+	// The controller↔service-worker RPC channel prefix.
+	'tabchannel-',
+	// Scramjet 3.x globals.
+	'$scramjet$call',
+	'$scramjet$registerrealm',
+	'$scramjet$standin',
+	'$scramjet$tempreceiver',
+	'$scramjet$tempcallee',
+	'scramjet raw frames',
+	'scramjet-frame-',
+	'scramjet-attr-content',
+	'scramjet-attr_script-source',
+];
+// Also built into the WASM rewriter, where a name has to keep its length.
+const wasmNames = [
+	'$scramjet$setrealmfn',
+	'$scramitize',
+	'$scramerr',
+	'rewriter',
+	// Query params hardcoded onto rewritten module URLs; hideScramjetParams
+	// renames the JS side to the same tokens.
+	'%24module',
+	'%24io',
 ];
 
 export interface ScramjetTokens {
@@ -26,10 +145,10 @@ export interface ScramjetTokens {
 	scram: string;
 	wrapper: string;
 	// Separate tokens so the globals don't form the telltale
-	// `$x`, `$xController`, `$xUtils` trio.
+	// `$x`, `$xController` pair.
 	controller: string;
-	utils: string;
 	members: Record<string, string>;
+	names: Record<string, string>;
 }
 
 function identifier(length: number) {
@@ -48,28 +167,59 @@ export function scramjetTokens(): ScramjetTokens {
 			scram: 'scram',
 			wrapper: 'invisiScramjet',
 			controller: 'scramjetController',
-			utils: 'scramjetUtils',
 			members: {},
+			names: {},
 		};
 	const state = obfuscationState();
 	if (
 		!state.scramjet?.controller ||
-		memberNames.some((name) => !state.scramjet?.members[name])
+		memberNames.some((name) => !state.scramjet?.members[name]) ||
+		[...literalNames, ...wasmNames].some(
+			(name) => !state.scramjet?.names?.[name]
+		)
 	) {
 		state.scramjet = {
 			core: identifier(8),
 			scram: identifier(5),
 			wrapper: identifier(8),
 			controller: identifier(8),
-			utils: identifier(8),
 			members: Object.fromEntries(
 				memberNames.map((name) => [name, identifier(6)])
 			),
+			names: randomNames(),
 		};
 		saveObfuscationState(state);
 	}
 	return state.scramjet;
 }
+
+function randomNames() {
+	const names: Record<string, string> = Object.fromEntries(
+		literalNames.map((name) => [name, identifier(8)])
+	);
+	// The rewriter strips a hardcoded 14 - the length of "scramjet-attr-"
+	// (13 chars plus the hyphen) - from hidden attributes to restore their
+	// original names, so the token has to keep that length exactly.
+	names['scramjet-attr'] = identifier(13);
+	// Kept under the attribute prefix, which Scramjet uses to hide its own
+	// attributes from pages.
+	names['scramjet-attr-script-source-src'] =
+		`${names['scramjet-attr']}-${identifier(6)}`;
+	names['scramjet-attr_script-source'] =
+		`${names['scramjet-attr']}_${identifier(6)}`;
+	// The generated frame name prefix (3.x); the rewriter checks the length
+	// relative to the prefix, so the prefix keeps its own random token.
+	names['scramjet-frame-'] = `${identifier(8)}-`;
+	for (const name of wasmNames) {
+		const sigil = name.startsWith('$') ? '$' : '';
+		names[name] = sigil + identifier(name.length - sigil.length);
+	}
+	return names;
+}
+
+// Longest first, so a name is never cut short by one it starts with.
+const byLength = (names: Record<string, string>) =>
+	Object.entries(names).sort(([a], [b]) => b.length - a.length);
 
 const realCacheKeys = (source: string) =>
 	source.replaceAll(
@@ -81,15 +231,16 @@ const capitalize = (token: string) => token[0].toUpperCase() + token.slice(1);
 
 export function scrubScramjetSignatures(source: string): string {
 	if (config.usingSEO) return source;
-	const { core, scram, wrapper, controller, utils, members } =
+	const { core, scram, wrapper, controller, members, names } =
 		scramjetTokens();
+	let output = realCacheKeys(source);
+	for (const [name, token] of byLength(names))
+		output = output.replaceAll(name, token);
 	// Exported class/constant names (ScramjetClient, SCRAMJETCLIENT, ...) are
 	// looked up by key across bundles, so every casing maps to the same token.
-	let output = realCacheKeys(source)
-		.replaceAll('scramjet-injected', `${scram}-injected`)
+	output = output
 		.replaceAll('$invisiScramjet', `$${wrapper}`)
 		.replaceAll('$scramjetController', `$${controller}`)
-		.replaceAll('$scramjetUtils', `$${utils}`)
 		.replaceAll('$scramjet', `$${core}`)
 		.replaceAll('scramjet', core)
 		.replaceAll('Scramjet', capitalize(core))
@@ -97,7 +248,10 @@ export function scrubScramjetSignatures(source: string): string {
 		.replaceAll('$scram', `$${scram}`)
 		.replaceAll('scram', scram)
 		.replaceAll(/mercury-?workshop/gi, wrapper);
-	for (const [name, token] of Object.entries(members))
+	// Longest first: `unrewriteUrl` before `rewriteUrl`,
+	// `uncarriedHeaderName` before `carriedHeaderName`, so a member is
+	// never cut short by one it ends with.
+	for (const [name, token] of byLength(members))
 		output = output.replaceAll(name, token);
 	return output;
 }
@@ -111,11 +265,13 @@ const toLatin1 = (bytes: Uint8Array) => {
 
 export function scrubScramjetWasm(source: Uint8Array): Uint8Array {
 	if (config.usingSEO) return source;
-	const { core, scram } = scramjetTokens();
+	const { core, scram, names } = scramjetTokens();
 	// Replace all scramjet identifiers in the WASM's embedded strings.
 	// `$scramjet` is 9 chars; `$<core>` is also 9 chars (8-char token).
 	// Same length = all wasm byte offsets stay valid.
-	const text = toLatin1(source)
+	let text = toLatin1(source);
+	for (const name of wasmNames) text = text.replaceAll(name, names[name]);
+	text = text
 		.replaceAll('$scramjet', `$${core}`)
 		.replaceAll('scramjet', core)
 		.replaceAll('$scram', `$${scram}`)

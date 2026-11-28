@@ -33,9 +33,9 @@ export function selectedWisp(
 	regions: string[],
 	base: string
 ): string {
-	const region = settings.UseSocks5;
+	const region = settings['UseSocks5'];
 	return (
-		customWispUrl(settings.CustomWisp) ??
+		customWispUrl(settings['CustomWisp']) ??
 		base +
 			(transport === 'libcurl' &&
 			typeof region === 'string' &&

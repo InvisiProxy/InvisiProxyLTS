@@ -1,4 +1,5 @@
 import { fork, spawn } from 'node:child_process';
+import { rmSync } from 'node:fs';
 import {
 	cp,
 	mkdtemp,
@@ -22,10 +23,22 @@ const shutdowns = new Map<string, (() => Promise<unknown>)[]>();
 export const probe = (name: string) =>
 	fileURLToPath(new URL(`../fixtures/${name}`, import.meta.url));
 
+export const browserSettings = {
+	usingSEO: false,
+	disguiseFiles: true,
+	pathname: '/school/',
+} as const;
+
+export const wispPolicyEnv = (targetPort: number) => ({
+	WISP_DIRECT_IP: 'true',
+	WISP_LOOPBACK_IPS: 'true',
+	WISP_PRIVATE_IPS: 'true',
+	WISP_PORTS: `${targetPort},80,443`,
+});
+
 export async function fixture(
 	t: TestContext,
-	overrides: Partial<typeof settings> = {},
-	full = false
+	overrides: Partial<typeof settings> = {}
 ) {
 	const root = await realpath(
 		await mkdtemp(join(tmpdir(), 'invisiproxy-test-'))
@@ -36,8 +49,19 @@ export async function fixture(
 		shutdowns.delete(root);
 		await rm(root, { recursive: true, force: true, maxRetries: 5 });
 	});
-	for (const file of ['src', 'locales', 'package.json', 'vite.config.ts'])
+	for (const file of [
+		'src',
+		'locales',
+		'package.json',
+		'vite.config.ts',
+		'vendor',
+	])
 		await cp(join(project, file), join(root, file), { recursive: true });
+	await cp(join(project, 'views'), join(root, 'views'), {
+		recursive: true,
+		filter: (path) =>
+			!['dist', 'dist-new', 'archive'].includes(basename(path)),
+	});
 	await symlink(
 		join(project, 'node_modules'),
 		join(root, 'node_modules'),
@@ -55,12 +79,6 @@ export async function fixture(
 		join(root, 'private/test-links.txt'),
 		'# PRIVATE_TEST_MARKER\nhttps://first.example/\nhttps://second.example/\n'
 	);
-	if (full)
-		await cp(join(project, 'views'), join(root, 'views'), {
-			recursive: true,
-			filter: (path) =>
-				!['dist', 'dist-new', 'archive'].includes(basename(path)),
-		});
 	return root;
 }
 
@@ -114,13 +132,37 @@ export async function run(
 	});
 }
 
-export const buildFixture = (root: string) =>
-	run(root, [
+const buildCache = new Map<string, string>();
+process.on('exit', () => {
+	for (const dir of buildCache.values())
+		rmSync(dir, { recursive: true, force: true, maxRetries: 3 });
+});
+
+export async function buildFixture(root: string) {
+	const config = await readFile(join(root, 'config.json'), 'utf8');
+	const cached = buildCache.get(config);
+	if (cached) {
+		await rm(join(root, 'dist'), { recursive: true, force: true });
+		await rm(join(root, 'views/dist'), { recursive: true, force: true });
+		await cp(join(cached, 'dist'), join(root, 'dist'), { recursive: true });
+		await cp(join(cached, 'views/dist'), join(root, 'views/dist'), {
+			recursive: true,
+		});
+		return;
+	}
+	await run(root, [
 		'node_modules/vite/bin/vite.js',
 		'build',
 		'--configLoader',
 		'native',
 	]);
+	const dir = await mkdtemp(join(tmpdir(), 'invisiproxy-build-'));
+	buildCache.set(config, dir);
+	await cp(join(root, 'dist'), join(dir, 'dist'), { recursive: true });
+	await cp(join(root, 'views/dist'), join(dir, 'views/dist'), {
+		recursive: true,
+	});
+}
 
 export async function startServer(
 	root: string,

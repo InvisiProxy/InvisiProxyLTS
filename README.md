@@ -65,6 +65,8 @@ View the <a href="#deploy-InvisiProxy">self-deployment options</a> if you wish t
 
 [![Deploy to Koyeb](https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg)](https://app.koyeb.com/deploy?name=InvisiProxyLTS&type=git&repository=InvisiProxy%2FInvisiProxyLTS&branch=production&builder=dockerfile&ports=8080%3Bhttp%3B%2F)
 [![Deploy to Oracle Cloud](https://binbashbanana.github.io/deploy-buttons/buttons/remade/oraclecloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/BinBashBanana/deploy-buttons/archive/refs/heads/main.zip)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FIssla1997%2FInvisiProxyLTS%2Ftree%2Fproduction)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/integration/start/deploy?repository=https://github.com/Issla1997/InvisiProxyLTS&branch=production)
 
 <details><summary>Alternative Free Sources</summary>
 
@@ -83,6 +85,19 @@ View the <a href="#deploy-InvisiProxy">self-deployment options</a> if you wish t
 #### What happened to Replit/Heroku Deployment?
 
 Replit is no longer free and Heroku has a set policy against web proxies. Try GitHub Codespaces or Gitpod instead for development on the cloud OR Koyeb for free hosting.
+
+### Docker
+
+The image ships with finalwisp and Tor built in, and the server runs the Wisp instances itself (`manageWisp`), so one container is all it takes. finalwisp supports **x86_64 Linux only**; no Windows support at this time
+
+```bash
+docker compose up -d
+# or stand-alone
+docker build -t invisiproxy .
+docker run -d -p 8080:8080 --name invisiproxy invisiproxy
+```
+
+`FINALWISP_VERSION` (build arg) pins the Wisp server version, `PORT` changes the site's port, and `docker stop` waits 35 s so open Wisp sessions drain first. For the nginx + pm2 layout instead of a container, see [FINALWISP.md](FINALWISP.md).
 
 ### GitHub Codespaces
 
@@ -147,7 +162,6 @@ git clone https://github.com/InvisiProxy/InvisiProxyLTS.git
 
 cd InvisiProxyLTS
 
-# Edit config.js and set production to true if you want to use pm2 (Allows for easier VPS hosting)
 pnpm install
 pnpm fetch-keywords
 pnpm fetch-adblock
@@ -171,13 +185,55 @@ pnpm run build
 pnpm run test
 ```
 
+### Installing finalwisp (the Wisp server)
+
+The proxy's Wisp server is [finalwisp](https://github.com/theogbob/finalwisp), a single static binary for Linux on x86_64 (there is no npm package). Without it the site still serves, but pages cannot open connections through the proxy. Install it where the site runs:
+
+```bash
+V=v1.5.0
+curl -LO https://github.com/theogbob/finalwisp/releases/download/$V/finalwisp-$V-x86_64-linux.tar.gz
+curl -LO https://github.com/theogbob/finalwisp/releases/download/$V/SHA256SUMS
+tar -xzf finalwisp-$V-x86_64-linux.tar.gz
+sha256sum -c SHA256SUMS      # must print OK twice
+sudo install -m 0755 finalwisp-$V-x86_64-linux/finalwisp /usr/local/bin/finalwisp
+finalwisp --version
+```
+
+With that binary installed you are done: by default the site process starts and watches one finalwisp instance per region itself (`manageWisp: true` in `config.json`), which is what `pnpm dev`, the tests and a plain `pnpm start` use.
+
+### Production: nginx + pm2 (recommended)
+
+For the setup that survives site rebuilds without dropping Wisp sessions, nginx sends Wisp straight to pm2-managed finalwisp instances instead of the site process. **See [FINALWISP.md](FINALWISP.md) for the full guide**; the short version:
+
+```bash
+# 1. The shared instance settings, generated from config.json
+#    (destination policy, limits and the "dns" setting, e.g. nextdns:xxx)
+sudo mkdir -p /etc/finalwisp
+sudo node scripts/finalwisp-config.ts /etc/finalwisp/common.conf
+
+# 2. The instances, one per region (default, tor, eu, jp, patreon)
+pm2 start finalwisp.config.cjs && pm2 save
+
+# 3. The nginx pieces (copy once, then generate the routes + reload)
+sudo cp finalwisp/nginx/finalwisp-proxy.conf /etc/nginx/snippets/
+sudo cp finalwisp/nginx/finalwisp-http.conf /etc/nginx/conf.d/
+# add "include snippets/finalwisp-routes.conf;" inside your site's server { } block, before location /
+pnpm run wisp:nginx
+
+# 4. Stop the site process from running its own instances, and restart it
+#    (set "manageWisp": false in config.json)
+pnpm restart
+```
+
+The `rebuild` and `refresh` scripts regenerate the nginx routes on every build, so the routes follow the randomized Wisp path names. If you use NextDNS (or another DNS provider) for the proxy, set `"dns": "nextdns:xxx"` (or the full hostname, e.g. `"xxx.dns.nextdns.io"`) in `config.json` and regenerate the instance settings with step 1.
+
 This website is hosted locally with [Scramjet](https://github.com/MercuryWorkshop/Scramjet), [Wisp](https://github.com/MercuryWorkshop/Wisp-Protocol), [Merp Obfuscation](https://github.com/sylvieisnton/merp), [EpoxyTransport](https://github.com/MercuryWorkshop/Epoxy-Transport), and [LibcurlTransport](https://github.com/MercuryWorkshop/Libcurl-Transport) built-in.
 
-### For security reasons when hosting with a reverse proxy PLEASE use NGINX not Caddy. This is due to wispurr using loopbacks. If using Caddy disable this feature or adjust your default Caddy config.
+### For security reasons when hosting with a reverse proxy PLEASE use NGINX not Caddy. This is due to finalwisp using loopbacks. If using Caddy disable this feature or adjust your default Caddy config.
 
 #### Detailed Setup (Ubuntu Example)
 
-You will need `Node.js 20.x`, `curl` and `git` installed; below is an example for Debian/Ubuntu setup.
+You will need `Node.js 26.x`, `curl` and `git` installed; below is an example for Debian/Ubuntu setup.
 
 <details>
 
@@ -193,12 +249,12 @@ If you wish to self-host however you will first need a VPS or hosting provider:
 
 ### Dependencies
 
-You will then need to setup git, musl, nginx (or caddy) and Node.js. Here is an example for Ubuntu LTS:
+You will then need to setup git, nginx (or caddy), Node.js and the finalwisp binary (see [Installing finalwisp](#installing-finalwisp-the-wisp-server) above). Here is an example for Ubuntu LTS:
 
 ```
 sudo apt update
 sudo apt upgrade
-sudo apt install curl git nginx musl
+sudo apt install curl git nginx
 
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
@@ -208,6 +264,13 @@ export NVM_DIR="$HOME/.nvm"
 # 26 or latest
 nvm install 26
 nvm use 26
+
+# finalwisp, the Wisp server (see Installing finalwisp above for the sha256 check)
+V=v1.5.0
+curl -LO https://github.com/theogbob/finalwisp/releases/download/$V/finalwisp-$V-x86_64-linux.tar.gz
+tar -xzf finalwisp-$V-x86_64-linux.tar.gz
+sudo install -m 0755 finalwisp-$V-x86_64-linux/finalwisp /usr/local/bin/finalwisp
+finalwisp --version
 ```
 
 https://github.com/nvm-sh/nvm
@@ -225,14 +288,17 @@ From there just configure as needed: https://github.com/InvisiProxy/InvisiProxyL
 
 ### Cloning and Running InvisiProxy
 
-Then run the respective process; if you have production set to true in the configuration pm2 will be automatically enabled with our own workers/cache system.
+Then run the respective process; the site starts under pm2 with our own workers/cache system, and `manageWisp` (the default) has the site process run the finalwisp instances itself:
 
 ```
 git clone https://github.com/InvisiProxy/InvisiProxyLTS.git
 cd InvisiProxy
 
 pnpm run fresh-start
+pm2 start ecosystem.config.cjs
 ```
+
+For the production setup that survives rebuilds without dropping Wisp sessions, move Wisp to pm2-managed finalwisp instances behind nginx ([Production: nginx + pm2](#production-nginx-pm2-recommended) above, or [FINALWISP.md](FINALWISP.md) for the full guide), and set `"manageWisp": false` in `config.json`.
 
 Then of course if you used NGINX or caddy please restart/reload it
 
@@ -254,7 +320,7 @@ Resources for self-hosting:
 
 #### Server Configuration Setup
 
-The default PORT for the proxy when started is `http://localhost:8080`. You can change the PORT and other production metrics if needed in `./ecosystem.config.js`.
+The default PORT for the proxy when started is `http://localhost:8080`. You can change the PORT (`PORT` env override) and other production metrics if needed in `./config.json`.
 
 Every other localized changes for source randomization, auto-minify, etc. are located in `./config.json`.
 
@@ -262,17 +328,19 @@ Every other localized changes for source randomization, auto-minify, etc. are lo
 
 - `minifyScripts`: Automatically minify respective static assets upon starting the server.
 - `randomizeIdentifiers`: Enable experimental proxy global randomization for Ultraviolet. This reduces the chances of UV being detected by any extension based filters.
-- `production`: Utilize a pre-configured production setup for server hosting. Automatically has cache control and source rewrites setup.
 - `disguiseFiles`: Enable DOM masquerading which obfuscates real the real content fetches for InvisiLTS. This is done through disguising requests, decompressing and then reconstructing the DOM tree.
-- `usingSEO`: Enable Source Randomization which randomizes the source by swapping chunks of data specified in `./src/data.json`. Highly useful for masking keywords that will automatically flag or block InvisiProxy LTS as well as preventing source blocks.
+- `usingSEO`: Serve the site as plain, crawlable pages for search engines and reviewers. This **disables** Source Randomization, DOM masquerading, keyword masking and the challenge page, so `/` serves the readable Overview page and all content is sent as normal HTML. Leave it `false` to keep those protections on
 - `verbose`: Enables compiling and building messages to see progress and possible issues while compiling.
 - `mirrorLinksFile`: Server-only file used by the Links page dispenser, defaulting to `private/mirror-links.txt`. Relative paths are resolved from the project root; absolute paths are also supported. Use one HTTP(S) URL per line and keep the file outside `views/` so it is not publicly served. Restart the server after changing this setting.
+- `adsFile`: Server-only file with each domain's ad setup, defaulting to `private/ads.json`. Copy `private/ads.example.json` to start; edits are picked up without a restart. See [ADVERTISING.md](ADVERTISING.md).
 - `geoLanguage`: Enables automatic language selection using Cloudflare's `CF-IPCountry` header. Only enable this behind Cloudflare, since the header can otherwise be set by anyone. Countries are listed per language under `language.countries` in each `./locales/*.yaml` file.
 - `singleLanguage`: When `true`, only the language set in `language` is built and every visitor gets it, with the Language setting hidden. Useful for Docker or other deployments that only need one language, since builds are faster and smaller. Defaults to `false`.
 - `language`: The language to build when `singleLanguage` is on, matching a file in `./locales/` (e.g. `en` for `en.yaml`). Defaults to `en`. For Docker, set this in `config.json` before running `docker build` or `docker compose build`, since languages are chosen at build time.
-- `patreon`: Enables the Patreon proxy region. Defaults to `false`.
+- `patreon`: Enables the Patreon proxy region and turns off all ads. Defaults to `false`.
 - `dlpcc`: Runs the [DLPCC](#webrtc-relay-dlpcc) WebRTC relay. Defaults to `false`.
 - `dlpccNginx`: Set to `true` when NGINX owns port 443 and splits TURN from page loads with the DLPCC stream config. Leave `false` when Node serves visitors directly. Defaults to `false`.
+- `manageWisp`: When `true` (the default) the site process starts and watches the finalwisp instances itself, which is what dev, the tests and a plain `pnpm start` use. Set it to `false` for the nginx + pm2 setup, where nginx routes Wisp to pm2-managed instances (see [FINALWISP.md](FINALWISP.md)) and a site rebuild no longer drops Wisp sessions.
+- `dns`: How the finalwisp instances resolve hostnames. `resolve` (the default) uses finalwisp's built-in resolver, `lookup` the system resolver, and `nextdns:xxx` or a hostname such as `xxx.dns.nextdns.io` queries that provider (e.g. NextDNS) directly over UDP/53. An invalid value stops the server with a clear error. Regenerate `/etc/finalwisp/common.conf` (`pnpm run finalwisp:config`) and restart the instances after changing it in the nginx + pm2 setup.
 
 #### Translations
 
@@ -292,18 +360,27 @@ If you are hosting InvisiProxy LTS on a VPS utilizing Ubuntu consider attaching 
 
 Users can also set their own Wisp server in Proxy Preferences.
 
-If you wish to use a custom HTTP/HTTPS/SOCKS5 proxy to route traffic for Scramjet this is handled on the server in `./src/server/wisp.ts`.
+If you wish to use a custom HTTP/HTTPS/SOCKS5 proxy to route traffic for Scramjet this is handled on the server in `./src/server/wisp.ts` (the `finalwispRegions` table; each region runs its own finalwisp instance on that port).
 
 ```ts
-export const wispProxies = {
-	tor: 'socks5h://127.0.0.1:9050',
-	eu: 'socks5h://127.0.0.1:7000',
-	jp: 'socks5h://127.0.0.1:7001',
-	patreon: process.env.PATREON_PROXY || 'socks5h://127.0.0.1:7002',
-};
+export const finalwispRegions = {
+	'': { port: 6001, upstream: null, extra: [] },
+	tor: {
+		port: 6002,
+		upstream: 'socks5h://127.0.0.1:9050',
+		extra: ['--connect-timeout', '30', '--dns-threads', '2'],
+	},
+	eu: { port: 6003, upstream: 'socks5://127.0.0.1:7000', extra: ['--dns-threads', '4'] },
+	jp: { port: 6004, upstream: 'socks5://127.0.0.1:7001', extra: ['--dns-threads', '4'] },
+	patreon: {
+		port: 6005,
+		upstream: process.env.PATREON_PROXY || 'socks5://127.0.0.1:7002',
+		extra: ['--dns-threads', '4'],
+	},
+} satisfies Record<string, FinalwispRegion>;
 ```
 
-The Patreon region's proxy is read from `PATREON_PROXY`, so its address can stay out of the repo. Environment variables can go in a `.env` file in the project root, which the server loads on start (variables already set in the environment win) and git ignores:
+`socks5://` routes have finalwisp resolve and check the name itself; `socks5h://` (what Tor needs for `.onion`) lets the proxy resolve names instead. The Patreon region's proxy is read from `PATREON_PROXY`, so its address can stay out of the repo. Environment variables can go in a `.env` file in the project root, which the server loads on start (variables already set in the environment win) and git ignores:
 
 ```sh
 PATREON_PROXY=socks5h://203.0.113.5:1080
@@ -341,19 +418,6 @@ PATREON_PROXY=socks5h://203.0.113.5:1080
 ```
 
 Add `user:pass@` before the host if the proxy uses a login. For an IP whitelist, whitelist the server's IP. Most SOCKS5 proxies only carry TCP; when one can't do UDP, the relay logs an `upstream proxy` error saying `UDP ASSOCIATE` was refused.
-
-Since the relay is meant for private instances, InvisiProxy uses looser limits than DLPCC's own defaults, so many visitors sharing one school or office IP don't lock each other out:
-
-| Option | InvisiProxy default | DLPCC default |
-|---|---|---|
-| `DLPCC_RATE_LIMIT` (requests per minute per IP) | `600` | `30` |
-| `DLPCC_RATE_LIMIT_BURST` | `100` | `10` |
-| `DLPCC_MAX_ALLOCS_PER_USER` (concurrent relays per visitor) | `32` | `8` |
-| `DLPCC_MAX_ALLOCS` (concurrent relays in total) | `4000` | `1000` |
-
-The relay itself has no bandwidth cap; a single relayed connection measured 170 to 400 Mbps in testing on loopback, so the server's own uplink is the limit. Budget roughly 15 to 50 Mbps per game stream.
-
-Things to keep in mind:
 
 - Anyone who can open the site can get relay credentials, so everyone with the domain shares its bandwidth (a game stream is roughly 15 to 50 Mbps). Keep proxy sites with this feature enabled private.
 - The relay refuses to reach private networks, and credentials are rate limited per visitor. Behind NGINX the visitor's address is read from `X-Real-IP`.
@@ -530,11 +594,12 @@ View the official website for more detail and credits.
 
 This project currently uses Scramjet and Ultraviolet as web proxies adhering to the Wisp protocol. Bare-Mux is utilized for swapping transport systems to be utilized with Wisp. The included transport systems are EpoxyTransport and libcurl-transport.
 
-- <a href="https://github.com/sylvieisnton/wispurr">wispurr</a>
+- <a href="https://github.com/theogbob/finalwisp">finalwisp</a>
 - <a href="https://github.com/MercuryWorkshop/scramjet">Scramjet</a>
 - <a href="https://github.com/MercuryWorkshop/wisp-protocol">Wisp Protocol</a>
 - <a href="https://github.com/MercuryWorkshop/Epoxy-Transport">EpoxyTransport</a>
 - <a href="https://github.com/MercuryWorkshop/Libcurl-Transport">libcurl-transport</a>
+- <a href="https://github.com/nautilus-os/GUST">GUST</a>
 - <a href="https://github.com/sylvieisnton/merp">Merp (Obfuscation Module)</a>
 - <a href="https://github.com/QuiteAFancyEmerald/Donglalu-Proxy-The-Second-Coming">Donglalu Proxy The Second Coming</a>
 - <a href="https://gitlab.com/fp-production/fp">The Freedom Project (Hard Fork)</a>

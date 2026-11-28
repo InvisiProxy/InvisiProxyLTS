@@ -14,7 +14,12 @@ export interface SiteFile {
 const modulePath = (path: string) => join(projectDir, 'node_modules', path);
 
 // Merp fix
-const vendorDirs: [prefix: string, dir: string, files: string[]][] = [
+const vendorDirs: [
+	prefix: string,
+	dir: string,
+	files: string[],
+	renames?: Record<string, string>,
+][] = [
 	[
 		'epoxy',
 		modulePath('@mercuryworkshop/epoxy-transport/dist'),
@@ -31,10 +36,24 @@ const vendorDirs: [prefix: string, dir: string, files: string[]][] = [
 		modulePath('@mercuryworkshop/scramjet-controller/dist'),
 		['controller.api.js', 'controller.inject.js', 'controller.sw.js'],
 	],
+	// Scramjet v3 (the continuous build; see vendor/README.md). The files
+	// are renamed so both versions can be served at once under their own
+	// aliases: scramjet3.js, controller3.api.js, ...
 	[
-		'scram',
-		modulePath('@mercuryworkshop/scramjet-utils/dist'),
-		['scramjet-utils.js'],
+		'scram3',
+		join(projectDir, 'vendor/scramjet-3.0.0-alpha/dist'),
+		['scramjet.js', 'scramjet.wasm'],
+		{ 'scramjet.js': 'scramjet3.js', 'scramjet.wasm': 'scramjet3.wasm' },
+	],
+	[
+		'scram3',
+		join(projectDir, 'vendor/scramjet-controller-0.0.15/dist'),
+		['controller.api.js', 'controller.inject.js', 'controller.sw.js'],
+		{
+			'controller.api.js': 'controller3.api.js',
+			'controller.inject.js': 'controller3.inject.js',
+			'controller.sw.js': 'controller3.sw.js',
+		},
 	],
 ];
 
@@ -57,7 +76,7 @@ export const clientScripts = [
 export function siteFiles(): SiteFile[] {
 	const files: SiteFile[] = [];
 	const claimed = new Set<string>();
-	const ignoredDirs = ['dist', 'dist-new', 'assets', 'scram'];
+	const ignoredDirs = ['dist', 'dist-new', 'assets', 'scram', 'scram3'];
 	const ignoredFiles = /\.map$|\.d\.ts$/;
 	const alias = (name: string) =>
 		(!config.usingSEO && getPathAliases()[`files/${name}`]) || name;
@@ -66,7 +85,8 @@ export function siteFiles(): SiteFile[] {
 		dir: string,
 		outDir: string,
 		fromViews: boolean,
-		only?: string[]
+		only?: string[],
+		renames?: Record<string, string>
 	) => {
 		if (fromViews && outDir === 'assets/css/partials/') return;
 		for (const file of only ?? readdirSync(dir)) {
@@ -82,7 +102,8 @@ export function siteFiles(): SiteFile[] {
 				continue;
 			}
 			if (!stats.isFile()) continue;
-			const target = outDir + alias(file.replace(/\.ts$/, '.js'));
+			const name = renames?.[file] ?? file;
+			const target = outDir + alias(name.replace(/\.ts$/, '.js'));
 			if (claimed.has(target)) continue;
 			let kind: SiteFile['kind'] = 'copy';
 			if (!fromViews && /\.(?:m?js|cjs)$/.test(file))
@@ -100,7 +121,7 @@ export function siteFiles(): SiteFile[] {
 	};
 
 	collect(join(projectDir, 'views/assets'), 'assets/', true);
-	for (const [prefix, path, only] of vendorDirs) {
+	for (const [prefix, path, only, renames] of vendorDirs) {
 		const missing = only.filter((file) => !existsSync(join(path, file)));
 		if (missing.length) {
 			console.warn(
@@ -108,7 +129,7 @@ export function siteFiles(): SiteFile[] {
 			);
 			continue;
 		}
-		collect(path, `${prefix}/`, false, only);
+		collect(path, `${prefix}/`, false, only, renames);
 	}
 	collect(join(projectDir, 'views'), '', true);
 	return files;

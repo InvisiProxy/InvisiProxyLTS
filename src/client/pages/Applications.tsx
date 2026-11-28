@@ -21,6 +21,7 @@ import AntiExfil from '../components/AntiExfil.tsx';
 import Header from '../components/Header.tsx';
 import ProxySettings from '../components/ProxySettings.tsx';
 import Footer from '../components/Footer.tsx';
+import Placements from '../components/Placements.tsx';
 import App from '../components/AppButton.tsx';
 
 const links = {
@@ -89,6 +90,8 @@ export default function Applications() {
 										<App
 											url={app.url}
 											name={app.name}
+											local={app.local}
+											icon={app.icon}
 											group={group}
 											card
 										/>
@@ -101,6 +104,7 @@ export default function Applications() {
 				</div>
 			</div>
 			<Keywords />
+			<Placements />
 			<div id="footer" class="fullwidth">
 				<Footer />
 			</div>

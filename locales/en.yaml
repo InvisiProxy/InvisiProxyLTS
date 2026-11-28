@@ -322,11 +322,15 @@ settings:
       nord: Nordish
     autocomplete: Autocomplete
     autocompleteDescription: Show proxied search suggestions.
+    serverRestart: Server restart prompt
+    serverRestartDescription: Show the restart prompt when the proxy can't be reached. Turn off to keep your tabs working offline.
 
   privacy:
     title: Privacy
     hideAds: Hide ads
-    hideAdsDescription: Block ads while browsing.
+    hideAdsDescription: Block external ads while browsing. This does not remove our own ads on the site.
+    blockPopups: Block pop-up ads
+    blockPopupsDescription: Stop our ads from opening new tabs or covering the page. Banner ads still show.
     hideHistory: Hide history
     hideHistoryDescription: Eliminate browsing history within local browser. Networks can still see masked activity.
     preventLeaks: Block window leaks
@@ -397,7 +401,7 @@ footer:
   about: About
   solidjs: SolidJS - Simple and performant reactivity for building user interfaces.
   vite: Vite - Next generation frontend tooling.
-  wispurr: High-Performance and Feature Focused Wisp v1/v2 Server implementation in Golang.
+  finalwisp: Finalwisp - The fastest Wisp server for Linux. One static binary, written in Rust.
   nord: Nord Theme - An arctic, north-bluish color palette.
   scramjet: Scramjet - Scramjet is a versatile web proxy designed to bypass internet censorship.
   wisp: Wisp - Wisp is a low-overhead, easy to implement protocol for proxying multiple TCP/UDP sockets over a single websocket.
@@ -416,6 +420,7 @@ footer:
 
 common:
   logoAlt: InvisiProxy logo
+  advertisement: Advertisement
   description: >-
     InvisiProxy is a secure web proxy service with support for many sites.
     Bypass filters and freely enjoy a safer private browsing experience or
@@ -428,8 +433,9 @@ mirrors:
   title: Mirror links
   close: Close mirror links
   description: >-
-    Get another link to keep using InvisiProxy. Links are restocked frequently.
-  getLink: Get a random link
+    Get another link to keep using InvisiProxy. Your link stays the same for
+    the day, and a fresh one is handed out each day as links are restocked.
+  getLink: Get your mirror link
   open: Open mirror link
   openLabel: Open another InvisiProxy mirror
   issues: If you have any issues with links please create a GitHub issue.
@@ -442,19 +448,22 @@ proxySettings:
     <faq>FAQ</faq> page if you have any issues with the proxy.
   title: Proxy Preferences
   connection: Connection
-  searchNavFix: Enable site fixes
+  searchNavFix: Enable browsing fixes
   searchNavFixDescription: >-
     Utilize plugin made by The Freedom Project to fix errors like "undefined"
     when browsing. Optional.
   experimentalSiteFixes: Experimental site fixes
   experimentalSiteFixesDescription: >-
-    Mix of manual site support fixes. May break sites and leak real IP; use at own risk.
+    Mix of manual site support fixes including downloading files. May break sites and leak real IP; use at own risk.
   hideHistoryDescription: Hide local browsing history. Networks can still sniff history but it is proxied.
   randomizeFingerprint: Randomize browser fingerprint
   randomizeFingerprintDescription: >-
     Uses a random desktop browser for each tab session and adds noise to
-    canvas, WebGL, CPU and memory readings. A chosen user agent still wins.
-    May break some sites.
+    canvas, WebGL, CPU and memory readings. May break some sites.
+  proxyVersion: Proxy Version
+  proxyVersionDescription: >-
+    Scramjet V3 (Beta) is the newest release; switch to Scramjet 2.1.0 if a
+    site misbehaves. Switching reloads the page and reconnects your tabs.
   customWisp: Custom Wisp server
   customWispDescription: >-
     Route proxy traffic through your own Wisp server for better privacy control. If you wish to route all your traffic via self-hosting this is a lightweight method. Utilize the frontend here but have respective traffic go to your own servers. Leave empty to turn off.
@@ -576,143 +585,108 @@ faq:
 
 privacy:
   title: Privacy Policy
-  subtitle: InvisiProxy, a private web proxy service.
+  subtitle: InvisiProxy LTS, a private web proxy service.
   effective: 'Effective Date: 07-16-2021'
-  updated: 'Updated Date: 05-10-2026'
+  updated: 'Updated Date: 11-26-2026'
   what:
     title: What is InvisiProxy?
     body: >-
-      InvisiProxy LTS is a web proxy service that helps you access websites
-      that may be blocked by your network, government or policy all within
-      your browser with no download or setup. It does this securely and with
-      additional privacy features. Browse Tor/Onion sites in any browser, hide
-      browsing activity and bypass filters. This includes the potential ability
-      to bypass content blockers from governments, chrome extensions, localized
-      client firewalls, and network-related filters.<br/>This project serves
-      mostly as a proof of concept for the ideal clientless solution to
-      bypassing censorship.
+      InvisiProxy LTS is a web proxy that runs in your browser. Instead of
+      opening a site directly, you open it through the proxy, so your
+      network only ever sees the proxy. Sites blocked by your network,
+      school or government become reachable again, and Tor/Onion sites open
+      in any browser. Nothing to download, nothing to install.
   data:
-    title: Is any data being collected?
+    title: What is collected?
     body: >-
-      Nope! No data is logged or collected by any of our web proxies featured.
-      Logging is disabled to ensure user privacy on the backend. NextDNS
-      queries are adjusted to not log client IPs or domains and store in
-      Switzerland. NextDNS log retention for respective numerical values is
-      minimal and focused on ensuring the service operates smoothly. Cloudflare
-      is utilized for this project to improve performance and have easier DNS
-      management due to the scope of this project. At a minimum Cloudflare
-      numerical values are utilized for tracking visits and page views
-      indicating when server upgrades are needed. NGINX is set to store no
-      logs. InvisiProxy LTS values its statement of ending internet censorship
-      along with valuing user privacy. Outside of this the Wisp protocol (to
-      proxy TCP connections) is used with libcurl-transport for end-to-end
-      encryption by running SSL/TLS inside webassembly. This service is made to
-      be as transparent as possible and remember you can self-host at any time
-      to ensure you are in control over everything.<br/><br/>If you wish to
-      make a privacy statement or request please contact us via Discord.
+      InvisiProxy does not log your browsing. The Wisp server is started
+      with per-connection logging off: it records no addresses and no
+      destinations. The nginx config that ships with this project turns
+      access logs off on the proxy paths, and no request logs are written
+      to disk.<br/><br/>One exception, kept in memory only: the mirror
+      links button remembers your address for five seconds so the button
+      cannot be spammed. It is never written to disk and leaves no
+      records.<br/><br/>Attacks and floods are handled with rate limits and
+      connection caps, not with logs. Per-connection logging exists as a
+      debugging option, but it is off by default in every config this
+      project ships.<br/><br/>DNS lookups are resolved on the server. The
+      DNS provider is the operator's choice (self-hosters often point it at
+      a filtering DNS service); this project adds no logging on top of
+      whatever is chosen.<br/><br/>The official site is served through
+      Cloudflare. Like any CDN, it sees your IP address and the address of
+      each request with it; how that data is handled is described in
+      Cloudflare's own privacy policy.<br/><br/>None of this has to be
+      taken on faith. It is all open source, and you can self-host at any
+      time to control the whole stack yourself.
   security:
     title: Security
     body: >-
-      InvisiProxy LTS is built from the ground up to ensure a secure and
-      reliable web proxy service for its users. One of the core technologies
-      behind InvisiProxy LTS is the new Wisp protocol, developed by Mercury
-      Workshop.<br/><br/>This protocol brings several innovative features and
-      enhancements that contribute to the speed and security of the service
-      over previous models.
-    intro: >-
-      The Wisp protocol is designed to handle modern web traffic demands while
-      maintaining high security standards. By implementing Wisp, this project
-      leverages the following benefits:
+      Wisp carries every stream your browser would normally open over one
+      WebSocket to the proxy server, where the real connections are made.
+      In short, what that looks like:
     performance: >-
-      Performance: The Wisp protocol optimizes TCP data transfer speeds,
-      ensuring that users experience minimal latency while browsing.
+      Speed: Wisp sends site data as plain WebSocket frames, so pages stay
+      fast.
     compatibility: >-
-      Compatibility: Wisp is built to be compatible with a wide range of web
-      technologies, ensuring seamless access to various websites and online
-      services. This is done through the support of various open-source
-      transports following the protocol (Libcurl Transport).
+      Compatibility: open transports such as Libcurl keep the proxy working
+      with a wide range of sites and services.
     censorship: >-
-      Resilience Against Censorship: The protocol is designed to bypass
-      sophisticated censorship techniques employed by restrictive networks,
-      allowing users to access blocked content with ease.
+      Censorship resistance: the protocol is built so filters cannot easily
+      see or block what you open.
     fingerprinting: >-
-      Fingerprint Resistance: This project has strong fingerprint resistance
-      mechanisms within its reverse proxy setup for official instances. This
-      means that the proxy is designed to minimize the unique identifiers that
-      can be used to track or identify users, thereby enhancing privacy. By
-      following industry best practices and continually updating its methods,
-      users can browse anonymously without leaving identifiable traces.
-    transparency: >-
-      Transparency: Transparency is a key principle for InvisiProxy LTS. The
-      project operates with an open-source model, allowing the community to
-      review and contribute to the codebase. This openness not only fosters
-      trust but also enables continuous improvement through community feedback
-      and collaboration. By adhering to transparent practices, InvisiProxy LTS
-      ensures that users are aware of how their data is handled and what
-      measures are in place to protect their privacy.
-    randomisation: >-
-      Source/Global Randomisation: In order to further enhance security and
-      privacy, InvisiProxy LTS employs source and global randomisation. This
-      allows the project to remain unblocked longer on domains and also improve
-      anonymity while browsing. Typical web proxies will leave traces whenever
-      rewriting assets, but with this method, it is much harder to detect the
-      proxy and block it.
+      Fingerprints: the reverse proxy setup randomizes rewrites, so
+      sessions are harder to single out and the proxy is harder to block.
     encryption: >-
-      Encryption: InvisiProxy LTS utilizes advanced proxy technologies that
-      focus on end-to-end encryption and secure data transfer, particularly in
-      the context of URL rewriting proxies. NOTE: This is still a massive work
-      in progress and open to contributions.
-    audits: >-
-      Regular Audits: Conducting regular security audits to identify and
-      address potential vulnerabilities.
+      Encryption: HTTPS sites stay end-to-end encrypted between you and
+      them, and the Wisp connection itself uses wss:// (TLS) on the official
+      site. Parts of the rewriting stack are still being built; this section
+      grows as they land.
+    transparency: >-
+      Open source: everything above can be checked in the repository, and
+      changes are public.
+  advertising:
+    title: Advertising
+    body: >-
+      Free domains show ads to cover hosting costs. Patreon instances are
+      always ad-free. Ads are served by third-party networks: Adsterra,
+      Adcash and Monetag. They only appear on InvisiProxy's own pages and
+      loading screens, never inside the sites you browse through the
+      proxy.<br/><br/>When an ad loads, its network receives your IP
+      address, your user agent and the page you are on, and may set or read
+      its own cookies. Their handling of your data follows their privacy
+      policies, not this one.<br/><br/>An ad blocker stops all of this;
+      uBlock Origin works, or use a Patreon instance.
   usage:
-    title: Additional Usage
+    title: What is stored on your device
     storage: >-
-      InvisiProxy uses "Cookies", IndexedDB, localStorage, and sessionStorage
-      to maintain a user session (described more below) and store your
-      preferences on your computer. All of this information is completely
-      private being only local content with ZERO analytical purposes.
+      Your settings, tabs and bookmarks live in your browser: cookies,
+      localStorage, sessionStorage and IndexedDB. They never leave your
+      device, and none of it is used for analytics.
     cookies: >-
-      A cookie is a string of information that a website stores on a visitor's
-      computer, and that the visitor's browser provides to the website each
-      time the visitor returns. InvisiProxy uses cookies to help ensure
-      usability with the Settings menu, and lastly for user preferences. Users
-      who do not wish to have cookies placed on their computers should set
-      their browsers to refuse cookies before using InvisiProxy's websites,
-      with the drawback that certain features of InvisiProxy WILL not function
-      properly without the aid of cookies, localStorage or IndexedDB. No
-      cookies, IndexedDB, localStorage, or sessionStorage features are stored
-      for analytical purposes only functions (Scramjet (Caching proxied assets,
-      session state, etc.), Autocomplete (Proxied), Setting Menu: Tab Cloak,
-      Icon Presets, Transport Options, Search Engines, Theming, Sandboxing, Tor
-      Routing, Hide Ads, Hidden History, and Region Swapping) rely on it for
-      storing persistent data locally.
+      If you refuse cookies in your browser, features like tabs, bookmarks
+      and the settings menu stop working, since there is nowhere to save
+      them. Nothing is stored for tracking; only proxy functions rely on it
+      (Scramjet caching and session state, tabs, bookmarks, autocomplete,
+      tab cloak, icon presets, transport options, search engines, theming,
+      language, window type, Tor routing, region swapping, hide ads,
+      hidden history, block window leaks, block WebRTC and fingerprint
+      randomization).
     serviceWorkers: >-
-      In addition, InvisiProxy uses Service Workers as a technology for our
-      web proxies. This enables the ability to intercept respective network
-      traffic, etc. and is a core function for the project.
+      A service worker sits between pages and the network; the proxy needs
+      one to route traffic. Clearing the site's storage removes it again.
     consent: >-
-      By continuing to navigate our website without changing your cookie
-      settings, you hereby acknowledge and agree to InvisiProxy's use of
-      cookies.
+      Using the site counts as accepting the storage above, plus the
+      advertising partners' cookies where the law does not require your
+      separate consent.
   changes:
-    title: Ending Note
+    title: Changes
     body: >-
-      Although most changes are likely to be minor, InvisiProxy may change its
-      Privacy Policy from time to time, and in InvisiProxy LTS's sole
-      discretion. InvisiProxy LTS encourages visitors to frequently check this
-      page for any changes to its Privacy Policy. Your continued use of this
-      site after any change in this Privacy Policy will constitute your
-      acceptance of such change. In the case of any abuse or DDOS attacks,
-      InvisiProxy LTS may be forced to temporarily log data to mitigate the
-      attack and ensure the service remains operational. In such cases, any
-      logged data will be securely deleted immediately after the attack is
-      mitigated.
+      This policy can change; the updated date at the top tells you when it
+      last did. This page always states the current policy.
   contact:
-    title: Contact Information & Credit
+    title: Contact
     body: >-
-      If you have any questions about our Privacy Policy, please contact us via
-      email at
+      Questions about this policy, or a data or privacy request: write to
 
 docs:
   chemical: >-
@@ -889,13 +863,15 @@ docs:
       built-in.
     caddyWarning: >-
       For security reasons when hosting with a reverse proxy PLEASE use NGINX
-      not Caddy. This is due to wispurr using loopbacks. If using Caddy disable
+      not Caddy. This is due to finalwisp using loopbacks. If using Caddy disable
       this feature or adjust your default Caddy config.
     resources: 'Resources for self-hosting:'
   commands:
-    pm2Config: >-
-      Edit config.js and set production to true if you want to use pm2 (Allows
-      for easier VPS hosting)
+    pm2Config: Install the dependencies and fetch the blocklists
+    finalwisp: >-
+      Install finalwisp, the Wisp server the proxy needs to open connections
+    pm2Finalwisp: >-
+      Production: the finalwisp instances, one per region, under pm2 as well
     pm2: pm2 daemon utilization
     restart: Or on subsequent uses...
     kill: For killing any production processes made with pm2
@@ -920,8 +896,8 @@ docs:
       provider:
     dependencies: Dependencies
     dependenciesBody: >-
-      You will then need to setup git, musl, nginx (or caddy) and Node.js. Here
-      is an example for Ubuntu LTS:
+      You will then need to setup git, nginx (or caddy), Node.js and the
+      finalwisp binary (the Wisp server). Here is an example for Ubuntu LTS:
     tor: Tor Support (Optional)
     configure: Configurating InvisiProxy
     configureBody: >-
@@ -930,17 +906,17 @@ docs:
     configureMore: 'From there just configure as needed:'
     run: Cloning and Running InvisiProxy
     runBody: >-
-      Then run the respective process; if you have production set to true in
-      the configuration pm2 will be automatically enabled with our own
-      workers/cache system.
+      Then run the respective process; the site starts under pm2 with our own
+      workers/cache system, and manageWisp (the default) has the site process
+      run the finalwisp instances itself:
     restart: Then of course if you used NGINX or caddy please restart/reload it
   config:
     title: Configuration
     server: Server Configuration Setup
     port: >-
       The default PORT for the proxy when started is
-      <code>http://localhost:8080</code>. You can change the PORT and other
-      production metrics if needed in <code>./ecosystem.config.js</code>.
+      <code>http://localhost:8080</code>. You can change the PORT (PORT env
+      override) and other settings if needed in <code>./config.json</code>.
     local: >-
       Every other localized changes for source randomization, auto-minify, etc.
       are located in <code>./config.json</code>.
@@ -950,9 +926,15 @@ docs:
       randomizeIdentifiers: >-
         Enable experimental proxy global randomization for Ultraviolet. This
         reduces the chances of UV being detected by any extension based filters.
-      production: >-
-        Utilize a pre-configured production setup for server hosting.
-        Automatically has cache control and source rewrites setup.
+      manageWisp: >-
+        When true (the default) the site process starts and watches the finalwisp
+        instances itself. Set it to false for the nginx + pm2 setup, where nginx
+        routes Wisp to pm2-managed instances (see FINALWISP.md) and a site
+        rebuild no longer drops Wisp sessions.
+      dns: >-
+        How the finalwisp instances resolve hostnames: resolve (the default)
+        uses finalwisp's own resolver, lookup the system resolver, and a provider
+        such as nextdns:xxx or xxx.dns.nextdns.io is queried directly.
       disguiseFiles: >-
         Enable DOM masquerading which obfuscates real the real content fetches
         for InvisiLTS. This is done through disguising requests, decompressing
@@ -1357,6 +1339,7 @@ frame:
   searchPlaceholder: Type a URL or search...
   loading: Loading the web proxy...
   restarting: The server is restarting, please wait. This helps randomize the source...
+  continueOffline: Continue offline
   title: Browsing
   tabs: Proxy Tabs
   newTab: New tab

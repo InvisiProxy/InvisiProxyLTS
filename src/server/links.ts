@@ -58,5 +58,5 @@ export const externalPages: ExternalPages = {
 	kofi: 'https://ko-fi.com/quiteafancyemerald',
 	truffled: 'https://truffled.lol',
 	freedomproject: 'https://nullatenus.com',
-	wispurr: 'https://github.com/sylvieisnton/wispurr',
+	finalwisp: 'https://github.com/theogbob/finalwisp',
 };

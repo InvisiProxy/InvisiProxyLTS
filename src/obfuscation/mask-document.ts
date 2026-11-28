@@ -56,14 +56,14 @@ const titleText = (text: string) => homoglyphText(maskText(text));
 
 const attributeText = (name: string, text: string) =>
 	name === 'data-tippy-content' && values.fontCipher.tag
-		? cipherText(maskText(text))
+		? cipherText(text)
 		: titleAttributes.has(name)
 			? titleText(text)
 			: disguiseText(text);
 
 const renderText = (text: string, mode: TextMode) =>
 	mode === 'cipher'
-		? cipherMarkup(maskText(text))
+		? cipherMarkup(text)
 		: escapeText(
 				mode === 'decoy'
 					? maskText(text)

@@ -44,9 +44,27 @@ import {
   };
 
   const byId = (id) => document.getElementById(id);
-  const container = byId('tab-frames');
+  const loaderDismiss = () => loader?.getElementsByClassName('loader-dismiss')[0];
+  const closedRoot = (host, sheet, ...children) => {
+    const root = host.attachShadow({ mode: 'closed' });
+    const styles = document.createElement('link');
+    styles.rel = 'stylesheet';
+    styles.href = sheet;
+    host.hidden = true;
+    const reveal = () => (host.hidden = false);
+    styles.addEventListener('load', reveal, { once: true });
+    styles.addEventListener('error', reveal, { once: true });
+    root.append(styles, ...children);
+    return root;
+  };
+  const host = byId('tab-frames');
+  const container = closedRoot(host, route('assets/css/tab-frames.css'), ...host.children);
   const omnibar = byId('pr-sj');
   const omniInput = byId('search-input');
+  const omniHost = document.createElement('span');
+  omniInput.before(omniHost);
+  const omniRoot = closedRoot(omniHost, route('assets/css/omnibox.css'), omniInput);
+  const omniFocused = () => omniRoot.activeElement === omniInput;
   const loader = document.getElementsByClassName('loader')[0];
   const loaderText = loader?.getElementsByClassName('loader-text')[0];
   const toggle = byId('omnibar-toggle');
@@ -64,6 +82,8 @@ import {
   let bundle = null;
   let bookmarks = parseBookmarks(read(localStorage, bookmarksKey));
   let restarting = false;
+  let restartDismissed = false;
+  const restartPrompt = () => setting('HideRestartPrompt') !== true;
 
   const documentOf = (tab) => {
     try {
@@ -116,8 +136,16 @@ import {
       JSON.stringify({ urls: tabs.map((tab) => tab.url), active: tabs.indexOf(active) })
     );
 
-  const syncLoader = () =>
-    loader?.classList.toggle('loader-active', restarting || Boolean(active?.loading));
+  const syncLoader = () => {
+    if (!loader) return;
+    // Dismissed, the restart prompt leaves tabs usable offline.
+    const prompt = restarting && !restartDismissed;
+    loader.classList.toggle('loader-restarting', prompt);
+    loader.classList.toggle(
+      'loader-active',
+      prompt || Boolean(active?.loading)
+    );
+  };
   const syncChip = (tab) => {
     tab.label.textContent = cipherText(titleOf(tab));
     tab.iframe.classList.toggle('proxy-tab-blank', !tab.url);
@@ -198,10 +226,10 @@ import {
     if (
       crossOriginIsolated ||
       !autoSiteFixes(url) ||
-      document.cookie.split('; ').includes('AutoSiteFixes=true')
+      document.cookie.split('; ').includes(`${'AutoSiteFixes'}=true`) // quoted so the cookie name gets the build's settings token
     )
       return false;
-    document.cookie = 'AutoSiteFixes=true; path=/; SameSite=None; Secure;';
+    document.cookie = `${'AutoSiteFixes'}=true; path=/; SameSite=None; Secure;`;
     save();
     location.reload();
     return true;
@@ -220,7 +248,7 @@ import {
     tab.url = url;
     if (isolateFor(url)) return;
     if (tab === active) {
-      if (document.activeElement !== omniInput) omniInput.value = url;
+      if (!omniFocused()) omniInput.value = url;
       favBookmarks();
     }
     syncChip(tab);
@@ -284,7 +312,7 @@ import {
       tab.started = true;
       if (tab.url) navigate(tab, tab.url);
     }
-    if (document.activeElement !== omniInput) omniInput.value = tab.url;
+    if (!omniFocused()) omniInput.value = tab.url;
     syncLoader();
     syncStrip();
     favBookmarks();
@@ -477,23 +505,29 @@ import {
       return location.reload();
     if (state === 'down' && !restarting) {
       restarting = true;
+      restartDismissed = false;
       if (loaderText?.dataset.restarting)
         loaderText.textContent = loaderText.dataset.restarting;
       syncLoader();
     }
     setTimeout(watchServer, restarting ? 2000 : 30000);
   };
-  if (!values.development)
+  // Optional: no restart prompt and no watcher reloads while offline.
+  if (!values.development && restartPrompt())
     checkBuild().then((state) => {
       if (state === 'same') setTimeout(watchServer, 30000);
     });
+  loaderDismiss()?.addEventListener('click', () => {
+    restartDismissed = true;
+    syncLoader();
+  });
 
   const start = () => {
     bundle = window.$invisiScramjet;
     const session = parseSession(read(sessionStorage, sessionKey));
     const opened = proxiedFrameUrl(read(localStorage, openKey));
     forget(localStorage, openKey);
-    const first = byId('frame');
+    const first = container.getElementById('frame');
     if (session.urls.length) {
       session.urls.forEach((url, index) => createTab(url, index ? undefined : first));
       activate(tabs[session.active]);

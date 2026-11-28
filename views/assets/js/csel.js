@@ -7,6 +7,10 @@ import {
   selectedTransport,
   selectedWisp,
 } from '../../../src/browser/transport.ts';
+import {
+  selectedScramjetVersion,
+  scramjetVersionStored,
+} from '../../../src/browser/scramjet-version.ts';
 import { customWispUrl } from '../../../src/browser/chain.ts';
 import {
   customUserAgent,
@@ -17,6 +21,7 @@ import {
   storedUserAgent,
   userAgentPresets,
 } from '../../../src/browser/fingerprint.ts';
+import { migrateSettings } from '../../../src/browser/settings-migration.ts';
 /* -----------------------------------------------
 /* Authors: Yoct, OlyB, b4kt
 /* GNU Affero General Public License v3.0: https://www.gnu.org/licenses/agpl-3.0.en.html
@@ -166,7 +171,7 @@ const storageId = `${values.storageNamespace}-storage`,
     if (window.$invisiScramjetError) return null;
     const transportName = selectedTransport(readStorage('Transport'));
     return openTransport(
-      route(`/${transportName}/index.mjs`),
+      values.transportPaths[transportName],
       selectedWisp(
         storageObject(),
         transportName,
@@ -290,6 +295,14 @@ const storageId = `${values.storageNamespace}-storage`,
   }),
   defaultTheme = 'dark',
   defaultSearch = values.defaultSearch;
+
+// Repair settings written by older builds before anything reads them: the
+// removed site-fixes default-on coupling saved Tor routing for anyone it
+// switched on, leaving those sessions on a dead upstream. Runs once per
+// browser; any future repair bumps the version in migrateSettings.
+const repairedSettings = JSON.stringify(migrateSettings(storageObject()));
+if (repairedSettings !== localStorage.getItem(storageId))
+  localStorage.setItem(storageId, repairedSettings);
 
 // All code in this block is used by menu items that adjust website settings.
 
@@ -468,6 +481,14 @@ if (document.getElementById('csel')) {
     else removeStorage('UseAC');
   });
 
+  // Off: no restart prompt when the server can't be reached.
+  attachClassEventListener('server-restart', 'change', (e) => {
+    if (checkBooleanState(e.target) === false)
+      setStorage('HideRestartPrompt', true);
+    else removeStorage('HideRestartPrompt');
+    if (e.isTrusted) location.reload();
+  });
+
   attachClassEventListener('search-nav-fix', 'change', (e) => {
     if (checkBooleanState(e.target) === true) setStorage('SearchNavFix', true);
     else removeStorage('SearchNavFix');
@@ -496,6 +517,13 @@ if (document.getElementById('csel')) {
   attachClassEventListener('block-webrtc', 'change', (e) => {
     if (checkBooleanState(e.target) === true) setStorage('BlockWebRTC', true);
     else removeStorage('BlockWebRTC');
+    if (e.isTrusted) location.reload();
+  });
+
+  // Popunders arm themselves on page clicks, so a reload is what removes them.
+  attachClassEventListener('block-popups', 'change', (e) => {
+    if (checkBooleanState(e.target) === true) setStorage('BlockPopups', true);
+    else removeStorage('BlockPopups');
     if (e.isTrusted) location.reload();
   });
 
@@ -758,20 +786,16 @@ useStorageArgs('SearchEngine', (s) => {
 });
 
 const mobileBrowser = isMobileBrowser(),
-  transportName = selectedTransport(readStorage('Transport'), mobileBrowser),
-  transportValue = (name) => values.aliases[`prefixes/${name}`] || name;
+  transportName = selectedTransport(readStorage('Transport'), mobileBrowser);
 if (mobileBrowser || transportName === 'epoxy') setStorage('Transport', transportName);
 else if (readStorage('Transport') !== undefined) removeStorage('Transport');
 for (const transportSelector of document.getElementsByClassName('transport-list')) {
-  transportSelector.value = transportValue(transportName);
+  // The select values are the per-build transport tokens, so the stored
+  // value is the token the transport module URL is looked up by.
+  transportSelector.value = transportName;
   transportSelector.closest('.transport-setting').hidden = mobileBrowser;
   transportSelector.addEventListener('change', () => {
-    setStorage(
-      'Transport',
-      ['libcurl', 'epoxy'].find(
-        (name) => transportValue(name) === transportSelector.value
-      ) || 'libcurl'
-    );
+    setStorage('Transport', transportSelector.value);
     location.reload();
   });
 }
@@ -782,6 +806,18 @@ for (const regionSelector of document.getElementsByClassName('region-list')) {
 for (const torToggle of document.getElementsByClassName('useonion')) {
   torToggle.disabled = transportName === 'epoxy';
   torToggle.title = transportName === 'epoxy' ? homoglyphText('Tor routing requires libcurl.') : '';
+}
+// The Proxy Version setting; switching reloads so the matching service
+// worker takes over (v3 is the default and stores nothing).
+for (const versionSelector of document.getElementsByClassName('version-list')) {
+  versionSelector.value = selectedScramjetVersion(readStorage('ProxyVersion'));
+  versionSelector.addEventListener('change', () => {
+    const version = selectedScramjetVersion(versionSelector.value);
+    scramjetVersionStored(version) === null
+      ? removeStorage('ProxyVersion')
+      : setStorage('ProxyVersion', version);
+    location.reload();
+  });
 }
 
 // Ads are disabled by default. Load ads if ads were enabled previously.
@@ -794,15 +830,10 @@ useStorageArgs('HideAds', (s) => {
   }
 });
 
-// Tor routing is only enabled by default when ExperimentalSiteFixes is on.
 useStorageArgs('UseSocks5', (s) => {
   const tor = document.getElementsByClassName('useonion'),
     regionList = document.getElementsByClassName('region-list');
-  if (
-    s === 'tor' ||
-    (s === undefined && readStorage('ExperimentalSiteFixes') === true)
-  )
-    classUpdateHandler(tor, 'on', classEvent(tor, 'change'))();
+  if (s === 'tor') classUpdateHandler(tor, 'on', classEvent(tor, 'change'))();
   else if ('string' === typeof s) classUpdateHandler(regionList, s)();
 });
 
@@ -836,6 +867,14 @@ useStorageArgs('UseAC', (s) => {
     classUpdateHandler(document.getElementsByClassName('useac'), 'off')();
 });
 
+useStorageArgs('HideRestartPrompt', (s) => {
+  if (s === true)
+    classUpdateHandler(
+      document.getElementsByClassName('server-restart'),
+      'off'
+    )();
+});
+
 useStorageArgs('SearchNavFix', (s) => {
   if (s === true)
     classUpdateHandler(document.getElementsByClassName('search-nav-fix'), 'on')();
@@ -865,6 +904,11 @@ useStorageArgs('CustomWisp', (s) => {
 useStorageArgs('BlockWebRTC', (s) => {
   if (s === true)
     classUpdateHandler(document.getElementsByClassName('block-webrtc'), 'on')();
+});
+
+useStorageArgs('BlockPopups', (s) => {
+  if (s === true)
+    classUpdateHandler(document.getElementsByClassName('block-popups'), 'on')();
 });
 
 useStorageArgs('RandomizeFingerprint', (s) => {

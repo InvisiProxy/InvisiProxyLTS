@@ -13,7 +13,7 @@ import {
 } from './state.ts';
 
 type Routes = Record<string, string>;
-const apiEndpoints = ['link', 'clear'] as const;
+const apiEndpoints = ['link', 'clear', 'units'] as const;
 type Links = Record<string, string | Record<string, string>>;
 
 export function getPathAliases(): Record<string, string> {
@@ -42,6 +42,7 @@ export function getPathAliases(): Record<string, string> {
 		ts.forEachChild(node, visit);
 	}
 	visit(source);
+	keys.add('gust');
 	for (const [name, target] of Object.entries(externalPages)) {
 		keys.add(name);
 		if (typeof target !== 'string')
@@ -50,10 +51,12 @@ export function getPathAliases(): Record<string, string> {
 	}
 	for (const prefix of [
 		'scram',
+		'scram3',
 		'libcurl',
 		'epoxy',
 		'wisp',
 		'network',
+		'network3',
 		'api',
 		'dlpcc',
 	])
@@ -73,6 +76,8 @@ export function getPathAliases(): Record<string, string> {
 	files.push(
 		'sw.js',
 		'sw-blacklist.js',
+		'swv2.js',
+		'swv2-blacklist.js',
 		'faq-search.js',
 		'particles.js',
 		'tooltips.js',
@@ -83,7 +88,13 @@ export function getPathAliases(): Record<string, string> {
 		'controller.api.js',
 		'controller.inject.js',
 		'controller.sw.js',
-		'scramjet-utils.js',
+		// Scramjet v3, renamed on copy (see src/build/sources.ts).
+		'scramjet3.js',
+		'scramjet3.wasm',
+		'controller3.api.js',
+		'controller3.inject.js',
+		'controller3.sw.js',
+		'wind.svg',
 		'fa-brands-400.woff2',
 		'fa-regular-400.woff2',
 		'fa-solid-900.woff2',

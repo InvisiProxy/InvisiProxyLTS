@@ -32,6 +32,7 @@ import {
 	stripObfuscatedMarker,
 } from '../obfuscation/scripts.ts';
 import { saltAsset, saltBlocklist, saltToken } from '../obfuscation/assets.ts';
+import { settingTokens } from '../obfuscation/settings.ts';
 import {
 	builtFonts,
 	cipherFontFamilies,
@@ -43,6 +44,7 @@ import { getPathAliases } from '../obfuscation/paths.ts';
 import { hideScramjetParams } from '../obfuscation/scramjet-params.ts';
 import { scrubScramjetWasm } from '../obfuscation/scramjet-signatures.ts';
 import { route } from '../site.ts';
+import { gustEmitAssets, gustPageFile } from '../gust/index.ts';
 import { beginObfuscationBuild } from '../obfuscation/state.ts';
 import {
 	getPlainDocuments,
@@ -207,7 +209,7 @@ function environments(): Record<string, EnvironmentOptions> {
 		},
 		ssr: {
 			consumer: 'server',
-			resolve: { external: ['send', 'wispurr', 'dlpcc'] },
+			resolve: { external: ['send', 'dlpcc'] },
 			build: {
 				outDir: serverDir,
 				emptyOutDir: true,
@@ -232,6 +234,10 @@ async function buildApp(builder: ViteBuilder) {
 	readFromStaging(true);
 	try {
 		await getPlainDocuments(true);
+		// Generate the settings/storage token names before any environment
+		// builds: every script and page build must scrub and render with
+		// the same mapping.
+		settingTokens();
 		await builder.build(built.client);
 		await Promise.all(
 			siteScripts().map((_, index) =>
@@ -394,6 +400,27 @@ export function siteBuildPlugin(): Plugin[] {
 							}),
 						});
 					}
+				}
+				for (const asset of gustEmitAssets()) {
+					const original = saltAsset(asset.target, asset.bytes);
+					const substituted = new TextEncoder().encode(
+						new TextDecoder()
+							.decode(original)
+							.replaceAll('__IP_WISP_ROUTE__', route('/wisp/'))
+							.replaceAll(
+								'__IP_GUST_WIND__',
+								route("assets/ico/wind.svg")
+							)
+					);
+					this.emitFile({
+						type: 'asset',
+						fileName: asset.target,
+						source:
+							config.disguiseFiles &&
+							asset.target === gustPageFile
+								? gzipSync(substituted)
+								: substituted,
+					});
 				}
 			},
 		},

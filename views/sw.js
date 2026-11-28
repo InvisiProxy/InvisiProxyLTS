@@ -1,5 +1,5 @@
 import { route } from 'build:invisiproxy';
-importScripts(route("/scram/controller.sw.js"));
+importScripts(route("/scram3/controller3.sw.js"));
 
 self.addEventListener('fetch', (event) => {
   if ($scramjetController.shouldRoute(event))

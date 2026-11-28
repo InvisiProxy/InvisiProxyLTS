@@ -1,5 +1,4 @@
 import type { Controller, Frame } from '@mercuryworkshop/scramjet-controller';
-import '@mercuryworkshop/scramjet-utils';
 import '@mercuryworkshop/scramjet';
 
 declare global {
